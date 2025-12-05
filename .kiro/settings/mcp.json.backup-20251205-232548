@@ -30,22 +30,7 @@
         "conv_dump",
         "memory_store",
         "wsl_run",
-        "docker_ps",
-        "docker_images",
-        "wsl_list",
-        "network_ping",
-        "project_scan_turbo",
-        "project_file_deps",
-        "browser_navigate",
-        "browser_snapshot",
-        "browser_click",
-        "browser_type",
-        "browser_screenshot",
-        "browser_get_text",
-        "browser_close",
-        "browser_evaluate",
-        "web_fetch",
-        "system_health"
+        "wsl_run"
       ]
     },
     "aurora-dsql": {
@@ -76,13 +61,70 @@
       "disabled": false,
       "startupDelay": 2000,
       "autoApprove": [
+        "query",
+        "execute",
+        "list_tables",
+        "describe_table",
         "readonly_query",
         "transact",
-        "get_schema",
-        "dsql_search_documentation",
-        "dsql_read_documentation",
-        "dsql_recommend"
+        "dsql_search_documentation"
       ]
+    },
+    "stripe": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-stripe@latest"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": true,
+      "startupDelay": 4000,
+      "autoApprove": []
+    },
+    "aws-knowledge-mcp-server": {
+      "command": "uvx",
+      "args": [
+        "awslabs.aws-knowledge-mcp-server@latest"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": true,
+      "startupDelay": 3000,
+      "autoApprove": [
+        "aws___search_documentation",
+        "aws___read_documentation",
+        "aws___get_regional_availability",
+        "aws___list_regions",
+        "aws___recommend"
+      ]
+    },
+    "awslabs-dynamodb": {
+      "command": "uvx",
+      "args": [
+        "awslabs.dynamodb-mcp-server@latest"
+      ],
+      "env": {
+        "AWS_PROFILE": "125140434314",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": true,
+      "startupDelay": 5000,
+      "autoApprove": []
+    },
+    "awslabs-serverless": {
+      "command": "uvx",
+      "args": [
+        "awslabs.aws-serverless-mcp@latest"
+      ],
+      "env": {
+        "AWS_PROFILE": "125140434314",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": true,
+      "startupDelay": 6000,
+      "autoApprove": []
     },
     "fetch": {
       "command": "uvx",
@@ -98,16 +140,16 @@
         "fetch"
       ]
     },
-    "stripe": {
+    "playwright": {
       "command": "uvx",
       "args": [
-        "mcp-server-stripe@latest"
+        "mcp-server-playwright@latest"
       ],
       "env": {
         "FASTMCP_LOG_LEVEL": "ERROR"
       },
       "disabled": true,
-      "startupDelay": 3000,
+      "startupDelay": 7000,
       "autoApprove": []
     },
     "nonicatab-revit": {

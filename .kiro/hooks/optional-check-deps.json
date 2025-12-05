@@ -1,0 +1,12 @@
+{
+  "name": "Check Dependencies",
+  "description": "Sprawdź czy są nieaktualne pakiety",
+  "enabled": true,
+  "trigger": {
+    "type": "manual"
+  },
+  "action": {
+    "type": "sendMessage",
+    "message": "Sprawdź requirements.txt i porównaj z najnowszymi wersjami pakietów. Pokaż listę pakietów które mają nowsze wersje dostępne. Zaznacz które aktualizacje są krytyczne (security)."
+  }
+}

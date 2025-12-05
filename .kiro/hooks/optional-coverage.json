@@ -1,0 +1,12 @@
+{
+  "name": "Test Coverage Analysis",
+  "description": "Uruchom analizę pokrycia testami",
+  "enabled": true,
+  "trigger": {
+    "type": "manual"
+  },
+  "action": {
+    "type": "sendMessage",
+    "message": "Uruchom pytest z coverage (pytest --cov) i pokaż raport pokrycia kodu testami. Wskaż pliki z najniższym pokryciem które wymagają więcej testów."
+  }
+}

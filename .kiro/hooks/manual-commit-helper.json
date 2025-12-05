@@ -1,0 +1,12 @@
+{
+  "name": "Commit Message Helper",
+  "description": "Wygeneruj sensowny commit message",
+  "enabled": true,
+  "trigger": {
+    "type": "manual"
+  },
+  "action": {
+    "type": "sendMessage",
+    "message": "Sprawdź git diff i wygeneruj sensowny commit message w formacie: [type] krótki opis. Typy: feat, fix, docs, style, refactor, test, chore. Zaproponuj 3 warianty do wyboru."
+  }
+}
