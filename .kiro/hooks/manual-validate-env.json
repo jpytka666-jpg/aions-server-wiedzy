@@ -1,0 +1,12 @@
+{
+  "name": "Validate Environment",
+  "description": "Sprawdź zmienne środowiskowe i pliki .env",
+  "enabled": true,
+  "trigger": {
+    "type": "manual"
+  },
+  "action": {
+    "type": "sendMessage",
+    "message": "Sprawdź konfigurację środowiska: 1) Czy istnieją pliki .env, 2) Czy są wymagane zmienne środowiskowe (AWS_PROFILE, CHROMA_PATH, PYTHONPATH), 3) Czy nie ma wycieków secrets w plikach .env. Pokaż podsumowanie."
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "Test MCP Servers",
+  "description": "Testuj każdy MCP server z przykładowymi wywołaniami",
+  "enabled": true,
+  "trigger": {
+    "type": "manual"
+  },
+  "action": {
+    "type": "sendMessage",
+    "message": "Przetestuj każdy aktywny MCP server wykonując przykładowe wywołanie: 1) AIONS-CONTEXT: fast_search('test'), 2) aurora-dsql: SELECT 1, 3) fetch: pobierz google.com. Pokaż wyniki i czas odpowiedzi."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Auto Security Scan on Save",
+  "description": "Automatycznie skanuje kod pod kątem API keys i secrets",
+  "enabled": true,
+  "trigger": {
+    "type": "onFileSave",
+    "filePattern": "**/*.{py,js,ts,json,yaml,yml,env}"
+  },
+  "action": {
+    "type": "sendMessage",
+    "message": "Przeskanuj ostatnio zapisany plik pod kątem wycieków danych wrażliwych: API keys (sk-proj-, ghp_, AKIA), passwords, secrets. Jeśli znajdziesz - OSTRZEŻ użytkownika!"
+  }
+}
