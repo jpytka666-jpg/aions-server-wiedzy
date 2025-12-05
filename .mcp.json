@@ -1,0 +1,49 @@
+{
+  "mcpServers": {
+    "aions-context": {
+      "command": "E:/server wiedzy/venv/Scripts/python.exe",
+      "args": [
+        "E:/server wiedzy/mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+      ],
+      "env": {
+        "CHROMA_PATH": "E:/server wiedzy/data/chroma",
+        "PYTHONPATH": "E:/server wiedzy;E:/server wiedzy/server"
+      }
+    },
+    "aurora-dsql": {
+      "command": "C:\\Windows\\System32\\wsl.exe",
+      "args": [
+        "-d",
+        "Ubuntu",
+        "--",
+        "/root/.local/bin/uvx",
+        "--from",
+        "awslabs.aurora-dsql-mcp-server",
+        "awslabs.aurora-dsql-mcp-server",
+        "--cluster_endpoint",
+        "q5tlv2ufq7sws5d5pyhth2m4sa.dsql.eu-west-2.on.aws",
+        "--database_user",
+        "admin",
+        "--region",
+        "eu-west-2",
+        "--profile",
+        "125140434314",
+        "--allow-writes"
+      ],
+      "env": {
+        "AWS_PROFILE": "125140434314",
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "WSLENV": "AWS_PROFILE"
+      }
+    },
+    "aws-core": {
+      "command": "uvx",
+      "args": [
+        "awslabs.core-mcp-server@latest"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    }
+  }
+}

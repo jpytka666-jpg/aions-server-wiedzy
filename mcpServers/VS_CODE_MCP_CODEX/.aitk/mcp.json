@@ -1,0 +1,21 @@
+{
+    "servers": {
+        "local-server-vs_code_mcp_codex": {
+            "type": "stdio",
+            "command": "pwsh",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "E:\\server wiedzy\\scripts\\run_mcp_server.ps1",
+                "stdio"
+            ],
+            "env": {
+                "CHROMA_PATH": "E:\\server wiedzy\\data\\chroma",
+                "LOG_LEVEL": "INFO"
+            },
+            "timeout": 60000
+        }
+    }
+}

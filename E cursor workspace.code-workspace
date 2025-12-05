@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"name": "E:",
+			"path": "."
+		}
+	],
+	"settings": {
+		"workbench.editor.enablePreviewFromQuickOpen": true,
+		"extensions.supportNodeGlobalNavigator": true,
+		"telemetry.editStats.details.enabled": true,
+		"dotnetAcquisitionExtension.allowInvalidPaths": true,
+		"workbench.editor.enablePreviewFromCodeNavigation": true,
+		"chatgpt.openOnStartup": true
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-azuretools.vscode-cosmosdb",
+			"redhat.vscode-yaml",
+			"ms-azuretools.vscode-azure-mcp-server",
+			"openai.chatgpt"
+		]
+	}
+}

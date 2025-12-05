@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CHROMA_PATH": "E:/server wiedzy/data/chroma",
+    "PYTHONPATH": "E:/server wiedzy;E:/server wiedzy/server",
+    "AWS_PROFILE": "125140434314"
+  },
+  "includeCoAuthoredBy": true,
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(Select-Object -First 30)",
+      "Bash(wsl -e bash -c \"cat ~/.aws/config 2>/dev/null; echo ''---CRED---''; cat ~/.aws/credentials 2>/dev/null\")",
+      "Bash(wsl -e bash -c \"echo ''[profile 125140434314]\nregion = eu-west-2\noutput = json'' >> ~/.aws/config && cat ~/.aws/config\")",
+      "Bash(wsl -e bash -c \"AWS_PROFILE=125140434314 aws sts get-caller-identity\")",
+      "Bash(wsl -e bash -c \"which uvx || which pip3 || which python3\")",
+      "Bash(wsl -e bash -c \"pip3 install awscli uv 2>&1 | tail -5\")",
+      "Bash(wsl -e bash -c \"curl -LsSf https://astral.sh/uv/install.sh | sh 2>&1\")",
+      "Bash(wsl -e bash -c \"source ~/.local/bin/env 2>/dev/null || export PATH=$HOME/.local/bin:$PATH; uvx --version\")",
+      "Bash(wsl -e bash -c \"export PATH=$HOME/.local/bin:$PATH; uvx pip install awscli 2>&1 | tail -3\")",
+      "Bash(wsl -e bash -c \"export PATH=$HOME/.local/bin:$PATH; AWS_PROFILE=125140434314 aws sts get-caller-identity\")",
+      "Bash(wsl -e bash -c:*)",
+      "Bash(uvx:*)",
+      "Bash(set AWS_PROFILE=125140434314:*)",
+      "Bash(aws dsql generate-db-connect-auth-token:*)",
+      "Bash(aws configure list:*)",
+      "Bash(wsl --exec /root/.local/bin/uvx:*)",
+      "Bash(wsl -d Ubuntu -e /root/.local/bin/uvx:*)",
+      "Bash(\"E:/server wiedzy/venv/Scripts/python.exe\":*)",
+      "Bash(git reset:*)",
+      "Bash(git:*)",
+      "Bash(python:*)",
+      "Bash(pip:*)",
+      "Write(*)",
+      "Read(*)",
+      "ListDir(*)",
+      "Bash(unzip:*)",
+      "Bash(dir:*)",
+      "Bash(dotnet build:*)",
+      "Bash(powershell -Command \"dir $env:APPDATA\\Autodesk\\Revit\\Addins\")",
+      "Bash(powershell -Command \"Write-Host $env:APPDATA\")",
+      "Bash(powershell -Command \"[Environment]::GetFolderPath(''ApplicationData'')\")",
+      "Bash(powershell -Command:*)",
+      "Bash(tasklist:*)",
+      "Bash(findstr:*)",
+      "Bash(dir /b /o-d 'e:\\server wiedzy\\.kiro')",
+      "Bash(Select-Object -First 10)"
+    ],
+    "deny": [
+      "Bash(rm -rf /*)",
+      "Bash(del /f /s /q C:\\*)",
+      "Bash(format:*)"
+    ],
+    "ask": [
+      "Bash(docker:*)",
+      "Bash(systemctl:*)",
+      "Bash(shutdown:*)",
+      "Bash(reboot:*)"
+    ],
+    "defaultMode": "default",
+    "additionalDirectories": [
+      "E:/server wiedzy",
+      "E:/AI_WORKSPACE"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "spinnerTipsEnabled": true
+}

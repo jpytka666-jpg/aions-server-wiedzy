@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "aions-context": {
+      "command": "E:\\server wiedzy\\venv\\Scripts\\python.exe",
+      "args": ["E:\\server wiedzy\\mcpServers\\VS_CODE_MCP_CODEX\\src\\server.py"],
+      "env": {
+        "PYTHONPATH": "E:\\server wiedzy;E:\\server wiedzy\\mcpServers\\VS_CODE_MCP_CODEX",
+        "CHROMA_PATH": "E:\\server wiedzy\\data\\chroma",
+        "ANONYMIZED_TELEMETRY": "False"
+      }
+    }
+  }
+}

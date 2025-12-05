@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  
+  "model": "claude-sonnet-4-5-20250929",
+  
+  "env": {
+    "CHROMA_PATH": "E:/server wiedzy/data/chroma",
+    "PYTHONPATH": "E:/server wiedzy;E:/server wiedzy/server",
+    "AWS_PROFILE": "125140434314"
+  },
+  
+  "permissions": {
+    "defaultMode": "default",
+    "allow": [
+      "Bash(find:*)",
+      "Bash(wsl:*)",
+      "Bash(uvx:*)",
+      "Bash(aws:*)",
+      "Bash(git:*)",
+      "Bash(python:*)",
+      "Bash(\"E:/server wiedzy/venv/Scripts/python.exe\":*)",
+      "Write(*)",
+      "Read(*)",
+      "ListDir(*)"
+    ],
+    "deny": [
+      "Bash(rm -rf /*)",
+      "Bash(del /f /s /q C:\\*)"
+    ],
+    "ask": [
+      "Bash(docker:*)",
+      "Bash(systemctl:*)"
+    ],
+    "additionalDirectories": [
+      "E:/server wiedzy",
+      "E:/AI_WORKSPACE"
+    ]
+  },
+  
+  "enableAllProjectMcpServers": false,
+  
+  "enabledMcpjsonServers": [
+    "aions-context",
+    "aurora-dsql",
+    "aws-core"
+  ],
+  
+  "allowedMcpServers": [
+    {
+      "serverName": "aions-context",
+      "serverCommand": [
+        "E:/server wiedzy/venv/Scripts/python.exe",
+        "E:/server wiedzy/mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+      ]
+    },
+    {
+      "serverName": "aurora-dsql",
+      "serverCommand": [
+        "C:\\Windows\\System32\\wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/root/.local/bin/uvx"
+      ]
+    },
+    {
+      "serverName": "aws-core",
+      "serverCommand": [
+        "uvx",
+        "awslabs.core-mcp-server@latest"
+      ]
+    }
+  ],
+  
+  "hooks": {
+    "beforeWrite": [
+      {
+        "matcher": "*.py",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -m py_compile \"$FILE\"",
+            "timeout": 5,
+            "statusMessage": "Checking Python syntax..."
+          }
+        ]
+      }
+    ],
+    "afterWrite": [
+      {
+        "matcher": "*.py",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Verify that the Python file $FILE has correct syntax and follows PEP 8 conventions. Return 'OK' if valid, or describe issues found.",
+            "timeout": 10,
+            "statusMessage": "Validating code quality..."
+          }
+        ]
+      }
+    ]
+  },
+  
+  "includeCoAuthoredBy": true,
+  
+  "cleanupPeriodDays": 30,
+  
+  "spinnerTipsEnabled": true,
+  
+  "alwaysThinkingEnabled": false,
+  
+  "sandbox": {
+    "enabled": false,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": true,
+    "network": {
+      "allowAllUnixSockets": true,
+      "allowLocalBinding": true
+    }
+  }
+}

@@ -1,0 +1,83 @@
+# =============================================================================
+# AIONS SERVER WIEDZY - .gitignore
+# =============================================================================
+
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+eggs/
+*.egg
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node
+node_modules/
+npm-debug.log
+
+# Data directories (large/generated)
+data/
+index/
+logs/
+scan_results/
+
+# Scan outputs
+FULL_SCAN_*/
+*_SCAN_*/
+
+# Extracted/temporary
+files_extracted/
+chatgpt_extracted/
+*.zip
+*.tar.gz
+
+# Kiro/IDE installations (DO NOT COMMIT)
+tu huje/
+
+# Database files
+*.db
+*.sqlite3
+
+# Binary/large files
+*.bin
+*.npz
+
+# Credentials (NEVER commit)
+.env
+*.pem
+*.key
+credentials*.json
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+*.jsonl
+
+# Temporary
+tmp/
+temp/
+*.tmp
+nul
+
+# AIOrchestrator snapshots (large)
+AIOrchestrator/snapshots/
+AIOrchestrator/logs/
+
+# ChromaDB
+chroma/
+chroma_backup_*/

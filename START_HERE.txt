@@ -1,0 +1,145 @@
+═══════════════════════════════════════════════════════════════════
+  AIONS MASTER CONSOLIDATION - START HERE
+═══════════════════════════════════════════════════════════════════
+
+Masz 3 opcje uruchomienia:
+
+┌─────────────────────────────────────────────────────────────────┐
+│ OPCJA 1: SUPER SZYBKI START (POLECANA)                         │
+│ Czas: ~5 sekund                                                 │
+│ Tworzy: strukturę + symlinki (BEZ kopiowania plików)           │
+└─────────────────────────────────────────────────────────────────┘
+
+Otwórz PowerShell jako Administrator i wykonaj:
+
+    cd E:\
+    .\SUPER_QUICK_START.ps1
+
+To stworzy:
+  ✅ E:\AIONS_MASTER\ (struktura katalogów)
+  ✅ Symlinki do produkcji (Desktop)
+  ✅ Symlinki do plasters (zero duplikacji)
+
+Potem możesz od razu:
+  cd E:\AIONS_MASTER
+  dir .\production         # Twoja aktywna produkcja
+  dir .\plasters\200g      # Plasters (zero kopiowania!)
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│ OPCJA 2: QUICK START Z PYTANIEM                                │
+│ Czas: ~5 sekund + opcjonalnie 30-40 minut                      │
+│ Pyta czy chcesz skopiować pliki po stworzeniu struktury        │
+└─────────────────────────────────────────────────────────────────┘
+
+    cd E:\
+    .\QUICK_START_CONSOLIDATION.ps1
+
+To zrobi:
+  1. Strukturę + symlinki (5s)
+  2. Zapyta czy kopiować pliki
+  3. Jeśli powiesz TAK, skopiuje wszystko (~30-40 min)
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│ OPCJA 3: PEŁNA KONSOLIDACJA (wszystko od razu)                 │
+│ Czas: ~30-40 minut                                              │
+│ Kopiuje: 5 wersji AIONS + POLIPEK + MAIPA + recovery (~26GB)  │
+└─────────────────────────────────────────────────────────────────┘
+
+    cd E:\
+    .\AIONS_MASTER_EXECUTE.ps1
+
+To wykona wszystkie 7 faz automatycznie.
+
+
+═══════════════════════════════════════════════════════════════════
+  POLECENIE: Zacznij od OPCJI 1 (super szybki start)
+═══════════════════════════════════════════════════════════════════
+
+Dlaczego?
+  ✅ Zajmie tylko 5 sekund
+  ✅ Zero ryzyka (nie kopiuje plików)
+  ✅ Od razu zobaczysz strukturę
+  ✅ Będziesz mieć dostęp do produkcji i plasters
+  ✅ Później możesz dodać kopie jeśli zechcesz
+
+
+═══════════════════════════════════════════════════════════════════
+  KROK PO KROKU
+═══════════════════════════════════════════════════════════════════
+
+1. Uruchom PowerShell jako Administrator
+   (Prawy przycisk → "Uruchom jako Administrator")
+
+2. Przejdź na E:\
+   cd E:\
+
+3. Uruchom super quick start:
+   .\SUPER_QUICK_START.ps1
+
+4. Zobacz co powstało:
+   cd E:\AIONS_MASTER
+   dir
+
+5. Testuj dostęp:
+   dir .\production
+   dir .\plasters\200g
+
+
+═══════════════════════════════════════════════════════════════════
+  CO DOSTANIESZ PO OPCJI 1
+═══════════════════════════════════════════════════════════════════
+
+E:\AIONS_MASTER\
+├─ production/          [SYMLINK → Desktop] ← działa OD RAZU
+├─ plasters/
+│   ├─ 200g/           [SYMLINK] ← działa OD RAZU
+│   ├─ howto/          [SYMLINK] ← działa OD RAZU
+│   ├─ programming/    [SYMLINK] ← działa OD RAZU
+│   ├─ general/        [SYMLINK] ← działa OD RAZU
+│   └─ claude/         [SYMLINK] ← działa OD RAZU
+├─ versions/           (pusty, do wypełnienia później)
+├─ history/            (pusty, do wypełnienia później)
+├─ recovery/           (pusty, do wypełnienia później)
+├─ reports/            (pusty, do wypełnienia później)
+├─ config/             (pusty, do wypełnienia później)
+├─ scripts/            (pusty, do wypełnienia później)
+├─ docs/               (pusty, do wypełnienia później)
+└─ backups/            (pusty, do wypełnienia później)
+
+
+═══════════════════════════════════════════════════════════════════
+  JEŚLI CHCESZ DODAĆ KOPIE PÓŹNIEJ
+═══════════════════════════════════════════════════════════════════
+
+Po uruchomieniu OPCJI 1, możesz w dowolnym momencie dodać kopie:
+
+    cd E:\
+    .\AIONS_MASTER_EXECUTE.ps1 -SkipPhase1 -SkipPhase2
+
+To pominie tworzenie struktury (już istnieje) i od razu zacznie
+kopiować pliki (wersje, historia, recovery).
+
+
+═══════════════════════════════════════════════════════════════════
+  PLIKI NA E:\
+═══════════════════════════════════════════════════════════════════
+
+✅ SUPER_QUICK_START.ps1              ← ZACZNIJ TUTAJ (5 sekund)
+✅ QUICK_START_CONSOLIDATION.ps1      ← z pytaniem
+✅ AIONS_MASTER_EXECUTE.ps1           ← pełna konsolidacja (40 min)
+✅ AIONS_MASTER_INSTRUCTIONS.md       ← szczegółowa instrukcja
+✅ AIONS_MASTER_CONSOLIDATION_PLAN.md ← plan techniczny
+✅ AIONS_CONSOLIDATION_READY.md       ← podsumowanie
+✅ START_HERE.txt                     ← ten plik
+
+
+═══════════════════════════════════════════════════════════════════
+  GOTOWY? URUCHOM TO TERAZ:
+═══════════════════════════════════════════════════════════════════
+
+    cd E:\
+    .\SUPER_QUICK_START.ps1
+
+Zajmie to 5 sekund i będziesz miał dostęp do wszystkiego!

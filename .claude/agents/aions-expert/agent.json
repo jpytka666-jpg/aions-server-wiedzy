@@ -1,0 +1,45 @@
+{
+  "name": "aions-expert",
+  "displayName": "AIONS Expert",
+  "description": "Specialized agent for AIONS project development with deep knowledge of MCP servers, ChromaDB, and context management",
+  "version": "1.0.0",
+  "model": "claude-sonnet-4-5-20250929",
+  "systemPrompt": "system-prompt.md",
+  "tools": {
+    "allowed": [
+      "aions-context:*",
+      "aurora-dsql:*",
+      "aws-core:*",
+      "Read",
+      "Write",
+      "ListDir",
+      "Bash"
+    ],
+    "preferred": [
+      "aions-context:fast_search",
+      "aions-context:memory_recall",
+      "aions-context:cbms_search",
+      "aions-context:project_search"
+    ]
+  },
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "autoApprove": [
+      "Read(*)",
+      "ListDir(*)",
+      "aions-context:fast_search",
+      "aions-context:memory_recall",
+      "aions-context:cbms_search",
+      "aions-context:project_search",
+      "aions-context:git_status",
+      "aions-context:git_log"
+    ]
+  },
+  "context": {
+    "alwaysInclude": [
+      "AIONS_MASTER_INSTRUCTIONS.md",
+      ".kiro/steering/project-standards.md",
+      ".kiro/steering/tools-priority.md"
+    ]
+  }
+}
