@@ -83,7 +83,7 @@
       "command": "C:\\NONICA\\OtherFiles\\System\\Core\\net8.0-windows\\RevitMCPConnection.exe",
       "args": [],
       "env": {},
-      "disabled": false,
+      "disabled": true,
       "autoApprove": [
         "get_active_view_in_revit",
         "get_user_selection_in_revit",
