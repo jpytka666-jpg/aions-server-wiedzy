@@ -27,7 +27,8 @@
         "mcp_list",
         "conv_log",
         "conv_dump",
-        "browser_navigate"
+        "browser_navigate",
+        "memory_store"
       ]
     },
     "aurora-dsql": {
