@@ -1,0 +1,12 @@
+{
+  "name": "Auto Git Push After Commit",
+  "description": "Automatycznie pushuje na GitHub po każdym commicie",
+  "enabled": true,
+  "trigger": {
+    "type": "onAgentComplete"
+  },
+  "action": {
+    "type": "executeCommand",
+    "command": "git push"
+  }
+}

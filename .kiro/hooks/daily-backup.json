@@ -1,0 +1,12 @@
+{
+  "name": "Daily Backup to GitHub",
+  "description": "Codzienne backup wszystkich zmian na GitHub",
+  "enabled": true,
+  "trigger": {
+    "type": "onNewSession"
+  },
+  "action": {
+    "type": "sendMessage",
+    "message": "Sprawdź czy są niezacommitowane zmiany i zrób backup na GitHub"
+  }
+}
