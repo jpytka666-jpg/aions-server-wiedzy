@@ -50,14 +50,15 @@ git status
 - Zapytaj czy zrobić commit
 - Wykonaj auto commit jeśli user zgodzi się
 
-### 4. Sprawdź system health
+### 4. Sprawdź MCP servers status
 
 ```bash
-system_health()
+# Sprawdź czy MCP servers odpowiadają
+conv_status()  # Sprawdza AIONS Context
 ```
 
 **Sprawdź:**
-- Czy wszystkie MCP servers działają
+- Czy AIONS Context działa
 - Czy ChromaDB jest dostępna
 - Czy są błędy w logach
 
@@ -82,10 +83,10 @@ Gotowy do pracy! Kontynuujemy [ostatni temat] czy coś nowego?
 1. User: [otwiera Kiro IDE]
 
 2. Kiro automatycznie:
-   a) memory_recall() → szuka ostatniej sesji
-   b) conv_history() → sprawdza dzisiejsze rozmowy
-   c) git status → sprawdza zmiany
-   d) system_health() → sprawdza MCP servers
+   a) conv_status() → sprawdza AIONS Context
+   b) memory_recall() → szuka ostatniej sesji (jeśli Context działa)
+   c) conv_history() → sprawdza dzisiejsze rozmowy
+   d) git status → sprawdza zmiany
    e) Pokazuje podsumowanie
 
 3. Kiro: "Witaj! Ostatnio pracowaliśmy nad [X]. Kontynuujemy?"
