@@ -9,6 +9,8 @@
         "CHROMA_PATH": "E:/server wiedzy/data/chroma",
         "PYTHONPATH": "E:/server wiedzy;E:/server wiedzy/server"
       },
+      "disabled": false,
+      "startupDelay": 0,
       "autoApprove": [
         "fast_search",
         "fast_search_ext",
@@ -22,12 +24,10 @@
         "memory_recall",
         "session_list",
         "cbms_search",
-        "system_health",
         "mcp_find",
         "mcp_list",
         "conv_log",
         "conv_dump",
-        "browser_navigate",
         "memory_store"
       ]
     },
@@ -57,6 +57,7 @@
         "WSLENV": "AWS_PROFILE"
       },
       "disabled": false,
+      "startupDelay": 2000,
       "autoApprove": [
         "query",
         "execute",
@@ -66,32 +67,98 @@
         "transact"
       ]
     },
-    "aws-core": {
+    "stripe": {
       "command": "uvx",
       "args": [
-        "awslabs.core-mcp-server@latest"
+        "mcp-server-stripe@latest"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": true,
+      "startupDelay": 4000,
+      "autoApprove": []
+    },
+    "aws-knowledge-mcp-server": {
+      "command": "uvx",
+      "args": [
+        "awslabs.aws-knowledge-mcp-server@latest"
       ],
       "env": {
         "FASTMCP_LOG_LEVEL": "ERROR"
       },
       "disabled": false,
+      "startupDelay": 3000,
       "autoApprove": [
-        "prompt_understanding"
+        "aws___search_documentation",
+        "aws___read_documentation",
+        "aws___get_regional_availability",
+        "aws___list_regions",
+        "aws___recommend"
       ]
+    },
+    "awslabs-dynamodb": {
+      "command": "uvx",
+      "args": [
+        "awslabs.dynamodb-mcp-server@latest"
+      ],
+      "env": {
+        "AWS_PROFILE": "125140434314",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": true,
+      "startupDelay": 5000,
+      "autoApprove": []
+    },
+    "awslabs-serverless": {
+      "command": "uvx",
+      "args": [
+        "awslabs.aws-serverless-mcp@latest"
+      ],
+      "env": {
+        "AWS_PROFILE": "125140434314",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": true,
+      "startupDelay": 6000,
+      "autoApprove": []
+    },
+    "fetch": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-fetch@latest"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false,
+      "startupDelay": 1000,
+      "autoApprove": [
+        "fetch"
+      ]
+    },
+    "playwright": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-playwright@latest"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": true,
+      "startupDelay": 7000,
+      "autoApprove": []
     },
     "nonicatab-revit": {
       "command": "C:\\NONICA\\OtherFiles\\System\\Core\\net8.0-windows\\RevitMCPConnection.exe",
       "args": [],
       "env": {},
       "disabled": true,
+      "startupDelay": 0,
       "autoApprove": [
         "get_active_view_in_revit",
         "get_user_selection_in_revit",
-        "get_model_categories",
-        "get_elements_by_category",
-        "get_all_elements_shown_in_view",
-        "create_tool_names_explorer",
-        "create_tool_arguments_explorer"
+        "get_model_categories"
       ]
     }
   }

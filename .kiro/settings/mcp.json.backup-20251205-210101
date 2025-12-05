@@ -1,0 +1,150 @@
+{
+  "mcpServers": {
+    "aions-context": {
+      "command": "E:/server wiedzy/venv/Scripts/python.exe",
+      "args": [
+        "E:/server wiedzy/mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+      ],
+      "env": {
+        "CHROMA_PATH": "E:/server wiedzy/data/chroma",
+        "PYTHONPATH": "E:/server wiedzy;E:/server wiedzy/server"
+      },
+      "autoApprove": [
+        "fast_search",
+        "fast_search_ext",
+        "git_status",
+        "git_log",
+        "project_scan_status",
+        "project_scan_results",
+        "project_search",
+        "conv_status",
+        "conv_history",
+        "memory_recall",
+        "session_list",
+        "cbms_search",
+        "system_health",
+        "mcp_find",
+        "mcp_list",
+        "conv_log",
+        "conv_dump",
+        "browser_navigate",
+        "memory_store"
+      ]
+    },
+    "aurora-dsql": {
+      "command": "C:\\Windows\\System32\\wsl.exe",
+      "args": [
+        "-d",
+        "Ubuntu",
+        "--",
+        "/root/.local/bin/uvx",
+        "--from",
+        "awslabs.aurora-dsql-mcp-server",
+        "awslabs.aurora-dsql-mcp-server",
+        "--cluster_endpoint",
+        "q5tlv2ufq7sws5d5pyhth2m4sa.dsql.eu-west-2.on.aws",
+        "--database_user",
+        "admin",
+        "--region",
+        "eu-west-2",
+        "--profile",
+        "125140434314",
+        "--allow-writes"
+      ],
+      "env": {
+        "AWS_PROFILE": "125140434314",
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "WSLENV": "AWS_PROFILE"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "query",
+        "execute",
+        "list_tables",
+        "describe_table",
+        "readonly_query",
+        "transact"
+      ]
+    },
+    "aws-core": {
+      "command": "uvx",
+      "args": [
+        "awslabs.core-mcp-server@latest"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "prompt_understanding"
+      ]
+    },
+    "nonicatab-revit": {
+      "command": "C:\\NONICA\\OtherFiles\\System\\Core\\net8.0-windows\\RevitMCPConnection.exe",
+      "args": [],
+      "env": {},
+      "disabled": true,
+      "autoApprove": [
+        "get_active_view_in_revit",
+        "get_user_selection_in_revit",
+        "get_model_categories",
+        "get_elements_by_category",
+        "get_all_elements_shown_in_view",
+        "create_tool_names_explorer",
+        "create_tool_arguments_explorer"
+      ],
+      "disabledTools": [
+        "get_category_by_keyword",
+        "set_copy_view_filters",
+        "get_schedules_info_and_columns",
+        "get_all_additional_properties_from_elementid",
+        "get_graphic_overrides_for_element_ids_in_view",
+        "get_all_elements_of_specific_families",
+        "get_material_layers_from_types",
+        "create_tool_arguments_explorer",
+        "set_user_selection_in_revit",
+        "set_graphic_overrides_for_elements_in_view",
+        "set_revisions_on_sheets",
+        "get_viewports_and_schedules_on_sheets",
+        "get_additional_property_for_all_elementids",
+        "get_all_used_types_of_families",
+        "get_elements_by_category",
+        "get_categories_from_elementids",
+        "set_isolated_elements_in_view",
+        "set_copy_elements",
+        "get_all_used_families_in_model",
+        "get_boundary_lines",
+        "set_movement_for_elements",
+        "get_parameter_value_for_element_ids",
+        "get_worksets_from_elementids",
+        "set_delete_elements",
+        "get_document_switched",
+        "get_all_workset_information",
+        "get_if_elements_pass_filter",
+        "get_location_for_element_ids",
+        "get_all_elements_shown_in_view",
+        "get_size_in_mb_of_families",
+        "get_object_classes_from_elementids",
+        "create_tool_names_explorer",
+        "get_parameters_from_elementid",
+        "get_boundingboxes_for_element_ids",
+        "set_parameter_value_for_elements",
+        "get_graphic_overrides_view_filters",
+        "get_element_types_for_elementids",
+        "get_all_warnings_in_the_model",
+        "set_additional_property_for_all_elements",
+        "get_active_view_in_revit",
+        "get_all_project_units",
+        "create_tools_invoker",
+        "get_model_categories",
+        "set_rotation_for_elements",
+        "get_user_selection_in_revit",
+        "get_host_id_for_element_ids",
+        "get_all_elementids_for_specific_type_ids",
+        "get_all_used_families_of_category",
+        "get_graphic_filters_applied_to_views",
+        "get_worksharing_information_for_element_ids"
+      ]
+    }
+  }
+}
