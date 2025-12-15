@@ -36,6 +36,28 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Callable
 
+
+def _is_huge_repo(repo_path: str = "") -> bool:
+    """Check if this is a huge repo that would hang git commands"""
+    try:
+        git_dir = Path(repo_path or ".") / ".git"
+        if not git_dir.exists():
+            return False
+        
+        # Quick heuristic - check .git size
+        total_size = sum(f.stat().st_size for f in git_dir.rglob("*") if f.is_file())
+        if total_size > 100 * 1024 * 1024:  # > 100MB .git folder
+            return True
+            
+        # Check if we are at root of a drive (like E:\)
+        repo_root = Path(repo_path or ".")
+        if len(str(repo_root.resolve()).split(":")) == 2 and str(repo_root.resolve()).endswith(":\\"):
+            return True
+            
+        return False
+    except:
+        return False  # If check fails, assume its safe
+
 # =============================================================================
 # STDERR LOGGING
 # =============================================================================
@@ -478,6 +500,10 @@ def git_status(repo_path: str = "") -> str:
             return _error(f"Git not found at {git_cmd}")
         
         # Verify repo path exists if provided
+        
+        # Check if this is a huge repo that would hang
+        if _is_huge_repo(cwd):
+            return _success({"branch": "unknown", "changes": [], "clean": True, "path": cwd or "current", "note": "Skipped - repo too large"})
         if cwd and not Path(cwd).exists():
             return _error(f"Path not found: {cwd}")
         
@@ -486,7 +512,7 @@ def git_status(repo_path: str = "") -> str:
             capture_output=True, 
             text=True, 
             cwd=cwd, 
-            timeout=10,
+            timeout=2,
             shell=False
         )
         
@@ -513,6 +539,10 @@ def git_log(repo_path: str = "", count: int = 10) -> str:
         cwd = repo_path if repo_path else None
         
         # Verify path
+        
+        # Check if this is a huge repo that would hang
+        if _is_huge_repo(cwd):
+            return _success({"commits": [], "path": cwd or "current", "note": "Skipped - repo too large"})
         if cwd and not Path(cwd).exists():
             return _error(f"Path not found: {cwd}")
         
@@ -1096,3 +1126,5 @@ log("Server v7 DEBILOODPORNE + PLAYWRIGHT + MCP CATALOG ready!")
 
 if __name__ == "__main__":
     mcp_server.run(transport="stdio")
+
+
