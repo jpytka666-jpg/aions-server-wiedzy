@@ -72,7 +72,7 @@ log("Server v6 loading (DEBILOODPORNE)...")
 # =============================================================================
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-AIONS_V10 = Path("D:/AIONS-INTEGRATION/aions_core")
+AIONS_V10 = Path("C:/Users/User/OneDrive - Global Banking School/Desktop/AIONS_CBMS_RELEASE_V3")
 DUMPS_DIR = REPO_ROOT / "logs" / "conversation_dumps"
 SCAN_RESULTS_DIR = REPO_ROOT / "scan_results"
 SCANNER_SCRIPT = REPO_ROOT / "scripts" / "project_scanner.py"

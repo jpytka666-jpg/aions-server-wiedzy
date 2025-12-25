@@ -25,7 +25,7 @@ from .models import (
     PruneResponse,
     DashboardSummary,
 )
-from .store import VectorStore
+from .store_selector import VectorStore, get_connection_mode
 
 app = FastAPI(title="AIONS Knowledge Server", version="0.1.0")
 app.add_middleware(
@@ -41,6 +41,16 @@ store = VectorStore(persist_path=os.environ.get("CHROMA_PATH"))
 @app.get("/health", response_model=HealthResponse)
 def health():
     return HealthResponse(status="ok", sessions=store.sessions_count())
+
+@app.get("/status")
+def status():
+    """Extended status with connection mode info."""
+    return {
+        "status": "ok",
+        "sessions": store.sessions_count(),
+        "connection_mode": get_connection_mode(),
+        "chromadb_mode": "http" if get_connection_mode() == "http" else "embedded",
+    }
 
 @app.post("/contexts")
 def add_context(batch: ContextBatch):
