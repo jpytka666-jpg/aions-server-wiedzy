@@ -1,0 +1,17 @@
+[Unit]
+Description=AIONS localhost API control plane (WSL/dev)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h
+EnvironmentFile=%h/aions/config/aions-runtime.env
+ExecStart=%h/aions/bin/start_aions_api.sh
+Restart=on-failure
+RestartSec=10
+StandardInput=null
+StandardOutput=append:%h/aions/logs/api.log
+StandardError=append:%h/aions/logs/api.log
+
+[Install]
+WantedBy=default.target

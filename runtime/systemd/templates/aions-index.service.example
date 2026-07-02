@@ -1,0 +1,12 @@
+[Unit]
+Description=AIONS inventory/index refresh job (template)
+After=default.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/mnt/e/aions-repo
+EnvironmentFile=%h/aions/config/aions-runtime.env
+# AIONS-owned Linux index refresh. Heavy full_system_scan stays separate/manual.
+ExecStart=/usr/bin/env bash -lc '"${AIONS_REPO}/scripts/aions_python.sh" "${AIONS_REPO}/scripts/aions_indexer.py" refresh'
+StandardOutput=append:%h/aions/logs/index.log
+StandardError=append:%h/aions/logs/index.log

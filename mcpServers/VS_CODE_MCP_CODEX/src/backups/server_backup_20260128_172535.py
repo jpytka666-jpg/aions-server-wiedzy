@@ -68,28 +68,48 @@ def log(msg: str):
 log("Server v6 loading (DEBILOODPORNE)...")
 
 # =============================================================================
-# PATH SETUP
+# PATH SETUP - AUTO-DISCOVERY (env vars -> common locations -> PATH)
 # =============================================================================
 
+def _find_dir(env_var: str, candidates: list) -> Optional[Path]:
+    """Find directory from env var or candidate locations."""
+    if os.environ.get(env_var):
+        p = Path(os.environ[env_var])
+        if p.exists(): return p
+    for c in candidates:
+        p = Path(c) if isinstance(c, str) else c
+        if p.exists(): return p
+    return None
+
+def _find_exe(name: str, extra: list = None) -> str:
+    """Find executable: PATH first, then extra locations."""
+    found = shutil.which(name)
+    if found: return found
+    for p in (extra or []):
+        if Path(p).exists(): return p
+    return name
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
-AIONS_V10 = Path("C:/Users/User/OneDrive - Global Banking School/Desktop/AIONS_CBMS_RELEASE_V3")
 DUMPS_DIR = REPO_ROOT / "logs" / "conversation_dumps"
 SCAN_RESULTS_DIR = REPO_ROOT / "scan_results"
 SCANNER_SCRIPT = REPO_ROOT / "scripts" / "project_scanner.py"
 TURBO_SCANNER_SCRIPT = REPO_ROOT / "scripts" / "turbo_scanner.py"
 PYTHON_EXE = REPO_ROOT / "venv" / "Scripts" / "python.exe"
 
-EVERYTHING_CLI = Path("C:/Program Files/Everything/es.exe")
-DOCKER_EXE = shutil.which("docker") or "docker"
-WSL_EXE = shutil.which("wsl") or "wsl"
-# Git - use full path to avoid issues
-GIT_EXE = Path("C:/Program Files/Git/bin/git.exe")
-if not GIT_EXE.exists():
-    GIT_EXE = shutil.which("git") or "git"
-else:
-    GIT_EXE = str(GIT_EXE)
-GH_EXE = shutil.which("gh") or "gh"
-NMAP_EXE = Path("C:/Program Files (x86)/Nmap/nmap.exe")
+# AIONS - AIONS_PATH env var, then common locations
+AIONS_V10 = _find_dir("AIONS_PATH", [
+    "D:/AIONS-INTEGRATION/aions_core",
+    "E:/AIONS-INTEGRATION/aions_core",
+    Path.home() / "AIONS-INTEGRATION/aions_core"
+])
+
+# Tools - PATH first, then common locations  
+EVERYTHING_CLI = Path(_find_exe("es", ["C:/Program Files/Everything/es.exe"]))
+DOCKER_EXE = _find_exe("docker")
+WSL_EXE = _find_exe("wsl")
+GIT_EXE = _find_exe("git", ["C:/Program Files/Git/bin/git.exe"])
+GH_EXE = _find_exe("gh")
+NMAP_EXE = _find_exe("nmap", ["C:/Program Files (x86)/Nmap/nmap.exe"])
 
 DUMPS_DIR.mkdir(parents=True, exist_ok=True)
 SCAN_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -121,8 +141,34 @@ def _now_iso() -> str:
 def _today_str() -> str:
     return datetime.now().strftime("%Y-%m-%d")
 
-def _success(payload: Dict[str, Any]) -> str:
-    return json.dumps({"status": "ok", "timestamp": _now_iso(), **payload}, ensure_ascii=False)
+# CONTEXT GUARD - compress large responses to save Claude context window
+CONTEXT_GUARD_THRESHOLD = 800  # chars threshold
+_offload_cache = {}  # {ref_id: full_json}
+
+def _success(payload: Dict[str, Any], guard: bool = True) -> str:
+    """Success response with optional context guard for large payloads."""
+    result = {"status": "ok", "timestamp": _now_iso(), **payload}
+    result_json = json.dumps(result, ensure_ascii=False)
+
+    # Context guard: compress if too large
+    if guard and len(result_json) > CONTEXT_GUARD_THRESHOLD:
+        ref_id = f"OFF_{str(uuid.uuid4())[:8]}"
+        _offload_cache[ref_id] = result_json
+
+        # Build summary
+        summary_parts = []
+        for k, v in list(payload.items())[:4]:
+            if isinstance(v, str): summary_parts.append(f"{k}:{len(v)}ch")
+            elif isinstance(v, list): summary_parts.append(f"{k}:{len(v)}items")
+            elif isinstance(v, dict): summary_parts.append(f"{k}:{len(v)}keys")
+
+        return json.dumps({
+            "status": "ok", "timestamp": _now_iso(),
+            "offloaded": ref_id, "size": len(result_json),
+            "summary": ", ".join(summary_parts) if summary_parts else "large payload"
+        }, ensure_ascii=False)
+
+    return result_json
 
 def _error(message: str) -> str:
     return json.dumps({"status": "error", "message": message, "timestamp": _now_iso()}, ensure_ascii=False)
@@ -850,6 +896,28 @@ def cbms_search(query: str) -> str:
     except Exception as e:
         return _error(str(e))
 
+@mcp_server.tool(name="cbms_get_chunk", description="Get full CBMS chunk by ID. Returns complete content, references, metadata.")
+@auto_logged
+def cbms_get_chunk(chunk_id: str) -> str:
+    try:
+        cbms = get_cbms()
+        if not cbms:
+            return _error("CBMS not available")
+        chunk = cbms.retrieve_chunk(chunk_id)
+        if not chunk:
+            return _error(f"Chunk '{chunk_id}' not found")
+        return _success({
+            "id": chunk.get("id", chunk_id),
+            "concept": chunk.get("concept", ""),
+            "content": chunk.get("content", ""),
+            "references": chunk.get("references", []),
+            "access_count": chunk.get("access_count", 0),
+            "last_accessed": chunk.get("last_accessed"),
+            "size": chunk.get("size", len(chunk.get("content", "")))
+        })
+    except Exception as e:
+        return _error(str(e))
+
 # =============================================================================
 # SYSTEM HEALTH (AUTO-LOGGED)
 # =============================================================================
@@ -1154,6 +1222,13 @@ _warmup_thread = threading.Thread(target=_warmup, daemon=True)
 _warmup_thread.start()
 
 log("Server v8 DEBILOODPORNE + PRELOAD ready!")
+
+
+@mcp_server.tool(name="offload_get", description="Retrieve full content from offloaded response by ref_id (OFF_xxx).")
+def offload_get(ref_id: str) -> str:
+    if ref_id in _offload_cache:
+        return _offload_cache[ref_id]  # Return raw, no re-guard
+    return _error(f"Offload '{ref_id}' not found or expired")
 
 if __name__ == "__main__":
     mcp_server.run(transport="stdio")

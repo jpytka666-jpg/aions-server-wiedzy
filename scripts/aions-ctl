@@ -1,0 +1,502 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+_resolve_script_dir() {
+  local src="${BASH_SOURCE[1]:-${BASH_SOURCE[0]}}"
+  while [[ -L "${src}" ]]; do
+    local link_dir
+    link_dir="$(cd "$(dirname "${src}")" && pwd)"
+    src="$(readlink "${src}")"
+    [[ "${src}" != /* ]] && src="${link_dir}/${src}"
+  done
+  cd "$(dirname "${src}")" && pwd
+}
+SCRIPT_DIR="$(_resolve_script_dir)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+UNIT_SOURCE_DIR="${REPO_ROOT}/runtime/systemd/user"
+UNIT_TARGET_DIR="${HOME}/.config/systemd/user"
+MCP_UNIT="aions-mcp.service"
+API_UNIT="aions-api.service"
+HEALTH_SERVICE_UNIT="aions-health.service"
+HEALTH_TIMER_UNIT="aions-health.timer"
+LOG_DIR="${HOME}/aions/logs"
+RUNTIME_BIN="${HOME}/aions/bin"
+RUNTIME_CONFIG_DIR="${HOME}/aions/config"
+RUNTIME_ENV_FILE="${RUNTIME_CONFIG_DIR}/aions-runtime.env"
+MCP_ENV_FILE="${RUNTIME_CONFIG_DIR}/aions-mcp.env"
+AIONS_REPO_SYMLINK="/mnt/e/aions-repo"
+AIONS_REPO_TARGET="/mnt/e/server wiedzy"
+AIONS_DEV_ROOT="/mnt/d/AIONS_DEV"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  aions-ctl install
+  aions-ctl uninstall
+  aions-ctl up
+  aions-ctl down
+  aions-ctl start [health|mcp|api]
+  aions-ctl stop [health|mcp|api]
+  aions-ctl restart [health|mcp|api|all]
+  aions-ctl status [health|mcp|api|all]
+  aions-ctl logs [health|mcp|api|all]
+  aions-ctl enable [health]
+  aions-ctl disable [health]
+  aions-ctl run-health
+  aions-ctl list
+
+  aions-ctl mcp-install    # kopiuje aions-mcp.service (bez enable/start)
+  aions-ctl mcp-start      # start po health gate (verify_python_env)
+  aions-ctl mcp-stop
+  aions-ctl mcp-status
+  aions-ctl mcp-logs
+
+  aions-ctl api-install    # kopiuje aions-api.service + runtime env
+  aions-ctl api-start
+  aions-ctl api-stop
+  aions-ctl api-status
+  aions-ctl api-logs
+
+  aions-ctl index-refresh
+  aions-ctl index-status
+
+Managed targets (systemd user):
+  health   aions-health.service + aions-health.timer
+  mcp      aions-mcp.service
+  api      aions-api.service (localhost control plane, opcjonalny backend MCP)
+
+Milestone A runtime:
+  aions-ctl up      # install + enable health timer + api + mcp
+  aions-ctl down    # stop api + mcp + disable health timer
+  aions-ctl status  # zbiorczy status całego runtime
+  aions-ctl logs    # logi health + api + mcp
+
+Windows MCP (start_aions_mcp.bat) — bez zmian, nie dotykaj prod.
+EOF
+}
+
+service_for() {
+  case "${1:-health}" in
+    health) echo "${HEALTH_SERVICE_UNIT}" ;;
+    mcp) echo "${MCP_UNIT}" ;;
+    api) echo "${API_UNIT}" ;;
+    *) echo "Unknown target: $1" >&2; exit 1 ;;
+  esac
+}
+
+timer_for() {
+  case "${1:-health}" in
+    health) echo "${HEALTH_TIMER_UNIT}" ;;
+    mcp|api) echo "" ;;
+    *) echo "Unknown target: $1" >&2; exit 1 ;;
+  esac
+}
+
+require_systemd_user() {
+  systemctl --user show-environment >/dev/null
+}
+
+resolve_repo_for_systemd() {
+  if [[ -L "${AIONS_REPO_SYMLINK}" ]]; then
+    echo "${AIONS_REPO_SYMLINK}"
+  else
+    echo "${REPO_ROOT}"
+  fi
+}
+
+ensure_aions_repo_symlink() {
+  if [[ -L "${AIONS_REPO_SYMLINK}" ]]; then
+    return 0
+  fi
+  if [[ -e "${AIONS_REPO_SYMLINK}" ]]; then
+    echo "[AIONS] ${AIONS_REPO_SYMLINK} istnieje i nie jest symlinkiem" >&2
+    return 1
+  fi
+  if [[ ! -d "${AIONS_REPO_TARGET}" ]]; then
+    echo "[AIONS] Brak ${AIONS_REPO_TARGET} — pomijam symlink (używam REPO_ROOT)" >&2
+    return 0
+  fi
+  ln -s "${AIONS_REPO_TARGET}" "${AIONS_REPO_SYMLINK}"
+  echo "[AIONS] Symlink: ${AIONS_REPO_SYMLINK} -> ${AIONS_REPO_TARGET}"
+}
+
+install_runtime_binaries() {
+  local repo_path
+  repo_path="$(resolve_repo_for_systemd)"
+  mkdir -p "${RUNTIME_BIN}" "${RUNTIME_CONFIG_DIR}" "${LOG_DIR}" "${HOME}/aions/state/search"
+  cp "${REPO_ROOT}/runtime/scripts/start_aions_mcp.sh" "${RUNTIME_BIN}/start_aions_mcp.sh"
+  cp "${REPO_ROOT}/runtime/scripts/start_aions_api.sh" "${RUNTIME_BIN}/start_aions_api.sh"
+  cp "${REPO_ROOT}/runtime/scripts/aions_run_health.sh" "${RUNTIME_BIN}/aions_run_health.sh"
+  chmod +x "${RUNTIME_BIN}/start_aions_mcp.sh" "${RUNTIME_BIN}/start_aions_api.sh" "${RUNTIME_BIN}/aions_run_health.sh"
+  echo "[AIONS] Runtime binaries -> ${RUNTIME_BIN} (repo=${repo_path})"
+}
+
+setup_runtime_env() {
+  local repo_path
+  repo_path="$(resolve_repo_for_systemd)"
+  install_runtime_binaries
+  sed -e "s|@HOME@|${HOME}|g" \
+      -e "s|^AIONS_REPO=.*|AIONS_REPO=${repo_path}|" \
+    "${UNIT_SOURCE_DIR}/aions-runtime.env" > "${RUNTIME_ENV_FILE}"
+  sed -e "s|@HOME@|${HOME}|g" \
+      -e "s|^AIONS_REPO=.*|AIONS_REPO=${repo_path}|" \
+    "${UNIT_SOURCE_DIR}/aions-mcp.env" > "${MCP_ENV_FILE}"
+}
+
+copy_health_units() {
+  setup_runtime_env
+  mkdir -p "${UNIT_TARGET_DIR}"
+  cp "${UNIT_SOURCE_DIR}/${HEALTH_SERVICE_UNIT}" "${UNIT_TARGET_DIR}/"
+  cp "${UNIT_SOURCE_DIR}/${HEALTH_TIMER_UNIT}" "${UNIT_TARGET_DIR}/"
+  systemctl --user daemon-reload
+}
+
+setup_mcp_runtime() {
+  ensure_aions_repo_symlink
+  setup_runtime_env
+}
+
+copy_mcp_unit() {
+  setup_mcp_runtime
+  mkdir -p "${UNIT_TARGET_DIR}"
+  cp "${UNIT_SOURCE_DIR}/${MCP_UNIT}" "${UNIT_TARGET_DIR}/"
+  systemctl --user daemon-reload
+}
+
+copy_api_unit() {
+  setup_runtime_env
+  mkdir -p "${UNIT_TARGET_DIR}"
+  cp "${UNIT_SOURCE_DIR}/${API_UNIT}" "${UNIT_TARGET_DIR}/"
+  systemctl --user daemon-reload
+}
+
+remove_units() {
+  rm -f \
+    "${UNIT_TARGET_DIR}/${HEALTH_SERVICE_UNIT}" \
+    "${UNIT_TARGET_DIR}/${HEALTH_TIMER_UNIT}" \
+    "${UNIT_TARGET_DIR}/${MCP_UNIT}" \
+    "${UNIT_TARGET_DIR}/${API_UNIT}"
+  systemctl --user daemon-reload
+}
+
+print_runtime_services() {
+  cat <<EOF
+health-timer:${HEALTH_TIMER_UNIT}
+health-service:${HEALTH_SERVICE_UNIT}
+api:${API_UNIT}
+mcp:${MCP_UNIT}
+EOF
+}
+
+unit_enabled_state() {
+  local unit="$1"
+  systemctl --user is-enabled "${unit}" 2>/dev/null || true
+}
+
+unit_active_state() {
+  local unit="$1"
+  systemctl --user is-active "${unit}" 2>/dev/null || true
+}
+
+unit_sub_state() {
+  local unit="$1"
+  systemctl --user show "${unit}" --property=SubState --value 2>/dev/null || true
+}
+
+print_unit_row() {
+  local label="$1"
+  local unit="$2"
+  printf '%-16s %-22s enabled=%-10s active=%-10s sub=%s\n' \
+    "${label}" \
+    "${unit}" \
+    "$(unit_enabled_state "${unit}")" \
+    "$(unit_active_state "${unit}")" \
+    "$(unit_sub_state "${unit}")"
+}
+
+runtime_install() {
+  require_systemd_user
+  copy_health_units
+  copy_mcp_unit
+  copy_api_unit
+}
+
+health_gate() {
+  if ! "${REPO_ROOT}/scripts/aions_python.sh" "${REPO_ROOT}/scripts/verify_python_env.py" >/dev/null 2>&1; then
+    echo "[AIONS] Health gate failed: uruchom 'aions-ctl run-health' i napraw venv/Python" >&2
+    return 1
+  fi
+}
+
+runtime_up() {
+  runtime_install
+  systemctl --user enable --now "${HEALTH_TIMER_UNIT}"
+  export CHROMA_PATH="${CHROMA_PATH:-${AIONS_DEV_ROOT}/data/chroma}"
+  export AIONS_PATH="${AIONS_PATH:-/mnt/d/AIONS-INTEGRATION/aions_core}"
+  export AIONS_API_BASE_URL="${AIONS_API_BASE_URL:-http://127.0.0.1:8765}"
+  export AIONS_SEARCH_INDEX_PATH="${AIONS_SEARCH_INDEX_PATH:-${HOME}/aions/state/search/aions_search_index.json}"
+  if [[ ! -f "${AIONS_SEARCH_INDEX_PATH}" ]]; then
+    echo "[AIONS] Brak indeksu search — pierwszy refresh..."
+    index_refresh || echo "[AIONS] index-refresh warn (kontynuuję)" >&2
+  fi
+  api_start || echo "[AIONS] API start skipped or failed (optional backend)" >&2
+  "${REPO_ROOT}/scripts/aions_healthcheck.sh"
+  mcp_start
+  echo "[AIONS] Runtime UP: health-timer + api + mcp"
+}
+
+runtime_down() {
+  require_systemd_user
+  systemctl --user stop "${MCP_UNIT}" 2>/dev/null || true
+  systemctl --user stop "${API_UNIT}" 2>/dev/null || true
+  systemctl --user disable --now "${HEALTH_TIMER_UNIT}" >/dev/null 2>&1 || true
+  echo "[AIONS] Runtime DOWN: api + mcp stopped, health timer disabled"
+}
+
+runtime_status() {
+  require_systemd_user
+  cat <<EOF
+AIONS runtime (Milestone A — Linux dev)
+repo=${REPO_ROOT}
+log_dir=${LOG_DIR}
+runtime_env=${RUNTIME_ENV_FILE}
+EOF
+  print_unit_row "health-timer" "${HEALTH_TIMER_UNIT}"
+  print_unit_row "health-service" "${HEALTH_SERVICE_UNIT}"
+  print_unit_row "api" "${API_UNIT}"
+  print_unit_row "mcp" "${MCP_UNIT}"
+}
+
+show_health_logs() {
+  if [[ -f "${LOG_DIR}/health.log" ]]; then
+    echo "== health.log =="
+    tail -n 80 "${LOG_DIR}/health.log"
+  else
+    journalctl --user -u "${HEALTH_SERVICE_UNIT}" --no-pager -n 50 || true
+  fi
+}
+
+show_api_logs() {
+  if [[ -f "${LOG_DIR}/api.log" ]]; then
+    echo "== api.log =="
+    tail -n 80 "${LOG_DIR}/api.log"
+  else
+    journalctl --user -u "${API_UNIT}" --no-pager -n 50 || true
+  fi
+}
+
+show_mcp_logs() {
+  if [[ -f "${LOG_DIR}/mcp.log" ]]; then
+    echo "== mcp.log =="
+    tail -n 80 "${LOG_DIR}/mcp.log"
+  else
+    journalctl --user -u "${MCP_UNIT}" --no-pager -n 50 || true
+  fi
+}
+
+runtime_logs() {
+  case "${1:-all}" in
+    health) show_health_logs ;;
+    api) show_api_logs ;;
+    mcp) show_mcp_logs ;;
+    all)
+      show_health_logs
+      echo
+      show_api_logs
+      echo
+      show_mcp_logs
+      ;;
+    *)
+      echo "Unknown log target: $1" >&2
+      exit 1
+      ;;
+  esac
+}
+
+mcp_install() {
+  require_systemd_user
+  copy_mcp_unit
+  echo "[AIONS] Zainstalowano ${MCP_UNIT} do ${UNIT_TARGET_DIR}"
+  echo "[AIONS] Po 'run-health' OK: aions-ctl mcp-start"
+}
+
+mcp_start() {
+  require_systemd_user
+  health_gate
+  if [[ ! -f "${UNIT_TARGET_DIR}/${MCP_UNIT}" ]]; then
+    echo "[AIONS] Brak unit — najpierw: aions-ctl mcp-install" >&2
+    exit 1
+  fi
+  systemctl --user start "${MCP_UNIT}"
+  echo "[AIONS] MCP started — logi: ~/aions/logs/mcp.log"
+}
+
+mcp_stop() {
+  require_systemd_user
+  systemctl --user stop "${MCP_UNIT}" 2>/dev/null || true
+}
+
+mcp_status() {
+  require_systemd_user
+  systemctl --user status --no-pager "${MCP_UNIT}" || true
+}
+
+mcp_logs() {
+  require_systemd_user
+  journalctl --user -u "${MCP_UNIT}" --no-pager -n 100
+}
+
+api_install() {
+  require_systemd_user
+  copy_api_unit
+  echo "[AIONS] Zainstalowano ${API_UNIT} do ${UNIT_TARGET_DIR}"
+  echo "[AIONS] Start: aions-ctl api-start (po run-health OK)"
+}
+
+api_start() {
+  require_systemd_user
+  health_gate
+  if [[ ! -f "${UNIT_TARGET_DIR}/${API_UNIT}" ]]; then
+    copy_api_unit
+  fi
+  systemctl --user start "${API_UNIT}"
+  local port="${AIONS_API_PORT:-8765}"
+  local url="http://127.0.0.1:${port}/health"
+  local i
+  for i in $(seq 1 15); do
+    if curl -sf --max-time 2 "${url}" >/dev/null 2>&1; then
+      echo "[AIONS] API started — ${url} OK"
+      return 0
+    fi
+    sleep 1
+  done
+  echo "[AIONS] API unit started — health probe timeout, sprawdź: aions-ctl api-logs" >&2
+  return 1
+}
+
+api_stop() {
+  require_systemd_user
+  systemctl --user stop "${API_UNIT}" 2>/dev/null || true
+}
+
+api_status() {
+  require_systemd_user
+  systemctl --user status --no-pager "${API_UNIT}" || true
+}
+
+api_logs() {
+  require_systemd_user
+  if [[ -f "${LOG_DIR}/api.log" ]]; then
+    tail -n 100 "${LOG_DIR}/api.log"
+  else
+    journalctl --user -u "${API_UNIT}" --no-pager -n 100
+  fi
+}
+
+index_refresh() {
+  export AIONS_SEARCH_INDEX_PATH="${AIONS_SEARCH_INDEX_PATH:-${HOME}/aions/state/search/aions_search_index.json}"
+  "${REPO_ROOT}/scripts/aions_python.sh" "${REPO_ROOT}/scripts/aions_indexer.py" refresh
+}
+
+index_status() {
+  export AIONS_SEARCH_INDEX_PATH="${AIONS_SEARCH_INDEX_PATH:-${HOME}/aions/state/search/aions_search_index.json}"
+  "${REPO_ROOT}/scripts/aions_python.sh" "${REPO_ROOT}/scripts/aions_indexer.py" status
+}
+
+CMD="${1:-status}"
+RAW_TARGET="${2:-}"
+TARGET="${RAW_TARGET:-health}"
+
+case "${CMD}" in
+  install)
+    runtime_install
+    echo "[AIONS] Installed user units to ${UNIT_TARGET_DIR}"
+    ;;
+  uninstall)
+    require_systemd_user
+    systemctl --user disable --now "${HEALTH_TIMER_UNIT}" >/dev/null 2>&1 || true
+    systemctl --user stop "${MCP_UNIT}" "${API_UNIT}" >/dev/null 2>&1 || true
+    remove_units
+    echo "[AIONS] Removed user units from ${UNIT_TARGET_DIR}"
+    ;;
+  up)
+    runtime_up
+    ;;
+  down)
+    runtime_down
+    ;;
+  start)
+    require_systemd_user
+    if [[ "${TARGET}" == "mcp" ]]; then mcp_start
+    elif [[ "${TARGET}" == "api" ]]; then api_start
+    else systemctl --user start "$(service_for "${TARGET}")"; fi
+    ;;
+  stop)
+    require_systemd_user
+    if [[ "${TARGET}" == "mcp" ]]; then mcp_stop
+    elif [[ "${TARGET}" == "api" ]]; then api_stop
+    else systemctl --user stop "$(service_for "${TARGET}")"; fi
+    ;;
+  restart)
+    if [[ -z "${RAW_TARGET}" || "${RAW_TARGET}" == "all" ]]; then
+      runtime_down
+      runtime_up
+    elif [[ "${TARGET}" == "mcp" ]]; then
+      require_systemd_user
+      systemctl --user restart "${MCP_UNIT}"
+    elif [[ "${TARGET}" == "api" ]]; then
+      require_systemd_user
+      systemctl --user restart "${API_UNIT}"
+    else
+      require_systemd_user
+      systemctl --user restart "$(service_for "${TARGET}")"
+    fi
+    ;;
+  status)
+    if [[ "${TARGET}" == "mcp" ]]; then mcp_status
+    elif [[ "${TARGET}" == "api" ]]; then api_status
+    elif [[ -z "${RAW_TARGET}" || "${RAW_TARGET}" == "all" ]]; then runtime_status
+    else
+      require_systemd_user
+      systemctl --user status --no-pager "$(service_for "${TARGET}")" "$(timer_for "${TARGET}")"
+    fi
+    ;;
+  logs)
+    require_systemd_user
+    runtime_logs "${RAW_TARGET:-all}"
+    ;;
+  enable)
+    require_systemd_user
+    copy_health_units
+    systemctl --user enable --now "$(timer_for "${TARGET}")"
+    ;;
+  disable)
+    require_systemd_user
+    systemctl --user disable --now "$(timer_for "${TARGET}")"
+    ;;
+  run-health)
+    export CHROMA_PATH="${CHROMA_PATH:-${AIONS_DEV_ROOT}/data/chroma}"
+    export AIONS_PATH="${AIONS_PATH:-/mnt/d/AIONS-INTEGRATION/aions_core}"
+    export AIONS_API_BASE_URL="${AIONS_API_BASE_URL:-http://127.0.0.1:8765}"
+    export AIONS_SEARCH_INDEX_PATH="${AIONS_SEARCH_INDEX_PATH:-${HOME}/aions/state/search/aions_search_index.json}"
+    exec "${REPO_ROOT}/scripts/aions_healthcheck.sh"
+    ;;
+  mcp-install) mcp_install ;;
+  mcp-start) mcp_start ;;
+  mcp-stop) mcp_stop ;;
+  mcp-status) mcp_status ;;
+  mcp-logs) mcp_logs ;;
+  api-install) api_install ;;
+  api-start) api_start ;;
+  api-stop) api_stop ;;
+  api-status) api_status ;;
+  api-logs) api_logs ;;
+  index-refresh) index_refresh ;;
+  index-status) index_status ;;
+  list) print_runtime_services ;;
+  -h|--help|help) usage ;;
+  *)
+    usage >&2
+    exit 1
+    ;;
+esac

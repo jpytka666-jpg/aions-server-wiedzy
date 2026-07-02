@@ -1,0 +1,10 @@
+[Unit]
+Description=Run AIONS health check periodically
+
+[Timer]
+OnBootSec=2m
+OnUnitActiveSec=15m
+Unit=aions-health.service
+
+[Install]
+WantedBy=timers.target

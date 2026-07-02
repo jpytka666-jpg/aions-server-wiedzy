@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": ".cursor/hooks/run_autolog_bootstrap.cmd",
+        "timeout": 10
+      }
+    ]
+  }
+}

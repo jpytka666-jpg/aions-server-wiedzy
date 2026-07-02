@@ -1,0 +1,12 @@
+[Unit]
+Description=Run AIONS Linux index refresh periodically
+Documentation=file://%h/aions/config/aions-runtime.env
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=15min
+Unit=aions-index.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target

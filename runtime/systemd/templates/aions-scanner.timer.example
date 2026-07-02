@@ -1,0 +1,10 @@
+[Unit]
+Description=Run AIONS project scanner periodically (template)
+
+[Timer]
+OnBootSec=5m
+OnUnitActiveSec=6h
+Unit=aions-scanner.service
+
+[Install]
+WantedBy=timers.target

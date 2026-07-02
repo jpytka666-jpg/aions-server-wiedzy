@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "aions-context": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "E:\\server wiedzy\\start_aions_mcp.bat"
+      ],
+      "env": {
+        "CHROMA_PATH": "E:\\server wiedzy\\data\\chroma",
+        "AIONS_PATH": "D:\\AIONS-INTEGRATION\\aions_core",
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUNBUFFERED": "1",
+        "MCP_RELOAD": "2026-07-01T2228"
+      }
+    }
+  }
+}

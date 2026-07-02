@@ -1,0 +1,11 @@
+[Unit]
+Description=AIONS project scanner job (template)
+After=default.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/mnt/e/aions-repo
+EnvironmentFile=%h/aions/config/aions-runtime.env
+ExecStart=/usr/bin/env bash -lc '"${AIONS_REPO}/scripts/aions_python.sh" "${AIONS_REPO}/scripts/project_scanner.py" "${AIONS_SCAN_PATH:-${AIONS_REPO}}"'
+StandardOutput=append:%h/aions/logs/scanner.log
+StandardError=append:%h/aions/logs/scanner.log

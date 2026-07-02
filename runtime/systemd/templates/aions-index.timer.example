@@ -1,0 +1,13 @@
+[Unit]
+Description=Run AIONS Linux index refresh periodically (template)
+Documentation=file://%h/aions/config/aions-runtime.env
+
+[Timer]
+# Align with AIONS_SEARCH_AUTO_REFRESH_SECONDS (default 900 = 15m).
+OnBootSec=5min
+OnUnitActiveSec=15min
+Unit=aions-index.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,17 @@
+[Unit]
+Description=AIONS MCP server (host-linux)
+After=default.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h
+EnvironmentFile=%h/aions/config/aions-mcp.env
+ExecStart=%h/aions/bin/start_aions_mcp.sh
+Restart=on-failure
+RestartSec=10
+StandardInput=null
+StandardOutput=append:%h/aions/logs/mcp.log
+StandardError=append:%h/aions/logs/mcp.log
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,4017 @@
+diff --git a/mcpServers/VS_CODE_MCP_CODEX/src/__main__.py b/mcpServers/VS_CODE_MCP_CODEX/src/__main__.py
+index 0cbc914..64293ba 100644
+--- a/mcpServers/VS_CODE_MCP_CODEX/src/__main__.py
++++ b/mcpServers/VS_CODE_MCP_CODEX/src/__main__.py
+@@ -5,6 +5,17 @@ PATCHED for Windows stdio buffering issues
+ 
+ import sys
+ import os
++from pathlib import Path
++
++# Refuse wrong Python — Cursor sometimes spawns system Python311 without Playwright
++_venv_scripts = (Path(__file__).resolve().parents[3] / "venv" / "Scripts").resolve()
++if _venv_scripts not in Path(sys.executable).resolve().parents:
++    print(
++        f"[AIONS] Refusing to start outside venv (got {sys.executable})",
++        file=sys.stderr,
++        flush=True,
++    )
++    sys.exit(1)
+ 
+ # WINDOWS FIX: Prevent binary mode issues
+ if sys.platform == "win32":
+diff --git a/mcpServers/VS_CODE_MCP_CODEX/src/server.py b/mcpServers/VS_CODE_MCP_CODEX/src/server.py
+index f918007..77df0ad 100644
+--- a/mcpServers/VS_CODE_MCP_CODEX/src/server.py
++++ b/mcpServers/VS_CODE_MCP_CODEX/src/server.py
+@@ -45,7 +45,7 @@ def _is_huge_repo(repo_path: str = "") -> bool:
+             return False
+         
+         # Quick heuristic - check .git size
+-        total_size = sum(f.stat().st_size for f in git_dir.rglob("*") if f.is_file())
++        pack_dir = git_dir / "objects" / "pack"; total_size = sum(f.stat().st_size for f in pack_dir.iterdir() if f.is_file()) if pack_dir.exists() else 0  # FAST - no rglob
+         if total_size > 100 * 1024 * 1024:  # > 100MB .git folder
+             return True
+             
+@@ -68,28 +68,48 @@ def log(msg: str):
+ log("Server v6 loading (DEBILOODPORNE)...")
+ 
+ # =============================================================================
+-# PATH SETUP
++# PATH SETUP - AUTO-DISCOVERY (env vars -> common locations -> PATH)
+ # =============================================================================
+ 
++def _find_dir(env_var: str, candidates: list) -> Optional[Path]:
++    """Find directory from env var or candidate locations."""
++    if os.environ.get(env_var):
++        p = Path(os.environ[env_var])
++        if p.exists(): return p
++    for c in candidates:
++        p = Path(c) if isinstance(c, str) else c
++        if p.exists(): return p
++    return None
++
++def _find_exe(name: str, extra: list = None) -> str:
++    """Find executable: PATH first, then extra locations."""
++    found = shutil.which(name)
++    if found: return found
++    for p in (extra or []):
++        if Path(p).exists(): return p
++    return name
++
+ REPO_ROOT = Path(__file__).resolve().parents[3]
+-AIONS_V10 = Path("C:/Users/User/OneDrive - Global Banking School/Desktop/AIONS_CBMS_RELEASE_V3")
+ DUMPS_DIR = REPO_ROOT / "logs" / "conversation_dumps"
+ SCAN_RESULTS_DIR = REPO_ROOT / "scan_results"
+ SCANNER_SCRIPT = REPO_ROOT / "scripts" / "project_scanner.py"
+ TURBO_SCANNER_SCRIPT = REPO_ROOT / "scripts" / "turbo_scanner.py"
+ PYTHON_EXE = REPO_ROOT / "venv" / "Scripts" / "python.exe"
+ 
+-EVERYTHING_CLI = Path("C:/Program Files/Everything/es.exe")
+-DOCKER_EXE = shutil.which("docker") or "docker"
+-WSL_EXE = shutil.which("wsl") or "wsl"
+-# Git - use full path to avoid issues
+-GIT_EXE = Path("C:/Program Files/Git/bin/git.exe")
+-if not GIT_EXE.exists():
+-    GIT_EXE = shutil.which("git") or "git"
+-else:
+-    GIT_EXE = str(GIT_EXE)
+-GH_EXE = shutil.which("gh") or "gh"
+-NMAP_EXE = Path("C:/Program Files (x86)/Nmap/nmap.exe")
++# AIONS - AIONS_PATH env var, then common locations
++AIONS_V10 = _find_dir("AIONS_PATH", [
++    "D:/AIONS-INTEGRATION/aions_core",
++    "E:/AIONS-INTEGRATION/aions_core",
++    Path.home() / "AIONS-INTEGRATION/aions_core"
++])
++
++# Tools - PATH first, then common locations  
++EVERYTHING_CLI = Path(_find_exe("es", ["C:/Program Files/Everything/es.exe"]))
++DOCKER_EXE = _find_exe("docker")
++WSL_EXE = _find_exe("wsl")
++GIT_EXE = _find_exe("git", ["C:/Program Files/Git/bin/git.exe"])
++GH_EXE = _find_exe("gh")
++NMAP_EXE = _find_exe("nmap", ["C:/Program Files (x86)/Nmap/nmap.exe"])
+ 
+ DUMPS_DIR.mkdir(parents=True, exist_ok=True)
+ SCAN_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+@@ -121,8 +141,34 @@ def _now_iso() -> str:
+ def _today_str() -> str:
+     return datetime.now().strftime("%Y-%m-%d")
+ 
+-def _success(payload: Dict[str, Any]) -> str:
+-    return json.dumps({"status": "ok", "timestamp": _now_iso(), **payload}, ensure_ascii=False)
++# CONTEXT GUARD - compress large responses to save Claude context window
++CONTEXT_GUARD_THRESHOLD = 800  # chars threshold
++_offload_cache = {}  # {ref_id: full_json}
++
++def _success(payload: Dict[str, Any], guard: bool = True) -> str:
++    """Success response with optional context guard for large payloads."""
++    result = {"status": "ok", "timestamp": _now_iso(), **payload}
++    result_json = json.dumps(result, ensure_ascii=False)
++
++    # Context guard: compress if too large
++    if guard and len(result_json) > CONTEXT_GUARD_THRESHOLD:
++        ref_id = f"OFF_{str(uuid.uuid4())[:8]}"
++        _offload_cache[ref_id] = result_json
++
++        # Build summary
++        summary_parts = []
++        for k, v in list(payload.items())[:4]:
++            if isinstance(v, str): summary_parts.append(f"{k}:{len(v)}ch")
++            elif isinstance(v, list): summary_parts.append(f"{k}:{len(v)}items")
++            elif isinstance(v, dict): summary_parts.append(f"{k}:{len(v)}keys")
++
++        return json.dumps({
++            "status": "ok", "timestamp": _now_iso(),
++            "offloaded": ref_id, "size": len(result_json),
++            "summary": ", ".join(summary_parts) if summary_parts else "large payload"
++        }, ensure_ascii=False)
++
++    return result_json
+ 
+ def _error(message: str) -> str:
+     return json.dumps({"status": "error", "message": message, "timestamp": _now_iso()}, ensure_ascii=False)
+@@ -132,7 +178,15 @@ def _generate_id() -> str:
+ 
+ def _run_command(cmd: List[str], timeout: int = 30) -> Dict[str, Any]:
+     try:
+-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, shell=False)
++        result = subprocess.run(
++            cmd,
++            capture_output=True,
++            text=True,
++            encoding="utf-8",
++            errors="replace",
++            timeout=timeout,
++            shell=False,
++        )
+         return {"success": result.returncode == 0, "stdout": result.stdout[:5000], "stderr": result.stderr[:1000], "returncode": result.returncode}
+     except subprocess.TimeoutExpired:
+         return {"success": False, "error": f"Command timed out after {timeout}s"}
+@@ -186,7 +240,13 @@ _auto_log_threshold: int = 5
+ _auto_log_last_dump: datetime = datetime.now(timezone.utc)
+ 
+ # Tools to SKIP logging (to avoid infinite loops)
+-SKIP_LOG_TOOLS = {"conv_log", "conv_dump", "conv_status", "conv_set_threshold", "conv_history"}
++SKIP_LOG_TOOLS = {
++    "conv_log", "conv_dump", "conv_status", "conv_set_threshold",
++    "conv_history", "session_bootstrap",
++}
++
++# Desktop tools whose auto-log preview must omit huge payloads (e.g. base64 PNG)
++DESKTOP_TRUNCATE_LOG_TOOLS = {"desktop_snapshot"}
+ 
+ def _auto_log_entry(tool_name: str, args: Dict, result_preview: str):
+     """AUTOMATYCZNIE loguje każde wywołanie narzędzia"""
+@@ -269,9 +329,16 @@ def auto_logged(func: Callable) -> Callable:
+                 if isinstance(result, str):
+                     try:
+                         parsed = json.loads(result)
+-                        preview = parsed.get("status", "") + ": " + str(list(parsed.keys()))[:100]
++                        if tool_name in DESKTOP_TRUNCATE_LOG_TOOLS and parsed.get("image_base64"):
++                            preview = (
++                                f"{parsed.get('status', 'ok')}: "
++                                f"{parsed.get('width')}x{parsed.get('height')} "
++                                f"({parsed.get('size_bytes', '?')} bytes, base64 omitted)"
++                            )
++                        else:
++                            preview = parsed.get("status", "") + ": " + str(list(parsed.keys()))[:100]
+                     except:
+-                        preview = result[:100]
++                        preview = result[:100] if tool_name not in DESKTOP_TRUNCATE_LOG_TOOLS else result[:80] + "…"
+                 else:
+                     preview = str(result)[:100]
+                 
+@@ -384,18 +451,49 @@ log("FastMCP server created")
+ # EVERYTHING SEARCH TOOLS (AUTO-LOGGED)
+ # =============================================================================
+ 
++def _normalize_folder_prefix(folder: str) -> str:
++    """Normalize folder to Everything path-prefix (handles spaces in paths)."""
++    prefix = folder.strip().strip('"').strip("'")
++    prefix = prefix.replace("/", "\\")
++    if not prefix.endswith("\\"):
++        prefix += "\\"
++    return prefix
++
++def _build_everything_ext_query(extension: str, folder: str = "") -> str:
++    """
++    Build Everything query for extension search.
++    Quoted-folder + ext: syntax fails on Windows paths with spaces;
++    path-prefix glob (E:\\folder\\*.py) works reliably.
++    """
++    ext = extension.lstrip(".")
++    if folder:
++        return f"{_normalize_folder_prefix(folder)}*.{ext}"
++    return f"ext:{ext}"
++
++def _everything_search(query: str, max_results: int, timeout: int = 15) -> Dict[str, Any]:
++    if not EVERYTHING_CLI.exists():
++        return {"ok": False, "error": "Everything CLI not found"}
++    cmd = [str(EVERYTHING_CLI), "-n", str(max_results), query]
++    result = _run_command(cmd, timeout=timeout)
++    if not result["success"]:
++        err = result.get("error") or result.get("stderr") or "Search failed"
++        return {"ok": False, "error": err}
++    files = [f for f in result["stdout"].strip().split("\n") if f.strip()]
++    return {"ok": True, "files": files, "query": query}
++
+ @mcp_server.tool(name="fast_search", description="Blazing fast file search using Everything.")
+ @auto_logged
+-def fast_search(query: str, max_results: int = 50) -> str:
++def fast_search(query: str, max_results: int = 50, folder: str = "") -> str:
+     try:
+-        if not EVERYTHING_CLI.exists():
+-            return _error("Everything CLI not found")
+-        cmd = [str(EVERYTHING_CLI), "-n", str(max_results), query]
+-        result = _run_command(cmd, timeout=10)
+-        if result["success"]:
+-            files = [f for f in result["stdout"].strip().split("\n") if f]
+-            return _success({"query": query, "files": files[:max_results], "count": len(files)})
+-        return _error(result.get("error", "Search failed"))
++        search_query = query
++        if folder:
++            prefix = _normalize_folder_prefix(folder)
++            search_query = f"{prefix}{query}" if query else prefix.rstrip("\\")
++        payload = _everything_search(search_query, max_results, timeout=10)
++        if not payload.get("ok"):
++            return _error(payload.get("error", "Search failed"))
++        files = payload["files"]
++        return _success({"query": search_query, "folder": folder or None, "files": files[:max_results], "count": len(files)})
+     except Exception as e:
+         return _error(str(e))
+ 
+@@ -403,17 +501,18 @@ def fast_search(query: str, max_results: int = 50) -> str:
+ @auto_logged
+ def fast_search_ext(extension: str, folder: str = "", max_results: int = 100) -> str:
+     try:
+-        if not EVERYTHING_CLI.exists():
+-            return _error("Everything CLI not found")
+-        query = f"ext:{extension.lstrip('.')}"
+-        if folder:
+-            query = f'"{folder}" {query}'
+-        cmd = [str(EVERYTHING_CLI), "-n", str(max_results), query]
+-        result = _run_command(cmd, timeout=15)
+-        if result["success"]:
+-            files = [f for f in result["stdout"].strip().split("\n") if f]
+-            return _success({"extension": extension, "files": files, "count": len(files)})
+-        return _error("Search failed")
++        query = _build_everything_ext_query(extension, folder)
++        payload = _everything_search(query, max_results, timeout=15)
++        if not payload.get("ok"):
++            return _error(payload.get("error", "Search failed"))
++        files = payload["files"]
++        return _success({
++            "extension": extension.lstrip("."),
++            "folder": folder or None,
++            "query": query,
++            "files": files,
++            "count": len(files),
++        })
+     except Exception as e:
+         return _error(str(e))
+ 
+@@ -588,9 +687,9 @@ def network_ping(host: str, count: int = 4) -> str:
+ # PROJECT SCANNER TOOLS (AUTO-LOGGED)
+ # =============================================================================
+ 
+-@mcp_server.tool(name="project_scan_turbo", description="TURBO SCAN using Everything - FAST!")
++@mcp_server.tool(name="project_scan_turbo", description="TURBO SCAN using Everything - FAST! Optional scan_paths: semicolon-separated folders.")
+ @auto_logged
+-def project_scan_turbo(output_dir: str = "") -> str:
++def project_scan_turbo(output_dir: str = "", scan_paths: str = "") -> str:
+     global _scan_status
+     try:
+         if _scan_status.get("state") == "running":
+@@ -600,23 +699,38 @@ def project_scan_turbo(output_dir: str = "") -> str:
+         
+         out_dir = output_dir or str(SCAN_RESULTS_DIR)
+         scan_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+-        _scan_status = {"state": "starting", "scan_id": scan_id, "type": "turbo"}
++        if scan_paths.strip():
++            folder_args = [p.strip().strip('"') for p in scan_paths.replace("|", ";").split(";") if p.strip()]
++        else:
++            folder_args = [str(REPO_ROOT)]
++        _scan_status = {"state": "starting", "scan_id": scan_id, "type": "turbo", "scan_paths": folder_args}
+         
+         def run_turbo():
+             global _scan_status
++            log_file = REPO_ROOT / "logs" / f"turbo_scan_{scan_id}.log"
+             try:
+                 _scan_status["state"] = "running"
+-                cmd = [str(PYTHON_EXE), str(TURBO_SCANNER_SCRIPT), "-o", out_dir]
+-                result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=600)
++                log_file.parent.mkdir(parents=True, exist_ok=True)
++                cmd = [str(PYTHON_EXE), str(TURBO_SCANNER_SCRIPT), *folder_args, "-o", out_dir]
++                with open(log_file, "w", encoding="utf-8", errors="replace") as log_f:
++                    result = subprocess.run(
++                        cmd,
++                        stdout=log_f,
++                        stderr=subprocess.STDOUT,
++                        cwd=str(REPO_ROOT),
++                        timeout=1800,
++                    )
+                 _scan_status["state"] = "completed" if result.returncode == 0 else "error"
++                _scan_status["log_file"] = str(log_file)
+                 if result.returncode != 0:
+-                    _scan_status["error"] = result.stderr[:500]
++                    tail = log_file.read_text(encoding="utf-8", errors="replace")[-500:] if log_file.exists() else ""
++                    _scan_status["error"] = tail or f"Scanner exited with code {result.returncode}"
+             except Exception as e:
+                 _scan_status["state"] = "error"
+                 _scan_status["error"] = str(e)
+         
+         threading.Thread(target=run_turbo, daemon=True).start()
+-        return _success({"message": "TURBO scan started!", "scan_id": scan_id})
++        return _success({"message": "TURBO scan started!", "scan_id": scan_id, "scan_paths": folder_args, "engine": "Everything (es.exe)"})
+     except Exception as e:
+         return _error(str(e))
+ 
+@@ -762,19 +876,79 @@ def conv_set_threshold(threshold: int = 5) -> str:
+     _auto_log_threshold = max(1, min(50, threshold))
+     return _success({"threshold": _auto_log_threshold})
+ 
++def _read_autolog_entries(date: str = "", limit: int = 30) -> Dict[str, Any]:
++    """Read auto-log JSONL for a date (default today)."""
++    target = date or _today_str()
++    dump_file = DUMPS_DIR / f"autolog_{target}.jsonl"
++    if not dump_file.exists():
++        return {"date": target, "entries": [], "count": 0, "file": str(dump_file)}
++    entries: List[Dict] = []
++    with open(dump_file, "r", encoding="utf-8") as f:
++        for line in f:
++            if line.strip():
++                entries.append(json.loads(line))
++    tail = entries[-limit:] if limit > 0 else entries
++    return {"date": target, "entries": tail, "count": len(entries), "file": str(dump_file)}
++
++
+ @mcp_server.tool(name="conv_history", description="Get log history.")
+ def conv_history(date: str = "") -> str:
+     try:
+-        target = date or _today_str()
+-        dump_file = DUMPS_DIR / f"autolog_{target}.jsonl"
+-        if not dump_file.exists():
+-            return _success({"date": target, "entries": [], "count": 0})
+-        entries = []
+-        with open(dump_file, "r", encoding="utf-8") as f:
+-            for line in f:
+-                if line.strip():
+-                    entries.append(json.loads(line))
+-        return _success({"date": target, "entries": entries[-30:], "count": len(entries)})
++        data = _read_autolog_entries(date, limit=30)
++        return _success({"date": data["date"], "entries": data["entries"], "count": data["count"]})
++    except Exception as e:
++        return _error(str(e))
++
++
++@mcp_server.tool(
++    name="session_bootstrap",
++    description=(
++        "One-call session bootstrap: system_health + recent auto-log + memory_recall. "
++        "Use when sessionStart hook is unavailable (cloud agent, hooks disabled)."
++    ),
++)
++def session_bootstrap(
++    session_id: str = "claude_marcin_main",
++    autolog_limit: int = 20,
++    memory_query: str = "COMPACT_BOOTSTRAP session context recent work",
++    memory_top_k: int = 3,
++    include_yesterday: bool = True,
++) -> str:
++    """Combine health, autolog tail, and compact memory in one MCP call."""
++    try:
++        health_raw = json.loads(system_health())
++        autolog_today = _read_autolog_entries("", limit=autolog_limit)
++        autolog_entries = list(autolog_today["entries"])
++        autolog_dates = [autolog_today["date"]] if autolog_today["entries"] else []
++
++        if include_yesterday and len(autolog_entries) < autolog_limit:
++            yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
++            older = _read_autolog_entries(yesterday, limit=autolog_limit)
++            if older["entries"]:
++                autolog_dates.append(yesterday)
++                need = autolog_limit - len(autolog_entries)
++                autolog_entries = older["entries"][-need:] + autolog_entries
++
++        memory_raw = json.loads(
++            memory_recall(session_id=session_id, query=memory_query, top_k=memory_top_k)
++        )
++        status_raw = json.loads(conv_status())
++
++        return _success({
++            "bootstrap": True,
++            "health": health_raw.get("data", health_raw),
++            "autolog": {
++                "dates": autolog_dates,
++                "entries": autolog_entries,
++                "count_shown": len(autolog_entries),
++            },
++            "memory": memory_raw.get("data", memory_raw),
++            "conv_status": status_raw.get("data", status_raw),
++            "hook_hint": (
++                "Desktop: .cursor/hooks sessionStart injects autolog automatically. "
++                "Call conv_history() only after long gaps."
++            ),
++        })
+     except Exception as e:
+         return _error(str(e))
+ 
+@@ -821,7 +995,21 @@ def memory_recall(session_id: str, query: str, top_k: int = 5) -> str:
+                         results.append({"id": f"cbms:{cid}", "text": chunk.get("content", "")[:300], "score": 0.5, "source": "cbms"})
+             except:
+                 pass
+-        results.sort(key=lambda x: x["score"], reverse=True)
++        chroma_results = [r for r in results if r["source"] == "chromadb"]
++        other_results = [r for r in results if r["source"] != "chromadb"]
++        if chroma_results:
++            chroma_results.sort(key=lambda x: x["score"], reverse=True)
++            other_results.sort(key=lambda x: x["score"], reverse=True)
++            results = chroma_results + other_results
++        else:
++            chroma_results = [r for r in results if r["source"] == "chromadb"]
++        other_results = [r for r in results if r["source"] != "chromadb"]
++        if chroma_results:
++            chroma_results.sort(key=lambda x: x["score"], reverse=True)
++            other_results.sort(key=lambda x: x["score"], reverse=True)
++            results = chroma_results + other_results
++        else:
++            results.sort(key=lambda x: x["score"], reverse=True)
+         return _success({"results": results[:top_k]})
+     except Exception as e:
+         return _error(str(e))
+@@ -890,6 +1078,11 @@ def system_health() -> str:
+             "wsl": "ok" if shutil.which("wsl") else "missing",
+             "git": "ok" if shutil.which("git") else "missing",
+         }
++        try:
++            from desktop_control import is_desktop_ready, desktop_unavailable_msg
++            health["desktop"] = "ok" if is_desktop_ready() else desktop_unavailable_msg()
++        except Exception as de:
++            health["desktop"] = f"unavailable: {de}"
+         vs = get_vector_store()
+         health["chromadb"] = f"{vs.sessions_count()} sessions" if vs else "failed"
+         cbms = get_cbms()
+@@ -900,51 +1093,74 @@ def system_health() -> str:
+ 
+ # =============================================================================
+ # PLAYWRIGHT BROWSER TOOLS (AUTO-LOGGED)
++# Playwright Sync API must run off the MCP asyncio loop — dedicated thread.
+ # =============================================================================
+ 
+-_browser = None
+-_browser_context = None
+-_page = None
++import concurrent.futures
++
++_browser_executor = concurrent.futures.ThreadPoolExecutor(max_workers=1, thread_name_prefix="aions-playwright")
++_browser_state: Dict[str, Any] = {"playwright": None, "browser": None, "context": None, "page": None}
++_browser_init_error: Optional[str] = None
+ _page_snapshot = None
+ 
++def _browser_thread_init() -> None:
++    from playwright.sync_api import sync_playwright
++    pw = sync_playwright().start()
++    browser = pw.chromium.launch(headless=True)
++    context = browser.new_context(viewport={"width": 1280, "height": 720})
++    page = context.new_page()
++    _browser_state["playwright"] = pw
++    _browser_state["browser"] = browser
++    _browser_state["context"] = context
++    _browser_state["page"] = page
++    log("Playwright browser launched")
++
++def _run_browser(fn: Callable, timeout: int = 60) -> Any:
++    global _browser_init_error
++    def _task():
++        if _browser_state["page"] is None:
++            _browser_thread_init()
++        return fn(_browser_state["page"])
++
++    try:
++        return _browser_executor.submit(_task).result(timeout=timeout)
++    except Exception as e:
++        _browser_init_error = str(e)
++        log(f"Playwright op failed: {e}")
++        raise
++
+ def get_browser():
+-    """Lazy-load Playwright browser"""
+-    global _browser, _browser_context, _page
+-    if _browser is None:
+-        try:
+-            from playwright.sync_api import sync_playwright
+-            pw = sync_playwright().start()
+-            _browser = pw.chromium.launch(headless=True)
+-            _browser_context = _browser.new_context(viewport={"width": 1280, "height": 720})
+-            _page = _browser_context.new_page()
+-            log("Playwright browser launched")
+-        except Exception as e:
+-            log(f"Playwright failed: {e}")
+-            return None, None
+-    return _browser, _page
++    """Legacy helper — page must only be used inside _run_browser."""
++    try:
++        _run_browser(lambda page: page)
++        return _browser_state["browser"], _browser_state["page"]
++    except Exception:
++        return None, None
++
++def _browser_unavailable_msg() -> str:
++    return f"Browser not available: {_browser_init_error or 'init failed'}"
+ 
+ @mcp_server.tool(name="browser_navigate", description="Navigate to URL in browser.")
+ @auto_logged
+ def browser_navigate(url: str) -> str:
+     try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        page.goto(url, wait_until="domcontentloaded", timeout=30000)
+-        return _success({"url": page.url, "title": page.title()})
++        def op(page):
++            page.goto(url, wait_until="domcontentloaded", timeout=30000)
++            return {"url": page.url, "title": page.title()}
++        return _success(_run_browser(op))
+     except Exception as e:
+-        return _error(str(e))
++        return _error(_browser_unavailable_msg() if "Sync API" in str(e) or _browser_init_error else str(e))
+ 
+ @mcp_server.tool(name="browser_snapshot", description="Get accessibility snapshot of current page.")
+ @auto_logged
+ def browser_snapshot() -> str:
+     global _page_snapshot
+     try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        # Get accessibility tree
+-        snapshot = page.accessibility.snapshot()
++        def op(page):
++            snapshot = page.accessibility.snapshot()
++            return snapshot, page.url, page.title()
++
++        snapshot, url, title = _run_browser(op)
+         _page_snapshot = snapshot
+ 
+         def flatten_tree(node, depth=0, results=None):
+@@ -962,93 +1178,100 @@ def browser_snapshot() -> str:
+             return results
+ 
+         elements = flatten_tree(snapshot)
+-        return _success({"url": page.url, "title": page.title(), "elements": elements[:100]})
++        return _success({"url": url, "title": title, "elements": elements[:100]})
+     except Exception as e:
+-        return _error(str(e))
++        return _error(_browser_unavailable_msg() if _browser_init_error else str(e))
+ 
+ @mcp_server.tool(name="browser_click", description="Click element by text or selector.")
+ @auto_logged
+ def browser_click(selector: str = "", text: str = "") -> str:
+     try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        if text:
+-            page.get_by_text(text, exact=False).first.click(timeout=5000)
+-        elif selector:
+-            page.click(selector, timeout=5000)
+-        else:
+-            return _error("Provide selector or text")
+-        page.wait_for_load_state("domcontentloaded", timeout=5000)
+-        return _success({"clicked": text or selector, "url": page.url})
+-    except Exception as e:
++        def op(page):
++            if text:
++                page.get_by_text(text, exact=False).first.click(timeout=5000)
++            elif selector:
++                page.click(selector, timeout=5000)
++            else:
++                raise ValueError("Provide selector or text")
++            page.wait_for_load_state("domcontentloaded", timeout=5000)
++            return {"clicked": text or selector, "url": page.url}
++        return _success(_run_browser(op))
++    except ValueError as e:
+         return _error(str(e))
++    except Exception as e:
++        return _error(_browser_unavailable_msg() if _browser_init_error else str(e))
+ 
+ @mcp_server.tool(name="browser_type", description="Type text into input field.")
+ @auto_logged
+ def browser_type(selector: str = "", text: str = "", placeholder: str = "", submit: bool = False) -> str:
+     try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        if placeholder:
+-            elem = page.get_by_placeholder(placeholder, exact=False).first
+-        elif selector:
+-            elem = page.locator(selector).first
+-        else:
+-            return _error("Provide selector or placeholder")
+-        elem.fill(text)
+-        if submit:
+-            elem.press("Enter")
+-            page.wait_for_load_state("domcontentloaded", timeout=5000)
+-        return _success({"typed": text[:50], "submitted": submit})
+-    except Exception as e:
++        def op(page):
++            if placeholder:
++                elem = page.get_by_placeholder(placeholder, exact=False).first
++            elif selector:
++                elem = page.locator(selector).first
++            else:
++                raise ValueError("Provide selector or placeholder")
++            elem.fill(text)
++            if submit:
++                elem.press("Enter")
++                page.wait_for_load_state("domcontentloaded", timeout=5000)
++            return {"typed": text[:50], "submitted": submit}
++        return _success(_run_browser(op))
++    except ValueError as e:
+         return _error(str(e))
++    except Exception as e:
++        return _error(_browser_unavailable_msg() if _browser_init_error else str(e))
+ 
+ @mcp_server.tool(name="browser_screenshot", description="Take screenshot of current page.")
+ @auto_logged
+ def browser_screenshot(filename: str = "", full_page: bool = False) -> str:
+     try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+         fname = filename or f"screenshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+         fpath = DUMPS_DIR / fname
+-        page.screenshot(path=str(fpath), full_page=full_page)
+-        return _success({"file": str(fpath), "url": page.url})
++
++        def op(page):
++            page.screenshot(path=str(fpath), full_page=full_page)
++            return {"file": str(fpath), "url": page.url}
++        return _success(_run_browser(op))
+     except Exception as e:
+-        return _error(str(e))
++        return _error(_browser_unavailable_msg() if _browser_init_error else str(e))
+ 
+ @mcp_server.tool(name="browser_get_text", description="Get text content from page or element.")
+ @auto_logged
+ def browser_get_text(selector: str = "") -> str:
+     try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        if selector:
+-            text = page.locator(selector).first.inner_text(timeout=5000)
+-        else:
+-            text = page.inner_text("body")
+-        return _success({"text": text[:5000], "length": len(text)})
++        def op(page):
++            if selector:
++                text = page.locator(selector).first.inner_text(timeout=5000)
++            else:
++                text = page.inner_text("body")
++            return {"text": text[:5000], "length": len(text)}
++        return _success(_run_browser(op))
+     except Exception as e:
+-        return _error(str(e))
++        return _error(_browser_unavailable_msg() if _browser_init_error else str(e))
+ 
+ @mcp_server.tool(name="browser_close", description="Close browser.")
+ @auto_logged
+ def browser_close() -> str:
+-    global _browser, _browser_context, _page
++    def op(_page):
++        global _browser_init_error
++        if _browser_state["page"]:
++            _browser_state["page"].close()
++        if _browser_state["context"]:
++            _browser_state["context"].close()
++        if _browser_state["browser"]:
++            _browser_state["browser"].close()
++        if _browser_state["playwright"]:
++            _browser_state["playwright"].stop()
++        _browser_state.update({"playwright": None, "browser": None, "context": None, "page": None})
++        _browser_init_error = None
++        return {"closed": True}
++
+     try:
+-        if _page:
+-            _page.close()
+-        if _browser_context:
+-            _browser_context.close()
+-        if _browser:
+-            _browser.close()
+-        _browser = None
+-        _browser_context = None
+-        _page = None
+-        return _success({"closed": True})
++        if _browser_state["page"] is None:
++            return _success({"closed": True})
++        return _success(_browser_executor.submit(op, _browser_state["page"]).result(timeout=30))
+     except Exception as e:
+         return _error(str(e))
+ 
+@@ -1056,13 +1279,142 @@ def browser_close() -> str:
+ @auto_logged
+ def browser_evaluate(script: str) -> str:
+     try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        result = page.evaluate(script)
+-        return _success({"result": str(result)[:2000]})
++        def op(page):
++            result = page.evaluate(script)
++            return {"result": str(result)[:2000]}
++        return _success(_run_browser(op))
+     except Exception as e:
+-        return _error(str(e))
++        return _error(_browser_unavailable_msg() if _browser_init_error else str(e))
++
++# =============================================================================
++# DESKTOP CONTROL TOOLS (AUTO-LOGGED)
++# pyautogui / pywin32 must run off the MCP asyncio loop — dedicated thread.
++# =============================================================================
++
++try:
++    from desktop_control import (
++        run_desktop,
++        desktop_unavailable_msg,
++        is_desktop_ready,
++        impl_snapshot,
++        impl_click,
++        impl_type,
++        impl_key,
++        impl_windows,
++        impl_focus,
++        impl_launch,
++        impl_scroll,
++        impl_shell,
++        impl_ui_tree,
++    )
++    _desktop_import_ok = True
++except ImportError as _desktop_import_err:
++    _desktop_import_ok = False
++    log(f"Desktop control module import failed: {_desktop_import_err}")
++
++
++def _desktop_err(e: Exception) -> str:
++    msg = str(e)
++    if not _desktop_import_ok or "Desktop" in msg or "dependency" in msg.lower():
++        try:
++            return desktop_unavailable_msg()
++        except Exception:
++            pass
++    return msg
++
++
++@mcp_server.tool(name="desktop_snapshot", description="Screenshot full screen or active window; returns base64 PNG + dimensions.")
++@auto_logged
++def desktop_snapshot(target: str = "screen") -> str:
++    try:
++        payload = run_desktop(lambda: impl_snapshot(target=target), timeout=30)
++        return _success(payload, guard=True)
++    except Exception as e:
++        return _error(_desktop_err(e))
++
++
++@mcp_server.tool(name="desktop_click", description="Click at screen coordinates (x, y). button: left/right/middle; optional double click.")
++@auto_logged
++def desktop_click(x: int, y: int, button: str = "left", double: bool = False) -> str:
++    try:
++        return _success(run_desktop(lambda: impl_click(x, y, button, double), timeout=15))
++    except Exception as e:
++        return _error(_desktop_err(e))
++
++
++@mcp_server.tool(name="desktop_type", description="Type text; optional clear_first (Ctrl+A). Optionally click x,y first.")
++@auto_logged
++def desktop_type(text: str, clear_first: bool = False, x: int = 0, y: int = 0, click_first: bool = False, press_enter: bool = False) -> str:
++    try:
++        pos_x = int(x) if click_first else None
++        pos_y = int(y) if click_first else None
++        return _success(run_desktop(lambda: impl_type(text, clear_first, pos_x, pos_y, press_enter), timeout=30))
++    except Exception as e:
++        return _error(_desktop_err(e))
++
++
++@mcp_server.tool(name="desktop_key", description="Press key or combo, e.g. 'enter', 'ctrl+c', 'alt+tab'.")
++@auto_logged
++def desktop_key(combo: str) -> str:
++    try:
++        return _success(run_desktop(lambda: impl_key(combo), timeout=15))
++    except Exception as e:
++        return _error(_desktop_err(e))
++
++
++@mcp_server.tool(name="desktop_windows", description="List visible open windows (title, hwnd, process).")
++@auto_logged
++def desktop_windows() -> str:
++    try:
++        return _success(run_desktop(impl_windows, timeout=15))
++    except Exception as e:
++        return _error(_desktop_err(e))
++
++
++@mcp_server.tool(name="desktop_focus", description="Focus window by title substring or hwnd.")
++@auto_logged
++def desktop_focus(title: str = "", hwnd: int = 0) -> str:
++    try:
++        h = int(hwnd) if hwnd else None
++        return _success(run_desktop(lambda: impl_focus(title, h), timeout=15))
++    except Exception as e:
++        return _error(_desktop_err(e))
++
++
++@mcp_server.tool(name="desktop_launch", description="Launch app by path or known exe name (notepad, calc, etc.).")
++@auto_logged
++def desktop_launch(path_or_name: str, args: str = "") -> str:
++    try:
++        return _success(run_desktop(lambda: impl_launch(path_or_name, args), timeout=20))
++    except Exception as e:
++        return _error(_desktop_err(e))
++
++
++@mcp_server.tool(name="desktop_scroll", description="Scroll at x,y. amount: positive=up, negative=down.")
++@auto_logged
++def desktop_scroll(x: int, y: int, amount: int = 3, direction: str = "vertical") -> str:
++    try:
++        return _success(run_desktop(lambda: impl_scroll(x, y, amount, direction), timeout=15))
++    except Exception as e:
++        return _error(_desktop_err(e))
++
++
++@mcp_server.tool(name="desktop_shell", description="Run PowerShell command (max 30s timeout); returns stdout/stderr.")
++@auto_logged
++def desktop_shell(command: str, timeout: int = 30) -> str:
++    try:
++        return _success(run_desktop(lambda: impl_shell(command, timeout), timeout=35))
++    except Exception as e:
++        return _error(_desktop_err(e))
++
++
++@mcp_server.tool(name="desktop_ui_tree", description="Simplified UI accessibility tree of the active window (pywinauto).")
++@auto_logged
++def desktop_ui_tree(max_depth: int = 4, max_nodes: int = 80) -> str:
++    try:
++        return _success(run_desktop(lambda: impl_ui_tree(max_depth, max_nodes), timeout=30))
++    except Exception as e:
++        return _error(_desktop_err(e))
+ 
+ # =============================================================================
+ # MCP CATALOG (BUILT-IN)
+@@ -1083,7 +1435,8 @@ MCP_CATALOG = {
+     "time": {"description": "Time and timezone tools", "url": "https://github.com/anthropics/mcp-servers"},
+     "context7": {"description": "Context window management", "url": "https://github.com/upstash/context7"},
+     "playwright": {"description": "Browser automation (ALREADY BUILT-IN!)", "url": "built-in"},
+-    "aions-context": {"description": "THIS SERVER - ChromaDB + CBMS + Everything", "url": "built-in"},
++    "desktop-control": {"description": "Windows desktop automation (ALREADY BUILT-IN! desktop_* tools)", "url": "built-in"},
++    "aions-context": {"description": "THIS SERVER - ChromaDB + CBMS + Everything + Desktop", "url": "built-in"},
+ }
+ 
+ @mcp_server.tool(name="mcp_find", description="Search MCP servers catalog.")
+@@ -1147,6 +1500,534 @@ def web_fetch(url: str, selector: str = "") -> str:
+ # ENTRY POINT
+ # =============================================================================
+ 
++# =============================================================================
++# SEQUENTIAL THINKING ENGINE (AIONS FUSION v1.0)
++# =============================================================================
++# WKLEJONE AUTOMATYCZNIE PRZEZ backup_and_install.ps1
++# Data: {TIMESTAMP}
++# =============================================================================
++"""
++Integruje Sequential Thinking bezpośrednio z AIONS:
++- Auto-search CBMS przy każdym kroku myślowym
++- Sugestie narzędzi AIONS na podstawie kontekstu
++- Persistent thinking sessions z thread-safety
++- Branch/parallel reasoning dla eksploracji alternatyw
++- Auto-store conclusions do ChromaDB
++"""
++
++import concurrent.futures
++from threading import Lock
++
++# Thread-safe storage for thinking sessions
++_thinking_sessions: Dict[str, Dict] = {}
++_thinking_lock = Lock()
++_thinking_cleanup_interval = timedelta(hours=1)
++
++# Prevent auto-logging loops for status checks
++SKIP_LOG_TOOLS.add("think_status")
++
++# Tool suggestion keywords -> AIONS tools mapping
++THINK_TOOL_KEYWORDS = {
++    # File operations
++    "file": ["fast_search", "fast_search_ext", "project_search"],
++    "find": ["fast_search", "cbms_search", "project_search"],
++    "search": ["fast_search", "cbms_search", "memory_recall"],
++    "locate": ["fast_search", "fast_search_ext"],
++    
++    # Code analysis
++    "code": ["project_scan_turbo", "project_file_deps", "git_status"],
++    "function": ["cbms_search", "project_search", "project_file_deps"],
++    "class": ["cbms_search", "project_search"],
++    "import": ["project_file_deps", "project_search"],
++    "dependency": ["project_file_deps", "project_scan_results"],
++    
++    # Memory & knowledge
++    "remember": ["memory_recall", "cbms_search", "conv_history"],
++    "memory": ["memory_store", "memory_recall", "session_list"],
++    "knowledge": ["cbms_search", "cbms_get_chunk", "memory_recall"],
++    "context": ["cbms_search", "memory_recall"],
++    "history": ["conv_history", "git_log", "memory_recall"],
++    
++    # System operations
++    "docker": ["docker_ps", "docker_images"],
++    "container": ["docker_ps", "docker_images"],
++    "linux": ["wsl_run", "wsl_list"],
++    "wsl": ["wsl_run", "wsl_list"],
++    "git": ["git_status", "git_log"],
++    "commit": ["git_log", "git_status"],
++    
++    # Web & browser
++    "web": ["browser_navigate", "web_fetch"],
++    "browser": ["browser_navigate", "browser_snapshot", "browser_screenshot"],
++    "url": ["browser_navigate", "web_fetch"],
++    "page": ["browser_snapshot", "browser_get_text"],
++    "screenshot": ["desktop_snapshot", "browser_screenshot"],
++    "desktop": ["desktop_snapshot", "desktop_windows", "desktop_click"],
++    "pulpit": ["desktop_snapshot", "desktop_windows", "desktop_click"],
++    "okno": ["desktop_windows", "desktop_focus"],
++    "klik": ["desktop_click"],
++    
++    # Network & health
++    "network": ["network_ping", "system_health"],
++    "ping": ["network_ping"],
++    "health": ["system_health"],
++    
++    # Project scanning
++    "scan": ["project_scan_turbo", "project_scan_status", "project_scan_results"],
++    "project": ["project_scan_turbo", "project_search", "project_file_deps"],
++    "analyze": ["project_scan_turbo", "cbms_search", "project_scan_results"],
++    # Polish keywords (same mappings as English)
++    "plik": ["fast_search", "fast_search_ext", "project_search"],
++    "szukaj": ["fast_search", "cbms_search", "memory_recall"],
++    "znajdz": ["fast_search", "cbms_search", "project_search"],
++    "pamiec": ["memory_store", "memory_recall", "session_list"],
++    "zapamietaj": ["memory_store", "memory_recall"],
++    "wiedza": ["cbms_search", "cbms_get_chunk", "memory_recall"],
++    "kontekst": ["cbms_search", "memory_recall"],
++    "historia": ["conv_history", "git_log", "memory_recall"],
++    "projekt": ["project_scan_turbo", "project_search", "project_file_deps"],
++    "skan": ["project_scan_turbo", "project_scan_status", "project_scan_results"],
++    "kod": ["project_scan_turbo", "project_file_deps", "git_status"],
++    "zaleznosc": ["project_file_deps", "project_scan_results"],
++    "zaleznosci": ["project_file_deps", "project_scan_results"],
++    "siec": ["network_ping", "system_health"],
++    "zdrowie": ["system_health"],
++}
++
++def _suggest_aions_tools(text: str) -> List[Dict[str, Any]]:
++    """Analizuje tekst i sugeruje odpowiednie narzędzia AIONS."""
++    suggestions = []
++    text_lower = text.lower()
++    seen_tools = set()
++    
++    for keyword, tools in THINK_TOOL_KEYWORDS.items():
++        if keyword in text_lower:
++            for tool in tools:
++                if tool not in seen_tools:
++                    seen_tools.add(tool)
++                    pos = text_lower.find(keyword)
++                    confidence = 0.9 if pos < 50 else 0.7 if pos < 200 else 0.5
++                    suggestions.append({
++                        "tool": tool,
++                        "keyword": keyword,
++                        "confidence": confidence,
++                        "reason": f"Keyword '{keyword}' detected in thought"
++                    })
++    
++    suggestions.sort(key=lambda x: x["confidence"], reverse=True)
++    return suggestions[:5]
++
++def _thinking_auto_cbms(text: str, timeout: float = 2.0) -> Dict[str, Any]:
++    """Automatyczne przeszukanie CBMS z timeout protection."""
++    try:
++        cbms = get_cbms()
++        if not cbms:
++            return {"status": "unavailable", "chunks": []}
++        
++        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
++            future = executor.submit(cbms.cbms_think, text[:500])
++            try:
++                result = future.result(timeout=timeout)
++                return {
++                    "status": "ok",
++                    "answer": result.get("answer", "")[:500],
++                    "chunks": result.get("chunk_references", [])[:5]
++                }
++            except concurrent.futures.TimeoutError:
++                return {"status": "timeout", "chunks": []}
++    except Exception as e:
++        return {"status": "error", "error": str(e), "chunks": []}
++
++def _thinking_cleanup():
++    """Usuwa sesje thinking starsze niż 1 godzina."""
++    with _thinking_lock:
++        now = datetime.now(timezone.utc)
++        expired = []
++        for sid, data in _thinking_sessions.items():
++            try:
++                created = datetime.fromisoformat(data["created"].replace("Z", "+00:00"))
++                if now - created > _thinking_cleanup_interval:
++                    expired.append(sid)
++            except:
++                expired.append(sid)
++        for sid in expired:
++            del _thinking_sessions[sid]
++        return len(expired)
++
++
++@mcp_server.tool(name="think_start", description="Start sequential thinking chain with AIONS context integration. Auto-searches CBMS and suggests relevant tools.")
++@auto_logged
++def think_start(
++    goal: str,
++    context: str = "",
++    auto_search_cbms: bool = True,
++    max_steps: int = 10
++) -> str:
++    """
++    Inicjalizuje nowy łańcuch myślowy.
++    
++    Args:
++        goal: Cel analizy/rozumowania
++        context: Dodatkowy kontekst (opcjonalny)
++        auto_search_cbms: Czy automatycznie przeszukać CBMS dla kontekstu
++        max_steps: Maksymalna liczba kroków (default: 10)
++    
++    Returns:
++        JSON z session_id, cbms_context, suggested_tools
++    """
++    try:
++        cleaned = _thinking_cleanup()
++        session_id = f"think_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{_generate_id()}"
++        
++        session = {
++            "id": session_id,
++            "goal": goal,
++            "context": context,
++            "created": _now_iso(),
++            "max_steps": max_steps,
++            "current_step": 0,
++            "steps": [],
++            "branches": {"main": []},
++            "active_branch": "main",
++            "status": "active",
++            "cbms_context": None,
++            "suggested_tools": []
++        }
++        
++        cbms_result = {"status": "skipped", "chunks": []}
++        if auto_search_cbms:
++            search_text = f"{goal} {context}".strip()
++            cbms_result = _thinking_auto_cbms(search_text)
++            session["cbms_context"] = cbms_result
++        
++        combined_text = f"{goal} {context}"
++        suggested = _suggest_aions_tools(combined_text)
++        session["suggested_tools"] = suggested
++        
++        with _thinking_lock:
++            _thinking_sessions[session_id] = session
++        
++        return _success({
++            "session_id": session_id,
++            "goal": goal,
++            "max_steps": max_steps,
++            "cbms_context": {
++                "status": cbms_result.get("status"),
++                "relevant_chunks": cbms_result.get("chunks", [])[:3],
++                "preview": cbms_result.get("answer", "")[:200] if cbms_result.get("answer") else None
++            },
++            "suggested_tools": suggested,
++            "message": f"Thinking session started. Use think_step() to add reasoning steps.",
++            "sessions_cleaned": cleaned
++        }, guard=False)
++        
++    except Exception as e:
++        log(f"think_start error: {e}")
++        return _error(f"Failed to start thinking: {str(e)}")
++
++
++@mcp_server.tool(name="think_step", description="Execute single thinking step with auto CBMS lookup and tool suggestions.")
++@auto_logged
++def think_step(
++    session_id: str,
++    thought: str,
++    step_number: int,
++    needs_more_steps: bool = True,
++    branch_id: str = "main",
++    auto_cbms: bool = True
++) -> str:
++    """
++    Wykonuje pojedynczy krok myślowy z auto-integracją AIONS.
++    
++    Args:
++        session_id: ID sesji thinking (z think_start)
++        thought: Treść myśli/analizy
++        step_number: Numer kroku (1-indexed)
++        needs_more_steps: Czy potrzebne dalsze kroki
++        branch_id: ID gałęzi (default: "main")
++        auto_cbms: Czy auto-szukać w CBMS
++    """
++    try:
++        with _thinking_lock:
++            if session_id not in _thinking_sessions:
++                return _error(f"Session '{session_id}' not found. Use think_start() first.")
++            
++            session = _thinking_sessions[session_id]
++            
++            if session["status"] != "active":
++                return _error(f"Session is {session['status']}. Cannot add steps.")
++            
++            if step_number > session["max_steps"]:
++                return _error(f"Exceeded max steps ({session['max_steps']})")
++            
++            if branch_id not in session["branches"]:
++                session["branches"][branch_id] = []
++        
++        cbms_hits = {"status": "skipped", "chunks": []}
++        if auto_cbms:
++            cbms_hits = _thinking_auto_cbms(thought)
++        
++        suggested = _suggest_aions_tools(thought)
++        
++        step_record = {
++            "step": step_number,
++            "thought": thought,
++            "timestamp": _now_iso(),
++            "branch": branch_id,
++            "cbms_hits": cbms_hits.get("chunks", [])[:3],
++            "suggested_tools": [s["tool"] for s in suggested],
++            "needs_more": needs_more_steps
++        }
++        
++        with _thinking_lock:
++            session["branches"][branch_id].append(step_record)
++            session["current_step"] = step_number
++            session["steps"].append(step_record)
++            session["active_branch"] = branch_id
++        
++        next_suggestions = []
++        if needs_more_steps:
++            if cbms_hits.get("chunks"):
++                next_suggestions.append("Consider exploring CBMS chunks: " + ", ".join(cbms_hits["chunks"][:2]))
++            if suggested:
++                tools_str = ", ".join([s["tool"] for s in suggested[:3]])
++                next_suggestions.append(f"Recommended tools: {tools_str}")
++            next_suggestions.append(f"Continue with think_step(step_number={step_number + 1})")
++        else:
++            next_suggestions.append("Ready to conclude. Use think_finish() to summarize.")
++        
++        return _success({
++            "session_id": session_id,
++            "step": step_number,
++            "branch": branch_id,
++            "thought_preview": thought[:100] + "..." if len(thought) > 100 else thought,
++            "cbms_context": {
++                "status": cbms_hits.get("status"),
++                "chunks_found": cbms_hits.get("chunks", [])[:3]
++            },
++            "suggested_tools": suggested[:3],
++            "needs_more_steps": needs_more_steps,
++            "next_suggestions": next_suggestions,
++            "total_steps": len(session["steps"])
++        })
++        
++    except Exception as e:
++        log(f"think_step error: {e}")
++        return _error(f"Step failed: {str(e)}")
++
++
++@mcp_server.tool(name="think_branch", description="Create parallel reasoning branch for exploring alternative hypotheses.")
++def think_branch(
++    session_id: str,
++    branch_name: str,
++    hypothesis: str,
++    parent_step: int = -1
++) -> str:
++    """
++    Tworzy równoległą gałąź rozumowania.
++    
++    Args:
++        session_id: ID sesji
++        branch_name: Nazwa nowej gałęzi
++        hypothesis: Hipoteza do eksploracji
++        parent_step: Od którego kroku rozgałęzić (-1 = current)
++    """
++    try:
++        with _thinking_lock:
++            if session_id not in _thinking_sessions:
++                return _error(f"Session '{session_id}' not found")
++            
++            session = _thinking_sessions[session_id]
++            
++            if branch_name in session["branches"]:
++                return _error(f"Branch '{branch_name}' already exists")
++            
++            parent = parent_step if parent_step > 0 else session["current_step"]
++            session["branches"][branch_name] = []
++            
++            branch_start = {
++                "step": 0,
++                "thought": f"BRANCH START: {hypothesis}",
++                "timestamp": _now_iso(),
++                "branch": branch_name,
++                "parent_step": parent,
++                "cbms_hits": [],
++                "suggested_tools": [],
++                "needs_more": True
++            }
++            session["branches"][branch_name].append(branch_start)
++        
++        return _success({
++            "session_id": session_id,
++            "branch_created": branch_name,
++            "hypothesis": hypothesis,
++            "forked_from_step": parent,
++            "total_branches": len(session["branches"]),
++            "branches": list(session["branches"].keys()),
++            "message": f"Use think_step(branch_id='{branch_name}') to continue this branch"
++        })
++        
++    except Exception as e:
++        log(f"think_branch error: {e}")
++        return _error(f"Branch failed: {str(e)}")
++
++
++@mcp_server.tool(name="think_finish", description="Complete thinking chain, generate summary report, optionally store to ChromaDB memory.")
++@auto_logged
++def think_finish(
++    session_id: str,
++    conclusion: str,
++    confidence: float = 0.8,
++    store_to_memory: bool = True,
++    memory_session: str = "thinking_conclusions"
++) -> str:
++    """
++    Kończy łańcuch myślowy i generuje raport.
++    
++    Args:
++        session_id: ID sesji
++        conclusion: Końcowy wniosek
++        confidence: Pewność wniosku (0.0 - 1.0)
++        store_to_memory: Czy zapisać do ChromaDB
++        memory_session: Nazwa sesji ChromaDB
++    """
++    try:
++        with _thinking_lock:
++            if session_id not in _thinking_sessions:
++                return _error(f"Session '{session_id}' not found")
++            
++            session = _thinking_sessions[session_id]
++            session["status"] = "completed"
++            session["conclusion"] = conclusion
++            session["confidence"] = confidence
++            session["completed_at"] = _now_iso()
++        
++        report = {
++            "session_id": session_id,
++            "goal": session["goal"],
++            "total_steps": len(session["steps"]),
++            "branches_explored": len(session["branches"]),
++            "duration": None,
++            "conclusion": conclusion,
++            "confidence": confidence,
++            "thinking_chain": []
++        }
++        
++        try:
++            start = datetime.fromisoformat(session["created"].replace("Z", "+00:00"))
++            end = datetime.fromisoformat(session["completed_at"].replace("Z", "+00:00"))
++            report["duration"] = str(end - start)
++        except:
++            report["duration"] = "unknown"
++        
++        for step in session["steps"]:
++            report["thinking_chain"].append({
++                "step": step["step"],
++                "branch": step["branch"],
++                "thought": step["thought"][:200] + "..." if len(step["thought"]) > 200 else step["thought"],
++                "tools_suggested": step.get("suggested_tools", [])
++            })
++        
++        memory_result = None
++        if store_to_memory:
++            try:
++                memory_text = f"""THINKING SESSION: {session_id}
++GOAL: {session['goal']}
++CONCLUSION: {conclusion}
++CONFIDENCE: {confidence}
++STEPS: {len(session['steps'])}
++BRANCHES: {', '.join(session['branches'].keys())}
++
++THINKING CHAIN:
++"""
++                for i, step in enumerate(session["steps"], 1):
++                    memory_text += f"\n{i}. [{step['branch']}] {step['thought'][:300]}"
++                
++                store_result = memory_store(
++                    session_id=memory_session,
++                    text=memory_text[:4000],
++                    ttl_days=90
++                )
++                memory_result = json.loads(store_result)
++            except Exception as e:
++                memory_result = {"status": "error", "error": str(e)}
++        
++        return _success({
++            "status": "completed",
++            "report": report,
++            "stored_to_memory": memory_result.get("status") == "ok" if memory_result else False,
++            "memory_doc_id": memory_result.get("doc_id") if memory_result else None,
++            "message": "Thinking session completed successfully."
++        }, guard=False)
++        
++    except Exception as e:
++        log(f"think_finish error: {e}")
++        return _error(f"Finish failed: {str(e)}")
++
++
++@mcp_server.tool(name="think_status", description="Get status of thinking sessions - active, completed, or specific session details.")
++def think_status(
++    session_id: str = "",
++    include_history: bool = False
++) -> str:
++    """
++    Zwraca status sesji thinking.
++    
++    Args:
++        session_id: ID konkretnej sesji (puste = wszystkie)
++        include_history: Czy włączyć pełną historię kroków
++    """
++    try:
++        with _thinking_lock:
++            if session_id:
++                if session_id not in _thinking_sessions:
++                    return _error(f"Session '{session_id}' not found")
++                
++                session = _thinking_sessions[session_id]
++                result = {
++                    "session_id": session_id,
++                    "goal": session["goal"],
++                    "status": session["status"],
++                    "current_step": session["current_step"],
++                    "max_steps": session["max_steps"],
++                    "branches": list(session["branches"].keys()),
++                    "active_branch": session["active_branch"],
++                    "created": session["created"]
++                }
++                
++                if include_history:
++                    result["steps"] = session["steps"]
++                    result["conclusion"] = session.get("conclusion")
++                
++                return _success(result)
++            else:
++                sessions_summary = []
++                for sid, data in _thinking_sessions.items():
++                    sessions_summary.append({
++                        "session_id": sid,
++                        "goal": data["goal"][:50] + "..." if len(data["goal"]) > 50 else data["goal"],
++                        "status": data["status"],
++                        "steps": len(data["steps"]),
++                        "branches": len(data["branches"])
++                    })
++                
++                return _success({
++                    "active_sessions": len([s for s in _thinking_sessions.values() if s["status"] == "active"]),
++                    "total_sessions": len(_thinking_sessions),
++                    "sessions": sessions_summary
++                })
++                
++    except Exception as e:
++        log(f"think_status error: {e}")
++        return _error(f"Status failed: {str(e)}")
++
++
++# =============================================================================
++# END OF SEQUENTIAL THINKING ENGINE
++# =============================================================================
++
++
++
+ server = mcp_server
+ 
+ # =============================================================================
+@@ -1177,6 +2058,13 @@ _warmup_thread.start()
+ 
+ log("Server v8 DEBILOODPORNE + PRELOAD ready!")
+ 
++
++@mcp_server.tool(name="offload_get", description="Retrieve full content from offloaded response by ref_id (OFF_xxx).")
++def offload_get(ref_id: str) -> str:
++    if ref_id in _offload_cache:
++        return _offload_cache[ref_id]  # Return raw, no re-guard
++    return _error(f"Offload '{ref_id}' not found or expired")
++
+ if __name__ == "__main__":
+     mcp_server.run(transport="stdio")
+ 
+diff --git a/mcpServers/VS_CODE_MCP_CODEX/src/server.py.backup b/mcpServers/VS_CODE_MCP_CODEX/src/server.py.backup
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/mcpServers/VS_CODE_MCP_CODEX/src/server.py.backup_20251225 b/mcpServers/VS_CODE_MCP_CODEX/src/server.py.backup_20251225
+deleted file mode 100644
+index 9440c82..0000000
+--- a/mcpServers/VS_CODE_MCP_CODEX/src/server.py.backup_20251225
++++ /dev/null
+@@ -1,1161 +0,0 @@
+-"""
+-AIONS ULTIMATE MCP SERVER v6
+-============================
+-DEBILOODPORNE AUTO-LOGGING!
+-
+-Każde wywołanie narzędzia = automatyczny log do bufora.
+-Zero myślenia, zero pamiętania.
+-
+-Integruje:
+-- ChromaDB (semantic search)
+-- CBMS chunks (deterministic retrieval) 
+-- Korean keys (fast matching)
+-- DEBILOODPORNE AUTO-LOGGING ⭐⭐⭐
+-- Project Scanner + TURBO
+-- Everything (blazing fast file search)
+-- Docker, WSL, Git, Network tools
+-
+-Autor: Marcin Szul / AIONS Project
+-"""
+-
+-from __future__ import annotations
+-
+-import json
+-import os
+-import sys
+-import re
+-import hashlib
+-import uuid
+-import traceback
+-import importlib.util
+-import subprocess
+-import threading
+-import shutil
+-import functools
+-from datetime import datetime, timezone, timedelta
+-from pathlib import Path
+-from typing import Any, Dict, List, Optional, Callable
+-
+-
+-def _is_huge_repo(repo_path: str = "") -> bool:
+-    """Check if this is a huge repo that would hang git commands"""
+-    try:
+-        git_dir = Path(repo_path or ".") / ".git"
+-        if not git_dir.exists():
+-            return False
+-        
+-        # Quick heuristic - check .git size
+-        total_size = sum(f.stat().st_size for f in git_dir.rglob("*") if f.is_file())
+-        if total_size > 100 * 1024 * 1024:  # > 100MB .git folder
+-            return True
+-            
+-        # Check if we are at root of a drive (like E:\)
+-        repo_root = Path(repo_path or ".")
+-        if len(str(repo_root.resolve()).split(":")) == 2 and str(repo_root.resolve()).endswith(":\\"):
+-            return True
+-            
+-        return False
+-    except:
+-        return False  # If check fails, assume its safe
+-
+-# =============================================================================
+-# STDERR LOGGING
+-# =============================================================================
+-
+-def log(msg: str):
+-    print(f"[AIONS] {datetime.now().isoformat()} - {msg}", file=sys.stderr, flush=True)
+-
+-log("Server v6 loading (DEBILOODPORNE)...")
+-
+-# =============================================================================
+-# PATH SETUP
+-# =============================================================================
+-
+-REPO_ROOT = Path(__file__).resolve().parents[3]
+-AIONS_V10 = Path("C:/Users/User/OneDrive - Global Banking School/Desktop/AIONS_CBMS_RELEASE_V3")
+-DUMPS_DIR = REPO_ROOT / "logs" / "conversation_dumps"
+-SCAN_RESULTS_DIR = REPO_ROOT / "scan_results"
+-SCANNER_SCRIPT = REPO_ROOT / "scripts" / "project_scanner.py"
+-TURBO_SCANNER_SCRIPT = REPO_ROOT / "scripts" / "turbo_scanner.py"
+-PYTHON_EXE = REPO_ROOT / "venv" / "Scripts" / "python.exe"
+-
+-EVERYTHING_CLI = Path("C:/Program Files/Everything/es.exe")
+-DOCKER_EXE = shutil.which("docker") or "docker"
+-WSL_EXE = shutil.which("wsl") or "wsl"
+-# Git - use full path to avoid issues
+-GIT_EXE = Path("C:/Program Files/Git/bin/git.exe")
+-if not GIT_EXE.exists():
+-    GIT_EXE = shutil.which("git") or "git"
+-else:
+-    GIT_EXE = str(GIT_EXE)
+-GH_EXE = shutil.which("gh") or "gh"
+-NMAP_EXE = Path("C:/Program Files (x86)/Nmap/nmap.exe")
+-
+-DUMPS_DIR.mkdir(parents=True, exist_ok=True)
+-SCAN_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+-
+-server_pkg_path = REPO_ROOT / "server"
+-
+-for p in [AIONS_V10, AIONS_V10 / "server"]:
+-    if p.exists() and str(p) not in sys.path:
+-        sys.path.insert(0, str(p))
+-
+-# =============================================================================
+-# MCP IMPORTS
+-# =============================================================================
+-
+-try:
+-    from mcp.server.fastmcp import FastMCP
+-    log("FastMCP imported successfully")
+-except ImportError as e:
+-    log(f"FastMCP import failed: {e}")
+-    raise
+-
+-# =============================================================================
+-# HELPER FUNCTIONS
+-# =============================================================================
+-
+-def _now_iso() -> str:
+-    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+-
+-def _today_str() -> str:
+-    return datetime.now().strftime("%Y-%m-%d")
+-
+-def _success(payload: Dict[str, Any]) -> str:
+-    return json.dumps({"status": "ok", "timestamp": _now_iso(), **payload}, ensure_ascii=False)
+-
+-def _error(message: str) -> str:
+-    return json.dumps({"status": "error", "message": message, "timestamp": _now_iso()}, ensure_ascii=False)
+-
+-def _generate_id() -> str:
+-    return str(uuid.uuid4())[:12]
+-
+-def _run_command(cmd: List[str], timeout: int = 30) -> Dict[str, Any]:
+-    try:
+-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, shell=False)
+-        return {"success": result.returncode == 0, "stdout": result.stdout[:5000], "stderr": result.stderr[:1000], "returncode": result.returncode}
+-    except subprocess.TimeoutExpired:
+-        return {"success": False, "error": f"Command timed out after {timeout}s"}
+-    except Exception as e:
+-        return {"success": False, "error": str(e)}
+-
+-# =============================================================================
+-# KOREAN KEYS
+-# =============================================================================
+-
+-def korean_build_keys(text: str) -> set:
+-    if not text:
+-        return set()
+-    tokens = re.findall(r"[A-Za-z0-9]{2,}", text.lower())
+-    keys = set()
+-    for tok in tokens[:30]:
+-        for i in range(len(tok) - 2):
+-            keys.add(f"g:{tok[i:i+3]}")
+-        h = hashlib.sha1(tok.encode()).hexdigest()[:12]
+-        keys.add(f"h:{h[0:3]}")
+-    return keys
+-
+-# =============================================================================
+-# AUTO-CATEGORIZATION
+-# =============================================================================
+-
+-def extract_categories(text: str) -> List[str]:
+-    categories = []
+-    text_lower = text.lower()
+-    if any(k in text_lower for k in ["python", "javascript", "code", "function", "class", "api", "database"]):
+-        categories.append("programming")
+-    if any(k in text_lower for k in ["ai", "machine learning", "model", "gpt", "claude", "llm"]):
+-        categories.append("ai_ml")
+-    if any(k in text_lower for k in ["aions", "cbms", "chunk", "korean", "crla", "mcp"]):
+-        categories.append("aions_system")
+-    if any(k in text_lower for k in ["docker", "container", "wsl", "linux"]):
+-        categories.append("devops")
+-    if any(k in text_lower for k in ["git", "github", "commit", "branch"]):
+-        categories.append("version_control")
+-    if any(k in text_lower for k in ["scan", "file", "search", "find"]):
+-        categories.append("file_ops")
+-    return categories if categories else ["general"]
+-
+-# =============================================================================
+-# DEBILOODPORNE AUTO-LOGGING SYSTEM
+-# =============================================================================
+-
+-_auto_log_buffer: List[Dict] = []
+-_auto_log_session: str = "claude_marcin_main"
+-_auto_log_threshold: int = 5
+-_auto_log_last_dump: datetime = datetime.now(timezone.utc)
+-
+-# Tools to SKIP logging (to avoid infinite loops)
+-SKIP_LOG_TOOLS = {"conv_log", "conv_dump", "conv_status", "conv_set_threshold", "conv_history"}
+-
+-def _auto_log_entry(tool_name: str, args: Dict, result_preview: str):
+-    """AUTOMATYCZNIE loguje każde wywołanie narzędzia"""
+-    global _auto_log_buffer
+-    
+-    if tool_name in SKIP_LOG_TOOLS:
+-        return  # Skip conv_* tools to avoid loops
+-    
+-    # Create log entry
+-    args_str = ", ".join([f"{k}={repr(v)[:50]}" for k, v in args.items() if v])
+-    entry = {
+-        "id": _generate_id(),
+-        "timestamp": _now_iso(),
+-        "tool": tool_name,
+-        "args": args_str[:200],
+-        "result": result_preview[:300]
+-    }
+-    
+-    _auto_log_buffer.append(entry)
+-    log(f"AUTO-LOG: {tool_name}({args_str[:50]}) -> buffer={len(_auto_log_buffer)}")
+-    
+-    # Auto-dump when threshold reached
+-    if len(_auto_log_buffer) >= _auto_log_threshold:
+-        _auto_dump_logs()
+-
+-def _auto_dump_logs():
+-    """Dump accumulated logs to file and ChromaDB"""
+-    global _auto_log_buffer, _auto_log_last_dump
+-    
+-    if not _auto_log_buffer:
+-        return
+-    
+-    try:
+-        # Format logs
+-        log_text = f"AUTO-LOG DUMP ({_today_str()})\n\n"
+-        for entry in _auto_log_buffer:
+-            log_text += f"[{entry['timestamp'][:19]}] {entry['tool']}({entry['args']})\n"
+-            log_text += f"  -> {entry['result']}\n\n"
+-        
+-        # Save to JSONL file
+-        dump_file = DUMPS_DIR / f"autolog_{_today_str()}.jsonl"
+-        with open(dump_file, "a", encoding="utf-8") as f:
+-            for entry in _auto_log_buffer:
+-                f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+-        
+-        # Save to ChromaDB
+-        vs = get_vector_store()
+-        if vs:
+-            doc_id = f"autolog_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+-            metadata = {
+-                "type": "auto_log",
+-                "entry_count": len(_auto_log_buffer),
+-                "tools_used": ",".join(set(e["tool"] for e in _auto_log_buffer)),
+-                "timestamp": _now_iso()
+-            }
+-            vs.add_items(_auto_log_session, [(doc_id, log_text, metadata)])
+-        
+-        log(f"AUTO-DUMP: {len(_auto_log_buffer)} entries saved")
+-        
+-        _auto_log_buffer = []
+-        _auto_log_last_dump = datetime.now(timezone.utc)
+-        
+-    except Exception as e:
+-        log(f"AUTO-DUMP error: {e}")
+-
+-def auto_logged(func: Callable) -> Callable:
+-    """Decorator that auto-logs tool calls - DEBILOODPORNE!"""
+-    @functools.wraps(func)
+-    def wrapper(*args, **kwargs):
+-        # Get tool name
+-        tool_name = func.__name__
+-        
+-        # Call original function
+-        result = func(*args, **kwargs)
+-        
+-        # Auto-log (skip if in SKIP_LOG_TOOLS)
+-        if tool_name not in SKIP_LOG_TOOLS:
+-            try:
+-                # Parse result for preview
+-                if isinstance(result, str):
+-                    try:
+-                        parsed = json.loads(result)
+-                        preview = parsed.get("status", "") + ": " + str(list(parsed.keys()))[:100]
+-                    except:
+-                        preview = result[:100]
+-                else:
+-                    preview = str(result)[:100]
+-                
+-                _auto_log_entry(tool_name, kwargs, preview)
+-            except Exception as e:
+-                log(f"Auto-log error for {tool_name}: {e}")
+-        
+-        return result
+-    return wrapper
+-
+-# =============================================================================
+-# LAZY-LOADED STORES
+-# =============================================================================
+-
+-_vector_store = None
+-_cbms_memory = None
+-
+-def get_vector_store():
+-    global _vector_store
+-    if _vector_store is None:
+-        try:
+-            context_schema_path = server_pkg_path / "context_schema.py"
+-            store_path = server_pkg_path / "store.py"
+-            
+-            if not context_schema_path.exists() or not store_path.exists():
+-                raise FileNotFoundError("Store files not found")
+-            
+-            spec_cs = importlib.util.spec_from_file_location("aions_context_schema", context_schema_path)
+-            context_schema_module = importlib.util.module_from_spec(spec_cs)
+-            sys.modules["aions_context_schema"] = context_schema_module
+-            spec_cs.loader.exec_module(context_schema_module)
+-            
+-            sys.modules["server"] = type(sys)("server")
+-            sys.modules["server"].__path__ = [str(server_pkg_path)]
+-            sys.modules["server.context_schema"] = context_schema_module
+-            
+-            spec_store = importlib.util.spec_from_file_location("server.store", store_path, submodule_search_locations=[str(server_pkg_path)])
+-            store_module = importlib.util.module_from_spec(spec_store)
+-            sys.modules["server.store"] = store_module
+-            spec_store.loader.exec_module(store_module)
+-            
+-            VectorStore = store_module.VectorStore
+-            _vector_store = VectorStore(persist_path=os.environ.get("CHROMA_PATH"))
+-            log(f"VectorStore loaded")
+-        except Exception as e:
+-            log(f"VectorStore failed: {e}")
+-            _vector_store = "FAILED"
+-    return _vector_store if _vector_store != "FAILED" else None
+-
+-def get_cbms():
+-    global _cbms_memory
+-    if _cbms_memory is None:
+-        try:
+-            # Add CBMS server folder to path
+-            cbms_server_path = AIONS_V10 / "server"
+-            if cbms_server_path.exists() and str(cbms_server_path) not in sys.path:
+-                sys.path.insert(0, str(cbms_server_path))
+-            from cbms_memory import CBMSMemory
+-            cbms_dir = AIONS_V10 / "memory" if AIONS_V10.exists() else None
+-            _cbms_memory = CBMSMemory(memory_dir=str(cbms_dir) if cbms_dir else None)
+-            log(f"CBMS loaded from {cbms_server_path}")
+-        except Exception as e:
+-            log(f"CBMS failed: {e}")
+-            _cbms_memory = "FAILED"
+-    return _cbms_memory if _cbms_memory != "FAILED" else None
+-
+-# =============================================================================
+-# IN-MEMORY STORE
+-# =============================================================================
+-
+-_memory_store: Dict[str, List[Dict]] = {}
+-_korean_index: Dict[str, Dict[str, set]] = {}
+-
+-def memory_store_add(session_id: str, doc_id: str, text: str, metadata: dict):
+-    if session_id not in _memory_store:
+-        _memory_store[session_id] = []
+-    _memory_store[session_id].append({"id": doc_id, "text": text, "metadata": metadata})
+-    if session_id not in _korean_index:
+-        _korean_index[session_id] = {}
+-    _korean_index[session_id][doc_id] = korean_build_keys(text)
+-
+-def memory_store_search(session_id: str, query: str, top_k: int = 5) -> List[Dict]:
+-    if session_id not in _memory_store:
+-        return []
+-    query_keys = korean_build_keys(query)
+-    session_keys = _korean_index.get(session_id, {})
+-    scores = []
+-    for doc in _memory_store[session_id]:
+-        doc_keys = session_keys.get(doc["id"], set())
+-        overlap = len(query_keys & doc_keys)
+-        if overlap > 0:
+-            scores.append((doc, overlap / max(len(query_keys), 1)))
+-    scores.sort(key=lambda x: x[1], reverse=True)
+-    return [{"id": d["id"], "text": d["text"], "score": s, "metadata": d["metadata"]} for d, s in scores[:top_k]]
+-
+-# =============================================================================
+-# SCANNER STATE
+-# =============================================================================
+-
+-_scan_status: Dict[str, Any] = {"state": "idle"}
+-
+-# =============================================================================
+-# MCP SERVER
+-# =============================================================================
+-
+-mcp_server = FastMCP("aions_context_server")
+-log("FastMCP server created")
+-
+-# =============================================================================
+-# EVERYTHING SEARCH TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="fast_search", description="Blazing fast file search using Everything.")
+-@auto_logged
+-def fast_search(query: str, max_results: int = 50) -> str:
+-    try:
+-        if not EVERYTHING_CLI.exists():
+-            return _error("Everything CLI not found")
+-        cmd = [str(EVERYTHING_CLI), "-n", str(max_results), query]
+-        result = _run_command(cmd, timeout=10)
+-        if result["success"]:
+-            files = [f for f in result["stdout"].strip().split("\n") if f]
+-            return _success({"query": query, "files": files[:max_results], "count": len(files)})
+-        return _error(result.get("error", "Search failed"))
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="fast_search_ext", description="Search files by extension.")
+-@auto_logged
+-def fast_search_ext(extension: str, folder: str = "", max_results: int = 100) -> str:
+-    try:
+-        if not EVERYTHING_CLI.exists():
+-            return _error("Everything CLI not found")
+-        query = f"ext:{extension.lstrip('.')}"
+-        if folder:
+-            query = f'"{folder}" {query}'
+-        cmd = [str(EVERYTHING_CLI), "-n", str(max_results), query]
+-        result = _run_command(cmd, timeout=15)
+-        if result["success"]:
+-            files = [f for f in result["stdout"].strip().split("\n") if f]
+-            return _success({"extension": extension, "files": files, "count": len(files)})
+-        return _error("Search failed")
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# DOCKER TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="docker_ps", description="List Docker containers.")
+-@auto_logged
+-def docker_ps(all_containers: bool = False) -> str:
+-    try:
+-        cmd = [DOCKER_EXE, "ps", "--format", "json"]
+-        if all_containers:
+-            cmd.insert(2, "-a")
+-        result = _run_command(cmd, timeout=10)
+-        if result["success"]:
+-            containers = []
+-            for line in result["stdout"].strip().split("\n"):
+-                if line:
+-                    try:
+-                        containers.append(json.loads(line))
+-                    except:
+-                        pass
+-            return _success({"containers": containers, "count": len(containers)})
+-        return _error(result.get("stderr", "Docker failed"))
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="docker_images", description="List Docker images.")
+-@auto_logged
+-def docker_images() -> str:
+-    try:
+-        cmd = [DOCKER_EXE, "images", "--format", "json"]
+-        result = _run_command(cmd, timeout=10)
+-        if result["success"]:
+-            images = []
+-            for line in result["stdout"].strip().split("\n"):
+-                if line:
+-                    try:
+-                        images.append(json.loads(line))
+-                    except:
+-                        pass
+-            return _success({"images": images, "count": len(images)})
+-        return _error("Docker failed")
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# WSL TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="wsl_run", description="Run command in WSL/Ubuntu Linux.")
+-@auto_logged
+-def wsl_run(command: str, distribution: str = "") -> str:
+-    try:
+-        cmd = [WSL_EXE]
+-        if distribution:
+-            cmd.extend(["-d", distribution])
+-        cmd.extend(["--", "bash", "-c", command])
+-        result = _run_command(cmd, timeout=60)
+-        return _success({"command": command, "output": result["stdout"], "success": result["success"]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="wsl_list", description="List WSL distributions.")
+-@auto_logged
+-def wsl_list() -> str:
+-    try:
+-        result = _run_command([WSL_EXE, "-l", "-v"], timeout=10)
+-        return _success({"distributions": result["stdout"]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# GIT TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="git_status", description="Get Git status.")
+-@auto_logged
+-def git_status(repo_path: str = "") -> str:
+-    try:
+-        # Handle paths with spaces - use shell=True on Windows
+-        git_cmd = GIT_EXE if isinstance(GIT_EXE, str) else str(GIT_EXE)
+-        cwd = repo_path if repo_path else None
+-        
+-        # Verify git exists
+-        if not Path(git_cmd).exists() and not shutil.which("git"):
+-            return _error(f"Git not found at {git_cmd}")
+-        
+-        # Verify repo path exists if provided
+-        
+-        # Check if this is a huge repo that would hang
+-        if _is_huge_repo(cwd):
+-            return _success({"branch": "unknown", "changes": [], "clean": True, "path": cwd or "current", "note": "Skipped - repo too large"})
+-        if cwd and not Path(cwd).exists():
+-            return _error(f"Path not found: {cwd}")
+-        
+-        result = subprocess.run(
+-            [git_cmd, "status", "--porcelain", "-b"], 
+-            capture_output=True, 
+-            text=True, 
+-            cwd=cwd, 
+-            timeout=2,
+-            shell=False
+-        )
+-        
+-        if result.returncode != 0 and "not a git repository" in result.stderr.lower():
+-            return _error(f"Not a git repository: {cwd or 'current dir'}")
+-        
+-        lines = result.stdout.strip().split("\n") if result.stdout.strip() else []
+-        branch = ""
+-        changes = []
+-        for line in lines:
+-            if line.startswith("##"):
+-                branch = line[3:].split("...")[0]
+-            elif line:
+-                changes.append(line)
+-        return _success({"branch": branch, "changes": changes, "clean": len(changes) == 0, "path": cwd or "current"})
+-    except Exception as e:
+-        return _error(f"Git error: {str(e)}")
+-
+-@mcp_server.tool(name="git_log", description="Get recent commits.")
+-@auto_logged
+-def git_log(repo_path: str = "", count: int = 10) -> str:
+-    try:
+-        git_cmd = GIT_EXE if isinstance(GIT_EXE, str) else str(GIT_EXE)
+-        cwd = repo_path if repo_path else None
+-        
+-        # Verify path
+-        
+-        # Check if this is a huge repo that would hang
+-        if _is_huge_repo(cwd):
+-            return _success({"commits": [], "path": cwd or "current", "note": "Skipped - repo too large"})
+-        if cwd and not Path(cwd).exists():
+-            return _error(f"Path not found: {cwd}")
+-        
+-        result = subprocess.run(
+-            [git_cmd, "log", f"-{count}", "--pretty=format:%h|%an|%ar|%s"], 
+-            capture_output=True, 
+-            text=True, 
+-            cwd=cwd, 
+-            timeout=10
+-        )
+-        
+-        if result.returncode != 0:
+-            return _error(f"Git log failed: {result.stderr[:200]}")
+-        
+-        commits = []
+-        for line in result.stdout.strip().split("\n"):
+-            if line:
+-                parts = line.split("|", 3)
+-                if len(parts) == 4:
+-                    commits.append({"hash": parts[0], "author": parts[1], "date": parts[2], "message": parts[3]})
+-        return _success({"commits": commits, "path": cwd or "current"})
+-    except Exception as e:
+-        return _error(f"Git error: {str(e)}")
+-
+-# =============================================================================
+-# NETWORK TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="network_ping", description="Ping a host.")
+-@auto_logged
+-def network_ping(host: str, count: int = 4) -> str:
+-    try:
+-        result = _run_command(["ping", "-n", str(count), host], timeout=30)
+-        return _success({"host": host, "output": result["stdout"], "success": result["success"]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# PROJECT SCANNER TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="project_scan_turbo", description="TURBO SCAN using Everything - FAST!")
+-@auto_logged
+-def project_scan_turbo(output_dir: str = "") -> str:
+-    global _scan_status
+-    try:
+-        if _scan_status.get("state") == "running":
+-            return _error("Scan already running")
+-        if not EVERYTHING_CLI.exists():
+-            return _error("Everything CLI not found")
+-        
+-        out_dir = output_dir or str(SCAN_RESULTS_DIR)
+-        scan_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+-        _scan_status = {"state": "starting", "scan_id": scan_id, "type": "turbo"}
+-        
+-        def run_turbo():
+-            global _scan_status
+-            try:
+-                _scan_status["state"] = "running"
+-                cmd = [str(PYTHON_EXE), str(TURBO_SCANNER_SCRIPT), "-o", out_dir]
+-                result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=600)
+-                _scan_status["state"] = "completed" if result.returncode == 0 else "error"
+-                if result.returncode != 0:
+-                    _scan_status["error"] = result.stderr[:500]
+-            except Exception as e:
+-                _scan_status["state"] = "error"
+-                _scan_status["error"] = str(e)
+-        
+-        threading.Thread(target=run_turbo, daemon=True).start()
+-        return _success({"message": "TURBO scan started!", "scan_id": scan_id})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="project_scan_status", description="Check scan status.")
+-@auto_logged
+-def project_scan_status() -> str:
+-    try:
+-        status = dict(_scan_status)
+-        if SCAN_RESULTS_DIR.exists():
+-            scans = sorted([d for d in SCAN_RESULTS_DIR.iterdir() if d.is_dir()], reverse=True)
+-            if scans:
+-                status["latest_scan"] = scans[0].name
+-                summary = scans[0] / "summary.json"
+-                if summary.exists():
+-                    with open(summary, "r", encoding="utf-8") as f:
+-                        status["latest_summary"] = json.load(f)
+-        return _success(status)
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="project_scan_results", description="Get scan results.")
+-@auto_logged
+-def project_scan_results(scan_id: str = "") -> str:
+-    try:
+-        if not scan_id:
+-            scans = sorted([d for d in SCAN_RESULTS_DIR.iterdir() if d.is_dir()], reverse=True)
+-            if not scans:
+-                return _error("No scans found")
+-            scan_dir = scans[0]
+-        else:
+-            scan_dir = SCAN_RESULTS_DIR / scan_id
+-        
+-        results = {"scan_id": scan_dir.name}
+-        for fname in ["summary.json", "analysis.json", "duplicates.json"]:
+-            fpath = scan_dir / fname
+-            if fpath.exists():
+-                with open(fpath, "r", encoding="utf-8") as f:
+-                    data = json.load(f)
+-                    if fname == "summary.json":
+-                        results["summary"] = data
+-                    elif fname == "analysis.json":
+-                        results["hubs"] = data.get("hubs", [])[:20]
+-                        results["orphans_count"] = len(data.get("orphans", []))
+-                    elif fname == "duplicates.json":
+-                        results["duplicate_groups"] = len(data)
+-        return _success(results)
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="project_search", description="Search scanned files.")
+-@auto_logged
+-def project_search(query: str, scan_id: str = "") -> str:
+-    try:
+-        if not scan_id:
+-            scans = sorted([d for d in SCAN_RESULTS_DIR.iterdir() if d.is_dir()], reverse=True)
+-            if not scans:
+-                return _error("No scans")
+-            scan_dir = scans[0]
+-        else:
+-            scan_dir = SCAN_RESULTS_DIR / scan_id
+-        
+-        files_json = scan_dir / "files.json"
+-        if not files_json.exists():
+-            return _error("No files data")
+-        
+-        with open(files_json, "r", encoding="utf-8") as f:
+-            files = json.load(f)
+-        
+-        matches = [{"path": p, "name": i.get("name")} for p, i in files.items() if query.lower() in p.lower()][:50]
+-        return _success({"query": query, "matches": matches, "count": len(matches)})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="project_file_deps", description="Get file dependencies.")
+-@auto_logged
+-def project_file_deps(file_path: str, scan_id: str = "") -> str:
+-    try:
+-        if not scan_id:
+-            scans = sorted([d for d in SCAN_RESULTS_DIR.iterdir() if d.is_dir()], reverse=True)
+-            if not scans:
+-                return _error("No scans")
+-            scan_dir = scans[0]
+-        else:
+-            scan_dir = SCAN_RESULTS_DIR / scan_id
+-        
+-        deps_json = scan_dir / "dependencies.json"
+-        if not deps_json.exists():
+-            return _error("No deps data")
+-        
+-        with open(deps_json, "r", encoding="utf-8") as f:
+-            deps = json.load(f)
+-        
+-        forward = deps.get("forward", {})
+-        reverse = deps.get("reverse", {})
+-        match = next((p for p in forward if file_path.lower() in p.lower()), None)
+-        
+-        if not match:
+-            return _error(f"File not found: {file_path}")
+-        
+-        return _success({"file": match, "imports": forward.get(match, []), "imported_by": reverse.get(match, [])})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# CONVERSATION TOOLS (NOT AUTO-LOGGED - to avoid loops)
+-# =============================================================================
+-
+-@mcp_server.tool(name="conv_log", description="Log message to buffer (manual).")
+-def conv_log(role: str, content: str, save_now: bool = False) -> str:
+-    try:
+-        global _auto_log_buffer
+-        entry = {"id": _generate_id(), "timestamp": _now_iso(), "tool": "manual_log", "args": f"role={role}", "result": content[:200]}
+-        _auto_log_buffer.append(entry)
+-        if save_now or len(_auto_log_buffer) >= _auto_log_threshold:
+-            _auto_dump_logs()
+-        return _success({"logged": True, "buffer_size": len(_auto_log_buffer)})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="conv_dump", description="Force dump buffer NOW.")
+-def conv_dump(summary: str = "") -> str:
+-    try:
+-        if summary:
+-            _auto_log_buffer.append({"id": _generate_id(), "timestamp": _now_iso(), "tool": "summary", "args": "", "result": summary})
+-        count = len(_auto_log_buffer)
+-        _auto_dump_logs()
+-        return _success({"dumped": True, "entries_saved": count})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="conv_status", description="Check buffer status.")
+-def conv_status() -> str:
+-    return _success({
+-        "buffer_size": len(_auto_log_buffer),
+-        "threshold": _auto_log_threshold,
+-        "session": _auto_log_session,
+-        "last_dump": _auto_log_last_dump.isoformat()
+-    })
+-
+-@mcp_server.tool(name="conv_set_threshold", description="Set auto-dump threshold.")
+-def conv_set_threshold(threshold: int = 5) -> str:
+-    global _auto_log_threshold
+-    _auto_log_threshold = max(1, min(50, threshold))
+-    return _success({"threshold": _auto_log_threshold})
+-
+-@mcp_server.tool(name="conv_history", description="Get log history.")
+-def conv_history(date: str = "") -> str:
+-    try:
+-        target = date or _today_str()
+-        dump_file = DUMPS_DIR / f"autolog_{target}.jsonl"
+-        if not dump_file.exists():
+-            return _success({"date": target, "entries": [], "count": 0})
+-        entries = []
+-        with open(dump_file, "r", encoding="utf-8") as f:
+-            for line in f:
+-                if line.strip():
+-                    entries.append(json.loads(line))
+-        return _success({"date": target, "entries": entries[-30:], "count": len(entries)})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# MEMORY TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="memory_store", description="Store context to ChromaDB.")
+-@auto_logged
+-def memory_store(session_id: str, text: str, ttl_days: int = 30) -> str:
+-    try:
+-        doc_id = _generate_id()
+-        categories = extract_categories(text)
+-        metadata = {"categories": ",".join(categories), "timestamp": _now_iso()}
+-        vs = get_vector_store()
+-        if vs:
+-            vs.add_items(session_id, [(doc_id, text, metadata)])
+-        memory_store_add(session_id, doc_id, text, metadata)
+-        return _success({"doc_id": doc_id, "categories": categories})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="memory_recall", description="Search memory.")
+-@auto_logged
+-def memory_recall(session_id: str, query: str, top_k: int = 5) -> str:
+-    try:
+-        results = []
+-        vs = get_vector_store()
+-        if vs:
+-            try:
+-                for hit in vs.search(session_id, query, top_k * 2):
+-                    results.append({"id": hit["id"], "text": hit["text"][:300], "score": hit["score"], "source": "chromadb"})
+-            except:
+-                pass
+-        for kr in memory_store_search(session_id, query, top_k):
+-            if not any(r["id"] == kr["id"] for r in results):
+-                results.append({"id": kr["id"], "text": kr["text"][:300], "score": kr["score"], "source": "korean"})
+-        cbms = get_cbms()
+-        if cbms:
+-            try:
+-                for cid in cbms.cbms_think(query).get("chunk_references", [])[:3]:
+-                    chunk = cbms.retrieve_chunk(cid)
+-                    if chunk:
+-                        results.append({"id": f"cbms:{cid}", "text": chunk.get("content", "")[:300], "score": 0.5, "source": "cbms"})
+-            except:
+-                pass
+-        results.sort(key=lambda x: x["score"], reverse=True)
+-        return _success({"results": results[:top_k]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="session_list", description="List sessions.")
+-@auto_logged
+-def session_list() -> str:
+-    try:
+-        sessions = []
+-        vs = get_vector_store()
+-        if vs:
+-            sessions = vs.list_sessions()
+-        return _success({"sessions": sessions})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="cbms_search", description="Direct CBMS search.")
+-@auto_logged
+-def cbms_search(query: str) -> str:
+-    try:
+-        cbms = get_cbms()
+-        if not cbms:
+-            return _error("CBMS not available")
+-        result = cbms.cbms_think(query)
+-        return _success({"answer": result.get("answer", ""), "chunks": result.get("chunk_references", [])})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# SYSTEM HEALTH (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="system_health", description="System health check.")
+-@auto_logged
+-def system_health() -> str:
+-    try:
+-        health = {
+-            "server": "v6 DEBILOODPORNE",
+-            "auto_log_buffer": len(_auto_log_buffer),
+-            "auto_log_threshold": _auto_log_threshold,
+-            "scan_status": _scan_status.get("state", "idle"),
+-            "everything": "ok" if EVERYTHING_CLI.exists() else "missing",
+-            "docker": "ok" if shutil.which("docker") else "missing",
+-            "wsl": "ok" if shutil.which("wsl") else "missing",
+-            "git": "ok" if shutil.which("git") else "missing",
+-        }
+-        vs = get_vector_store()
+-        health["chromadb"] = f"{vs.sessions_count()} sessions" if vs else "failed"
+-        cbms = get_cbms()
+-        health["cbms"] = f"{cbms.get_memory_stats().get('total_chunks', 0)} chunks" if cbms else "failed"
+-        return _success(health)
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# PLAYWRIGHT BROWSER TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-_browser = None
+-_browser_context = None
+-_page = None
+-_page_snapshot = None
+-
+-def get_browser():
+-    """Lazy-load Playwright browser"""
+-    global _browser, _browser_context, _page
+-    if _browser is None:
+-        try:
+-            from playwright.sync_api import sync_playwright
+-            pw = sync_playwright().start()
+-            _browser = pw.chromium.launch(headless=True)
+-            _browser_context = _browser.new_context(viewport={"width": 1280, "height": 720})
+-            _page = _browser_context.new_page()
+-            log("Playwright browser launched")
+-        except Exception as e:
+-            log(f"Playwright failed: {e}")
+-            return None, None
+-    return _browser, _page
+-
+-@mcp_server.tool(name="browser_navigate", description="Navigate to URL in browser.")
+-@auto_logged
+-def browser_navigate(url: str) -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        page.goto(url, wait_until="domcontentloaded", timeout=30000)
+-        return _success({"url": page.url, "title": page.title()})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_snapshot", description="Get accessibility snapshot of current page.")
+-@auto_logged
+-def browser_snapshot() -> str:
+-    global _page_snapshot
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        # Get accessibility tree
+-        snapshot = page.accessibility.snapshot()
+-        _page_snapshot = snapshot
+-
+-        def flatten_tree(node, depth=0, results=None):
+-            if results is None:
+-                results = []
+-            if not node:
+-                return results
+-            name = node.get("name", "")
+-            role = node.get("role", "")
+-            if name or role not in ("none", "generic", ""):
+-                ref = f"ref_{len(results)}"
+-                results.append({"ref": ref, "role": role, "name": name[:100], "depth": depth})
+-            for child in node.get("children", []):
+-                flatten_tree(child, depth + 1, results)
+-            return results
+-
+-        elements = flatten_tree(snapshot)
+-        return _success({"url": page.url, "title": page.title(), "elements": elements[:100]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_click", description="Click element by text or selector.")
+-@auto_logged
+-def browser_click(selector: str = "", text: str = "") -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        if text:
+-            page.get_by_text(text, exact=False).first.click(timeout=5000)
+-        elif selector:
+-            page.click(selector, timeout=5000)
+-        else:
+-            return _error("Provide selector or text")
+-        page.wait_for_load_state("domcontentloaded", timeout=5000)
+-        return _success({"clicked": text or selector, "url": page.url})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_type", description="Type text into input field.")
+-@auto_logged
+-def browser_type(selector: str = "", text: str = "", placeholder: str = "", submit: bool = False) -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        if placeholder:
+-            elem = page.get_by_placeholder(placeholder, exact=False).first
+-        elif selector:
+-            elem = page.locator(selector).first
+-        else:
+-            return _error("Provide selector or placeholder")
+-        elem.fill(text)
+-        if submit:
+-            elem.press("Enter")
+-            page.wait_for_load_state("domcontentloaded", timeout=5000)
+-        return _success({"typed": text[:50], "submitted": submit})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_screenshot", description="Take screenshot of current page.")
+-@auto_logged
+-def browser_screenshot(filename: str = "", full_page: bool = False) -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        fname = filename or f"screenshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+-        fpath = DUMPS_DIR / fname
+-        page.screenshot(path=str(fpath), full_page=full_page)
+-        return _success({"file": str(fpath), "url": page.url})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_get_text", description="Get text content from page or element.")
+-@auto_logged
+-def browser_get_text(selector: str = "") -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        if selector:
+-            text = page.locator(selector).first.inner_text(timeout=5000)
+-        else:
+-            text = page.inner_text("body")
+-        return _success({"text": text[:5000], "length": len(text)})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_close", description="Close browser.")
+-@auto_logged
+-def browser_close() -> str:
+-    global _browser, _browser_context, _page
+-    try:
+-        if _page:
+-            _page.close()
+-        if _browser_context:
+-            _browser_context.close()
+-        if _browser:
+-            _browser.close()
+-        _browser = None
+-        _browser_context = None
+-        _page = None
+-        return _success({"closed": True})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_evaluate", description="Execute JavaScript on page.")
+-@auto_logged
+-def browser_evaluate(script: str) -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        result = page.evaluate(script)
+-        return _success({"result": str(result)[:2000]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# MCP CATALOG (BUILT-IN)
+-# =============================================================================
+-
+-MCP_CATALOG = {
+-    "github-official": {"description": "GitHub API integration", "url": "https://github.com/github/github-mcp-server"},
+-    "filesystem": {"description": "Local filesystem operations", "url": "https://github.com/anthropics/mcp-servers"},
+-    "fetch": {"description": "HTTP fetch tool", "url": "https://github.com/anthropics/mcp-servers"},
+-    "puppeteer": {"description": "Browser automation with Puppeteer", "url": "https://github.com/anthropics/mcp-servers"},
+-    "postgres": {"description": "PostgreSQL database access", "url": "https://github.com/anthropics/mcp-servers"},
+-    "sqlite": {"description": "SQLite database operations", "url": "https://github.com/anthropics/mcp-servers"},
+-    "brave-search": {"description": "Brave Search API", "url": "https://github.com/anthropics/mcp-servers"},
+-    "google-drive": {"description": "Google Drive integration", "url": "https://github.com/anthropics/mcp-servers"},
+-    "slack": {"description": "Slack workspace integration", "url": "https://github.com/anthropics/mcp-servers"},
+-    "memory": {"description": "Knowledge graph memory", "url": "https://github.com/anthropics/mcp-servers"},
+-    "sequential-thinking": {"description": "Step-by-step reasoning", "url": "https://github.com/anthropics/mcp-servers"},
+-    "time": {"description": "Time and timezone tools", "url": "https://github.com/anthropics/mcp-servers"},
+-    "context7": {"description": "Context window management", "url": "https://github.com/upstash/context7"},
+-    "playwright": {"description": "Browser automation (ALREADY BUILT-IN!)", "url": "built-in"},
+-    "aions-context": {"description": "THIS SERVER - ChromaDB + CBMS + Everything", "url": "built-in"},
+-}
+-
+-@mcp_server.tool(name="mcp_find", description="Search MCP servers catalog.")
+-@auto_logged
+-def mcp_find(query: str, limit: int = 10) -> str:
+-    try:
+-        query_lower = query.lower()
+-        matches = []
+-        for name, info in MCP_CATALOG.items():
+-            if query_lower in name.lower() or query_lower in info["description"].lower():
+-                matches.append({"name": name, "description": info["description"], "url": info["url"]})
+-        return _success({"query": query, "servers": matches[:limit], "total": len(matches)})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="mcp_list", description="List all available MCP servers in catalog.")
+-@auto_logged
+-def mcp_list() -> str:
+-    try:
+-        servers = [{"name": k, "description": v["description"]} for k, v in MCP_CATALOG.items()]
+-        return _success({"servers": servers, "total": len(servers)})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="mcp_info", description="Get detailed info about MCP server.")
+-@auto_logged
+-def mcp_info(name: str) -> str:
+-    try:
+-        if name in MCP_CATALOG:
+-            info = MCP_CATALOG[name]
+-            return _success({"name": name, **info})
+-        return _error(f"Server '{name}' not found in catalog")
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# WEB FETCH TOOL (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="web_fetch", description="Fetch URL content and extract text.")
+-@auto_logged
+-def web_fetch(url: str, selector: str = "") -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            # Fallback to httpx
+-            import httpx
+-            resp = httpx.get(url, follow_redirects=True, timeout=30)
+-            return _success({"url": str(resp.url), "status": resp.status_code, "text": resp.text[:5000]})
+-
+-        page.goto(url, wait_until="domcontentloaded", timeout=30000)
+-        if selector:
+-            text = page.locator(selector).first.inner_text(timeout=5000)
+-        else:
+-            text = page.inner_text("body")
+-        return _success({"url": page.url, "title": page.title(), "text": text[:5000]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# ENTRY POINT
+-# =============================================================================
+-
+-server = mcp_server
+-
+-# =============================================================================
+-# EAGER PRELOAD - FIX COLD START!
+-# =============================================================================
+-def _warmup():
+-    """Preload heavy components to avoid cold start delays"""
+-    try:
+-        log("Warmup: loading ChromaDB...")
+-        vs = get_vector_store()
+-        if vs:
+-            log(f"Warmup: ChromaDB ready ({vs.sessions_count()} sessions)")
+-    except Exception as e:
+-        log(f"Warmup: ChromaDB failed: {e}")
+-
+-    try:
+-        log("Warmup: loading CBMS...")
+-        cbms = get_cbms()
+-        if cbms:
+-            stats = cbms.get_memory_stats()
+-            log(f"Warmup: CBMS ready ({stats.get('total_chunks', 0)} chunks)")
+-    except Exception as e:
+-        log(f"Warmup: CBMS failed: {e}")
+-
+-# Run warmup in background thread to not block server start
+-_warmup_thread = threading.Thread(target=_warmup, daemon=True)
+-_warmup_thread.start()
+-
+-log("Server v8 DEBILOODPORNE + PRELOAD ready!")
+-
+-if __name__ == "__main__":
+-    mcp_server.run(transport="stdio")
+-
+-
+diff --git a/mcpServers/VS_CODE_MCP_CODEX/src/server.py.backup_20251225_fixed b/mcpServers/VS_CODE_MCP_CODEX/src/server.py.backup_20251225_fixed
+deleted file mode 100644
+index f918007..0000000
+--- a/mcpServers/VS_CODE_MCP_CODEX/src/server.py.backup_20251225_fixed
++++ /dev/null
+@@ -1,1183 +0,0 @@
+-"""
+-AIONS ULTIMATE MCP SERVER v6
+-============================
+-DEBILOODPORNE AUTO-LOGGING!
+-
+-Każde wywołanie narzędzia = automatyczny log do bufora.
+-Zero myślenia, zero pamiętania.
+-
+-Integruje:
+-- ChromaDB (semantic search)
+-- CBMS chunks (deterministic retrieval) 
+-- Korean keys (fast matching)
+-- DEBILOODPORNE AUTO-LOGGING ⭐⭐⭐
+-- Project Scanner + TURBO
+-- Everything (blazing fast file search)
+-- Docker, WSL, Git, Network tools
+-
+-Autor: Marcin Szul / AIONS Project
+-"""
+-
+-from __future__ import annotations
+-
+-import json
+-import os
+-import sys
+-import re
+-import hashlib
+-import uuid
+-import traceback
+-import importlib.util
+-import subprocess
+-import threading
+-import shutil
+-import functools
+-from datetime import datetime, timezone, timedelta
+-from pathlib import Path
+-from typing import Any, Dict, List, Optional, Callable
+-
+-
+-def _is_huge_repo(repo_path: str = "") -> bool:
+-    """Check if this is a huge repo that would hang git commands"""
+-    try:
+-        git_dir = Path(repo_path or ".") / ".git"
+-        if not git_dir.exists():
+-            return False
+-        
+-        # Quick heuristic - check .git size
+-        total_size = sum(f.stat().st_size for f in git_dir.rglob("*") if f.is_file())
+-        if total_size > 100 * 1024 * 1024:  # > 100MB .git folder
+-            return True
+-            
+-        # Check if we are at root of a drive (like E:\)
+-        repo_root = Path(repo_path or ".")
+-        if len(str(repo_root.resolve()).split(":")) == 2 and str(repo_root.resolve()).endswith(":\\"):
+-            return True
+-            
+-        return False
+-    except:
+-        return False  # If check fails, assume its safe
+-
+-# =============================================================================
+-# STDERR LOGGING
+-# =============================================================================
+-
+-def log(msg: str):
+-    print(f"[AIONS] {datetime.now().isoformat()} - {msg}", file=sys.stderr, flush=True)
+-
+-log("Server v6 loading (DEBILOODPORNE)...")
+-
+-# =============================================================================
+-# PATH SETUP
+-# =============================================================================
+-
+-REPO_ROOT = Path(__file__).resolve().parents[3]
+-AIONS_V10 = Path("C:/Users/User/OneDrive - Global Banking School/Desktop/AIONS_CBMS_RELEASE_V3")
+-DUMPS_DIR = REPO_ROOT / "logs" / "conversation_dumps"
+-SCAN_RESULTS_DIR = REPO_ROOT / "scan_results"
+-SCANNER_SCRIPT = REPO_ROOT / "scripts" / "project_scanner.py"
+-TURBO_SCANNER_SCRIPT = REPO_ROOT / "scripts" / "turbo_scanner.py"
+-PYTHON_EXE = REPO_ROOT / "venv" / "Scripts" / "python.exe"
+-
+-EVERYTHING_CLI = Path("C:/Program Files/Everything/es.exe")
+-DOCKER_EXE = shutil.which("docker") or "docker"
+-WSL_EXE = shutil.which("wsl") or "wsl"
+-# Git - use full path to avoid issues
+-GIT_EXE = Path("C:/Program Files/Git/bin/git.exe")
+-if not GIT_EXE.exists():
+-    GIT_EXE = shutil.which("git") or "git"
+-else:
+-    GIT_EXE = str(GIT_EXE)
+-GH_EXE = shutil.which("gh") or "gh"
+-NMAP_EXE = Path("C:/Program Files (x86)/Nmap/nmap.exe")
+-
+-DUMPS_DIR.mkdir(parents=True, exist_ok=True)
+-SCAN_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+-
+-server_pkg_path = REPO_ROOT / "server"
+-
+-for p in [AIONS_V10, AIONS_V10 / "server"]:
+-    if p.exists() and str(p) not in sys.path:
+-        sys.path.insert(0, str(p))
+-
+-# =============================================================================
+-# MCP IMPORTS
+-# =============================================================================
+-
+-try:
+-    from mcp.server.fastmcp import FastMCP
+-    log("FastMCP imported successfully")
+-except ImportError as e:
+-    log(f"FastMCP import failed: {e}")
+-    raise
+-
+-# =============================================================================
+-# HELPER FUNCTIONS
+-# =============================================================================
+-
+-def _now_iso() -> str:
+-    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+-
+-def _today_str() -> str:
+-    return datetime.now().strftime("%Y-%m-%d")
+-
+-def _success(payload: Dict[str, Any]) -> str:
+-    return json.dumps({"status": "ok", "timestamp": _now_iso(), **payload}, ensure_ascii=False)
+-
+-def _error(message: str) -> str:
+-    return json.dumps({"status": "error", "message": message, "timestamp": _now_iso()}, ensure_ascii=False)
+-
+-def _generate_id() -> str:
+-    return str(uuid.uuid4())[:12]
+-
+-def _run_command(cmd: List[str], timeout: int = 30) -> Dict[str, Any]:
+-    try:
+-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, shell=False)
+-        return {"success": result.returncode == 0, "stdout": result.stdout[:5000], "stderr": result.stderr[:1000], "returncode": result.returncode}
+-    except subprocess.TimeoutExpired:
+-        return {"success": False, "error": f"Command timed out after {timeout}s"}
+-    except Exception as e:
+-        return {"success": False, "error": str(e)}
+-
+-# =============================================================================
+-# KOREAN KEYS
+-# =============================================================================
+-
+-def korean_build_keys(text: str) -> set:
+-    if not text:
+-        return set()
+-    tokens = re.findall(r"[A-Za-z0-9]{2,}", text.lower())
+-    keys = set()
+-    for tok in tokens[:30]:
+-        for i in range(len(tok) - 2):
+-            keys.add(f"g:{tok[i:i+3]}")
+-        h = hashlib.sha1(tok.encode()).hexdigest()[:12]
+-        keys.add(f"h:{h[0:3]}")
+-    return keys
+-
+-# =============================================================================
+-# AUTO-CATEGORIZATION
+-# =============================================================================
+-
+-def extract_categories(text: str) -> List[str]:
+-    categories = []
+-    text_lower = text.lower()
+-    if any(k in text_lower for k in ["python", "javascript", "code", "function", "class", "api", "database"]):
+-        categories.append("programming")
+-    if any(k in text_lower for k in ["ai", "machine learning", "model", "gpt", "claude", "llm"]):
+-        categories.append("ai_ml")
+-    if any(k in text_lower for k in ["aions", "cbms", "chunk", "korean", "crla", "mcp"]):
+-        categories.append("aions_system")
+-    if any(k in text_lower for k in ["docker", "container", "wsl", "linux"]):
+-        categories.append("devops")
+-    if any(k in text_lower for k in ["git", "github", "commit", "branch"]):
+-        categories.append("version_control")
+-    if any(k in text_lower for k in ["scan", "file", "search", "find"]):
+-        categories.append("file_ops")
+-    return categories if categories else ["general"]
+-
+-# =============================================================================
+-# DEBILOODPORNE AUTO-LOGGING SYSTEM
+-# =============================================================================
+-
+-_auto_log_buffer: List[Dict] = []
+-_auto_log_session: str = "claude_marcin_main"
+-_auto_log_threshold: int = 5
+-_auto_log_last_dump: datetime = datetime.now(timezone.utc)
+-
+-# Tools to SKIP logging (to avoid infinite loops)
+-SKIP_LOG_TOOLS = {"conv_log", "conv_dump", "conv_status", "conv_set_threshold", "conv_history"}
+-
+-def _auto_log_entry(tool_name: str, args: Dict, result_preview: str):
+-    """AUTOMATYCZNIE loguje każde wywołanie narzędzia"""
+-    global _auto_log_buffer
+-    
+-    if tool_name in SKIP_LOG_TOOLS:
+-        return  # Skip conv_* tools to avoid loops
+-    
+-    # Create log entry
+-    args_str = ", ".join([f"{k}={repr(v)[:50]}" for k, v in args.items() if v])
+-    entry = {
+-        "id": _generate_id(),
+-        "timestamp": _now_iso(),
+-        "tool": tool_name,
+-        "args": args_str[:200],
+-        "result": result_preview[:300]
+-    }
+-    
+-    _auto_log_buffer.append(entry)
+-    log(f"AUTO-LOG: {tool_name}({args_str[:50]}) -> buffer={len(_auto_log_buffer)}")
+-    
+-    # Auto-dump when threshold reached
+-    if len(_auto_log_buffer) >= _auto_log_threshold:
+-        _auto_dump_logs()
+-
+-def _auto_dump_logs():
+-    """Dump accumulated logs to file and ChromaDB"""
+-    global _auto_log_buffer, _auto_log_last_dump
+-    
+-    if not _auto_log_buffer:
+-        return
+-    
+-    try:
+-        # Format logs
+-        log_text = f"AUTO-LOG DUMP ({_today_str()})\n\n"
+-        for entry in _auto_log_buffer:
+-            log_text += f"[{entry['timestamp'][:19]}] {entry['tool']}({entry['args']})\n"
+-            log_text += f"  -> {entry['result']}\n\n"
+-        
+-        # Save to JSONL file
+-        dump_file = DUMPS_DIR / f"autolog_{_today_str()}.jsonl"
+-        with open(dump_file, "a", encoding="utf-8") as f:
+-            for entry in _auto_log_buffer:
+-                f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+-        
+-        # Save to ChromaDB
+-        vs = get_vector_store()
+-        if vs:
+-            doc_id = f"autolog_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+-            metadata = {
+-                "type": "auto_log",
+-                "entry_count": len(_auto_log_buffer),
+-                "tools_used": ",".join(set(e["tool"] for e in _auto_log_buffer)),
+-                "timestamp": _now_iso()
+-            }
+-            vs.add_items(_auto_log_session, [(doc_id, log_text, metadata)])
+-        
+-        log(f"AUTO-DUMP: {len(_auto_log_buffer)} entries saved")
+-        
+-        _auto_log_buffer = []
+-        _auto_log_last_dump = datetime.now(timezone.utc)
+-        
+-    except Exception as e:
+-        log(f"AUTO-DUMP error: {e}")
+-
+-def auto_logged(func: Callable) -> Callable:
+-    """Decorator that auto-logs tool calls - DEBILOODPORNE!"""
+-    @functools.wraps(func)
+-    def wrapper(*args, **kwargs):
+-        # Get tool name
+-        tool_name = func.__name__
+-        
+-        # Call original function
+-        result = func(*args, **kwargs)
+-        
+-        # Auto-log (skip if in SKIP_LOG_TOOLS)
+-        if tool_name not in SKIP_LOG_TOOLS:
+-            try:
+-                # Parse result for preview
+-                if isinstance(result, str):
+-                    try:
+-                        parsed = json.loads(result)
+-                        preview = parsed.get("status", "") + ": " + str(list(parsed.keys()))[:100]
+-                    except:
+-                        preview = result[:100]
+-                else:
+-                    preview = str(result)[:100]
+-                
+-                _auto_log_entry(tool_name, kwargs, preview)
+-            except Exception as e:
+-                log(f"Auto-log error for {tool_name}: {e}")
+-        
+-        return result
+-    return wrapper
+-
+-# =============================================================================
+-# LAZY-LOADED STORES
+-# =============================================================================
+-
+-_vector_store = None
+-_cbms_memory = None
+-
+-def get_vector_store():
+-    global _vector_store
+-    if _vector_store is None:
+-        try:
+-            context_schema_path = server_pkg_path / "context_schema.py"
+-            store_path = server_pkg_path / "store.py"
+-            
+-            if not context_schema_path.exists() or not store_path.exists():
+-                raise FileNotFoundError("Store files not found")
+-            
+-            spec_cs = importlib.util.spec_from_file_location("aions_context_schema", context_schema_path)
+-            context_schema_module = importlib.util.module_from_spec(spec_cs)
+-            sys.modules["aions_context_schema"] = context_schema_module
+-            spec_cs.loader.exec_module(context_schema_module)
+-            
+-            sys.modules["server"] = type(sys)("server")
+-            sys.modules["server"].__path__ = [str(server_pkg_path)]
+-            sys.modules["server.context_schema"] = context_schema_module
+-            
+-            spec_store = importlib.util.spec_from_file_location("server.store", store_path, submodule_search_locations=[str(server_pkg_path)])
+-            store_module = importlib.util.module_from_spec(spec_store)
+-            sys.modules["server.store"] = store_module
+-            spec_store.loader.exec_module(store_module)
+-            
+-            VectorStore = store_module.VectorStore
+-            _vector_store = VectorStore(persist_path=os.environ.get("CHROMA_PATH"))
+-            log(f"VectorStore loaded")
+-        except Exception as e:
+-            log(f"VectorStore failed: {e}")
+-            _vector_store = "FAILED"
+-    return _vector_store if _vector_store != "FAILED" else None
+-
+-def get_cbms():
+-    global _cbms_memory
+-    if _cbms_memory is None:
+-        try:
+-            # Add CBMS server folder to path
+-            cbms_server_path = AIONS_V10 / "server"
+-            if cbms_server_path.exists() and str(cbms_server_path) not in sys.path:
+-                sys.path.insert(0, str(cbms_server_path))
+-            from cbms_memory import CBMSMemory
+-            cbms_dir = AIONS_V10 / "memory" if AIONS_V10.exists() else None
+-            _cbms_memory = CBMSMemory(memory_dir=str(cbms_dir) if cbms_dir else None)
+-            log(f"CBMS loaded from {cbms_server_path}")
+-        except Exception as e:
+-            log(f"CBMS failed: {e}")
+-            _cbms_memory = "FAILED"
+-    return _cbms_memory if _cbms_memory != "FAILED" else None
+-
+-# =============================================================================
+-# IN-MEMORY STORE
+-# =============================================================================
+-
+-_memory_store: Dict[str, List[Dict]] = {}
+-_korean_index: Dict[str, Dict[str, set]] = {}
+-
+-def memory_store_add(session_id: str, doc_id: str, text: str, metadata: dict):
+-    if session_id not in _memory_store:
+-        _memory_store[session_id] = []
+-    _memory_store[session_id].append({"id": doc_id, "text": text, "metadata": metadata})
+-    if session_id not in _korean_index:
+-        _korean_index[session_id] = {}
+-    _korean_index[session_id][doc_id] = korean_build_keys(text)
+-
+-def memory_store_search(session_id: str, query: str, top_k: int = 5) -> List[Dict]:
+-    if session_id not in _memory_store:
+-        return []
+-    query_keys = korean_build_keys(query)
+-    session_keys = _korean_index.get(session_id, {})
+-    scores = []
+-    for doc in _memory_store[session_id]:
+-        doc_keys = session_keys.get(doc["id"], set())
+-        overlap = len(query_keys & doc_keys)
+-        if overlap > 0:
+-            scores.append((doc, overlap / max(len(query_keys), 1)))
+-    scores.sort(key=lambda x: x[1], reverse=True)
+-    return [{"id": d["id"], "text": d["text"], "score": s, "metadata": d["metadata"]} for d, s in scores[:top_k]]
+-
+-# =============================================================================
+-# SCANNER STATE
+-# =============================================================================
+-
+-_scan_status: Dict[str, Any] = {"state": "idle"}
+-
+-# =============================================================================
+-# MCP SERVER
+-# =============================================================================
+-
+-mcp_server = FastMCP("aions_context_server")
+-log("FastMCP server created")
+-
+-# =============================================================================
+-# EVERYTHING SEARCH TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="fast_search", description="Blazing fast file search using Everything.")
+-@auto_logged
+-def fast_search(query: str, max_results: int = 50) -> str:
+-    try:
+-        if not EVERYTHING_CLI.exists():
+-            return _error("Everything CLI not found")
+-        cmd = [str(EVERYTHING_CLI), "-n", str(max_results), query]
+-        result = _run_command(cmd, timeout=10)
+-        if result["success"]:
+-            files = [f for f in result["stdout"].strip().split("\n") if f]
+-            return _success({"query": query, "files": files[:max_results], "count": len(files)})
+-        return _error(result.get("error", "Search failed"))
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="fast_search_ext", description="Search files by extension.")
+-@auto_logged
+-def fast_search_ext(extension: str, folder: str = "", max_results: int = 100) -> str:
+-    try:
+-        if not EVERYTHING_CLI.exists():
+-            return _error("Everything CLI not found")
+-        query = f"ext:{extension.lstrip('.')}"
+-        if folder:
+-            query = f'"{folder}" {query}'
+-        cmd = [str(EVERYTHING_CLI), "-n", str(max_results), query]
+-        result = _run_command(cmd, timeout=15)
+-        if result["success"]:
+-            files = [f for f in result["stdout"].strip().split("\n") if f]
+-            return _success({"extension": extension, "files": files, "count": len(files)})
+-        return _error("Search failed")
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# DOCKER TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="docker_ps", description="List Docker containers.")
+-@auto_logged
+-def docker_ps(all_containers: bool = False) -> str:
+-    try:
+-        cmd = [DOCKER_EXE, "ps", "--format", "json"]
+-        if all_containers:
+-            cmd.insert(2, "-a")
+-        result = _run_command(cmd, timeout=10)
+-        if result["success"]:
+-            containers = []
+-            for line in result["stdout"].strip().split("\n"):
+-                if line:
+-                    try:
+-                        containers.append(json.loads(line))
+-                    except:
+-                        pass
+-            return _success({"containers": containers, "count": len(containers)})
+-        return _error(result.get("stderr", "Docker failed"))
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="docker_images", description="List Docker images.")
+-@auto_logged
+-def docker_images() -> str:
+-    try:
+-        cmd = [DOCKER_EXE, "images", "--format", "json"]
+-        result = _run_command(cmd, timeout=10)
+-        if result["success"]:
+-            images = []
+-            for line in result["stdout"].strip().split("\n"):
+-                if line:
+-                    try:
+-                        images.append(json.loads(line))
+-                    except:
+-                        pass
+-            return _success({"images": images, "count": len(images)})
+-        return _error("Docker failed")
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# WSL TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="wsl_run", description="Run command in WSL/Ubuntu Linux.")
+-@auto_logged
+-def wsl_run(command: str, distribution: str = "") -> str:
+-    try:
+-        cmd = [WSL_EXE]
+-        if distribution:
+-            cmd.extend(["-d", distribution])
+-        cmd.extend(["--", "bash", "-c", command])
+-        result = _run_command(cmd, timeout=60)
+-        return _success({"command": command, "output": result["stdout"], "success": result["success"]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="wsl_list", description="List WSL distributions.")
+-@auto_logged
+-def wsl_list() -> str:
+-    try:
+-        result = _run_command([WSL_EXE, "-l", "-v"], timeout=10)
+-        return _success({"distributions": result["stdout"]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# GIT TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="git_status", description="Get Git status.")
+-@auto_logged
+-def git_status(repo_path: str = "") -> str:
+-    try:
+-        # Handle paths with spaces - use shell=True on Windows
+-        git_cmd = GIT_EXE if isinstance(GIT_EXE, str) else str(GIT_EXE)
+-        cwd = repo_path if repo_path else None
+-        
+-        # Verify git exists
+-        if not Path(git_cmd).exists() and not shutil.which("git"):
+-            return _error(f"Git not found at {git_cmd}")
+-        
+-        # Verify repo path exists if provided
+-        
+-        # Check if this is a huge repo that would hang
+-        if _is_huge_repo(cwd):
+-            return _success({"branch": "unknown", "changes": [], "clean": True, "path": cwd or "current", "note": "Skipped - repo too large"})
+-        if cwd and not Path(cwd).exists():
+-            return _error(f"Path not found: {cwd}")
+-        
+-        result = subprocess.run(
+-            [git_cmd, "status", "--porcelain", "-b"], 
+-            capture_output=True, 
+-            text=True, 
+-            cwd=cwd, 
+-            timeout=2,
+-            shell=False
+-        )
+-        
+-        if result.returncode != 0 and "not a git repository" in result.stderr.lower():
+-            return _error(f"Not a git repository: {cwd or 'current dir'}")
+-        
+-        lines = result.stdout.strip().split("\n") if result.stdout.strip() else []
+-        branch = ""
+-        changes = []
+-        for line in lines:
+-            if line.startswith("##"):
+-                branch = line[3:].split("...")[0]
+-            elif line:
+-                changes.append(line)
+-        return _success({"branch": branch, "changes": changes, "clean": len(changes) == 0, "path": cwd or "current"})
+-    except Exception as e:
+-        return _error(f"Git error: {str(e)}")
+-
+-@mcp_server.tool(name="git_log", description="Get recent commits.")
+-@auto_logged
+-def git_log(repo_path: str = "", count: int = 10) -> str:
+-    try:
+-        git_cmd = GIT_EXE if isinstance(GIT_EXE, str) else str(GIT_EXE)
+-        cwd = repo_path if repo_path else None
+-        
+-        # Verify path
+-        
+-        # Check if this is a huge repo that would hang
+-        if _is_huge_repo(cwd):
+-            return _success({"commits": [], "path": cwd or "current", "note": "Skipped - repo too large"})
+-        if cwd and not Path(cwd).exists():
+-            return _error(f"Path not found: {cwd}")
+-        
+-        result = subprocess.run(
+-            [git_cmd, "log", f"-{count}", "--pretty=format:%h|%an|%ar|%s"], 
+-            capture_output=True, 
+-            text=True, 
+-            cwd=cwd, 
+-            timeout=10
+-        )
+-        
+-        if result.returncode != 0:
+-            return _error(f"Git log failed: {result.stderr[:200]}")
+-        
+-        commits = []
+-        for line in result.stdout.strip().split("\n"):
+-            if line:
+-                parts = line.split("|", 3)
+-                if len(parts) == 4:
+-                    commits.append({"hash": parts[0], "author": parts[1], "date": parts[2], "message": parts[3]})
+-        return _success({"commits": commits, "path": cwd or "current"})
+-    except Exception as e:
+-        return _error(f"Git error: {str(e)}")
+-
+-# =============================================================================
+-# NETWORK TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="network_ping", description="Ping a host.")
+-@auto_logged
+-def network_ping(host: str, count: int = 4) -> str:
+-    try:
+-        result = _run_command(["ping", "-n", str(count), host], timeout=30)
+-        return _success({"host": host, "output": result["stdout"], "success": result["success"]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# PROJECT SCANNER TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="project_scan_turbo", description="TURBO SCAN using Everything - FAST!")
+-@auto_logged
+-def project_scan_turbo(output_dir: str = "") -> str:
+-    global _scan_status
+-    try:
+-        if _scan_status.get("state") == "running":
+-            return _error("Scan already running")
+-        if not EVERYTHING_CLI.exists():
+-            return _error("Everything CLI not found")
+-        
+-        out_dir = output_dir or str(SCAN_RESULTS_DIR)
+-        scan_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+-        _scan_status = {"state": "starting", "scan_id": scan_id, "type": "turbo"}
+-        
+-        def run_turbo():
+-            global _scan_status
+-            try:
+-                _scan_status["state"] = "running"
+-                cmd = [str(PYTHON_EXE), str(TURBO_SCANNER_SCRIPT), "-o", out_dir]
+-                result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=600)
+-                _scan_status["state"] = "completed" if result.returncode == 0 else "error"
+-                if result.returncode != 0:
+-                    _scan_status["error"] = result.stderr[:500]
+-            except Exception as e:
+-                _scan_status["state"] = "error"
+-                _scan_status["error"] = str(e)
+-        
+-        threading.Thread(target=run_turbo, daemon=True).start()
+-        return _success({"message": "TURBO scan started!", "scan_id": scan_id})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="project_scan_status", description="Check scan status.")
+-@auto_logged
+-def project_scan_status() -> str:
+-    try:
+-        status = dict(_scan_status)
+-        if SCAN_RESULTS_DIR.exists():
+-            scans = sorted([d for d in SCAN_RESULTS_DIR.iterdir() if d.is_dir()], reverse=True)
+-            if scans:
+-                status["latest_scan"] = scans[0].name
+-                summary = scans[0] / "summary.json"
+-                if summary.exists():
+-                    with open(summary, "r", encoding="utf-8") as f:
+-                        status["latest_summary"] = json.load(f)
+-        return _success(status)
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="project_scan_results", description="Get scan results.")
+-@auto_logged
+-def project_scan_results(scan_id: str = "") -> str:
+-    try:
+-        if not scan_id:
+-            scans = sorted([d for d in SCAN_RESULTS_DIR.iterdir() if d.is_dir()], reverse=True)
+-            if not scans:
+-                return _error("No scans found")
+-            scan_dir = scans[0]
+-        else:
+-            scan_dir = SCAN_RESULTS_DIR / scan_id
+-        
+-        results = {"scan_id": scan_dir.name}
+-        for fname in ["summary.json", "analysis.json", "duplicates.json"]:
+-            fpath = scan_dir / fname
+-            if fpath.exists():
+-                with open(fpath, "r", encoding="utf-8") as f:
+-                    data = json.load(f)
+-                    if fname == "summary.json":
+-                        results["summary"] = data
+-                    elif fname == "analysis.json":
+-                        results["hubs"] = data.get("hubs", [])[:20]
+-                        results["orphans_count"] = len(data.get("orphans", []))
+-                    elif fname == "duplicates.json":
+-                        results["duplicate_groups"] = len(data)
+-        return _success(results)
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="project_search", description="Search scanned files.")
+-@auto_logged
+-def project_search(query: str, scan_id: str = "") -> str:
+-    try:
+-        if not scan_id:
+-            scans = sorted([d for d in SCAN_RESULTS_DIR.iterdir() if d.is_dir()], reverse=True)
+-            if not scans:
+-                return _error("No scans")
+-            scan_dir = scans[0]
+-        else:
+-            scan_dir = SCAN_RESULTS_DIR / scan_id
+-        
+-        files_json = scan_dir / "files.json"
+-        if not files_json.exists():
+-            return _error("No files data")
+-        
+-        with open(files_json, "r", encoding="utf-8") as f:
+-            files = json.load(f)
+-        
+-        matches = [{"path": p, "name": i.get("name")} for p, i in files.items() if query.lower() in p.lower()][:50]
+-        return _success({"query": query, "matches": matches, "count": len(matches)})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="project_file_deps", description="Get file dependencies.")
+-@auto_logged
+-def project_file_deps(file_path: str, scan_id: str = "") -> str:
+-    try:
+-        if not scan_id:
+-            scans = sorted([d for d in SCAN_RESULTS_DIR.iterdir() if d.is_dir()], reverse=True)
+-            if not scans:
+-                return _error("No scans")
+-            scan_dir = scans[0]
+-        else:
+-            scan_dir = SCAN_RESULTS_DIR / scan_id
+-        
+-        deps_json = scan_dir / "dependencies.json"
+-        if not deps_json.exists():
+-            return _error("No deps data")
+-        
+-        with open(deps_json, "r", encoding="utf-8") as f:
+-            deps = json.load(f)
+-        
+-        forward = deps.get("forward", {})
+-        reverse = deps.get("reverse", {})
+-        match = next((p for p in forward if file_path.lower() in p.lower()), None)
+-        
+-        if not match:
+-            return _error(f"File not found: {file_path}")
+-        
+-        return _success({"file": match, "imports": forward.get(match, []), "imported_by": reverse.get(match, [])})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# CONVERSATION TOOLS (NOT AUTO-LOGGED - to avoid loops)
+-# =============================================================================
+-
+-@mcp_server.tool(name="conv_log", description="Log message to buffer (manual).")
+-def conv_log(role: str, content: str, save_now: bool = False) -> str:
+-    try:
+-        global _auto_log_buffer
+-        entry = {"id": _generate_id(), "timestamp": _now_iso(), "tool": "manual_log", "args": f"role={role}", "result": content[:200]}
+-        _auto_log_buffer.append(entry)
+-        if save_now or len(_auto_log_buffer) >= _auto_log_threshold:
+-            _auto_dump_logs()
+-        return _success({"logged": True, "buffer_size": len(_auto_log_buffer)})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="conv_dump", description="Force dump buffer NOW.")
+-def conv_dump(summary: str = "") -> str:
+-    try:
+-        if summary:
+-            _auto_log_buffer.append({"id": _generate_id(), "timestamp": _now_iso(), "tool": "summary", "args": "", "result": summary})
+-        count = len(_auto_log_buffer)
+-        _auto_dump_logs()
+-        return _success({"dumped": True, "entries_saved": count})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="conv_status", description="Check buffer status.")
+-def conv_status() -> str:
+-    return _success({
+-        "buffer_size": len(_auto_log_buffer),
+-        "threshold": _auto_log_threshold,
+-        "session": _auto_log_session,
+-        "last_dump": _auto_log_last_dump.isoformat()
+-    })
+-
+-@mcp_server.tool(name="conv_set_threshold", description="Set auto-dump threshold.")
+-def conv_set_threshold(threshold: int = 5) -> str:
+-    global _auto_log_threshold
+-    _auto_log_threshold = max(1, min(50, threshold))
+-    return _success({"threshold": _auto_log_threshold})
+-
+-@mcp_server.tool(name="conv_history", description="Get log history.")
+-def conv_history(date: str = "") -> str:
+-    try:
+-        target = date or _today_str()
+-        dump_file = DUMPS_DIR / f"autolog_{target}.jsonl"
+-        if not dump_file.exists():
+-            return _success({"date": target, "entries": [], "count": 0})
+-        entries = []
+-        with open(dump_file, "r", encoding="utf-8") as f:
+-            for line in f:
+-                if line.strip():
+-                    entries.append(json.loads(line))
+-        return _success({"date": target, "entries": entries[-30:], "count": len(entries)})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# MEMORY TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="memory_store", description="Store context to ChromaDB.")
+-@auto_logged
+-def memory_store(session_id: str, text: str, ttl_days: int = 30) -> str:
+-    try:
+-        doc_id = _generate_id()
+-        categories = extract_categories(text)
+-        metadata = {"categories": ",".join(categories), "timestamp": _now_iso()}
+-        vs = get_vector_store()
+-        if vs:
+-            vs.add_items(session_id, [(doc_id, text, metadata)])
+-        memory_store_add(session_id, doc_id, text, metadata)
+-        return _success({"doc_id": doc_id, "categories": categories})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="memory_recall", description="Search memory.")
+-@auto_logged
+-def memory_recall(session_id: str, query: str, top_k: int = 5) -> str:
+-    try:
+-        results = []
+-        vs = get_vector_store()
+-        if vs:
+-            try:
+-                for hit in vs.search(session_id, query, top_k * 2):
+-                    results.append({"id": hit["id"], "text": hit["text"][:300], "score": hit["score"], "source": "chromadb"})
+-            except:
+-                pass
+-        for kr in memory_store_search(session_id, query, top_k):
+-            if not any(r["id"] == kr["id"] for r in results):
+-                results.append({"id": kr["id"], "text": kr["text"][:300], "score": kr["score"], "source": "korean"})
+-        cbms = get_cbms()
+-        if cbms:
+-            try:
+-                for cid in cbms.cbms_think(query).get("chunk_references", [])[:3]:
+-                    chunk = cbms.retrieve_chunk(cid)
+-                    if chunk:
+-                        results.append({"id": f"cbms:{cid}", "text": chunk.get("content", "")[:300], "score": 0.5, "source": "cbms"})
+-            except:
+-                pass
+-        results.sort(key=lambda x: x["score"], reverse=True)
+-        return _success({"results": results[:top_k]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="session_list", description="List sessions.")
+-@auto_logged
+-def session_list() -> str:
+-    try:
+-        sessions = []
+-        vs = get_vector_store()
+-        if vs:
+-            sessions = vs.list_sessions()
+-        return _success({"sessions": sessions})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="cbms_search", description="Direct CBMS search.")
+-@auto_logged
+-def cbms_search(query: str) -> str:
+-    try:
+-        cbms = get_cbms()
+-        if not cbms:
+-            return _error("CBMS not available")
+-        result = cbms.cbms_think(query)
+-        return _success({"answer": result.get("answer", ""), "chunks": result.get("chunk_references", [])})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="cbms_get_chunk", description="Get full CBMS chunk by ID. Returns complete content, references, metadata.")
+-@auto_logged
+-def cbms_get_chunk(chunk_id: str) -> str:
+-    try:
+-        cbms = get_cbms()
+-        if not cbms:
+-            return _error("CBMS not available")
+-        chunk = cbms.retrieve_chunk(chunk_id)
+-        if not chunk:
+-            return _error(f"Chunk '{chunk_id}' not found")
+-        return _success({
+-            "id": chunk.get("id", chunk_id),
+-            "concept": chunk.get("concept", ""),
+-            "content": chunk.get("content", ""),
+-            "references": chunk.get("references", []),
+-            "access_count": chunk.get("access_count", 0),
+-            "last_accessed": chunk.get("last_accessed"),
+-            "size": chunk.get("size", len(chunk.get("content", "")))
+-        })
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# SYSTEM HEALTH (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="system_health", description="System health check.")
+-@auto_logged
+-def system_health() -> str:
+-    try:
+-        health = {
+-            "server": "v6 DEBILOODPORNE",
+-            "auto_log_buffer": len(_auto_log_buffer),
+-            "auto_log_threshold": _auto_log_threshold,
+-            "scan_status": _scan_status.get("state", "idle"),
+-            "everything": "ok" if EVERYTHING_CLI.exists() else "missing",
+-            "docker": "ok" if shutil.which("docker") else "missing",
+-            "wsl": "ok" if shutil.which("wsl") else "missing",
+-            "git": "ok" if shutil.which("git") else "missing",
+-        }
+-        vs = get_vector_store()
+-        health["chromadb"] = f"{vs.sessions_count()} sessions" if vs else "failed"
+-        cbms = get_cbms()
+-        health["cbms"] = f"{cbms.get_memory_stats().get('total_chunks', 0)} chunks" if cbms else "failed"
+-        return _success(health)
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# PLAYWRIGHT BROWSER TOOLS (AUTO-LOGGED)
+-# =============================================================================
+-
+-_browser = None
+-_browser_context = None
+-_page = None
+-_page_snapshot = None
+-
+-def get_browser():
+-    """Lazy-load Playwright browser"""
+-    global _browser, _browser_context, _page
+-    if _browser is None:
+-        try:
+-            from playwright.sync_api import sync_playwright
+-            pw = sync_playwright().start()
+-            _browser = pw.chromium.launch(headless=True)
+-            _browser_context = _browser.new_context(viewport={"width": 1280, "height": 720})
+-            _page = _browser_context.new_page()
+-            log("Playwright browser launched")
+-        except Exception as e:
+-            log(f"Playwright failed: {e}")
+-            return None, None
+-    return _browser, _page
+-
+-@mcp_server.tool(name="browser_navigate", description="Navigate to URL in browser.")
+-@auto_logged
+-def browser_navigate(url: str) -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        page.goto(url, wait_until="domcontentloaded", timeout=30000)
+-        return _success({"url": page.url, "title": page.title()})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_snapshot", description="Get accessibility snapshot of current page.")
+-@auto_logged
+-def browser_snapshot() -> str:
+-    global _page_snapshot
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        # Get accessibility tree
+-        snapshot = page.accessibility.snapshot()
+-        _page_snapshot = snapshot
+-
+-        def flatten_tree(node, depth=0, results=None):
+-            if results is None:
+-                results = []
+-            if not node:
+-                return results
+-            name = node.get("name", "")
+-            role = node.get("role", "")
+-            if name or role not in ("none", "generic", ""):
+-                ref = f"ref_{len(results)}"
+-                results.append({"ref": ref, "role": role, "name": name[:100], "depth": depth})
+-            for child in node.get("children", []):
+-                flatten_tree(child, depth + 1, results)
+-            return results
+-
+-        elements = flatten_tree(snapshot)
+-        return _success({"url": page.url, "title": page.title(), "elements": elements[:100]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_click", description="Click element by text or selector.")
+-@auto_logged
+-def browser_click(selector: str = "", text: str = "") -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        if text:
+-            page.get_by_text(text, exact=False).first.click(timeout=5000)
+-        elif selector:
+-            page.click(selector, timeout=5000)
+-        else:
+-            return _error("Provide selector or text")
+-        page.wait_for_load_state("domcontentloaded", timeout=5000)
+-        return _success({"clicked": text or selector, "url": page.url})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_type", description="Type text into input field.")
+-@auto_logged
+-def browser_type(selector: str = "", text: str = "", placeholder: str = "", submit: bool = False) -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        if placeholder:
+-            elem = page.get_by_placeholder(placeholder, exact=False).first
+-        elif selector:
+-            elem = page.locator(selector).first
+-        else:
+-            return _error("Provide selector or placeholder")
+-        elem.fill(text)
+-        if submit:
+-            elem.press("Enter")
+-            page.wait_for_load_state("domcontentloaded", timeout=5000)
+-        return _success({"typed": text[:50], "submitted": submit})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_screenshot", description="Take screenshot of current page.")
+-@auto_logged
+-def browser_screenshot(filename: str = "", full_page: bool = False) -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        fname = filename or f"screenshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+-        fpath = DUMPS_DIR / fname
+-        page.screenshot(path=str(fpath), full_page=full_page)
+-        return _success({"file": str(fpath), "url": page.url})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_get_text", description="Get text content from page or element.")
+-@auto_logged
+-def browser_get_text(selector: str = "") -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        if selector:
+-            text = page.locator(selector).first.inner_text(timeout=5000)
+-        else:
+-            text = page.inner_text("body")
+-        return _success({"text": text[:5000], "length": len(text)})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_close", description="Close browser.")
+-@auto_logged
+-def browser_close() -> str:
+-    global _browser, _browser_context, _page
+-    try:
+-        if _page:
+-            _page.close()
+-        if _browser_context:
+-            _browser_context.close()
+-        if _browser:
+-            _browser.close()
+-        _browser = None
+-        _browser_context = None
+-        _page = None
+-        return _success({"closed": True})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="browser_evaluate", description="Execute JavaScript on page.")
+-@auto_logged
+-def browser_evaluate(script: str) -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            return _error("Browser not available")
+-        result = page.evaluate(script)
+-        return _success({"result": str(result)[:2000]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# MCP CATALOG (BUILT-IN)
+-# =============================================================================
+-
+-MCP_CATALOG = {
+-    "github-official": {"description": "GitHub API integration", "url": "https://github.com/github/github-mcp-server"},
+-    "filesystem": {"description": "Local filesystem operations", "url": "https://github.com/anthropics/mcp-servers"},
+-    "fetch": {"description": "HTTP fetch tool", "url": "https://github.com/anthropics/mcp-servers"},
+-    "puppeteer": {"description": "Browser automation with Puppeteer", "url": "https://github.com/anthropics/mcp-servers"},
+-    "postgres": {"description": "PostgreSQL database access", "url": "https://github.com/anthropics/mcp-servers"},
+-    "sqlite": {"description": "SQLite database operations", "url": "https://github.com/anthropics/mcp-servers"},
+-    "brave-search": {"description": "Brave Search API", "url": "https://github.com/anthropics/mcp-servers"},
+-    "google-drive": {"description": "Google Drive integration", "url": "https://github.com/anthropics/mcp-servers"},
+-    "slack": {"description": "Slack workspace integration", "url": "https://github.com/anthropics/mcp-servers"},
+-    "memory": {"description": "Knowledge graph memory", "url": "https://github.com/anthropics/mcp-servers"},
+-    "sequential-thinking": {"description": "Step-by-step reasoning", "url": "https://github.com/anthropics/mcp-servers"},
+-    "time": {"description": "Time and timezone tools", "url": "https://github.com/anthropics/mcp-servers"},
+-    "context7": {"description": "Context window management", "url": "https://github.com/upstash/context7"},
+-    "playwright": {"description": "Browser automation (ALREADY BUILT-IN!)", "url": "built-in"},
+-    "aions-context": {"description": "THIS SERVER - ChromaDB + CBMS + Everything", "url": "built-in"},
+-}
+-
+-@mcp_server.tool(name="mcp_find", description="Search MCP servers catalog.")
+-@auto_logged
+-def mcp_find(query: str, limit: int = 10) -> str:
+-    try:
+-        query_lower = query.lower()
+-        matches = []
+-        for name, info in MCP_CATALOG.items():
+-            if query_lower in name.lower() or query_lower in info["description"].lower():
+-                matches.append({"name": name, "description": info["description"], "url": info["url"]})
+-        return _success({"query": query, "servers": matches[:limit], "total": len(matches)})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="mcp_list", description="List all available MCP servers in catalog.")
+-@auto_logged
+-def mcp_list() -> str:
+-    try:
+-        servers = [{"name": k, "description": v["description"]} for k, v in MCP_CATALOG.items()]
+-        return _success({"servers": servers, "total": len(servers)})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-@mcp_server.tool(name="mcp_info", description="Get detailed info about MCP server.")
+-@auto_logged
+-def mcp_info(name: str) -> str:
+-    try:
+-        if name in MCP_CATALOG:
+-            info = MCP_CATALOG[name]
+-            return _success({"name": name, **info})
+-        return _error(f"Server '{name}' not found in catalog")
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# WEB FETCH TOOL (AUTO-LOGGED)
+-# =============================================================================
+-
+-@mcp_server.tool(name="web_fetch", description="Fetch URL content and extract text.")
+-@auto_logged
+-def web_fetch(url: str, selector: str = "") -> str:
+-    try:
+-        _, page = get_browser()
+-        if not page:
+-            # Fallback to httpx
+-            import httpx
+-            resp = httpx.get(url, follow_redirects=True, timeout=30)
+-            return _success({"url": str(resp.url), "status": resp.status_code, "text": resp.text[:5000]})
+-
+-        page.goto(url, wait_until="domcontentloaded", timeout=30000)
+-        if selector:
+-            text = page.locator(selector).first.inner_text(timeout=5000)
+-        else:
+-            text = page.inner_text("body")
+-        return _success({"url": page.url, "title": page.title(), "text": text[:5000]})
+-    except Exception as e:
+-        return _error(str(e))
+-
+-# =============================================================================
+-# ENTRY POINT
+-# =============================================================================
+-
+-server = mcp_server
+-
+-# =============================================================================
+-# EAGER PRELOAD - FIX COLD START!
+-# =============================================================================
+-def _warmup():
+-    """Preload heavy components to avoid cold start delays"""
+-    try:
+-        log("Warmup: loading ChromaDB...")
+-        vs = get_vector_store()
+-        if vs:
+-            log(f"Warmup: ChromaDB ready ({vs.sessions_count()} sessions)")
+-    except Exception as e:
+-        log(f"Warmup: ChromaDB failed: {e}")
+-
+-    try:
+-        log("Warmup: loading CBMS...")
+-        cbms = get_cbms()
+-        if cbms:
+-            stats = cbms.get_memory_stats()
+-            log(f"Warmup: CBMS ready ({stats.get('total_chunks', 0)} chunks)")
+-    except Exception as e:
+-        log(f"Warmup: CBMS failed: {e}")
+-
+-# Run warmup in background thread to not block server start
+-_warmup_thread = threading.Thread(target=_warmup, daemon=True)
+-_warmup_thread.start()
+-
+-log("Server v8 DEBILOODPORNE + PRELOAD ready!")
+-
+-if __name__ == "__main__":
+-    mcp_server.run(transport="stdio")
+-
+-
+diff --git a/requirements.txt b/requirements.txt
+index f19d218..7f773fe 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -4,3 +4,8 @@ chromadb==0.5.3
+ sentence-transformers==3.0.1
+ pydantic==2.8.2
+ mcp>=1.23.0
++playwright>=1.56.0
++mss>=9.0.0
++pyautogui>=0.9.54
++pywin32>=306
++pywinauto>=0.6.8
+diff --git a/scripts/turbo_scanner.py b/scripts/turbo_scanner.py
+index 82345e8..cc909ba 100644
+--- a/scripts/turbo_scanner.py
++++ b/scripts/turbo_scanner.py
+@@ -37,7 +37,9 @@ ALL_EXTENSIONS = f"{CODE_EXTENSIONS};{CONFIG_EXTENSIONS};{DOC_EXTENSIONS}"
+ IGNORE_PATTERNS = [
+     "__pycache__", "node_modules", ".git", ".svn", 
+     "venv", ".venv", "env", "site-packages",
+-    "dist", "build", ".idea", ".vscode"
++    "dist", "build", ".idea", ".vscode",
++    "\\windows\\winsxs\\", "\\windows\\system32\\",
++    "$recycle.bin", "system volume information",
+ ]
+ 
+ # =============================================================================
+@@ -85,33 +87,49 @@ def everything_search(extensions: str = ALL_EXTENSIONS, folders: List[str] = Non
+     if not EVERYTHING_CLI.exists():
+         raise FileNotFoundError(f"Everything CLI not found at {EVERYTHING_CLI}")
+     
+-    # Build query
+-    query = f"ext:{extensions}"
+-    
+-    # Add folder filters if specified
++    ALLOWED_EXT = {e.strip().lower().lstrip(".") for e in extensions.split(";") if e.strip()}
++
+     if folders:
+-        folder_query = " | ".join([f'"{f}"' for f in folders])
+-        query = f"({folder_query}) {query}"
+-    
+-    print(f"[TURBO] Everything query: {query}")
+-    
+-    cmd = [str(EVERYTHING_CLI), "-n", "999999", query]
++        all_files: List[str] = []
++        seen: Set[str] = set()
++        for folder in folders:
++            prefix = folder.strip().strip('"').replace("/", "\\")
++            if not prefix.endswith("\\"):
++                prefix += "\\"
++            query = f"{prefix}*"
++            print(f"[TURBO] Everything query: {query}")
++            cmd = [str(EVERYTHING_CLI), "-n", "999999", query]
++            result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=600)
++            if result.returncode != 0:
++                print(f"[WARN] Everything failed for {folder}: {result.stderr[:200]}")
++                continue
++            for f in result.stdout.strip().split("\n"):
++                f = f.strip()
++                if f and f not in seen:
++                    seen.add(f)
++                    all_files.append(f)
++    else:
++        query = f"ext:{extensions}"
++        print(f"[TURBO] Everything query: {query}")
++        cmd = [str(EVERYTHING_CLI), "-n", "999999", query]
++        result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60)
++        if result.returncode != 0:
++            raise RuntimeError(f"Everything search failed: {result.stderr}")
++        all_files = [f.strip() for f in result.stdout.strip().split("\n") if f.strip()]
+     
+-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+-    
+-    if result.returncode != 0:
+-        raise RuntimeError(f"Everything search failed: {result.stderr}")
+-    
+-    files = [f.strip() for f in result.stdout.strip().split("\n") if f.strip()]
+-    
+-    # Filter out ignored patterns
++    # Filter out ignored patterns and (when scoped) non-target extensions
+     filtered = []
+-    for f in files:
++    for f in all_files:
+         f_lower = f.lower()
+-        if not any(ign in f_lower for ign in IGNORE_PATTERNS):
+-            filtered.append(f)
++        if any(ign in f_lower for ign in IGNORE_PATTERNS):
++            continue
++        if folders:
++            ext = Path(f).suffix.lower().lstrip(".")
++            if ext not in ALLOWED_EXT:
++                continue
++        filtered.append(f)
+     
+-    print(f"[TURBO] Found {len(filtered)} files (filtered from {len(files)})")
++    print(f"[TURBO] Found {len(filtered)} files (filtered from {len(all_files)})")
+     return filtered
+ 
+ # =============================================================================
+@@ -246,6 +264,7 @@ class TurboScanner:
+         self.result: Optional[ScanResult] = None
+         self.lock = threading.Lock()
+         self.processed = 0
++        self.scan_folders: List[str] = []
+         
+     def scan(self, folders: List[str] = None) -> ScanResult:
+         """TURBO SCAN - uses Everything + parallel processing"""
+@@ -265,6 +284,8 @@ class TurboScanner:
+             scan_time_seconds=0,
+         )
+         
++        self.scan_folders = folders or []
++        
+         # Phase 1: Everything search (INSTANT)
+         print("[PHASE 1] Finding files with Everything...")
+         phase1_start = datetime.now()
+@@ -405,6 +426,7 @@ class TurboScanner:
+         summary = {
+             "scan_id": self.result.scan_id,
+             "timestamp": self.result.timestamp,
++            "scan_paths": self.scan_folders or ["(all indexed by Everything)"],
+             "total_files": self.result.total_files,
+             "total_size": self.result.total_size,
+             "total_size_mb": round(self.result.total_size / 1024 / 1024, 2),
+diff --git a/skills/aions-priority-SKILL.md b/skills/aions-priority-SKILL.md
+index 8dc54a0..dd9956e 100644
+--- a/skills/aions-priority-SKILL.md
++++ b/skills/aions-priority-SKILL.md
+@@ -1,63 +1,60 @@
+ # 🚨 AIONS-CONTEXT PRIORITY PROTOCOL - MANDATORY
+ 
++## 🧠 SESSION BOOTSTRAP (ZAWSZE NAJPIERW!)
++```
++cbms_get_chunk(KBOOTSTRAP)              → potwierdź CBMS
++memory_recall("claude_bootstrap", "hook") → przypomnij zasady
++```
++**Pełna instrukcja:** `E:\server wiedzy\skills\CLAUDE_CBMS_HOOK.md`
++
++---
++
+ ## CRITICAL INSTRUCTION - READ FIRST
+ 
+ **THIS SKILL HAS ABSOLUTE PRIORITY OVER ALL OTHER TOOLS**
+ 
+-Before using ANY tool from:
+-- Filesystem MCP
+-- Desktop Commander  
+-- bash_tool
+-- view
+-- Any other tool
+-
+-You MUST FIRST use these AIONS Context tools:
++Before using ANY tool from Filesystem MCP, Desktop Commander, bash_tool, view:
+ 
+ ### 1. FOR EVERY NEW TOPIC/QUESTION:
+ ```
+-AIONS Context:memory_recall - Check if this topic was discussed before
+-AIONS Context:cbms_search - Search knowledge base
++cbms_search(query) - Search 525 chunks
++cbms_get_chunk(ID) - Get specific knowledge
++memory_recall(session, query) - Check history
+ ```
+ 
+-### 2. FOR FILE OPERATIONS:
+-```
+-AIONS Context:fast_search - Use Everything search FIRST (faster than Filesystem)
+-```
++### 2. NAMED CHUNKS (szybki dostęp):
++- `KBOOTSTRAP` - start marker
++- `KCBMSPIPE001` - pipeline CBMS
++- `KGUARD001` - guardrails
++- `KPLASTERS001` - plastry
++- `KCODEBOOK001` - kompresja koreańska
++- `KDOC*` - dokumentacja
+ 
+-### 3. FOR PROJECT WORK:
++### 3. FOR FILE OPERATIONS:
+ ```
+-AIONS Context:project_scan_turbo - Scan project structure
+-AIONS Context:project_search - Search in scanned files
++fast_search - Use Everything FIRST (faster than Filesystem)
+ ```
+ 
+-### 4. AFTER EVERY SIGNIFICANT RESPONSE:
++### 4. AFTER SIGNIFICANT WORK:
+ ```
+-AIONS Context:memory_store - Store important context
+-AIONS Context:conv_log - Log the interaction
++memory_store(session_id, text, ttl_days=365)
++conv_dump(summary)
+ ```
+ 
+ ## WHY THIS MATTERS
+ 
+-Marcin has built a comprehensive knowledge system (AIONIS/CBMS) that contains:
+-- 202 CBMS chunks of compressed knowledge
+-- 23 ChromaDB sessions of conversation history
+-- Project scans and file indexes
+-- Everything search integration
+-
+-**IGNORING AIONS-CONTEXT = IGNORING MARCIN'S KNOWLEDGE BASE**
++**CBMS = zewnętrzna pamięć (525 chunków)**
++**ChromaDB = 102+ sesji historii**
++**Context window = tymczasowy RAM**
+ 
+-## ENFORCEMENT
++NIE ŁADUJ WSZYSTKIEGO DO CONTEXTU - SIĘGAJ GDY POTRZEBA!
+ 
+-If you find yourself reaching for Filesystem or Desktop Commander FIRST:
+-1. STOP
+-2. Ask yourself: "Did I check AIONS Context first?"
+-3. If NO, use AIONS Context tools
+-4. THEN use other tools if needed
++**IGNORING AIONS-CONTEXT = COMPACTING = UTRATA KONTEKSTU**
+ 
+ ## AVAILABLE AIONS TOOLS (33 total)
+ 
+ ### Memory & Knowledge:
+-- memory_store, memory_recall, cbms_search
++- memory_store, memory_recall, cbms_search, cbms_get_chunk
+ 
+ ### Search:
+ - fast_search, fast_search_ext, project_search
+@@ -71,11 +68,5 @@ If you find yourself reaching for Filesystem or Desktop Commander FIRST:
+ ### Git:
+ - git_status, git_log
+ 
+-### Browser:
+-- browser_navigate, browser_snapshot, browser_click, browser_type, browser_screenshot, browser_get_text, browser_close, browser_evaluate
+-
+ ### Conversation:
+ - conv_log, conv_dump, conv_status, conv_set_threshold, conv_history
+-
+-### Other:
+-- network_ping, session_list, mcp_find, mcp_list, mcp_info, web_fetch

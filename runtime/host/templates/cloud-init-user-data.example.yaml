@@ -1,0 +1,71 @@
+#cloud-config
+# AIONS host — example cloud-init user-data (Milestone D prep)
+# Use with: multipass launch … --cloud-init cloud-init-user-data.example.yaml
+# Or: oci compute instance launch --user-data-file …
+
+hostname: aions-host
+manage_etc_hosts: true
+package_update: true
+package_upgrade: false
+
+packages:
+  - git
+  - curl
+  - jq
+  - python3.11
+  - python3.11-venv
+  - python3-pip
+
+users:
+  - name: aions
+    groups: users
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAA...replace-with-your-key... comment
+
+write_files:
+  - path: /usr/local/lib/aions/host/install_aions_host.sh
+    permissions: "0755"
+    owner: root:root
+    content: |
+      # PLACEHOLDER — replace with actual install_aions_host.sh content
+      # or fetch from git during boot (see runcmd).
+      echo "Replace this stub with real install_aions_host.sh" >&2
+      exit 1
+
+  - path: /usr/local/lib/aions/host/first_boot_setup.sh
+    permissions: "0755"
+    owner: root:root
+    content: |
+      # PLACEHOLDER — replace with actual first_boot_setup.sh content
+      echo "Replace this stub with real first_boot_setup.sh" >&2
+      exit 1
+
+  - path: /usr/local/lib/aions/host/validate_install.sh
+    permissions: "0755"
+    owner: root:root
+    content: |
+      # PLACEHOLDER — replace with actual validate_install.sh content
+      echo "Replace this stub with real validate_install.sh" >&2
+      exit 1
+
+runcmd:
+  # Preferred: clone repo once and symlink scripts (adjust URL/branch).
+  - mkdir -p /opt/aions/staging
+  - |
+    if [[ ! -d /opt/aions/staging/repo/.git ]]; then
+      git clone --depth 1 https://github.com/ORG/aions-server-wiedzy.git /opt/aions/staging/repo || true
+    fi
+  - |
+    if [[ -d /opt/aions/staging/repo/runtime/host ]]; then
+      cp -a /opt/aions/staging/repo/runtime/host/*.sh /usr/local/lib/aions/host/
+      chmod +x /usr/local/lib/aions/host/*.sh
+    fi
+  - /usr/local/lib/aions/host/install_aions_host.sh
+  - runuser -u aions -- /usr/local/lib/aions/host/first_boot_setup.sh
+  - /usr/local/lib/aions/host/validate_install.sh --user aions
+  - echo "AIONS host cloud-init finished" > /var/lib/aions/cloud-init.done
+
+final_message: "AIONS host cloud-init complete after $UPTIME seconds"

@@ -14,18 +14,14 @@ $env:PYTHONIOENCODING = 'utf-8'
 $env:PYTHONUTF8 = '1'
 $env:PYTHONUNBUFFERED = '1'
 
-$venv = Join-Path $repoRoot 'venv'
-
-# Use ONLY venv Python - do not mix with system Python
-$pythonExe = Join-Path $venv 'Scripts\python.exe'
-if (-not (Test-Path $pythonExe)) {
-  throw "Python interpreter not found at $pythonExe. Run: python -m venv venv"
+# Use ONLY venv Python via aions_python launcher — never bare python
+$launcher = Join-Path $PSScriptRoot 'aions_python.ps1'
+if (-not (Test-Path $launcher)) {
+  throw "AIONS Python launcher not found: $launcher"
 }
-
-# Activate venv
-$activateScript = Join-Path $venv 'Scripts\Activate.ps1'
-if (Test-Path $activateScript) {
-  . $activateScript
+$pythonExe = & $launcher -ResolveOnly
+if (-not $pythonExe -or -not (Test-Path $pythonExe)) {
+  throw "AIONS venv Python not resolved. Run: scripts\ensure_venv.ps1"
 }
 
 # Set PYTHONPATH to include repo root

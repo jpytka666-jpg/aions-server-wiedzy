@@ -1,0 +1,16 @@
+FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    systemd systemd-sysv dbus dbus-user-session sudo \
+    python3.11 python3.11-venv python3-pip git rsync curl jq adduser ca-certificates \
+ && apt-get clean && rm -rf /var/lib/apt/lists/* \
+ && cd /lib/systemd/system/sysinit.target.wants/ \
+ && ln -sf ../systemd-tmpfiles-setup.service . \
+ && rm -f /lib/systemd/system/multi-user.target.wants/* \
+ && rm -f /lib/systemd/system/local-fs.target.wants/* \
+ && rm -f /lib/systemd/system/sockets.target.wants/*udev* \
+ && rm -f /lib/systemd/system/sockets.target.wants/*socket \
+ && rm -f /lib/systemd/system/basic.target.wants/* \
+ && rm -f /lib/systemd/system/anaconda.target.wants/*
+STOPSIGNAL SIGRTMIN+3
+CMD ["/lib/systemd/systemd"]
