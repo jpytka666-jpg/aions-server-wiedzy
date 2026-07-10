@@ -1,0 +1,138 @@
+{
+  "project": {
+    "codename": "KORZENIEC",
+    "folder": "aions_cbms_llm_v2",
+    "version": "2.0.0",
+    "spirit": "MAPA_LASU — korzeń myśli rośnie z codebooka, nie z szumu",
+    "created": "2026-07-10",
+    "author_context": "Marcin / AIONS / Grok 4.5 design pass"
+  },
+  "base_model": {
+    "id": "speakleash/Bielik-4.5B-v3.0-Instruct",
+    "local_gguf": "D:\\LOCAL LLM MODELS\\Bielik-4.5B-Q4_K_M\\bielik-4.5b-v3.0-instruct-q4_k_m-imat.gguf",
+    "ollama_tag": "bielik-aions",
+    "params_b": 4.5,
+    "quant": "Q4_K_M",
+    "vram_budget_gb": 4.0,
+    "why_not_phi_kr": "Phi-KR (PHIZONKKILL) zmieniał wagi przez torch.randn — embeddingi Hangul nie miały semantyki sylab ani codebooka. Brakowało też pełnego sharda modelu.",
+    "why_not_mistral_7b": "cbms_kr_v1 (Mistral) jest kompletny, ale 7B Q4 nie mieści się komfortowo w Quadro M2000M 4GB przy kontekście CBMS.",
+    "why_bielik": [
+      "Już podpięty jako AIONS_LLM_MODEL_SMALL w llm_adapter.py",
+      "PL-native usta operatora (Marcin) — Hangul to ADRESY bloków, nie język odpowiedzi",
+      "4.5B Q4 ≈ 2.6–3.2GB VRAM → zostaje headroom na KV + retrieval",
+      "Lokalny GGUF gotowy — zero downloadu, zero ruszania LOCAL LLM MODELS źródłowych",
+      "LoRA/adaptery da się trenować na HF FP16/BF16 offload RAM (64GB), serwować Q4"
+    ]
+  },
+  "vocab": {
+    "hangul_tokenizer": "E:\\AJAJAJ\\AI DEVELOPMENT\\WORK SPACE\\IMPORT FROM_E\\BIELIK_KOREAN_CBMS\\korean_cbms_tokenizer.json",
+    "codebook": "E:\\server wiedzy\\aions_core\\memory\\codebook\\codebook.json",
+    "hangul_syllables": 4016,
+    "codebook_symbols_min": 16,
+    "special_tokens": [
+      "<pad>",
+      "<unk>",
+      "<s>",
+      "</s>",
+      "<cbms>",
+      "</cbms>",
+      "<addr>",
+      "</addr>",
+      "<eo>",
+      "</eo>",
+      "<gate_hit>",
+      "<gate_miss>"
+    ],
+    "layout": {
+      "0_3": "legacy hangul specials (pad/unk/bos/eos)",
+      "4_4015": "Hangul syllable + particle addresses (~4012)",
+      "4016_plus": "CBMS codebook symbols (A1, CB1, …) + KORZENIEC control tokens"
+    },
+    "principle": "Hangul = pointer do bloku pamięci; codebook symbol = semantyka skompresowana; PL/EN zostaje w bazowym tokenizerze Bielika jako most usta↔mózg"
+  },
+  "embedding_init": {
+    "method": "semantic_meanpool_jamo_codebook",
+    "forbidden": "torch.randn / normal_(0,1) na nowych tokenach Hangul/codebook",
+    "hangul_strategy": {
+      "decompose": "Unicode jamo (초성/중성/종성)",
+      "seed": "średnia embeddingów bazowych tokenów odpowiadających jamo / najbliższych subwordów Bielika",
+      "fallback": "średnia całego embedding table * 0.02 scale (nie randn)"
+    },
+    "codebook_strategy": {
+      "seed": "mean-pool embeddingów fraz eo[] + pl[] + sem z codebook.json przez tokenizer bazowy",
+      "normalize": "L2",
+      "scale": 1.0
+    },
+    "output_dir": "artifacts/embeddings",
+    "write_policy": "tylko do experiments/aions_cbms_llm_v2 — NIGDY do D:\\LOCAL LLM MODELS ani chunków CBMS"
+  },
+  "inference_stack": {
+    "golden_rule": "CBMS-first: jeśli retrieval confidence >= 0.7 → odpowiedź z chunków BEZ LLM",
+    "confidence_threshold": 0.7,
+    "flow": [
+      "query → Hangul address encode + codebook symbolic match",
+      "CBMS retrieve (keys + symbolic_codes + chroma)",
+      "if max_score >= 0.7 → compose answer from chunks",
+      "else → Bielik (small) z kontekstem CBMS; optional LoRA CBMS-aware",
+      "large (phi4) tylko gdy tier=large i gate miss"
+    ],
+    "lora": {
+      "optional": true,
+      "targets": ["q_proj", "v_proj", "o_proj"],
+      "rank": 8,
+      "alpha": 16,
+      "purpose": "nauczyć model czytać sekwencje <addr>Hangul</addr><cbms>CB1</cbms> jako kontekst, nie jako szum"
+    }
+  },
+  "hardware": {
+    "ram_gb": 64,
+    "gpu": "Quadro M2000M 4GB",
+    "constraint": "<=4.5B Q4 in VRAM",
+    "train_note": "LoRA train: CPU/RAM offload OK; inference: llama.cpp / Ollama Q4"
+  },
+  "non_goals": [
+    "Nie nadpisujemy wag w D:\\LOCAL LLM MODELS",
+    "Nie mutujemy chunków CBMS na E:\\server wiedzy\\aions_core",
+    "Nie powtarzamy Phi-KR randn injection",
+    "Nie wymagamy generowania koreańskiego NLG — Hangul = adres"
+  ],
+  "innovations_vs_phi_kr": [
+    {
+      "id": 1,
+      "title": "Semantyczna inicjalizacja embeddingów",
+      "detail": "Jamo-decompose + mean-pool fraz codebook (eo/pl/sem) zamiast torch.randn"
+    },
+    {
+      "id": 2,
+      "title": "CBMS-first gate ≥0.7",
+      "detail": "Mózg odpowiada bez LLM gdy retrieval pewny — Phi-KR zawsze pchał przez uszkodzony model"
+    },
+    {
+      "id": 3,
+      "title": "Natywny vocab Hangul+codebook na Bieliku PL",
+      "detail": "Adresy i symbole jako first-class tokeny; usta po polsku już w bazie; LoRA opcjonalnie"
+    }
+  ],
+  "paths": {
+    "experiment_root": "E:\\server wiedzy\\experiments\\aions_cbms_llm_v2",
+    "codebook": "E:\\server wiedzy\\aions_core\\memory\\codebook\\codebook.json",
+    "hangul_tokenizer": "E:\\AJAJAJ\\AI DEVELOPMENT\\WORK SPACE\\IMPORT FROM_E\\BIELIK_KOREAN_CBMS\\korean_cbms_tokenizer.json",
+    "llm_adapter": "E:\\server wiedzy\\control_plane\\llm_adapter.py",
+    "bielik_gguf": "D:\\LOCAL LLM MODELS\\Bielik-4.5B-Q4_K_M",
+    "mistral_ref_readonly": "D:\\LOCAL LLM MODELS\\cbms_kr_v1",
+    "phi_kr_readonly": "D:\\NEEDS ATENTION\\MAPA_LASU_SOLO_CBMS\\PHIZONKKILL"
+  },
+  "next_step_1_2h": {
+    "title": "Dry-run vocab + embedding init (bez zapisu do LOCAL LLM MODELS)",
+    "commands": [
+      "python scripts/build_cbms_vocab.py --dry-run",
+      "python scripts/build_cbms_vocab.py",
+      "python scripts/init_cbms_embeddings.py --method semantic --max-tokens 64"
+    ],
+    "success": [
+      "artifacts/vocab/korzeniec_vocab.json istnieje",
+      "artifacts/embeddings/init_report.json: method!=randn, zero_randn=true",
+      "Nowe tokeny codebook mają cosine>0.3 względem mean-pool fraz PL"
+    ]
+  }
+}

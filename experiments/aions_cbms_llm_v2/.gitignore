@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Large generated vectors (reports stay tracked if small)
+artifacts/embeddings/korzeniec_embeddings.json
+artifacts/vocab/korzeniec_vocab.json
+
+# Never commit model weights
+*.gguf
+*.safetensors
+*.bin
+
+.git_nested_bak/
+artifacts/embeddings/
+artifacts/vocab/
+*.pt
+

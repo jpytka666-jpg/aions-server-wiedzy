@@ -1,0 +1,9 @@
+# Ignore future build outputs (Faza 0+) — design-only folder today
+artifacts/
+build/out/
+third_party/llama.cpp/
+*.exe
+*.dll
+*.gguf
+.venv/
+__pycache__/

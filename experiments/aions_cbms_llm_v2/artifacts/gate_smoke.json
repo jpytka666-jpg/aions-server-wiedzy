@@ -1,0 +1,198 @@
+{
+  "project": "KORZENIEC",
+  "phase": "1-gate-smoke",
+  "created_at": "2026-07-10T20:54:51.598392+00:00",
+  "threshold": 0.7,
+  "with_llm": false,
+  "summary": {
+    "total": 10,
+    "hits": 7,
+    "misses": 3,
+    "errors": 0,
+    "expect_pass": 10,
+    "status": "PASS"
+  },
+  "results": [
+    {
+      "id": "q01_pipeline",
+      "query": "Jak działa pipeline CBMS end-to-end?",
+      "expect": "hit",
+      "note": "KCBMSPIPE001 — cheat sheet operacyjny",
+      "gate": "hit",
+      "confidence": 1.0,
+      "top_chunk": "KCBMSPIPE001",
+      "top_score": 1.0,
+      "sources": [
+        "korean_keys+lexical",
+        "korean_keys+lexical",
+        "korean_keys+lexical"
+      ],
+      "query_codes": [
+        "CB1"
+      ],
+      "pass": true
+    },
+    {
+      "id": "q02_codebook",
+      "query": "Co to jest codebook w CBMS i kompresja koreańska?",
+      "expect": "hit",
+      "note": "chunki o codebook.json + symbols",
+      "gate": "hit",
+      "confidence": 0.9888,
+      "top_chunk": "KCODEBOOK001",
+      "top_score": 0.9888,
+      "sources": [
+        "korean_keys+lexical",
+        "korean_keys+lexical",
+        "korean_keys+lexical"
+      ],
+      "query_codes": [
+        "CB1"
+      ],
+      "pass": true
+    },
+    {
+      "id": "q03_access",
+      "query": "Jak uzyskać pełny dostęp do chunków CBMS?",
+      "expect": "hit",
+      "note": "KCBMSACCESS001",
+      "gate": "hit",
+      "confidence": 0.95,
+      "top_chunk": "KC80DF3DE5238",
+      "top_score": 0.95,
+      "sources": [
+        "korean_keys+lexical",
+        "korean_keys+lexical",
+        "korean_keys+lexical"
+      ],
+      "query_codes": [],
+      "pass": true
+    },
+    {
+      "id": "q04_crla",
+      "query": "Czym jest CRLA turniej kandydatów w CBMS?",
+      "expect": "hit",
+      "note": "CRLA / crla_core w chunkach",
+      "gate": "hit",
+      "confidence": 0.9629,
+      "top_chunk": "KCBMSPIPE001",
+      "top_score": 0.9629,
+      "sources": [
+        "korean_keys+lexical",
+        "korean_keys+lexical",
+        "korean_keys+lexical"
+      ],
+      "query_codes": [
+        "CR1",
+        "CR1"
+      ],
+      "pass": true
+    },
+    {
+      "id": "q05_hangul",
+      "query": "Kompresja koreańska Hangul sylaby i korean keys w CBMS codebook",
+      "expect": "hit",
+      "note": "KCODEBOOK001 / KCBMSPIPE001 — Hangul=adres, nie NLG",
+      "gate": "hit",
+      "confidence": 1.0,
+      "top_chunk": "KCODEBOOK001",
+      "top_score": 1.0,
+      "sources": [
+        "korean_keys+lexical",
+        "korean_keys+lexical",
+        "korean_keys+lexical"
+      ],
+      "query_codes": [
+        "CB1"
+      ],
+      "pass": true
+    },
+    {
+      "id": "q06_chroma",
+      "query": "Jak działa CBMS pipeline end-to-end korean keys i symbolic index?",
+      "expect": "hit",
+      "note": "KCBMSPIPE001 — Chroma lokalnie bywa padnięta, pipeline jest w CBMS",
+      "gate": "hit",
+      "confidence": 0.9976,
+      "top_chunk": "KCBMSPIPE001",
+      "top_score": 0.9976,
+      "sources": [
+        "korean_keys+lexical",
+        "korean_keys+lexical",
+        "korean_keys+lexical"
+      ],
+      "query_codes": [
+        "CB1"
+      ],
+      "pass": true
+    },
+    {
+      "id": "q07_esperanto",
+      "query": "Esperanto bridge symbolic index codebook encode",
+      "expect": "hit",
+      "note": "symbolic index / esperanto_bridge",
+      "gate": "hit",
+      "confidence": 1.0,
+      "top_chunk": "KCODEBOOK001",
+      "top_score": 1.0,
+      "sources": [
+        "korean_keys+lexical",
+        "korean_keys+lexical",
+        "korean_keys+lexical"
+      ],
+      "query_codes": [],
+      "pass": true
+    },
+    {
+      "id": "q08_operator",
+      "query": "Kim jest Marcin i jakie ma hobby w życiu prywatnym?",
+      "expect": "miss",
+      "note": "abstrakcyjne / poza CBMS — gate miss",
+      "gate": "miss",
+      "confidence": 0.0684,
+      "top_chunk": "KCODEBOOK001",
+      "top_score": 0.0684,
+      "sources": [
+        "korean_keys+lexical",
+        "korean_keys+lexical",
+        "korean_keys+lexical"
+      ],
+      "query_codes": [],
+      "pass": true
+    },
+    {
+      "id": "q09_quantum",
+      "query": "Wyjaśnij kwantową grawitację w teorii strun",
+      "expect": "miss",
+      "note": "poza wiedzą AIONS",
+      "gate": "miss",
+      "confidence": 0.1756,
+      "top_chunk": "KF790B4DEB1B0",
+      "top_score": 0.1756,
+      "sources": [
+        "korean_keys+lexical",
+        "korean_keys+lexical",
+        "korean_keys+lexical"
+      ],
+      "query_codes": [],
+      "pass": true
+    },
+    {
+      "id": "q10_weather",
+      "query": "Jaka będzie pogoda jutro w Tokio?",
+      "expect": "miss",
+      "note": "poza CBMS — gate musi miss (nie udajemy wiedzy)",
+      "gate": "miss",
+      "confidence": 0.2333,
+      "top_chunk": "KCURSORGIT001",
+      "top_score": 0.2333,
+      "sources": [
+        "korean_keys+lexical",
+        "korean_keys+lexical",
+        "korean_keys+lexical"
+      ],
+      "query_codes": [],
+      "pass": true
+    }
+  ]
+}

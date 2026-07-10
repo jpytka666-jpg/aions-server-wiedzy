@@ -1,0 +1,31 @@
+{
+  "project": "KORZENIEC",
+  "phase": "2-hf-stub",
+  "status": "STUB_ONLY",
+  "created_at": "2026-07-10T20:48:40.851315+00:00",
+  "hf_model_id": "speakleash/Bielik-4.5B-v3.0-Instruct",
+  "local_hf_found": false,
+  "reason": "Brak lokalnego HF Bielik (tylko GGUF w LOCAL LLM MODELS jest OK). Gate Fazy 1 działa bez tego.",
+  "vocab_source": "E:\\server wiedzy\\experiments\\aions_cbms_llm_v2\\artifacts\\vocab\\korzeniec_vocab.json",
+  "n_added_tokens_planned": 4030,
+  "embedding_init_source": "korzeniec_embed_init.pt:embeddings",
+  "embedding_policy": "semantic_meanpool_jamo_codebook — zero torch.randn",
+  "output_dir": "E:\\server wiedzy\\experiments\\aions_cbms_llm_v2\\artifacts\\hf_bielik_cbms_stub",
+  "write_policy": "NEVER touch D:\\LOCAL LLM MODELS\\",
+  "next_steps": [
+    "Zobacz NEXT.md w tym katalogu eksperymentu",
+    "huggingface-cli download speakleash/Bielik-4.5B-v3.0-Instruct --local-dir ./hf_cache/bielik",
+    "Ustaw KORZENIEC_HF_MODEL_PATH na ścieżkę z config.json",
+    "Ponów: python scripts/prepare_hf_bielik_cbms.py"
+  ],
+  "added_token_sample": [
+    "각",
+    "갂",
+    "갃",
+    "간",
+    "갅",
+    "갆",
+    "갇",
+    "갈"
+  ]
+}

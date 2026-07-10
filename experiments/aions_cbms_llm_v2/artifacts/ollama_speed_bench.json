@@ -1,0 +1,29 @@
+{
+  "created_at": "2026-07-10T22:03:14.707990+00:00",
+  "prompt": "Reply in one short sentence: What is 2+2?",
+  "num_predict": 64,
+  "temperature": 0,
+  "model_timeout_s": 600,
+  "gpu_note": "Quadro M2000M 4GB VRAM",
+  "note": "killed prior hung PS bench; sequential warmup+timed chat; read-only weights",
+  "results": [
+    {
+      "model": "bielik-aions",
+      "ok": false,
+      "status": "FAIL",
+      "warmup_ok": false,
+      "warmup_error": "HTTP Error 500: Internal Server Error",
+      "wall_s": 302.85,
+      "error": "HTTP Error 500: Internal Server Error"
+    },
+    {
+      "model": "phi4",
+      "ok": false,
+      "status": "FAIL",
+      "warmup_ok": false,
+      "warmup_error": "HTTP Error 500: Internal Server Error",
+      "wall_s": 302.98,
+      "error": "HTTP Error 500: Internal Server Error"
+    }
+  ]
+}
