@@ -1,0 +1,23 @@
+{
+  "name": "AIONS Session Initializer",
+  "description": "Wymusza prawidłową inicjalizację sesji AI - system_health, conv_history, memory_recall",
+  "trigger": {
+    "type": "on_session_start"
+  },
+  "conditions": [],
+  "actions": [
+    {
+      "type": "prompt_injection",
+      "content": "## 🚨 MANDATORY SESSION INITIALIZATION\n\nBefore responding to ANY user request, you MUST:\n\n1. Call `system_health()` from aions-context MCP\n2. Call `conv_history()` to see previous context\n3. Call `memory_recall()` with topic relevant to user's question\n\nONLY AFTER completing these steps, proceed with the user's request.\n\nRefer to:\n- .kiro/steering/claude-workflow.md for workflow rules\n- .kiro/steering/tools-priority.md for tool selection\n- .kiro/specs/claude-behavior/ for detailed requirements"
+    },
+    {
+      "type": "file_read",
+      "paths": [
+        ".kiro/steering/claude-workflow.md",
+        ".kiro/steering/tools-priority.md",
+        ".kiro/steering/aions-architecture.md"
+      ]
+    }
+  ],
+  "enabled": true
+}

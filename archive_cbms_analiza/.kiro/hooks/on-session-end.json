@@ -1,0 +1,20 @@
+{
+  "name": "AIONS Session Finalizer",
+  "description": "Wymusza zapisanie kontekstu przed zakończeniem sesji",
+  "trigger": {
+    "type": "on_session_end"
+  },
+  "conditions": [],
+  "actions": [
+    {
+      "type": "prompt_injection",
+      "content": "## 📝 SESSION END CHECKLIST\n\nBefore ending this session, you MUST:\n\n1. Call `conv_log('assistant', 'Session summary: [what was done]')` with summary\n2. Call `conv_dump()` to persist all logs to ChromaDB\n3. Call `conv_status()` to verify buffer is empty\n\nDo NOT end the session until these are complete!"
+    },
+    {
+      "type": "tool_call",
+      "tool": "conv_status",
+      "args": {}
+    }
+  ],
+  "enabled": true
+}

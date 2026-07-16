@@ -1,0 +1,27 @@
+{
+  "name": "AIONS Anti-Simulation Guard",
+  "description": "Blokuje symulowanie wyników - wymusza rzeczywiste wywołania narzędzi",
+  "trigger": {
+    "type": "on_response",
+    "patterns": [
+      "znalazłem",
+      "found",
+      "plik zawiera",
+      "file contains",
+      "zmodyfikowałem",
+      "modified",
+      "utworzyłem",
+      "created",
+      "działa",
+      "works"
+    ]
+  },
+  "conditions": [],
+  "actions": [
+    {
+      "type": "prompt_injection",
+      "content": "## 🚫 ANTI-SIMULATION CHECK\n\nYou just made a claim. Verify you have EVIDENCE:\n\n- 'Found file X' → Show `fast_search()` result\n- 'File contains Y' → Show `Read()` result  \n- 'Modified Z' → Show `Edit()` result\n- 'Created W' → Show `Write()` result\n- 'Works' → Show test/execution output\n\nIf you don't have evidence, STOP and call the actual tool.\n\n❌ SIMULATION IS FORBIDDEN ❌"
+    }
+  ],
+  "enabled": true
+}

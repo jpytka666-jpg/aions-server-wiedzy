@@ -1,0 +1,42 @@
+{
+  "test_date": "2025-11-11T15:03:19.713208",
+  "tests": [
+    {
+      "name": "Environment Verification",
+      "status": "FAIL",
+      "checks": [
+        {
+          "check": "Python version",
+          "value": "3.11.9",
+          "status": "FAIL"
+        },
+        {
+          "check": "Directory: AIONS_CBMS_PRODUCTION_20250913_065430",
+          "value": "E:/AJAJAJ/CBMS_EXTRACT/AIONS_CBMS_PRODUCTION_20250913_065430",
+          "status": "PASS"
+        },
+        {
+          "check": "Directory: AIONS_CBMS_RELEASE_V3",
+          "value": "C:/Users/User/OneDrive - Global Banking School/Desktop/AIONS_TEXTY_DLA_TEPYCH_AJAJ/AIONS_CBMS_RELEASE_V3",
+          "status": "PASS"
+        },
+        {
+          "check": "File: PRODUCTION_AIONS_CBMS_SYSTEM.py",
+          "value": "17,342 bytes",
+          "status": "PASS"
+        },
+        {
+          "check": "File: AIONS_KOREAN_MODIFIED_PHI3.safetensors",
+          "value": "2,669,692,520 bytes",
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "success_rate": "0.0%"
+  }
+}

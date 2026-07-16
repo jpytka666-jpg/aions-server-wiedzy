@@ -3,7 +3,7 @@
 > Auto-generowany przez runtime/aions_state.py. Sekcja "Roadmapa/decyzje/backlog"
 > pochodzi z runtime/aions_state_manual.md (edytuj tam). Odswiez: `python runtime/aions_state.py`.
 
-**Ostatnia aktualizacja:** 2026-07-16 16:03 UTC
+**Ostatnia aktualizacja:** 2026-07-16 17:09 UTC
 
 ## Serwery (health na zywo)
 - Phi-4-mini (llama.cpp)  :8877  -> **UP**
@@ -12,7 +12,7 @@
 
 ## Liczby
 - Skille: **87**  ·  Recipes: **12**
-- ChromaDB kolekcji: **26**  ·  glowna pamiec (session_claude_marcin_main): **936** docs
+- ChromaDB kolekcji: **26**  ·  glowna pamiec (session_claude_marcin_main): **937** docs
 - Nody w rejestrze: **4**
 
 ## Autostart / samozarzadzanie

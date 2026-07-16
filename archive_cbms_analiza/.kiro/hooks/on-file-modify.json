@@ -1,0 +1,21 @@
+{
+  "name": "AIONS File Modification Guard",
+  "description": "Wymusza sprawdzenie zależności przed modyfikacją pliku",
+  "trigger": {
+    "type": "on_tool_call",
+    "tools": ["Edit", "Write"]
+  },
+  "conditions": [
+    {
+      "type": "file_exists",
+      "path": "${target_file}"
+    }
+  ],
+  "actions": [
+    {
+      "type": "prompt_injection",
+      "content": "## ⚠️ FILE MODIFICATION CHECK\n\nBefore modifying this file, ensure you have:\n\n1. Called `project_file_deps('${target_file}')` to see dependencies\n2. Read the current file content\n3. Verified the modification won't break dependent files\n\nAfter modification:\n- Log the change via `conv_log('assistant', 'Modified ${target_file}: [description]')`"
+    }
+  ],
+  "enabled": true
+}

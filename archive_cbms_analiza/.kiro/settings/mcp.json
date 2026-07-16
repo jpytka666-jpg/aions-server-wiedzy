@@ -1,0 +1,54 @@
+{
+  "mcpServers": {
+    "aurora-dsql": {
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "D:/AIONS-INTEGRATION/aurora_dsql_windows.ps1"
+      ],
+      "env": {
+        "AWS_PROFILE": "125140434314",
+        "AWS_REGION": "eu-central-1"
+      },
+      "autoApprove": [
+        "execute_sql",
+        "list_tables",
+        "describe_table",
+        "get_table_schema"
+      ]
+    },
+    "aions-context": {
+      "command": "E:/server wiedzy/venv/Scripts/python.exe",
+      "args": [
+        "-m",
+        "mcp.server.stdio",
+        "--server-script",
+        "E:/server wiedzy/mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+      ],
+      "env": {
+        "CHROMA_PATH": "E:/server wiedzy/data/chroma",
+        "PYTHONPATH": "E:/server wiedzy;E:/server wiedzy/server;E:/AIONS_V10/AIONS_CBMS_RELEASE_V3"
+      },
+      "autoApprove": [
+        "fast_search",
+        "fast_search_ext",
+        "git_status",
+        "git_log",
+        "project_scan_status",
+        "project_scan_results",
+        "project_search",
+        "project_file_deps",
+        "conv_status",
+        "conv_history",
+        "memory_recall",
+        "session_list",
+        "cbms_search",
+        "system_health",
+        "mcp_find",
+        "mcp_list",
+        "mcp_info"
+      ]
+    }
+  }
+}

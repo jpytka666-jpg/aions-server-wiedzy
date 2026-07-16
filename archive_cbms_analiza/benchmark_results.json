@@ -1,0 +1,39 @@
+{
+  "timestamp": "2025-11-11 14:55:08",
+  "total_tests": 5,
+  "passed": 4,
+  "failed": 1,
+  "success_rate": 80.0,
+  "elapsed_seconds": 1.4187133312225342,
+  "results": [
+    {
+      "test": "File Existence",
+      "passed": 5,
+      "failed": 0,
+      "total": 5
+    },
+    {
+      "test": "Chunk Count",
+      "status": "FAIL",
+      "count": 504,
+      "expected": 2233
+    },
+    {
+      "test": "Korean Results Integrity",
+      "status": "PASS",
+      "checks_passed": 5,
+      "checks_total": 5
+    },
+    {
+      "test": "Facts Database",
+      "status": "PASS",
+      "fact_count": 7895
+    },
+    {
+      "test": "Python Imports",
+      "passed": 4,
+      "failed": 0,
+      "total": 4
+    }
+  ]
+}

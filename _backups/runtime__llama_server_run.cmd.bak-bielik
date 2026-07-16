@@ -1,0 +1,8 @@
+@echo off
+setlocal
+set "MODEL_DIR=D:\LOCAL LLM MODELS\Bielik-4.5B-Q4_K_M"
+set "GGUF=%MODEL_DIR%\bielik-4.5b-v3.0-instruct-q4_k_m-imat.gguf"
+set "SERVER_EXE=D:\AIONS-INTEGRATION\aions_core\llama-server.exe"
+set "PATH=%MODEL_DIR%;%PATH%"
+cd /d "%MODEL_DIR%"
+"%SERVER_EXE%" -m "%GGUF%" --port 8877 --host 127.0.0.1 --n-gpu-layers 0 --threads 4 --threads-batch 4 --ctx-size 4096 --mlock --cache-reuse 256

@@ -1,0 +1,24 @@
+{
+  "kiro": {
+    "version": "1.0",
+    "aws": {
+      "enabled": true,
+      "profile": "default",
+      "region": "us-east-1",
+      "services": ["lambda", "s3", "dynamodb", "apigateway"],
+      "localstack": {
+        "enabled": false,
+        "endpoint": "http://localhost:4566"
+      }
+    },
+    "extensions": {
+      "aws-toolkit": true,
+      "python": true,
+      "json": true
+    },
+    "debugging": {
+      "aws_debug": false,
+      "verbose_logging": false
+    }
+  }
+}
