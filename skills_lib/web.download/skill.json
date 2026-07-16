@@ -1,0 +1,14 @@
+{
+  "id": "web.download",
+  "type": "skill",
+  "name": "Pobierz plik z internetu",
+  "description": "Pobiera plik spod podanego adresu URL i zapisuje na dysku. Uzyj gdy trzeba sciagnac plik z sieci.",
+  "tags": ["pobierz", "sciagnij", "plik", "internet", "url", "download", "web", "fetch"],
+  "inputs": [{"name": "url", "type": "str", "required": true}, {"name": "path", "type": "str", "required": true}],
+  "outputs": [{"name": "path", "type": "str"}, {"name": "bytes", "type": "int"}],
+  "requires": [],
+  "avoid_when": ["internet==down"],
+  "risk": "medium",
+  "handler": "handler:run",
+  "version": "1.0"
+}

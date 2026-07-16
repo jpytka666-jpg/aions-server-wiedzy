@@ -1,0 +1,14 @@
+{
+  "id": "sys.datetime",
+  "type": "skill",
+  "name": "Aktualna data i godzina",
+  "description": "Podaje aktualna date i godzine systemu. Uzyj gdy trzeba znac biezacy czas lub date.",
+  "tags": ["data", "godzina", "czas", "zegar", "date", "time", "now"],
+  "inputs": [],
+  "outputs": [{"name": "now", "type": "str"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "handler": "handler:run",
+  "version": "1.0"
+}

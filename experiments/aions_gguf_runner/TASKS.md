@@ -19,13 +19,16 @@ Legenda: `[ ]` todo · `[~]` w toku · `[x]` done · `[-]` cancelled / out of sc
 
 ## Faza 0 — Proof of concept
 
-- [ ] Utworzyć `build/` + `.gitignore` (binaria, modele, artifacts)
-- [ ] Pin llama.cpp (submodule **lub** dokumentowana ścieżka do oficjalnego release Windows)
-- [ ] Zbudować / pobrać `llama-cli` / `llama-server` (CPU najpierw; CUDA/Vulkan osobno)
-- [ ] One-shot: załaduj `E:\server wiedzy\models\qwen2.5-3b-instruct\qwen2.5-3b-instruct-q4_K_M.gguf`
-- [ ] CLI speak z CONTEXT zawierającym `<addr>…</addr>` i `<<CB:A1>>` (ręczny smoke)
-- [ ] Bench tok/s vs Ollama **ten sam GGUF** → `artifacts/bench_faza0.json`
-- [ ] Zapisać backend użyty (cpu/cuda/vulkan) i czy M2000M w ogóle działa
+- [x] Utworzyć `build/` + `.gitignore` (binaria, modele, artifacts)
+- [x] Pin llama.cpp: **dokumentowana ścieżka** do istniejącego `llama-cli.exe` (Bielik folder / `AIONS_LLAMA_CLI`) — bez submodule na razie
+- [x] Wrapper CLI + HTTP stub (`wrapper/`) — real llama-cli **lub** stub + NEXT
+- [x] One-shot path: GGUF z E: `models/qwen2.5-3b-instruct/…q4_K_M.gguf`
+- [x] CLI speak z CONTEXT `<addr>` / `<<CB:A1>>` + post-process protected spans
+- [x] Gate-first w `speak_with_gate` (`mouth_calls=0` na hit)
+- [x] Opcjonalny switch `AIONS_MOUTH_BACKEND=ollama|llamacpp` w `llm_mouth.py` (default ollama)
+- [x] Smoke: `scripts/smoke_faza0.py` → `artifacts/smoke_faza0.json`
+- [ ] Bench tok/s vs Ollama **ten sam GGUF** → `artifacts/bench_faza0.json` (Faza 0.1 / Faza 1)
+- [ ] Zapisać backend użyty (cpu/cuda/vulkan) i czy M2000M w ogóle działa (przy real generate)
 
 ---
 

@@ -1,0 +1,50 @@
+{
+  "id": "linux.files.search",
+  "type": "skill",
+  "name": "Szukanie tekstu w plikach (Linux)",
+  "description": "Szuka wzorca tekstowego w plikach (grep -rn <pattern> <path> --include=<glob>) na zdalnym hoscie Linux przez SSH i zlicza trafienia na plik. Uzyj gdy trzeba znalezc wystapienia frazy w logach lub kodzie.",
+  "tags": [
+    "linux",
+    "files",
+    "grep",
+    "search",
+    "szukaj",
+    "tekst",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "pattern",
+      "type": "str",
+      "required": true
+    },
+    {
+      "name": "path",
+      "type": "str",
+      "required": false
+    },
+    {
+      "name": "glob",
+      "type": "str",
+      "required": false
+    },
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "matches",
+      "type": "list"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

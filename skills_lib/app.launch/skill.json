@@ -1,0 +1,14 @@
+{
+  "id": "app.launch",
+  "type": "skill",
+  "name": "Uruchom aplikacje",
+  "description": "Uruchamia dowolna aplikacje Windows po nazwie lub sciezce (np. notepad.exe, calc.exe, mspaint.exe). Uzyj gdy trzeba otworzyc dowolny program.",
+  "tags": ["uruchom", "otworz", "aplikacja", "program", "app", "launch", "open", "start", "exe"],
+  "inputs": [{"name": "name", "type": "str", "required": true}],
+  "outputs": [{"name": "launched", "type": "bool"}, {"name": "pid", "type": "int"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "handler": "handler:run",
+  "version": "1.0"
+}

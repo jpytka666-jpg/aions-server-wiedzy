@@ -1,0 +1,14 @@
+{
+  "id": "folder.list",
+  "type": "skill",
+  "name": "Pokaz zawartosc folderu",
+  "description": "Wypisuje pliki i podfoldery w danym folderze. Uzyj gdy trzeba zobaczyc co jest w folderze.",
+  "tags": ["folder", "katalog", "zawartosc", "lista", "pliki", "list", "dir", "ls"],
+  "inputs": [{"name": "path", "type": "str", "required": true}, {"name": "top", "type": "int", "required": false}],
+  "outputs": [{"name": "items", "type": "list"}, {"name": "count", "type": "int"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "handler": "handler:run",
+  "version": "1.0"
+}

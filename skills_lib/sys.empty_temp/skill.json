@@ -1,0 +1,9 @@
+{
+  "id": "sys.empty_temp",
+  "type": "skill",
+  "name": "Wyczysc pliki tymczasowe",
+  "description": "Usuwa pliki z folderu tymczasowego uzytkownika (TEMP), zwalniajac miejsce na dysku. Pliki w uzyciu sa pomijane. Uzyj gdy trzeba zwolnic miejsce.",
+  "tags": ["temp", "tymczasowe", "wyczysc", "sprzataj", "miejsce", "clean", "cleanup", "disk"],
+  "inputs": [], "outputs": [{"name": "freed_mb", "type": "float"}, {"name": "removed", "type": "int"}],
+  "requires": [], "avoid_when": [], "risk": "medium", "handler": "handler:run", "version": "1.0"
+}

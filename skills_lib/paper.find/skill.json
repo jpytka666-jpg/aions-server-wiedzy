@@ -1,0 +1,10 @@
+{
+  "id": "paper.find",
+  "type": "skill",
+  "name": "Znajdz papier",
+  "description": "Szuka sprawy po slowie (tytul, notatka, tag). Uzyj gdy trzeba znalezc konkretna sprawe.",
+  "tags": ["znajdz", "szukaj", "papier", "sprawa", "find", "search"],
+  "inputs": [{"name": "query", "type": "str", "required": true}],
+  "outputs": [{"name": "found", "type": "list"}, {"name": "count", "type": "int"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

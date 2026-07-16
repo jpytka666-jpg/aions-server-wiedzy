@@ -58,6 +58,9 @@ tu huje/
 *.pem
 *.key
 credentials*.json
+runtime/secrets/
+# AIONS DPAPI vault blobs (parent dir already ignored; explicit for docs)
+runtime/secrets/vault/
 
 # OS
 .DS_Store
@@ -82,3 +85,27 @@ AIOrchestrator/logs/
 chroma/
 chroma_backup_*/
 ciekawe.zip
+
+# Local venvs / tool caches (never commit)
+.venv-tier1/
+.aions/
+artifacts/
+backups/
+mcpServers/VS_CODE_MCP_CODEX/src/backups/
+
+# LLM weights / GGUF (keep out of git)
+models/
+*.gguf
+*.safetensors
+*.pt
+*.onnx
+
+# --- Dodane 2026-07-13: foldery zapychające git status ---
+runtime/
+aions_core/memory/
+aions_core/cbms_index/
+aions_core/__pycache__/
+aions_core/seeds/
+control_plane/__pycache__/
+server/__pycache__/
+.cursor/

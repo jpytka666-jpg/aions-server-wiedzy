@@ -1,0 +1,9 @@
+{
+  "id": "web.open_calendar",
+  "type": "skill",
+  "name": "Otworz Kalendarz Google",
+  "description": "Otwiera Kalendarz Google w przegladarce. Uzyj gdy trzeba sprawdzic kalendarz lub spotkania.",
+  "tags": ["kalendarz", "calendar", "spotkania", "terminy", "google", "otworz"],
+  "inputs": [], "outputs": [{"name": "opened", "type": "bool"}],
+  "requires": [], "avoid_when": ["internet==down"], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

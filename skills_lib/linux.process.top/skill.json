@@ -1,0 +1,16 @@
+{
+  "id": "linux.process.top",
+  "type": "skill",
+  "name": "Najbardziej obciazajace procesy (Linux)",
+  "description": "Pobiera 15 procesow zuzywajacych najwiecej CPU (ps aux --sort=-%cpu | head -15) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba sprawdzic co obciaza procesor.",
+  "tags": ["linux", "process", "ps", "cpu", "procesy", "top", "ssh"],
+  "inputs": [{"name": "host_alias", "type": "str", "required": false}],
+  "outputs": [{"name": "processes", "type": "list"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

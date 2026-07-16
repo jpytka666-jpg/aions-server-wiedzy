@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>AIONS Chat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#161616; --panel:#1e1e1e; --panel2:#232323; --border:#2e2e2e;
+    --text:#e6e6e6; --muted:#9a9a9a; --accent:#6aa9ff; --accent2:#3f7de0;
+    --user-bubble:#2a3a52; --bot-bubble:#232323; --danger:#e0664f; --ok:#5fb87a;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%; margin:0;}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family: -apple-system, "Segoe UI", Segoe UI, Roboto, Arial, sans-serif;
+    display:flex; flex-direction:column; height:100vh; overflow:hidden;
+  }
+  header{
+    padding:14px 20px; background:var(--panel); border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:10px; flex-shrink:0;
+  }
+  header .dot{width:9px; height:9px; border-radius:50%; background:var(--ok); box-shadow:0 0 6px var(--ok);}
+  header h1{font-size:15px; font-weight:600; margin:0; letter-spacing:.3px;}
+  header .sub{font-size:12px; color:var(--muted); margin-left:auto;}
+
+  #chat{
+    flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:14px;
+  }
+  .row{display:flex; width:100%;}
+  .row.user{justify-content:flex-end;}
+  .row.bot{justify-content:flex-start;}
+  .bubble{
+    max-width:72%; padding:11px 15px; border-radius:14px; font-size:14.5px; line-height:1.5;
+    white-space:pre-wrap; word-wrap:break-word; box-shadow:0 1px 3px rgba(0,0,0,.3);
+  }
+  .row.user .bubble{background:var(--user-bubble); border:1px solid #33507a; border-bottom-right-radius:4px;}
+  .row.bot .bubble{background:var(--bot-bubble); border:1px solid var(--border); border-bottom-left-radius:4px;}
+  .label{font-size:11px; color:var(--muted); margin:0 4px 4px; text-transform:uppercase; letter-spacing:.6px;}
+  .col{display:flex; flex-direction:column; max-width:72%;}
+  .row.user .col{align-items:flex-end;}
+  .row.bot .col{align-items:flex-start;}
+
+  .typing{display:inline-flex; gap:4px; padding:4px 2px;}
+  .typing span{width:6px; height:6px; border-radius:50%; background:var(--muted); animation:blink 1.2s infinite ease-in-out;}
+  .typing span:nth-child(2){animation-delay:.2s;}
+  .typing span:nth-child(3){animation-delay:.4s;}
+  @keyframes blink{0%,80%,100%{opacity:.25;} 40%{opacity:1;}}
+
+  #inputbar{
+    flex-shrink:0; border-top:1px solid var(--border); background:var(--panel);
+    padding:14px 20px 18px; display:flex; gap:10px; align-items:flex-end;
+  }
+  #msg{
+    flex:1; resize:none; background:var(--panel2); color:var(--text); border:1px solid var(--border);
+    border-radius:10px; padding:11px 13px; font-size:14.5px; font-family:inherit; line-height:1.4;
+    max-height:160px; outline:none;
+  }
+  #msg:focus{border-color:var(--accent2);}
+  #send{
+    background:var(--accent2); color:#fff; border:none; border-radius:10px; padding:0 18px; height:42px;
+    font-size:14px; font-weight:600; cursor:pointer; flex-shrink:0;
+  }
+  #send:hover{background:var(--accent);}
+  #send:disabled{opacity:.5; cursor:default;}
+  .hint{font-size:11px; color:var(--muted); padding:0 20px 10px; flex-shrink:0;}
+  ::-webkit-scrollbar{width:9px;}
+  ::-webkit-scrollbar-thumb{background:#3a3a3a; border-radius:6px;}
+</style>
+</head>
+<body>
+  <header>
+    <span class="dot" id="statusDot"></span>
+    <h1>AIONS Chat</h1>
+    <span class="sub">127.0.0.1:8770 · lokalnie</span>
+  </header>
+
+  <div id="chat"></div>
+  <div class="hint">Enter — wyślij · Shift+Enter — nowa linia</div>
+  <div id="inputbar">
+    <textarea id="msg" rows="1" placeholder="Napisz do AIONS..." autofocus></textarea>
+    <button id="send">Wyślij</button>
+  </div>
+
+<script>
+(function(){
+  const chat = document.getElementById('chat');
+  const msg = document.getElementById('msg');
+  const send = document.getElementById('send');
+  const statusDot = document.getElementById('statusDot');
+
+  function addRow(role, text){
+    const row = document.createElement('div');
+    row.className = 'row ' + (role === 'user' ? 'user' : 'bot');
+    const col = document.createElement('div');
+    col.className = 'col';
+    const label = document.createElement('div');
+    label.className = 'label';
+    label.textContent = role === 'user' ? 'Ty' : 'AIONS';
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.textContent = text;
+    col.appendChild(label);
+    col.appendChild(bubble);
+    row.appendChild(col);
+    chat.appendChild(row);
+    scrollDown();
+    return bubble;
+  }
+
+  function addTyping(){
+    const row = document.createElement('div');
+    row.className = 'row bot';
+    row.id = 'typingRow';
+    const col = document.createElement('div');
+    col.className = 'col';
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerHTML = '<span class="typing"><span></span><span></span><span></span></span>';
+    col.appendChild(bubble);
+    row.appendChild(col);
+    chat.appendChild(row);
+    scrollDown();
+  }
+
+  function removeTyping(){
+    const el = document.getElementById('typingRow');
+    if (el) el.remove();
+  }
+
+  function scrollDown(){
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  async function sendMessage(){
+    const text = msg.value.trim();
+    if (!text) return;
+    addRow('user', text);
+    msg.value = '';
+    autoresize();
+    send.disabled = true;
+    addTyping();
+    try{
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: text})
+      });
+      const data = await res.json();
+      removeTyping();
+      addRow('bot', data.reply || '(brak odpowiedzi)');
+      statusDot.style.background = '#5fb87a';
+    }catch(e){
+      removeTyping();
+      addRow('bot', 'Nie mogę połączyć się z serwerem AIONS (' + e + ').');
+      statusDot.style.background = '#e0664f';
+    }finally{
+      send.disabled = false;
+      msg.focus();
+    }
+  }
+
+  function autoresize(){
+    msg.style.height = 'auto';
+    msg.style.height = Math.min(msg.scrollHeight, 160) + 'px';
+  }
+
+  msg.addEventListener('input', autoresize);
+  msg.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+  send.addEventListener('click', sendMessage);
+
+  addRow('bot', 'Cześć Marcin. Jestem AIONS Chat — zapytaj mnie co mam do zrobienia, która godzina, albo poproś o otwarcie kalkulatora.');
+})();
+</script>
+</body>
+</html>

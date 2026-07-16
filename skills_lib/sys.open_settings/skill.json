@@ -1,0 +1,10 @@
+{
+  "id": "sys.open_settings",
+  "type": "skill",
+  "name": "Otworz Ustawienia Windows",
+  "description": "Otwiera aplikacje Ustawienia Windows, opcjonalnie na konkretnej stronie (np. display, bluetooth, network). Uzyj gdy trzeba otworzyc ustawienia systemu.",
+  "tags": ["ustawienia", "settings", "opcje", "konfiguracja", "system", "otworz"],
+  "inputs": [{"name": "page", "type": "str", "required": false}],
+  "outputs": [{"name": "opened", "type": "str"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

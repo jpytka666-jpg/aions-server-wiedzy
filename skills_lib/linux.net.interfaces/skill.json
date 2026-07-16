@@ -1,0 +1,35 @@
+{
+  "id": "linux.net.interfaces",
+  "type": "skill",
+  "name": "Interfejsy sieciowe (Linux)",
+  "description": "Listuje interfejsy sieciowe i ich adresy IPv4 (ip -j addr) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba sprawdzic konfiguracje sieciowa hosta.",
+  "tags": [
+    "linux",
+    "net",
+    "network",
+    "ip",
+    "interfejsy",
+    "sie\u0107",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "interfaces",
+      "type": "list"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

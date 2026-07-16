@@ -11,7 +11,11 @@ $env:PYTHONPATH = $root
 # Disable noisy Chroma telemetry logs
 $env:CHROMA_TELEMETRY_ENABLED = 'false'
 
-if(Test-Path (Join-Path $venv 'Scripts\Activate.ps1')){ . (Join-Path $venv 'Scripts\Activate.ps1') }
+$launcher = Join-Path $root 'scripts\aions_python.ps1'
+$py = & $launcher -ResolveOnly
+if (-not (Test-Path $py)) {
+  throw "AIONS venv Python not found. Run scripts\ensure_venv.ps1"
+}
 
 $logDir = Join-Path $root 'logs'
 if(!(Test-Path $logDir)){ New-Item -ItemType Directory -Path $logDir | Out-Null }
@@ -20,7 +24,6 @@ if(!(Test-Path $logPath)){ New-Item -ItemType Directory -Path $logPath | Out-Nul
 $logFile = Join-Path $logPath 'aions_knowledge_server.log'
 
 Write-Host ("[SERVER] Starting AIONS Knowledge Server on http://{0}:{1}" -f $BindHost,$Port) -ForegroundColor Green
-$py = Join-Path $venv 'Scripts\python.exe'
 $uvArgs = @('-m','uvicorn','server.app:app','--host', $BindHost,'--port', "$Port",'--log-level','info')
 if($Foreground){
   Write-Host "[SERVER] Running in foreground (integrated terminal). Ctrl+C to stop." -ForegroundColor Yellow

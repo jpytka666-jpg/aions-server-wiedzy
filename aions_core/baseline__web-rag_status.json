@@ -1,0 +1,1 @@
+{"web_rag_available": true, "web_rag_initialized": true, "trusted_domains": ["docs.python.org", "developer.mozilla.org", "pl.wikipedia.org", "wikipedia.org", "tutorialspoint.com", "en.wikipedia.org", "w3schools.com", "stackexchange.com", "stackoverflow.com", "github.com"], "max_pages": 5, "max_mb": 10}

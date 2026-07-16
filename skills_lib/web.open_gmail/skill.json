@@ -1,0 +1,9 @@
+{
+  "id": "web.open_gmail",
+  "type": "skill",
+  "name": "Otworz Gmail",
+  "description": "Otwiera skrzynke Gmail w przegladarce. Uzyj gdy trzeba sprawdzic poczte lub otworzyc maila.",
+  "tags": ["gmail", "poczta", "email", "mail", "skrzynka", "otworz"],
+  "inputs": [], "outputs": [{"name": "opened", "type": "bool"}],
+  "requires": [], "avoid_when": ["internet==down"], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

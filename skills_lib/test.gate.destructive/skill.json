@@ -1,0 +1,16 @@
+{
+  "id": "test.gate.destructive",
+  "type": "skill",
+  "name": "Test bramki bezpieczenstwa (destructive)",
+  "description": "Skill testowy do weryfikacji bramki ryzyka (gate.py). Tworzy plik /tmp/aions_gate_test na zdalnym hoscie przez SSH -- celowo mutacja/destructive, wylacznie do testow, nie uzywac produkcyjnie.",
+  "tags": ["test", "gate", "destructive"],
+  "inputs": [{"name": "host_alias", "type": "str", "required": false}],
+  "outputs": [{"name": "ok", "type": "bool"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "high",
+  "access_class": "destructive",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

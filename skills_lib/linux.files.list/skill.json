@@ -1,0 +1,40 @@
+{
+  "id": "linux.files.list",
+  "type": "skill",
+  "name": "Listowanie plikow (Linux)",
+  "description": "Listuje pliki i katalogi (ls -la <path>) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba zobaczyc zawartosc katalogu.",
+  "tags": [
+    "linux",
+    "files",
+    "ls",
+    "list",
+    "pliki",
+    "katalog",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "path",
+      "type": "str",
+      "required": false
+    },
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "items",
+      "type": "list"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

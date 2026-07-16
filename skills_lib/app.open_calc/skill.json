@@ -1,0 +1,16 @@
+{
+  "id": "app.open_calc",
+  "type": "skill",
+  "name": "Otworz Kalkulator",
+  "description": "Otwiera aplikacje Kalkulator (calc) w systemie Windows. Uzyj gdy trzeba cos policzyc lub otworzyc kalkulator.",
+  "tags": ["kalkulator", "calc", "licz", "otworz", "uruchom", "aplikacja", "open", "launch", "windows"],
+  "inputs": [],
+  "outputs": [
+    {"name": "launched", "type": "bool"}
+  ],
+  "requires": [],
+  "avoid_when": ["calc==open"],
+  "risk": "low",
+  "handler": "handler:run",
+  "version": "1.0"
+}

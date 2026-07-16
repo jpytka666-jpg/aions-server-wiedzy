@@ -101,3 +101,10 @@ def session_prune(session_id: str, body: PruneRequest | None = None):
 @app.get("/dashboard", response_model=DashboardSummary)
 def dashboard():
     return DashboardSummary(**store.summary())
+
+try:
+    from control_plane.api import router as control_plane_router
+
+    app.include_router(control_plane_router, prefix="/v1")
+except ImportError:
+    pass

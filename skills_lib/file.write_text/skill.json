@@ -1,0 +1,18 @@
+{
+  "id": "file.write_text",
+  "type": "skill",
+  "name": "Zapisz tekst do pliku",
+  "description": "Zapisuje podany tekst do pliku na dysku (tworzy lub nadpisuje). Uzyj gdy trzeba zapisac tekst, notatke lub wiersz do pliku txt.",
+  "tags": ["zapisz", "plik", "tekst", "notatka", "wiersz", "write", "file", "save", "txt"],
+  "inputs": [
+    {"name": "path", "type": "str", "required": true},
+    {"name": "text", "type": "str", "required": true},
+    {"name": "append", "type": "bool", "required": false}
+  ],
+  "outputs": [{"name": "path", "type": "str"}, {"name": "bytes", "type": "int"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "handler": "handler:run",
+  "version": "1.0"
+}

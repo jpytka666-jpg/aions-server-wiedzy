@@ -1,0 +1,39 @@
+{
+  "id": "linux.users.sessions",
+  "type": "skill",
+  "name": "Zalogowani uzytkownicy i historia logowan (Linux)",
+  "description": "Pokazuje aktualnie zalogowanych uzytkownikow (who) oraz ostatnie 10 logowan (last -n 10) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba sprawdzic kto jest/byl zalogowany.",
+  "tags": [
+    "linux",
+    "users",
+    "who",
+    "last",
+    "sesje",
+    "logowania",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "logged_in",
+      "type": "list"
+    },
+    {
+      "name": "recent",
+      "type": "list"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

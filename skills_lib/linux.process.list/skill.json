@@ -1,0 +1,39 @@
+{
+  "id": "linux.process.list",
+  "type": "skill",
+  "name": "Lista procesow wg CPU (Linux)",
+  "description": "Listuje procesy posortowane po zuzyciu CPU (ps aux --sort=-%cpu) na zdalnym hoscie Linux przez SSH, limit 30. Uzyj gdy trzeba zobaczyc co obciaza CPU.",
+  "tags": [
+    "linux",
+    "process",
+    "ps",
+    "cpu",
+    "procesy",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "limit",
+      "type": "int",
+      "required": false
+    },
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "processes",
+      "type": "list"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

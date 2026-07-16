@@ -1,0 +1,14 @@
+{
+  "id": "file.delete",
+  "type": "skill",
+  "name": "Usun plik",
+  "description": "Usuwa wskazany plik z dysku. Uzyj gdy trzeba skasowac plik. Uwaga: operacja nieodwracalna.",
+  "tags": ["usun", "skasuj", "kasuj", "plik", "delete", "remove", "file"],
+  "inputs": [{"name": "path", "type": "str", "required": true}],
+  "outputs": [{"name": "deleted", "type": "str"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "high",
+  "handler": "handler:run",
+  "version": "1.0"
+}

@@ -1,7 +1,7 @@
 {
   "project": "KORZENIEC",
   "phase": "1-gate-smoke",
-  "created_at": "2026-07-10T20:54:51.598392+00:00",
+  "created_at": "2026-07-11T20:07:53.053730+00:00",
   "threshold": 0.7,
   "with_llm": false,
   "summary": {
@@ -23,7 +23,7 @@
       "top_chunk": "KCBMSPIPE001",
       "top_score": 1.0,
       "sources": [
-        "korean_keys+lexical",
+        "korean_keys+lexical+chroma",
         "korean_keys+lexical",
         "korean_keys+lexical"
       ],

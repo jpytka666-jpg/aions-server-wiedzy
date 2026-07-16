@@ -1,0 +1,24 @@
+{
+  "id": "linux.service.status",
+  "type": "skill",
+  "name": "Status uslugi systemd (Linux)",
+  "description": "Sprawdza status uslugi systemd (systemctl status <name> --no-pager) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba sprawdzic czy dana usluga dziala.",
+  "tags": ["linux", "service", "systemd", "systemctl", "usluga", "status", "ssh"],
+  "inputs": [
+    {"name": "name", "type": "str", "required": true},
+    {"name": "host_alias", "type": "str", "required": false}
+  ],
+  "outputs": [
+    {"name": "active_state", "type": "str"},
+    {"name": "sub_state", "type": "str"},
+    {"name": "loaded", "type": "str"},
+    {"name": "main_pid", "type": "int"}
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

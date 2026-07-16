@@ -1,0 +1,59 @@
+"""AIONS Skill Engine — learned success recipes.
+
+A recipe is a verified plan for a type of problem, plus WHY it worked (a snapshot
+of world state + reasons). Saved only after verify-before-learn passes.
+"""
+from __future__ import annotations
+import hashlib
+import json
+from pathlib import Path
+
+from . import world_state
+
+REPO = Path(__file__).resolve().parents[2]
+RECIPES_PATH = REPO / "runtime" / "state" / "skill_recipes.json"
+
+
+def _load():
+    if RECIPES_PATH.exists():
+        try:
+            return json.loads(RECIPES_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+    return {}
+
+
+def _save(d):
+    RECIPES_PATH.parent.mkdir(parents=True, exist_ok=True)
+    RECIPES_PATH.write_text(json.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _key(intent):
+    return "recipe_" + hashlib.sha1(intent.lower().strip().encode("utf-8")).hexdigest()[:10]
+
+
+def save_recipe(intent, steps, why=None):
+    d = _load()
+    k = _key(intent)
+    d[k] = {
+        "id": k,
+        "type": "recipe",
+        "intent": intent,
+        "steps": steps,
+        "why": why or [],
+        "world": world_state.load(),
+        "uses": d.get(k, {}).get("uses", 0),
+    }
+    _save(d)
+    return k
+
+
+def find_recipe(intent):
+    return _load().get(_key(intent))
+
+
+def mark_used(k):
+    d = _load()
+    if k in d:
+        d[k]["uses"] = d[k].get("uses", 0) + 1
+        _save(d)

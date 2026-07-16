@@ -1,0 +1,81 @@
+Analyzing E:\server wiedzy\FULL_SCAN_20251128_114059\everything_full.csv...
+Processed 0 lines...
+Processed 100000 lines...
+Processed 200000 lines...
+Processed 300000 lines...
+Processed 400000 lines...
+Processed 500000 lines...
+Processed 600000 lines...
+Processed 700000 lines...
+Processed 800000 lines...
+Processed 900000 lines...
+Processed 1000000 lines...
+Processed 1100000 lines...
+Processed 1200000 lines...
+Processed 1300000 lines...
+Processed 1400000 lines...
+Processed 1500000 lines...
+Processed 1600000 lines...
+
+==================================================
+TOP CHUNK LOCATIONS:
+==================================================
+Count: 504    | Path: C:\Users\User\ContextVault\memory\chunks
+Count: 504    | Path: C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\memory\chunks
+Count: 504    | Path: C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_TEXTY_DLA_TEPYCH_AJAJ\AIONS_CBMS_RELEASE_V3\memory\chunks
+Count: 302    | Path: E:\BACKUPS\AIONS_SNAPSHOT_20251107_193155\AIONS_SNAPSHOT\c\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\memory\chunks
+Count: 302    | Path: E:\RESTORE_TEST_20251107_193155\c\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\memory\chunks
+Count: 207    | Path: C:\Users\User\OneDrive - Global Banking School\Desktop\MAPA_LASU_SOLO_CBMS\AIONS_CBMS_RELEASE\memory\chunks
+Count: 207    | Path: E:\AI_WORKSPACE\MASTER_CLEAN_SNAPSHOT\TRASH_BACKUP\Users\User\OneDrive - Global Banking School\Desktop\MAPA_LASU_SOLO_CBMS\AIONS_CBMS_RELEASE\memory\chunks
+Count: 207    | Path: E:\AI_WORKSPACE\TRASH_BACKUP_MASTER_CLEAN\Users\User\OneDrive - Global Banking School\Desktop\MAPA_LASU_SOLO_CBMS\AIONS_CBMS_RELEASE\memory\chunks
+Count: 204    | Path: E:\AI_WORKSPACE\MASTER_CLEAN\AIONS_CORE\AIONS_V10\AIONS_CBMS_RELEASE_V3\memory\chunks
+Count: 204    | Path: E:\AI_WORKSPACE\MASTER_CLEAN_SNAPSHOT\AIONS_CORE\AIONS_V10\AIONS_CBMS_RELEASE_V3\memory\chunks
+Count: 203    | Path: E:\AI_WORKSPACE\MASTER_CLEAN_SNAPSHOT\TRASH_BACKUP\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\memory\chunks
+Count: 203    | Path: E:\AI_WORKSPACE\TRASH_BACKUP_MASTER_CLEAN\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\memory\chunks
+Count: 175    | Path: E:\AI_WORKSPACE\MASTER_CLEAN\AIONS_CORE\AIONS_V10\AIONS_CBMS_RELEASE_VANILA\memory\chunks
+Count: 175    | Path: E:\AI_WORKSPACE\MASTER_CLEAN_SNAPSHOT\AIONS_CORE\AIONS_V10\AIONS_CBMS_RELEASE_VANILA\memory\chunks
+Count: 170    | Path: E:\AI_WORKSPACE\MASTER_CLEAN\AIONS_CORE\AIONS_V10\AIONS_CBMS_RELEASE_V1\memory\chunks
+Count: 170    | Path: E:\AI_WORKSPACE\MASTER_CLEAN_SNAPSHOT\AIONS_CORE\AIONS_V10\AIONS_CBMS_RELEASE_V1\memory\chunks
+Count: 159    | Path: E:\AI_WORKSPACE\MASTER_CLEAN_SNAPSHOT\UNCLASSIFIED\AIONS_COMPLETE\cbms_memory\chunks
+Count: 159    | Path: E:\AI_WORKSPACE\UNCLASSIFIED_SNAPSHOT_MASTER_CLEAN\AIONS_COMPLETE\cbms_memory\chunks
+Count: 137    | Path: C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\memory_backup_20251028_184000\chunks
+Count: 137    | Path: C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_TEXTY_DLA_TEPYCH_AJAJ\AIONS_CBMS_RELEASE_V3\memory_backup_20251028_184000\chunks
+
+==================================================
+CRITICAL FILE LOCATIONS:
+==================================================
+
+[crla_core.py] (36 found):
+  - C:\Users\User\ContextVault\workspace\server\crla_core.py
+  - C:\Users\User\ContextVault\workspace\server_backup_20251028_184000\crla_core.py
+  - C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\server\crla_core.py
+  - C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\server_backup_20251028_184000\crla_core.py
+  - C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_TEXTY_DLA_TEPYCH_AJAJ\AIONS_CBMS_RELEASE_V3\server\crla_core.py
+
+[pocket_qc.py] (36 found):
+  - C:\Users\User\ContextVault\workspace\server\pocket_qc.py
+  - C:\Users\User\ContextVault\workspace\server_backup_20251028_184000\pocket_qc.py
+  - C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\server\pocket_qc.py
+  - C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\server_backup_20251028_184000\pocket_qc.py
+  - C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_TEXTY_DLA_TEPYCH_AJAJ\AIONS_CBMS_RELEASE_V3\server\pocket_qc.py
+
+[plasters_loader.py] (6 found):
+  - C:\Users\User\ContextVault\workspace\server\plasters_loader.py
+  - C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\server\plasters_loader.py
+  - C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_TEXTY_DLA_TEPYCH_AJAJ\AIONS_CBMS_RELEASE_V3\server\plasters_loader.py
+  - E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED\plasters_unified\plasters_loader.py
+  - E:\BACKUPS\AIONS_SNAPSHOT_20251107_193155\AIONS_SNAPSHOT\c\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\server\plasters_loader.py
+
+[AIONS_ULTIMATE_UNIFIED.py] (22 found):
+  - C:\Users\User\ContextVault\workspace\AIONS_ULTIMATE_UNIFIED.py
+  - C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\AIONS_ULTIMATE_UNIFIED.py
+  - C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_TEXTY_DLA_TEPYCH_AJAJ\AIONS_CBMS_RELEASE_V3\AIONS_ULTIMATE_UNIFIED.py
+  - C:\Users\User\OneDrive - Global Banking School\Desktop\MAPA_LASU_SOLO_CBMS\AIONS_CBMS_RELEASE\AIONS_ULTIMATE_UNIFIED.py
+  - E:\AI_WORKSPACE\MASTER_CLEAN\AIONS_CORE\AIONS_V10\AIONS_CBMS_RELEASE_V0\AIONS_ULTIMATE_UNIFIED.py
+
+[knowledge_manifest.json] (58 found):
+  - C:\Users\User\ContextVault\memory\knowledge_manifest.json
+  - C:\Users\User\ContextVault\memory_backup_20251108_1\knowledge_manifest.json
+  - C:\Users\User\ContextVault\memory_curated\knowledge_manifest.json
+  - C:\Users\User\OneDrive - Global Banking School\Desktop\knowledge_manifest.json
+  - C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\memory\knowledge_manifest.json

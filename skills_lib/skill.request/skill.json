@@ -1,0 +1,14 @@
+{
+  "id": "skill.request",
+  "type": "skill",
+  "name": "Zamow nowy blok",
+  "description": "Sklada zamowienie na nowa umiejetnosc, ktorej AIONS jeszcze nie ma. Uzyj gdy brakuje bloku do zadania - trafi do kolejki dla duzego modelu.",
+  "tags": ["zamow", "brakuje", "nowy", "blok", "umiejetnosc", "potrzebuje", "forge", "request"],
+  "inputs": [
+    {"name": "name", "type": "str", "required": true},
+    {"name": "description", "type": "str", "required": true},
+    {"name": "why", "type": "str", "required": false}
+  ],
+  "outputs": [{"name": "request", "type": "str"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

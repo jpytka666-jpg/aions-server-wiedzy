@@ -1,6 +1,6 @@
 # 📚 AIONS KNOWLEDGE CATALOG
-## Master Index - Server Wiedzy
-### Generated: 2025-11-28
+## Master Index — Server Wiedzy (canonical E:)
+### Generated: 2026-07-10
 
 ---
 
@@ -8,164 +8,120 @@
 
 ```
 E:\server wiedzy\AIONS_CATALOG\
-├── indices\         # Indeksy CBMS (kr_meta.json, manifesty)
-├── chunks\          # Chunki wiedzy (JSON)
-├── plasters\        # Rozszerzone paczki wiedzy (PACK-xxxx)
-├── thinking_patterns\  # Wzorce myślenia Claude
-├── codebooks\       # Codebooki Esperanto/Korean
-├── facts\           # Bazy faktów (facts.jsonl)
-├── models\          # Odnośniki do modeli AI
-├── tools\           # Narzędzia i skrypty
-└── docs\            # Dokumentacja
+├── INDEX.md              # Ten plik — mapa skarbów (human-readable)
+├── catalog_2026.json     # Katalog maszynowy (generowany przez scripts/catalog_e_treasures.py)
+├── indices\              # Indeksy CBMS referencyjne (archiwum)
+├── chunks\               # Archiwum chunków (nie operacyjne)
+├── plasters\             # Odnośniki do paczek plastrów
+├── thinking_patterns\      # Wzorce myślenia
+├── codebooks\            # Codebooki
+├── facts\                # Bazy faktów
+├── models\               # Odnośniki do modeli
+├── tools\                # Narzędzia
+└── docs\                 # Dokumentacja
 ```
+
+**Operacyjny CBMS (AIONS_PATH):** `E:\server wiedzy\aions_core` — **561 chunków** w `memory\chunks\` (manifest) + 1 chunk poza manifestem (`KCBMSACCESS001`).
 
 ---
 
-## 📊 PEŁNA INWENTARYZACJA
+## 📊 MAPA SKARBÓW E: (2026-07)
 
-### 1. INDEKSY CBMS
+| ID | Lokalizacja | Typ | Rozmiar (szac.) | Status | CBMS |
+|----|-------------|-----|-----------------|--------|------|
+| **aions_core_cbms** | `E:\server wiedzy\aions_core` | cbms_operational | ~20 MB | **connected** | ✅ |
+| **chroma_prod** | `E:\server wiedzy\data\chroma` | vector_store | zmienny | **connected** | ✅ |
+| **plasters_200g_master** | `E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED\plasters_200g` | plasters | ~0.4 GB / 200 PACK | **connected** | ✅ meta |
+| **plasters_fullstack** | `E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED\plasters_fullstack` | plasters | ~większy / 448 PACK | **connected** | ✅ meta |
+| **master_clean_unclassified** | `E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED` | workspace | **~61 GB** | **connected** | częściowo |
+| **ajajaj_root** | `E:\AJAJAJ` | backup_archive | **~184 GB** | **connected** | ❌ |
+| **cbms_index_full** | `E:\AJAJAJ\CBMS_INDEX_FULL` | cbms_index | ~10 MB / 6819 docs | **disconnected** | ❌ |
+| **cbms_index_korean** | `E:\AJAJAJ\CBMS_INDEX_KOREAN` | cbms_index | ~2 MB | **disconnected** | ❌ |
+| **cbms_seed** | `E:\AJAJAJ\CBMS_SEED` | model_artifacts | metadata only | **archived** | ❌ |
+| **ajajaj_plasters_200g** | `E:\AJAJAJ\plasters_200g` | plasters | ~0.4 GB kopia | **archived** | ✅ meta |
+| **aions_complete** | `E:\AJAJAJ\AIONS_COMPLETE` | legacy_snapshot | ~20 MB | **archived** | ❌ |
+| **full_system_scan** | `E:\server wiedzy\scan_results\full_system_20260702_035156` | scan_artifact | ~0.6 GB | **connected** | ❌ |
 
-| Nazwa | Docs/Items | Rozmiar | Lokalizacja źródłowa |
-|-------|------------|---------|---------------------|
-| CBMS_INDEX_FULL | **6,819 docs** | 4.7 MB | `E:\AI_WORKSPACE\MASTER_CLEAN\CBMS\CBMS_INDEX_FULL\kr_meta.json` |
-| CBMS_INDEX_KOREAN | **8,042 syllables** | ~2 MB | `E:\AI_WORKSPACE\MASTER_CLEAN\CBMS_KR\CBMS_INDEX_KOREAN\kr_meta.json` |
-| CBMS_INDEX (basic) | varies | - | `E:\AI_WORKSPACE\MASTER_CLEAN\CBMS\CBMS_INDEX\kr_meta.json` |
-
-### 2. CHUNKS WIEDZY
-
-| Źródło | Ilość | Lokalizacja |
-|--------|-------|-------------|
-| ContextVault | **505 chunks** | `C:\Users\User\ContextVault\memory\chunks\` |
-| AIONS V3 | 521 chunks | `C:\Users\User\OneDrive...\AIONS_CBMS_RELEASE_V3\memory\chunks\` |
-| AIONS V0-V2 | varies | `E:\AI_WORKSPACE\MASTER_CLEAN\AIONS_CORE\AIONS_V10\` |
-
-### 3. FACTS/KNOWLEDGE BASES
-
-| Plik | Linie/Rozmiar | Lokalizacja |
-|------|---------------|-------------|
-| ContextVault facts | **7,895 linii** / 7.2 MB | `C:\Users\User\ContextVault\memory\facts.jsonl` |
-| knowledge_manifest | 33,945+ facts / 10 MB | `...\AIONS_CBMS_RELEASE_V3\memory\knowledge_manifest.json` |
-| claude_chunks.txt | 173 KB | `E:\AJAJAJ\claude_chunks.txt` |
-
-### 4. PLASTERS (Extended Knowledge Packs)
-
-| Pakiet | PACKi | Q&As | Lokalizacja |
-|--------|-------|------|-------------|
-| plasters_200g | **200** | **~343,200** | `E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED\plasters_200g\` |
-| plasters_fullstack | 448 | ~768,768 | `E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED\plasters_fullstack\` |
-| plasters_unified | mixed | - | `E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED\plasters_unified\` |
-| plasters_claude | - | - | `E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED\plasters_claude\` |
-| plasters_howto | - | - | `E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED\plasters_howto\` |
-| plasters_programming | - | - | `E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED\plasters_programming\` |
-
-**Struktura PACK:**
-```
-PACK-xxxx/
-├── module.json    # Metadata (qa_count, d_model, rank)
-├── enc.npz        # Encoder weights
-├── dec.npz        # Decoder weights
-└── kb.mmap        # Knowledge base memory-mapped
-```
-
-### 5. THINKING PATTERNS
-
-| Plik | Opis | Lokalizacja |
-|------|------|-------------|
-| claude_thinking_patterns.py | Wzorce myślenia | `E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED\thinking_patterns\` |
-| codebook.json | Esperanto symbole | j.w. |
-| thinking_log.jsonl | Log myślenia | j.w. |
-| beta_thinking_block.py | Extended thinking | j.w. |
-| mcp-server-sequential-thinking/ | MCP server | j.w. |
-
-**Zidentyfikowane wzorce:**
-- ANALYTICAL_BREAKDOWN
-- EVIDENCE_BASED_THINKING
-- ITERATIVE_REFINEMENT
-- MULTIDISCIPLINARY_SYNTHESIS
-- UNCERTAINTY_MANAGEMENT
-- CONTEXTUAL_REASONING
-- META-REASONING FRAMEWORK
-
-### 6. CODEBOOKS
-
-| Codebook | Symbole | Języki | Lokalizacja |
-|----------|---------|--------|-------------|
-| CBMS Esperanto | CR1-CR5 (CRLA), CB1-CB6 (CBMS) | PL, EO | `thinking_patterns\codebook.json` |
-| Korean Keys | 4,016+ patterns | KR | `CBMS_KR\` |
-| Token Map | varies | - | `CBMS_SEED\token_map.json` |
-
-### 7. MODELE I WEIGHTS
-
-| Model | Artifacts | Rozmiar | Lokalizacja |
-|-------|-----------|---------|-------------|
-| CBMS_SEED (Mistral repack) | **13,889** | 14.5 GB | `E:\AJAJAJ\CBMS_SEED\` |
-| Mistral-7B-AIONS-REPACK | chunks | - | `D:\models\Mistral-7B-AIONS-REPACK\` |
-
-### 8. PROJEKTY POWIĄZANE
-
-| Projekt | Status | Lokalizacja |
-|---------|--------|-------------|
-| POLIP (Brain Probe) | Archived | `E:\AJAJAJ\CBMS_EXTRACT\POLIP_GOOD_20250823_220346\` |
-| MAIPA | Development | `E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED\MAIPA\` |
-| Pocket QC | Integrated | `E:\CBMS_Pocket_QC_Lab\` |
-| GPT-US | Custom GPT | `E:\...\GPT-US\` |
-| CRLA | Core component | Integrated in AIONS |
+**Uwaga:** `E:\AI_WORKSPACE\MASTER_CLEAN\CBMS\` i `chunks_unified\` — **brak na dysku** (2026-07); indeksy przeniesione do `E:\AJAJAJ\`.
 
 ---
 
-## 🔗 SZYBKIE LINKI
-
-### Aktywny system
-- **AIONS V3**: `C:\Users\User\OneDrive - Global Banking School\Desktop\AIONS_CBMS_RELEASE_V3\`
-- **ContextVault**: `C:\Users\User\ContextVault\`
-- **MCP Server**: `E:\server wiedzy\mcpServers\VS_CODE_MCP_CODEX\`
-
-### Workspace
-- **MASTER_CLEAN**: `E:\AI_WORKSPACE\MASTER_CLEAN\`
-- **CBMS**: `E:\AI_WORKSPACE\MASTER_CLEAN\CBMS\`
-- **UNCLASSIFIED**: `E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED\`
-
-### Backupy
-- **AJAJAJ**: `E:\AJAJAJ\` (pełna kopia)
-- **BACKUPS**: `E:\BACKUPS\`
-- **SNAPSHOTS**: `E:\AI_WORKSPACE\MASTER_CLEAN_SNAPSHOT\`
-
----
-
-## 📈 STATYSTYKI SUMARYCZNE
+## 📈 STATYSTYKI SUMARYCZNE (scan 2026-07-02)
 
 | Metryka | Wartość |
 |---------|---------|
-| **Total docs (CBMS_INDEX_FULL)** | 6,819 |
-| **Total facts (ContextVault)** | 7,895 |
-| **Total chunks** | ~1,500+ |
-| **Total Q&As (plasters_200g)** | ~343,200 |
-| **Korean syllables** | 8,042 |
-| **Thinking patterns** | 7+ |
-| **Model artifacts** | 13,889 |
-| **Plaster packs** | 200+ |
+| **Dysk E: (turbo scan)** | 115 130 plików kodu, **~226 GB** (226 482 MB) |
+| **CBMS operacyjny (manifest)** | **561** chunków |
+| **CBMS_INDEX_FULL (AJAJAJ)** | 6 819 docs |
+| **plasters_200g PACK** | 200 (× ~1716 Q&A ≈ 343k) |
+| **plasters_fullstack PACK** | 448 |
+| **Korean index** | ~8 042 patterns |
+
+Pełny scan: `E:\server wiedzy\scan_results\full_system_20260702_035156\master_map.json`
 
 ---
 
-## ⚠️ ZNANE PROBLEMY
+## 🔗 SZYBKIE LINKI (aktywne 2026-07)
 
-1. **AIONS V3 widzi tylko 521 chunków** - trzeba podłączyć pozostałe źródła
-2. **Twarde ścieżki w kodzie** - wymagają unifikacji
-3. **Duplikacja folderów** - 200+ duplikatów w systemie
-4. **Template responses** - AIONS zwraca generyczne odpowiedzi
+| Co | Ścieżka |
+|----|---------|
+| **CBMS kanoniczny** | `E:\server wiedzy\aions_core` |
+| **Chunki** | `E:\server wiedzy\aions_core\memory\chunks\` |
+| **Manifest** | `E:\server wiedzy\aions_core\memory\knowledge_manifest.json` |
+| **Chroma prod** | `E:\server wiedzy\data\chroma` |
+| **MCP prod (Cursor)** | `aions-context` → `E:\server wiedzy\venv` |
+| **Przewodnik dla człowieka** | `E:\server wiedzy\docs\CBMS_HUMAN_GUIDE.md` |
+| **Dev mirror** | `D:\AIONS_DEV\repo\server-wiedzy` (sync z E:) |
+| **Junction CBMS (WSL)** | `D:\AIONS_DEV\cbms` → `E:\server wiedzy\aions_core` |
+
+### Workspace / archiwa
+
+| Co | Ścieżka |
+|----|---------|
+| Plastery robocze | `E:\AI_WORKSPACE\MASTER_CLEAN\UNCLASSIFIED\` |
+| Backup pełny | `E:\AJAJAJ\` |
+| MCP Server | `E:\server wiedzy\mcpServers\VS_CODE_MCP_CODEX\` |
 
 ---
 
-## 🛠️ NARZĘDZIA
+## 🛠️ NARZĘDZIA KATALOGU
 
-| Narzędzie | Lokalizacja |
-|-----------|-------------|
-| Everything CLI | `C:\Program Files\Everything\es.exe` |
-| MCP Server v6 | `E:\server wiedzy\mcpServers\VS_CODE_MCP_CODEX\src\server.py` |
-| TURBO Scanner | `E:\server wiedzy\scripts\turbo_scanner.py` |
-| ChatGPT Extractor | `E:\server wiedzy\scripts\chatgpt_ultimate.py` |
+| Narzędzie | Opis |
+|-----------|------|
+| `scripts/catalog_e_treasures.py` | Generuje `AIONS_CATALOG\catalog_2026.json` |
+| `scripts/ingest_treasures_tier2.py` | Rejestruje lokalizacje skarbów w Chroma (tier-2, bez binariów) |
+| `scripts/ingest_tier1_chroma.py` | Tier-1: operator_profile + CBMS manifest sample |
+| `scripts/sync_dev_mirror.ps1` | E: → D:\AIONS_DEV mirror |
+| `scripts/audit_cbms_sources.ps1` | Audyt źródeł chunków |
+
+**Regeneracja katalogu:**
+```powershell
+cd "E:\server wiedzy"
+python scripts\catalog_e_treasures.py
+python scripts\ingest_treasures_tier2.py
+```
 
 ---
 
-*Katalog wygenerowany automatycznie przez Claude + MCP Server*
-*Ostatnia aktualizacja: 2025-11-28*
+## ⚠️ ZNANE PROBLEMY (2026-07-10)
+
+1. **Manifest vs dysk:** 561 w manifeście, 562 plików JSON (`KCBMSACCESS001` poza manifestem) — niski priorytet
+2. **Stare ścieżki D:\ w treści chunków** — historyczne; kanoniczne `E:\server wiedzy\aions_core` (naprawiono `KCBMSACCESS001`, `cbms_seed_reference.json`)
+3. **CBMS_INDEX_FULL disconnected** — 6819 docs w AJAJAJ, nie podłączone do MCP search
+4. **Plastery — metadata only** — 343k Q&A w mmap; ingest tier-2 rejestruje *gdzie*, nie kopiuje binariów
+5. **MASTER_CLEAN/CBMS** — folder usunięty/przeniesiony; używaj `E:\AJAJAJ\CBMS_*`
+
+---
+
+## 📌 HISTORIA MIGRACJI
+
+| Data | Zdarzenie |
+|------|-----------|
+| 2025-11-28 | Pierwsza wersja INDEX (ContextVault, OneDrive V3) |
+| 2026-07-03 | Fala 0: `AIONS_PATH` → `E:\server wiedzy\aions_core` |
+| 2026-07-10 | Pełna mapa skarbów E:, `catalog_2026.json`, tier-2 Chroma ingest |
+
+---
+
+*Katalog: human `INDEX.md` + machine `catalog_2026.json`*
+*Ostatnia aktualizacja: 2026-07-10*

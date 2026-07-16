@@ -24,7 +24,7 @@ from chromadb.config import Settings
 from .context_schema import normalize_metadata
 
 # Configuration
-CHROMA_HOST = os.environ.get("CHROMA_HOST", "localhost")
+CHROMA_HOST = os.environ.get("CHROMA_HOST", "127.0.0.1")  # ALWAYS-ON fix: "localhost" wprowadzal ~4s IPv6/DNS lag na Windows
 CHROMA_PORT = int(os.environ.get("CHROMA_PORT", "8000"))
 CHROMA_PATH = os.environ.get("CHROMA_PATH", os.path.join(os.path.dirname(__file__), "..", "data", "chroma"))
 

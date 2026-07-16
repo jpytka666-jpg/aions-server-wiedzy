@@ -1,63 +1,57 @@
-# AIONS GGUF Runner — poziom C (projekt / design)
+# AIONS GGUF Runner — poziom C (Faza 0 scaffold)
 
-> **Status:** design only (2026-07-11). Brak implementacji silnika.  
-> **Profil:** AIONS-first — cienkie usta/gardło, **nie** generyczny serwer LLM.  
-> **Osobny tor:** Model Runtime (adapter) ≠ ten projekt. Tu tylko ścieżka C = runner GGUF / llama.cpp.
+> **Status:** Faza 0 proof (2026-07-11) — cienki wrapper + CLI/HTTP; silnik = istniejący `llama-cli` (nie fork).  
+> **Profil:** AIONS-first — usta/gardło, **nie** generyczny serwer LLM.  
+> **Restore point:** commit `5dfae12` + [RESTORE_POINT.md](./RESTORE_POINT.md)
 
 ## Jednym zdaniem
 
-Lokalny, cienki fork/wrapper **llama.cpp**, który ładuje GGUF i serwuje **tylko** to, czego potrzebują usta AIONS (`llm_speak` / `llm_understand`) — z natywnym szacunkiem dla adresów CBMS (Hangul / `<<CB:*>>`) i krótkim `n_predict`. Mózg (CBMS + Chroma + MCP) zostaje na `E:\server wiedzy`.
+Lokalny wrapper wokół **llama-cli** ładuje GGUF z E: i serwuje **speak / understand** (jak `llm_mouth`), z gate-first i ochroną `<addr>` / `<<CB:*>>`. Mózg zostaje CBMS.
 
-## AIONS-first (twarde zasady)
+## Jak odpalić
 
-| Warstwa | Co robi | Co NIE robi |
-|---------|---------|-------------|
-| **Mózg** | CBMS gate, Chroma, MCP tools, decyzje | Generacja NLG „z głowy” |
-| **Usta (ten runner)** | Przeformułowanie kontekstu / intent JSON | Fakty, tool-calling, esej |
-| **Gate hit** | Odpowiedź z CBMS **omija runner** | — |
+```powershell
+# Z repo root (E:\server wiedzy)
+.\scripts\aions_python.ps1 experiments\aions_gguf_runner\scripts\smoke_faza0.py
+.\scripts\aions_python.ps1 experiments\aions_gguf_runner\scripts\simulate_runner_flow.py
 
-Hangul w ścieżce promptu = **adresy bloków** (`<addr>…</addr>`), nie koreański NLG.  
-`<<CB:*>>` = symbole codebook. Runner **nie tłumaczy** ich na „ładny tekst koreański” — przekazuje / chroni jako tokeny adresowe.
+# CLI (cwd = experiments\aions_gguf_runner)
+cd experiments\aions_gguf_runner
+..\..\scripts\aions_python.ps1 -m wrapper health
+..\..\scripts\aions_python.ps1 -m wrapper speak --context "Adres <addr>각</addr> <<CB:A1>>" --lang pl
+..\..\scripts\aions_python.ps1 -m wrapper serve
+# Szybki stub: $env:AIONS_GGUF_SMOKE_REAL='0'
+```
+
+### Env
+
+| Env | Default | Opis |
+|-----|---------|------|
+| `AIONS_MOUTH_BACKEND` | `ollama` | `ollama` \| `llamacpp` \| `gguf` — **nie psuje** domyślnego Ollama |
+| `AIONS_GGUF_HOST` | `http://127.0.0.1:11435` | HTTP runner |
+| `AIONS_GGUF_PATH` | `models/qwen2.5-3b-instruct/…q4_K_M.gguf` | GGUF na E: |
+| `AIONS_LLAMA_CLI` | auto (Bielik folder) | ścieżka do `llama-cli.exe` |
+| `AIONS_GGUF_MODE` | `auto` | `auto` \| `real` \| `stub` |
+| `AIONS_MOUTH_NUM_PREDICT` | `200` | limit generacji |
+
+## AIONS-first
+
+| Warstwa | Co robi |
+|---------|---------|
+| **Gate hit** | Odpowiedź CBMS, `mouth_calls=0`, runner nie startuje |
+| **Miss / speak** | CONTEXT → krótki reply; post-process dokleja brakujące `<addr>` / `<<CB:*>>` |
+| **Understand** | Intent JSON (`lang/need/remember/summary`) |
 
 ## Dokumenty
 
 | Plik | Treść |
 |------|--------|
-| [DESIGN.md](./DESIGN.md) | Cel, architektura, API speak/understand, modele, fazy, ryzyka, sukces |
-| [TASKS.md](./TASKS.md) | Checklista wdrożenia (tracking, bez kodu runnera teraz) |
-| [scripts/simulate_runner_flow.py](./scripts/simulate_runner_flow.py) | Symulacja gate→usta (bez llama.cpp) |
-| [artifacts/simulate_runner_flow.json](./artifacts/simulate_runner_flow.json) | Wynik PASS/FAIL symulacji |
+| [DESIGN.md](./DESIGN.md) | Architektura, API, fazy |
+| [TASKS.md](./TASKS.md) | Checklista |
+| [RESTORE_POINT.md](./RESTORE_POINT.md) | Checkpoint przed Faza 0 |
+| [wrapper/](./wrapper/) | Faza 0 kod |
 
-```powershell
-.\scripts\aions_python.ps1 experiments\aions_gguf_runner\scripts\simulate_runner_flow.py
-```
+## Relacja
 
-## Szybki kontekst sprzętu / ust dziś
-
-- **HW:** Quadro M2000M **4 GB** VRAM, 64 GB RAM, Windows  
-- **Usta dziś:** Ollama → tag `aions-mouth` (Qwen2.5-3B Q4), opcjonalnie `bielik-aions`  
-- **MCP:** `llm_speak` / `llm_understand` w `mcpServers/.../llm_mouth.py` (`AIONS_MOUTH_MODEL`, `OLLAMA_HOST`)  
-- **GGUF kanoniczny (E:):** `E:\server wiedzy\models\qwen2.5-3b-instruct\qwen2.5-3b-instruct-q4_K_M.gguf`  
-- **D:\LOCAL LLM MODELS:** read-only (Bielik itd.) — bez destrukcji; kopia na E: jeśli potrzeba
-
-## Non-goals (skrót)
-
-- Nie CBMS / nie drugi mózg  
-- Nie trening HF / LoRA w tym repo  
-- Nie klon Ollamy (UI, library, pull registry)  
-- Nie image / multimodal (Faza 3 = tylko wzmianka OUT OF SCOPE)  
-- Nie ruszać wag na D: destrukcyjnie
-
-## Kryteria sukcesu (skrót)
-
-1. **Parity ust:** `speak` / `understand` przez runner ≥ jakość Ollamy na **tym samym** GGUF Qwen 3B Q4.  
-2. **Tok/s:** ≥ Ollama (CPU lub GPU — ten sam backend porównawczy) na tym samym GGUF.  
-3. **Gate:** hit CBMS → **zero** wywołań runnera (usta nie gaszą mózgu).  
-4. **Adresy:** Hangul / `<<CB:*>>` w kontekście nie są „naprawiane” ani stripowane przez runner.
-
-## Relacja do innych eksperymentów
-
-- `experiments/aions_cbms_llm_v2` (KORZENIEC) — vocab / embeddingi / gate — **mózg/most**, nie runner.  
-- Ten folder — **tylko** ścieżka C (inference GGUF pod usta).
-
-Szczegóły → [DESIGN.md](./DESIGN.md).
+- `experiments/aions_cbms_llm_v2` — mózg/most (KORZENIEC)  
+- Ten folder — ścieżka C (inference GGUF pod usta)

@@ -3,7 +3,7 @@ name = "vs_code_mcp_codex"
 version = "0.1.0"
 description = "A simple MCP weather server"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11,<3.12"
 dependencies = [
     "mcp>=1.23.0"
 ]

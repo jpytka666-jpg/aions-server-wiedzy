@@ -2,6 +2,8 @@
 inclusion: always
 ---
 
+> **DEPRECATED** — Use `.claude/specs/AIONS_OS_ROADMAP.md` (v15) and `AGENTS.md` instead. This file is kept for Kiro compatibility only.
+
 # AIONS Project - Product Vision
 
 ## Overview

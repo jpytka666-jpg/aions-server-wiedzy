@@ -1,0 +1,10 @@
+{
+  "id": "sys.brightness",
+  "type": "skill",
+  "name": "Ustaw jasnosc ekranu",
+  "description": "Ustawia jasnosc ekranu w procentach (0-100). Dziala na laptopach. Uzyj gdy trzeba przygasic lub rozjasnic ekran.",
+  "tags": ["jasnosc", "ekran", "brightness", "screen", "przygas", "rozjasnij"],
+  "inputs": [{"name": "level", "type": "int", "required": false}],
+  "outputs": [{"name": "level", "type": "int"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

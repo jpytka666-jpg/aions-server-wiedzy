@@ -32,7 +32,7 @@ else:
     try:
         import chromadb
         client = chromadb.HttpClient(
-            host=os.environ.get("CHROMA_HOST", "localhost"),
+            host=os.environ.get("CHROMA_HOST", "127.0.0.1"),  # ALWAYS-ON fix: unikamy DNS/IPv6 lag dla "localhost"
             port=int(os.environ.get("CHROMA_PORT", "8000"))
         )
         client.heartbeat()

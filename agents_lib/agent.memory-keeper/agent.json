@@ -1,0 +1,11 @@
+{
+  "id": "agent.memory-keeper",
+  "type": "agent",
+  "name": "Memory Keeper",
+  "description": "Straznik pamieci AIONS. Czyta logi i pliki na nodach Linux i raportuje stan, bez zadnej mozliwosci mutacji systemu. Model_tier none: dziala wylacznie na deterministycznym planerze, bez wolania LLM.",
+  "allowed_skills": ["linux.logs.*", "linux.files.read", "linux.files.search"],
+  "risk_ceiling": "read",
+  "model_tier": "none",
+  "prompt_template": "Jestes straznikiem pamieci AIONS. Tylko czytasz i raportujesz.",
+  "version": "1.0"
+}

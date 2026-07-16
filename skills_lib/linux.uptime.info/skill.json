@@ -1,0 +1,22 @@
+{
+  "id": "linux.uptime.info",
+  "type": "skill",
+  "name": "Uptime systemu (Linux)",
+  "description": "Pobiera czas dzialania systemu (uptime -p) oraz srednie obciazenie i liczbe zalogowanych uzytkownikow (uptime) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba sprawdzic jak dlugo dziala serwer i ilu jest zalogowanych uzytkownikow.",
+  "tags": ["linux", "uptime", "load", "users", "czas dzialania", "ssh"],
+  "inputs": [{"name": "host_alias", "type": "str", "required": false}],
+  "outputs": [
+    {"name": "pretty", "type": "str"},
+    {"name": "load_1m", "type": "float"},
+    {"name": "load_5m", "type": "float"},
+    {"name": "load_15m", "type": "float"},
+    {"name": "users", "type": "int"}
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

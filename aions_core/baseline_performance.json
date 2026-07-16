@@ -1,0 +1,27 @@
+{
+  "Opisz CRLA i dlaczego unika halucynacji": {
+    "count": 5,
+    "p50": 12.64,
+    "p95": 92.54
+  },
+  "Wyjaśnij Korean-CBMS segmentację kluczy": {
+    "count": 5,
+    "p50": 7.76,
+    "p95": 43.22
+  },
+  "STATUS SYSTEMU": {
+    "count": 5,
+    "p50": 7.87,
+    "p95": 10.7
+  },
+  "Ile masz teraz chunków?": {
+    "count": 5,
+    "p50": 10.93,
+    "p95": 11.57
+  },
+  "asdkj asd 129387 !@# nonsens": {
+    "count": 5,
+    "p50": 9.43,
+    "p95": 17.97
+  }
+}

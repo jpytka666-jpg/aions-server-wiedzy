@@ -1,0 +1,22 @@
+{
+  "id": "linux.logs.count",
+  "type": "skill",
+  "name": "Liczba bledow w logach systemowych bez sufitu (Linux)",
+  "description": "Liczy wpisy bledow w journalctl (priorytet err, od podanego czasu) na zdalnym hoscie Linux przez SSH, bez sufitu liczby wpisow (journalctl ... | wc -l zamiast -n 100). Uzyj do wykrywania log spike, gdzie liczy sie dokladna liczba bledow, nie tylko probka.",
+  "tags": ["linux", "logs", "journalctl", "errors", "bledy", "logi", "ssh", "count", "spike"],
+  "inputs": [
+    {"name": "since", "type": "str", "required": false},
+    {"name": "host_alias", "type": "str", "required": false}
+  ],
+  "outputs": [
+    {"name": "count", "type": "int"},
+    {"name": "since", "type": "str"}
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

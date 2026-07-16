@@ -1,0 +1,10 @@
+{
+  "id": "proc.kill",
+  "type": "skill",
+  "name": "Zabij proces",
+  "description": "Konczy dzialanie procesu po nazwie pliku wykonywalnego (np. chrome.exe). Uzyj gdy trzeba wymusic zamkniecie programu.",
+  "tags": ["zabij", "zakoncz", "proces", "program", "kill", "taskkill", "terminate"],
+  "inputs": [{"name": "image", "type": "str", "required": true}],
+  "outputs": [{"name": "ok", "type": "bool"}],
+  "requires": [], "avoid_when": [], "risk": "medium", "handler": "handler:run", "version": "1.0"
+}

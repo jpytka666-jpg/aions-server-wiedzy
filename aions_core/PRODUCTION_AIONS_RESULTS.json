@@ -1,0 +1,74 @@
+{
+  "system": "Production AIONS CBMS",
+  "model": "Korean-injected Phi-3 Mini",
+  "korean_syllables": [
+    "인",
+    "공",
+    "지",
+    "능",
+    "압",
+    "축",
+    "신",
+    "경",
+    "망",
+    "학",
+    "습",
+    "처",
+    "리",
+    "최",
+    "적",
+    "화"
+  ],
+  "cbms_patterns": 38,
+  "test_results": [
+    {
+      "phrase": "PROGRAMOWANIE",
+      "compression_ratio": 2.6,
+      "korean_coverage": 100.0,
+      "system_efficiency": 3.19
+    },
+    {
+      "phrase": "ARTIFICIAL INTELLIGENCE",
+      "compression_ratio": 2.2,
+      "korean_coverage": 0.0,
+      "system_efficiency": 1.0
+    },
+    {
+      "phrase": "NEURAL NETWORK COMPRESSION",
+      "compression_ratio": 3.0,
+      "korean_coverage": 62.5,
+      "system_efficiency": 2.36875
+    },
+    {
+      "phrase": "KOREAN CBMS PROCESSING",
+      "compression_ratio": 2.0,
+      "korean_coverage": 20.0,
+      "system_efficiency": 1.438
+    },
+    {
+      "phrase": "SYSTEM MEMORY OPTIMIZATION",
+      "compression_ratio": 2.1818181818181817,
+      "korean_coverage": 18.181818181818183,
+      "system_efficiency": 1.3981818181818182
+    },
+    {
+      "phrase": "DATA PROCESSING FUNCTION",
+      "compression_ratio": 3.142857142857143,
+      "korean_coverage": 71.42857142857143,
+      "system_efficiency": 2.564285714285714
+    },
+    {
+      "phrase": "BINARY CALCULATION METHODS",
+      "compression_ratio": 2.4,
+      "korean_coverage": 20.0,
+      "system_efficiency": 1.438
+    },
+    {
+      "phrase": "CPU GPU PERFORMANCE",
+      "compression_ratio": 2.8333333333333335,
+      "korean_coverage": 33.33333333333333,
+      "system_efficiency": 1.7299999999999998
+    }
+  ],
+  "status": "OPERATIONAL"
+}

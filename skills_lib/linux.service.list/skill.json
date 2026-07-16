@@ -1,0 +1,35 @@
+{
+  "id": "linux.service.list",
+  "type": "skill",
+  "name": "Lista uslug systemd running/failed (Linux)",
+  "description": "Listuje uslugi systemd w stanie running lub failed (systemctl list-units --type=service --state=running,failed) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba zobaczyc aktywne uslugi.",
+  "tags": [
+    "linux",
+    "service",
+    "systemd",
+    "systemctl",
+    "usluga",
+    "list",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "services",
+      "type": "list"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

@@ -37,7 +37,9 @@ ALL_EXTENSIONS = f"{CODE_EXTENSIONS};{CONFIG_EXTENSIONS};{DOC_EXTENSIONS}"
 IGNORE_PATTERNS = [
     "__pycache__", "node_modules", ".git", ".svn", 
     "venv", ".venv", "env", "site-packages",
-    "dist", "build", ".idea", ".vscode"
+    "dist", "build", ".idea", ".vscode",
+    "\\windows\\winsxs\\", "\\windows\\system32\\",
+    "$recycle.bin", "system volume information",
 ]
 
 # =============================================================================
@@ -85,33 +87,49 @@ def everything_search(extensions: str = ALL_EXTENSIONS, folders: List[str] = Non
     if not EVERYTHING_CLI.exists():
         raise FileNotFoundError(f"Everything CLI not found at {EVERYTHING_CLI}")
     
-    # Build query
-    query = f"ext:{extensions}"
-    
-    # Add folder filters if specified
+    ALLOWED_EXT = {e.strip().lower().lstrip(".") for e in extensions.split(";") if e.strip()}
+
     if folders:
-        folder_query = " | ".join([f'"{f}"' for f in folders])
-        query = f"({folder_query}) {query}"
+        all_files: List[str] = []
+        seen: Set[str] = set()
+        for folder in folders:
+            prefix = folder.strip().strip('"').replace("/", "\\")
+            if not prefix.endswith("\\"):
+                prefix += "\\"
+            query = f"{prefix}*"
+            print(f"[TURBO] Everything query: {query}")
+            cmd = [str(EVERYTHING_CLI), "-n", "999999", query]
+            result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=600)
+            if result.returncode != 0:
+                print(f"[WARN] Everything failed for {folder}: {result.stderr[:200]}")
+                continue
+            for f in result.stdout.strip().split("\n"):
+                f = f.strip()
+                if f and f not in seen:
+                    seen.add(f)
+                    all_files.append(f)
+    else:
+        query = f"ext:{extensions}"
+        print(f"[TURBO] Everything query: {query}")
+        cmd = [str(EVERYTHING_CLI), "-n", "999999", query]
+        result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60)
+        if result.returncode != 0:
+            raise RuntimeError(f"Everything search failed: {result.stderr}")
+        all_files = [f.strip() for f in result.stdout.strip().split("\n") if f.strip()]
     
-    print(f"[TURBO] Everything query: {query}")
-    
-    cmd = [str(EVERYTHING_CLI), "-n", "999999", query]
-    
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
-    
-    if result.returncode != 0:
-        raise RuntimeError(f"Everything search failed: {result.stderr}")
-    
-    files = [f.strip() for f in result.stdout.strip().split("\n") if f.strip()]
-    
-    # Filter out ignored patterns
+    # Filter out ignored patterns and (when scoped) non-target extensions
     filtered = []
-    for f in files:
+    for f in all_files:
         f_lower = f.lower()
-        if not any(ign in f_lower for ign in IGNORE_PATTERNS):
-            filtered.append(f)
+        if any(ign in f_lower for ign in IGNORE_PATTERNS):
+            continue
+        if folders:
+            ext = Path(f).suffix.lower().lstrip(".")
+            if ext not in ALLOWED_EXT:
+                continue
+        filtered.append(f)
     
-    print(f"[TURBO] Found {len(filtered)} files (filtered from {len(files)})")
+    print(f"[TURBO] Found {len(filtered)} files (filtered from {len(all_files)})")
     return filtered
 
 # =============================================================================
@@ -246,6 +264,7 @@ class TurboScanner:
         self.result: Optional[ScanResult] = None
         self.lock = threading.Lock()
         self.processed = 0
+        self.scan_folders: List[str] = []
         
     def scan(self, folders: List[str] = None) -> ScanResult:
         """TURBO SCAN - uses Everything + parallel processing"""
@@ -264,6 +283,8 @@ class TurboScanner:
             total_size=0,
             scan_time_seconds=0,
         )
+        
+        self.scan_folders = folders or []
         
         # Phase 1: Everything search (INSTANT)
         print("[PHASE 1] Finding files with Everything...")
@@ -405,6 +426,7 @@ class TurboScanner:
         summary = {
             "scan_id": self.result.scan_id,
             "timestamp": self.result.timestamp,
+            "scan_paths": self.scan_folders or ["(all indexed by Everything)"],
             "total_files": self.result.total_files,
             "total_size": self.result.total_size,
             "total_size_mb": round(self.result.total_size / 1024 / 1024, 2),

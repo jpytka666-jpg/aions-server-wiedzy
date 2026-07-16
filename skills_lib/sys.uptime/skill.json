@@ -1,0 +1,9 @@
+{
+  "id": "sys.uptime",
+  "type": "skill",
+  "name": "Czas dzialania systemu",
+  "description": "Podaje jak dlugo komputer jest wlaczony od ostatniego uruchomienia. Uzyj gdy trzeba sprawdzic uptime.",
+  "tags": ["uptime", "czas", "dzialanie", "wlaczony", "boot", "system"],
+  "inputs": [], "outputs": [{"name": "uptime", "type": "str"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

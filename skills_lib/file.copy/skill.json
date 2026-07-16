@@ -1,0 +1,14 @@
+{
+  "id": "file.copy",
+  "type": "skill",
+  "name": "Skopiuj plik",
+  "description": "Kopiuje plik z jednego miejsca do drugiego. Uzyj gdy trzeba zrobic kopie pliku.",
+  "tags": ["kopiuj", "kopia", "plik", "copy", "file", "duplicate"],
+  "inputs": [{"name": "src", "type": "str", "required": true}, {"name": "dst", "type": "str", "required": true}],
+  "outputs": [{"name": "dst", "type": "str"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "handler": "handler:run",
+  "version": "1.0"
+}

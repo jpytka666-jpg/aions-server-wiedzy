@@ -1,0 +1,49 @@
+{
+  "id": "linux.files.find",
+  "type": "skill",
+  "name": "Wyszukiwanie plikow po nazwie (Linux)",
+  "description": "Wyszukuje pliki po wzorcu nazwy (find <path> -maxdepth <depth> -name <name>) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba zlokalizowac plik po nazwie.",
+  "tags": [
+    "linux",
+    "files",
+    "find",
+    "wyszukiwanie",
+    "nazwa",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "name",
+      "type": "str",
+      "required": true
+    },
+    {
+      "name": "path",
+      "type": "str",
+      "required": false
+    },
+    {
+      "name": "depth",
+      "type": "int",
+      "required": false
+    },
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "paths",
+      "type": "list"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

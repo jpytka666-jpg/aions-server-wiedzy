@@ -1,0 +1,14 @@
+{
+  "id": "sys.screenshot",
+  "type": "skill",
+  "name": "Zrzut ekranu",
+  "description": "Robi zrzut calego ekranu i zapisuje jako plik PNG. Uzyj gdy trzeba zrobic screenshot ekranu.",
+  "tags": ["zrzut", "ekran", "screenshot", "print", "screen", "capture", "png"],
+  "inputs": [{"name": "path", "type": "str", "required": false}],
+  "outputs": [{"name": "path", "type": "str"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "handler": "handler:run",
+  "version": "1.0"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "web.weather",
+  "type": "skill",
+  "name": "Sprawdz pogode",
+  "description": "Sprawdza aktualna pogode w podanym miescie (darmowe wttr.in, bez klucza). Uzyj gdy trzeba znac pogode, temperature albo prognoze.",
+  "tags": ["pogoda", "pogode", "pogody", "weather", "temperatura", "prognoza", "deszcz", "stopni", "miasto"],
+  "inputs": [{"name": "city", "type": "str", "required": false}, {"name": "query", "type": "str", "required": false}],
+  "outputs": [{"name": "weather", "type": "str"}, {"name": "city", "type": "str"}],
+  "requires": [], "avoid_when": ["internet==down"], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

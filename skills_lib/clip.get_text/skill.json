@@ -1,0 +1,14 @@
+{
+  "id": "clip.get_text",
+  "type": "skill",
+  "name": "Odczytaj schowek",
+  "description": "Odczytuje tekst aktualnie znajdujacy sie w schowku Windows. Uzyj gdy trzeba sprawdzic co jest w schowku.",
+  "tags": ["schowek", "odczytaj", "wklej", "clipboard", "get", "paste", "clip"],
+  "inputs": [],
+  "outputs": [{"name": "text", "type": "str"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "handler": "handler:run",
+  "version": "1.0"
+}

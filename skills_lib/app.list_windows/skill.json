@@ -1,0 +1,9 @@
+{
+  "id": "app.list_windows",
+  "type": "skill",
+  "name": "Pokaz otwarte okna",
+  "description": "Wypisuje tytuly wszystkich otwartych okien programow. Uzyj gdy trzeba wiedziec co jest otwarte na ekranie.",
+  "tags": ["okna", "otwarte", "programy", "windows", "list", "titles", "co otwarte"],
+  "inputs": [], "outputs": [{"name": "windows", "type": "list"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

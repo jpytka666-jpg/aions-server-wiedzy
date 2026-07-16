@@ -1,0 +1,44 @@
+{
+  "id": "linux.pkg.list",
+  "type": "skill",
+  "name": "Lista zainstalowanych pakietow apt (Linux)",
+  "description": "Listuje zainstalowane pakiety apt (apt list --installed) i podaje calkowita liczbe pakietow (dpkg -l) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba sprawdzic co jest zainstalowane.",
+  "tags": [
+    "linux",
+    "pkg",
+    "apt",
+    "dpkg",
+    "packages",
+    "pakiety",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "limit",
+      "type": "int",
+      "required": false
+    },
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "total",
+      "type": "int"
+    },
+    {
+      "name": "packages",
+      "type": "list"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

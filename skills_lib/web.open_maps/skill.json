@@ -1,0 +1,10 @@
+{
+  "id": "web.open_maps",
+  "type": "skill",
+  "name": "Otworz Mapy Google",
+  "description": "Otwiera Mapy Google, opcjonalnie z wyszukiwanym miejscem. Uzyj gdy trzeba znalezc miejsce lub trase.",
+  "tags": ["mapy", "maps", "miejsce", "trasa", "google", "nawigacja", "otworz"],
+  "inputs": [{"name": "query", "type": "str", "required": false}],
+  "outputs": [{"name": "opened", "type": "bool"}],
+  "requires": [], "avoid_when": ["internet==down"], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

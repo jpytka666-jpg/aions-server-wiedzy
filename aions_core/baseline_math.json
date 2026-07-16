@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\User\OneDrive - Global Banking School\Desktop\MAPA_LASU_SOLO_CBMS\AIONS_CBMS_RELEASE\tools\gsm8k_quick.py", line 27, in <module>
+    with open(PATH,'r',encoding='utf-8') as fh:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\Users\User\OneDrive - Global Banking School\Desktop\MAPA_LASU_SOLO_CBMS\AIONS_CBMS_RELEASE\tools\gsm8k_test.jsonl'

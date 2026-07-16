@@ -1,0 +1,10 @@
+{
+  "id": "web.search",
+  "type": "skill",
+  "name": "Wyszukaj w internecie",
+  "description": "Otwiera wyszukiwarke Google z podanym zapytaniem w przegladarce. Uzyj gdy trzeba czegos poszukac w internecie.",
+  "tags": ["szukaj", "wyszukaj", "google", "internet", "search", "web", "przegladarka"],
+  "inputs": [{"name": "query", "type": "str", "required": true}],
+  "outputs": [{"name": "opened", "type": "bool"}],
+  "requires": [], "avoid_when": ["internet==down"], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

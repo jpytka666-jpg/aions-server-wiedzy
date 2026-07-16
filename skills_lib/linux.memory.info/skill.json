@@ -1,0 +1,19 @@
+{
+  "id": "linux.memory.info",
+  "type": "skill",
+  "name": "Informacje o pamieci i obciazeniu (Linux)",
+  "description": "Pobiera zuzycie pamieci RAM/swap (free -m) oraz srednie obciazenie systemu (/proc/loadavg) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba sprawdzic ile RAM jest wolne i jakie jest obciazenie.",
+  "tags": ["linux", "memory", "ram", "free", "loadavg", "pamiec", "obciazenie", "ssh"],
+  "inputs": [{"name": "host_alias", "type": "str", "required": false}],
+  "outputs": [
+    {"name": "memory", "type": "dict"},
+    {"name": "loadavg", "type": "dict"}
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

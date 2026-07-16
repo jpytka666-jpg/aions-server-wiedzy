@@ -1,0 +1,45 @@
+{
+  "id": "linux.logs.tail",
+  "type": "skill",
+  "name": "Ostatnie wpisy logu jednostki (Linux)",
+  "description": "Pobiera ostatnie N linii logu journald dla danej jednostki (journalctl -u <unit> -n <lines>) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba zobaczyc ostatnie logi uslugi.",
+  "tags": [
+    "linux",
+    "logs",
+    "journalctl",
+    "tail",
+    "logi",
+    "usluga",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "unit",
+      "type": "str",
+      "required": true
+    },
+    {
+      "name": "lines",
+      "type": "int",
+      "required": false
+    },
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "lines",
+      "type": "list"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

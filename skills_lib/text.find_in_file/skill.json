@@ -1,0 +1,10 @@
+{
+  "id": "text.find_in_file",
+  "type": "skill",
+  "name": "Znajdz tekst w pliku",
+  "description": "Szuka podanego tekstu w pliku i zwraca pasujace linie z numerami. Uzyj gdy trzeba znalezc fragment w pliku.",
+  "tags": ["znajdz", "szukaj", "tekst", "plik", "fragment", "find", "grep", "search"],
+  "inputs": [{"name": "path", "type": "str", "required": true}, {"name": "text", "type": "str", "required": true}],
+  "outputs": [{"name": "hits", "type": "list"}, {"name": "count", "type": "int"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

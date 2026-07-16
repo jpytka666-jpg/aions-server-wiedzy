@@ -1,0 +1,22 @@
+{
+  "id": "linux.logs.errors",
+  "type": "skill",
+  "name": "Bledy w logach systemowych (Linux)",
+  "description": "Pobiera bledy z journalctl (priorytet err, ostatnie 100 wpisow, od podanego czasu) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba sprawdzic czy w systemie wystapily bledy.",
+  "tags": ["linux", "logs", "journalctl", "errors", "bledy", "logi", "ssh"],
+  "inputs": [
+    {"name": "since", "type": "str", "required": false},
+    {"name": "host_alias", "type": "str", "required": false}
+  ],
+  "outputs": [
+    {"name": "entries", "type": "list"},
+    {"name": "count", "type": "int"}
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "paper.due",
+  "type": "skill",
+  "name": "Co pilne / na termin",
+  "description": "Pokazuje sprawy z terminem w najblizszych dniach (domyslnie 7). Uzyj gdy trzeba wiedziec co pilne albo co sie zbliza.",
+  "tags": ["pilne", "termin", "deadline", "na kiedy", "zblizajace", "due", "wkrotce", "urgent"],
+  "inputs": [{"name": "days", "type": "int", "required": false}],
+  "outputs": [{"name": "due", "type": "list"}, {"name": "count", "type": "int"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

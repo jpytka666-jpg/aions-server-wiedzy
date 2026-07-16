@@ -1,0 +1,50 @@
+{
+  "id": "linux.files.read",
+  "type": "skill",
+  "name": "Odczyt pliku z limitem linii (Linux)",
+  "description": "Czyta zawartosc pliku tekstowego (head -n <max_lines> <path>) na zdalnym hoscie Linux przez SSH, z informacja o obcieciu. Uzyj gdy trzeba podejrzec zawartosc pliku konfiguracyjnego lub logu.",
+  "tags": [
+    "linux",
+    "files",
+    "read",
+    "cat",
+    "head",
+    "plik",
+    "odczyt",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "path",
+      "type": "str",
+      "required": true
+    },
+    {
+      "name": "max_lines",
+      "type": "int",
+      "required": false
+    },
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "content",
+      "type": "str"
+    },
+    {
+      "name": "truncated",
+      "type": "bool"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

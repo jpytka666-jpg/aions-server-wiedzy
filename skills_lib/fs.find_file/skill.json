@@ -1,0 +1,21 @@
+{
+  "id": "fs.find_file",
+  "type": "skill",
+  "name": "Znajdz plik na dysku",
+  "description": "Znajduje pliki po nazwie lub fragmencie, opcjonalnie w danym folderze. Uzyj gdy trzeba zlokalizowac sciezke pliku na dysku.",
+  "tags": ["plik", "szukaj", "znajdz", "dysk", "file", "search", "fast_search", "everything"],
+  "inputs": [
+    {"name": "query", "type": "str", "required": true},
+    {"name": "folder", "type": "str", "required": false}
+  ],
+  "outputs": [
+    {"name": "files", "type": "list"},
+    {"name": "count", "type": "int"},
+    {"name": "first", "type": "str"}
+  ],
+  "requires": [],
+  "avoid_when": ["internet==down"],
+  "risk": "low",
+  "handler": "handler:run",
+  "version": "1.0"
+}

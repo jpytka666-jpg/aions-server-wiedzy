@@ -1,0 +1,10 @@
+{
+  "id": "shortcut.create",
+  "type": "skill",
+  "name": "Utworz skrot",
+  "description": "Tworzy skrot (.lnk) do pliku lub programu we wskazanym miejscu. Uzyj gdy trzeba zrobic skrot na pulpicie lub gdziekolwiek.",
+  "tags": ["skrot", "shortcut", "lnk", "utworz", "link", "create"],
+  "inputs": [{"name": "target", "type": "str", "required": true}, {"name": "link", "type": "str", "required": true}],
+  "outputs": [{"name": "link", "type": "str"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

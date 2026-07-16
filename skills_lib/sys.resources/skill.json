@@ -1,0 +1,9 @@
+{
+  "id": "sys.resources",
+  "type": "skill",
+  "name": "Zuzycie pamieci RAM",
+  "description": "Podaje ile pamieci RAM jest wolne i ile lacznie. Uzyj gdy trzeba sprawdzic zuzycie pamieci.",
+  "tags": ["ram", "pamiec", "zasoby", "memory", "resources", "free"],
+  "inputs": [], "outputs": [{"name": "ram_free_gb", "type": "float"}, {"name": "ram_total_gb", "type": "float"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

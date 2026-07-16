@@ -1,0 +1,236 @@
+"""AIONS Operator -- usta (mouth) do komentowania eskalacji (B4).
+
+Ten modul NIE jest serwerem LLM i NIE jest nowym "mouth backendem" -- woła
+WYLACZNIE juz istniejacy, przetestowany mechanizm ust llama.cpp z
+experiments/aions_gguf_runner/wrapper (ten sam runner, ktorego uzywaja
+narzedzia MCP llm_understand/llm_speak w mcpServers/VS_CODE_MCP_CODEX).
+Nic w server.py ani w experiments/aions_gguf_runner nie jest tu zmieniane --
+ten plik tylko importuje i woła istniejace API (generate.generate / config).
+
+Architektura B4 (decyzja wlasciciela projektu):
+  - Operator (control_plane/operator/loop.py) podejmuje WSZYSTKIE decyzje
+    deterministycznie (gate, cooldown, restart/eskalacja) -- tak jak wczesniej.
+  - Usta LLM tu NIE decyduja o niczym i nie wywoluja zadnej akcji. Sluza
+    wylacznie do doklejenia krotkiego, czytelnego dla czlowieka komentarza
+    do incydentu, ktory zostal juz w pelni okreslony przez
+    observe/diagnose/act/verify.
+  - Brak Ollamy (decyzja wlasciciela projektu) -- uzywany jest wylacznie
+    backend llamacpp z experiments/aions_gguf_runner (Phi-4-mini Q4 GGUF +
+    llama-cli.exe), bez zadnego serwera HTTP w tle jako fallback (in-process
+    subprocess wywolanie, tak jak w wrapper/generate.py::_run_llama_cli);
+    glowna sciezka to rezydentny llama-server (patrz server_client.py).
+
+v2.0 (decyzja wlasciciela projektu, podmiana produkcyjna): Bielik skasowany
+z dysku, Phi-4-mini jest teraz JEDYNYM lokalnym modelem. System prompt
+ponizej jest teraz PO ANGIELSKU -- prosimy model o odpowiedz w jezyku opisu
+incydentu (jesli mozliwe), w przeciwnym razie po angielsku. Komentarze moga
+wiec wychodzic po angielsku (zgoda wlasciciela projektu) -- operator i tak
+traktuje je tylko jako czytelny dla czlowieka dodatek, nigdy jako sygnal
+decyzyjny.
+
+Kontrakt (jedyna publiczna funkcja):
+    comment_incident(incident: dict) -> str | None
+
+Pelny graceful fallback: kazdy mozliwy problem (brak modulu wrapper, brak
+pliku GGUF, brak llama-cli.exe, timeout subprocessu, pusta/zla odpowiedz
+modelu, dowolny wyjatek) konczy sie zwrotem None. Funkcja NIGDY nie rzuca
+wyjatku na zewnatrz -- petla operatora ma dzialac identycznie z ustami i
+bez nich.
+"""
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+from typing import Optional
+
+# control_plane/operator/mouth.py -> parents[2] == repo root (tak samo jak
+# w loop.py: REPO = Path(__file__).resolve().parents[2]).
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+_RUNNER_DIR = _REPO_ROOT / "experiments" / "aions_gguf_runner"
+
+# v2.1 (backlog): fallback CLI naprawiony -- AIONS_LLAMA_CLI wskazuje teraz
+# na zabezpieczona kopie binarki (E:\LOCAL LLM MODELS\llama-runtime\) zamiast
+# na skasowana sciezke Bielika. Model docelowy to Phi-4-mini, wiec szablon
+# czatu MUSI pasowac -- uzywamy --jinja (natywny szablon z metadanych GGUF,
+# identycznie jak rezydentny serwer :8877), NIE --chat-template chatml (dawalo
+# to halucynowane dopiski w stylu <|im_end|>/kolejne fikcyjne tury -- Phi-4
+# nie jest modelem ChatML). Zweryfikowane na binarce: --jinja daje czysta,
+# poprawna odpowiedz; chatml -- smieci po pierwszym tokenie. Uzywane TYLKO
+# gdy AIONS_GGUF_PATH / AIONS_LLAMA_CLI / AIONS_MOUTH_TIMEOUT / AIONS_CHAT_TEMPLATE
+# nie sa juz ustawione w srodowisku procesu -- nigdy nie nadpisujemy istniejacej
+# konfiguracji (np. gdy operator jest kiedys uruchamiany z innym modelem).
+_DEFAULT_GGUF = r"E:\LOCAL LLM MODELS\Phi-4-mini\Phi-4-mini-instruct-Q4_K_M.gguf"
+_DEFAULT_LLAMA_CLI = r"E:\LOCAL LLM MODELS\llama-runtime\llama-cli.exe"
+_DEFAULT_TIMEOUT_S = "60"  # zadanie B4: timeout <= 60s (runner default to 180s)
+_DEFAULT_CHAT_TEMPLATE = "jinja"
+
+# v2.0: system prompt po angielsku (Phi-4-mini, decyzja wlasciciela
+# projektu). Semantyka bez zmian -- usta nie decyduja o niczym, tylko
+# komentuja juz podjeta decyzje. Prosimy o odpowiedz w jezyku opisu
+# incydentu jesli to mozliwe, w przeciwnym razie po angielsku (komentarze
+# moga byc EN -- zgoda wlasciciela).
+_SYSTEM_PROMPT = (
+    "You are a Linux operator (AIONS). You receive a short, already-decided "
+    "incident description (detected problems + actions already taken by the "
+    "deterministic operator loop). You do not make any decisions or propose "
+    "new actions -- the operator already did that. Your only task: reply in "
+    "1-2 sentences, in the same language as the incident description if "
+    "possible, otherwise in English, stating the probable cause of the "
+    "incident and a suggested next step for a human. Do not invent facts "
+    "outside the given description."
+)
+
+_MAX_TOKENS = 120  # n_predict <= 120 (krotki komentarz, nie esej)
+
+
+def _short_incident_desc(incident: dict) -> str:
+    """Krotki, deterministyczny skrot incydentu (issues+actions) do promptu.
+
+    Celowo NIE serializuje calego incydentu (snapshoty itd.) -- tylko typy/
+    detale problemow i podjete akcje/rekomendacje, zeby prompt byl krotki
+    i przewidywalny.
+    """
+    issues = incident.get("issues") or []
+    actions = incident.get("actions") or []
+    lines = []
+    for i in issues[:5]:
+        if isinstance(i, dict):
+            lines.append(f"- problem: {i.get('type')}: {str(i.get('detail', ''))[:160]}")
+    for a in actions[:5]:
+        if isinstance(a, dict):
+            rec = a.get("recommendation") or a.get("status") or ""
+            lines.append(
+                f"- akcja: {a.get('action')} decyzja={a.get('decision')} {str(rec)[:160]}"
+            )
+    text = "\n".join(lines).strip()
+    return text
+
+
+def _ensure_env_defaults() -> None:
+    """Uzupelnia braki w env TYLKO jesli nikt ich wczesniej nie ustawil."""
+    if not os.environ.get("AIONS_GGUF_PATH") and Path(_DEFAULT_GGUF).is_file():
+        os.environ["AIONS_GGUF_PATH"] = _DEFAULT_GGUF
+    if not os.environ.get("AIONS_LLAMA_CLI") and Path(_DEFAULT_LLAMA_CLI).is_file():
+        os.environ["AIONS_LLAMA_CLI"] = _DEFAULT_LLAMA_CLI
+    os.environ.setdefault("AIONS_MOUTH_TIMEOUT", _DEFAULT_TIMEOUT_S)
+    os.environ.setdefault("AIONS_CHAT_TEMPLATE", _DEFAULT_CHAT_TEMPLATE)
+
+
+def comment_incident(incident: dict) -> Optional[str]:
+    """Krotki komentarz (1-2 zdania) do incydentu operatora, wygenerowany
+    przez istniejace usta llama.cpp. LLM tu NIE decyduje -- tylko komentuje
+    juz podjeta przez deterministyke decyzje. Zwraca None przy KAZDYM
+    problemie (brak modelu/binarki/modulu, timeout, pusta odpowiedz) --
+    nigdy nie rzuca wyjatku na zewnatrz."""
+    try:
+        return _comment_incident_impl(incident)
+    except Exception as e:  # pragma: no cover -- twardy firewall na wyjatki
+        print(f"[operator.mouth] WARN: comment_incident wyjatek: {e}", file=sys.stderr)
+        return None
+
+
+def _comment_incident_impl(incident: dict) -> Optional[str]:
+    if not isinstance(incident, dict):
+        return None
+
+    desc = _short_incident_desc(incident)
+    if not desc:
+        return None
+
+    _ensure_env_defaults()
+
+    if str(_RUNNER_DIR) not in sys.path:
+        sys.path.insert(0, str(_RUNNER_DIR))
+
+    try:
+        from wrapper import generate as gguf_generate  # type: ignore
+        from wrapper import config as gguf_config  # type: ignore
+    except Exception as e:
+        print(f"[operator.mouth] WARN: import ust (wrapper) nieudany: {e}", file=sys.stderr)
+        return None
+
+    try:
+        mode = gguf_config.backend_mode()
+    except Exception as e:
+        print(f"[operator.mouth] WARN: backend_mode() nieudany: {e}", file=sys.stderr)
+        return None
+
+    if mode != "real":
+        print(
+            "[operator.mouth] WARN: usta w trybie stub (brak llama-cli.exe lub GGUF) "
+            "-- pomijam komentarz LLM dla tego incydentu",
+            file=sys.stderr,
+        )
+        return None
+
+    user_prompt = f"Operator incident:\n{desc}\n\nProvide a comment (1-2 sentences)."
+
+    # v1.2: rezydentny llama-server (jesli dziala) -- omija koszt zaladowania
+    # modelu od zera przy kazdym wywolaniu subprocess llama-cli. Fallback do
+    # dotychczasowej sciezki llama-cli przy KAZDYM problemie (serwer
+    # wylaczony, timeout, blad polaczenia itp.). "result" ma identyczny
+    # ksztalt jak zwrot gguf_generate.generate(), wiec cala walidacja
+    # ponizej dziala bez zmian.
+    try:
+        from ..llm import server_client  # type: ignore
+        srv = server_client.generate_http(
+            _SYSTEM_PROMPT, user_prompt, n_predict=_MAX_TOKENS, timeout=90.0
+        )
+    except Exception as e:
+        srv = {"ok": False, "error": str(e)}
+
+    if srv.get("ok"):
+        result = {
+            "ok": True,
+            "content": srv.get("content", ""),
+            "backend": "llamacpp",
+            "mode": "real",
+            "wall_s": srv.get("wall_s"),
+        }
+    else:
+        try:
+            result = gguf_generate.generate(
+                _SYSTEM_PROMPT,
+                user_prompt,
+                kind="speak",
+                n_predict=_MAX_TOKENS,
+            )
+        except Exception as e:
+            print(f"[operator.mouth] WARN: generate() rzucil wyjatek: {e}", file=sys.stderr)
+            return None
+
+    if not isinstance(result, dict) or not result.get("ok"):
+        err = result.get("error") if isinstance(result, dict) else result
+        print(f"[operator.mouth] WARN: generate() nie ok: {err}", file=sys.stderr)
+        return None
+
+    # generate() moze po cichu spasc na deterministyczny stub (mode=="stub"
+    # lub fallback_from_real_error) jesli real-run zawiedzie w trakcie --
+    # to NIE jest prawdziwy komentarz modelu, wiec go odrzucamy.
+    if result.get("mode") != "real" or result.get("backend") != "llamacpp" or result.get(
+        "fallback_from_real_error"
+    ):
+        print(
+            "[operator.mouth] WARN: generate() zwrocil stub/fallback zamiast realnej "
+            f"odpowiedzi (mode={result.get('mode')}, backend={result.get('backend')}, "
+            f"fallback_error={result.get('fallback_from_real_error')}) -- odrzucam",
+            file=sys.stderr,
+        )
+        return None
+
+    comment = (result.get("content") or "").strip()
+    # llama-cli dokleja marker konca generacji na koncu stdout -- to nie jest
+    # czesc odpowiedzi modelu, tylko naglowek narzedzia CLI.
+    for _marker in ("[end of text]", "[koniec tekstu]"):
+        if comment.lower().endswith(_marker):
+            comment = comment[: -len(_marker)].rstrip()
+
+    if not comment:
+        print("[operator.mouth] WARN: model zwrocil pusta odpowiedz", file=sys.stderr)
+        return None
+
+    if len(comment) > 500:
+        comment = comment[:500].rstrip() + "..."
+
+    return comment

@@ -1,0 +1,10 @@
+{
+  "id": "input.type_text",
+  "type": "skill",
+  "name": "Wpisz tekst do aktywnego okna",
+  "description": "Wpisuje podany tekst do aktualnie aktywnego okna (symuluje klawiature). Uzyj gdy trzeba cos wpisac do otwartego programu.",
+  "tags": ["wpisz", "napisz", "tekst", "klawiatura", "type", "keyboard", "input", "sendkeys"],
+  "inputs": [{"name": "text", "type": "str", "required": true}],
+  "outputs": [{"name": "ok", "type": "bool"}],
+  "requires": [], "avoid_when": [], "risk": "medium", "handler": "handler:run", "version": "1.0"
+}

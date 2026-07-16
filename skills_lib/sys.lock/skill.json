@@ -1,0 +1,9 @@
+{
+  "id": "sys.lock",
+  "type": "skill",
+  "name": "Zablokuj ekran",
+  "description": "Blokuje ekran Windows (jak Win+L). Uzyj gdy trzeba zablokowac komputer.",
+  "tags": ["zablokuj", "blokada", "ekran", "lock", "screen", "winl"],
+  "inputs": [], "outputs": [{"name": "locked", "type": "bool"}],
+  "requires": [], "avoid_when": [], "risk": "medium", "handler": "handler:run", "version": "1.0"
+}

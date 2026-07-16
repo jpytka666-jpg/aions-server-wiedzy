@@ -1,0 +1,9 @@
+{
+  "id": "net.wifi_list",
+  "type": "skill",
+  "name": "Lista sieci WiFi",
+  "description": "Pokazuje dostepne sieci WiFi w zasiegu. Uzyj gdy trzeba sprawdzic jakie sieci wifi sa widoczne.",
+  "tags": ["wifi", "siec", "bezprzewodowa", "ssid", "wireless", "network", "list"],
+  "inputs": [], "outputs": [{"name": "networks", "type": "list"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

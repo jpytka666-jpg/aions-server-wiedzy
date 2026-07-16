@@ -1,0 +1,17 @@
+{
+  "id": "app.open_notepad",
+  "type": "skill",
+  "name": "Otworz Notatnik",
+  "description": "Otwiera aplikacje Notatnik (notepad) w systemie Windows. Uzyj gdy trzeba otworzyc notatnik do pisania.",
+  "tags": ["notatnik", "notepad", "otworz", "uruchom", "aplikacja", "open", "launch", "windows"],
+  "inputs": [],
+  "outputs": [
+    {"name": "launched", "type": "bool"},
+    {"name": "pid", "type": "int"}
+  ],
+  "requires": [],
+  "avoid_when": ["notepad==open"],
+  "risk": "low",
+  "handler": "handler:run",
+  "version": "1.0"
+}

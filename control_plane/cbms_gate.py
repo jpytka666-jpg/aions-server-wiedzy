@@ -17,10 +17,14 @@ Env:
     AIONS_CBMS_FIRST=1|0          (domyślnie 1)
     AIONS_CBMS_CONFIDENCE=0.7
     AIONS_PATH / CBMS_MEMORY_DIR
+    AIONS_CBMS_RETRIEVE_CACHE=1|0 (domyślnie 1) -- cache retrieve() na dysku
+    AIONS_CBMS_CACHE_TTL_S=3600   (domyślnie 1h) -- TTL wpisow cache'a
 """
 
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 import re
 import sys
@@ -29,6 +33,30 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+
+# --- rezydentny cache wynikow retrieve() (Faza 2, KORZENIEC cache-layer) ---
+# Problem zastany: kazde retrieve() tworzylo NOWA instancje VectorStore
+# (Chroma) w _chroma_hits(), co powodowalo pelna re-inicjalizacje kolekcji
+# (~18s, widoczne "Add of existing embedding ID..." w logach) przy KAZDYM
+# wywolaniu -- nawet gdy _MEMORY/_CODEBOOK byly juz cache'owane w tym samym
+# procesie. Dwie warstwy naprawy (obie wlaczone domyslnie):
+#   1) in-process singleton dla VectorStore (analogicznie do juz istniejacego
+#      _MEMORY/_CODEBOOK) -> w ramach JEDNEGO procesu drugie retrieve() nie
+#      odtwarza polaczenia z Chroma.
+#   2) lekki cache na dysku (query+top_k -> wynik retrieve(), TTL) w
+#      runtime/state/cbms_cache.json -> dziala TEZ MIEDZY procesami (np. gdy
+#      goal_planner jest wolany jako osobny proces CLI za kazdym razem, co
+#      jest realny wzorzec uzycia produkcyjnego), bo wtedy singleton w
+#      pamieci i tak nie przetrwa miedzy wywolaniami.
+# Logika scoringu/decyzji w retrieve()/gate_decide() jest NIETKNIETA -- cache
+# tylko zapamietuje JUZ POLICZONY wynik dla identycznego zapytania (query,
+# top_k). gate_decide()/evaluate() zawsze licza decyzje (hit/threshold) NA
+# SWIEZO z (ewentualnie cache'owanego) retrieval, wiec zmiana progu miedzy
+# wywolaniami nadal dziala poprawnie.
+_VECTOR_STORE: Any = None
+
+_CBMS_CACHE_PATH = REPO_ROOT / "runtime" / "state" / "cbms_cache.json"
+_CBMS_CACHE_MEM: dict[str, dict[str, Any]] | None = None  # in-process mirror pliku
 
 _STOP = frozenset(
     {
@@ -56,6 +84,13 @@ def _env(name: str, default: str) -> str:
     return val if val not in (None, "") else default
 
 
+def _env_float(name: str, default: float) -> float:
+    try:
+        return float(_env(name, str(default)))
+    except ValueError:
+        return default
+
+
 def gate_enabled() -> bool:
     return _env("AIONS_CBMS_FIRST", "1").lower() in ("1", "true", "on", "yes")
 
@@ -65,6 +100,78 @@ def confidence_threshold(default: float = 0.7) -> float:
         return float(_env("AIONS_CBMS_CONFIDENCE", str(default)))
     except ValueError:
         return default
+
+
+def cache_enabled() -> bool:
+    return _env("AIONS_CBMS_RETRIEVE_CACHE", "1").lower() in ("1", "true", "on", "yes")
+
+
+def cache_ttl_s() -> float:
+    return _env_float("AIONS_CBMS_CACHE_TTL_S", 3600.0)
+
+
+def _cache_key(query: str, top_k: int) -> str:
+    norm = (query or "").strip().lower()
+    return hashlib.sha1(f"{norm}|{top_k}".encode("utf-8")).hexdigest()[:24]
+
+
+def _load_disk_cache() -> dict[str, dict[str, Any]]:
+    global _CBMS_CACHE_MEM
+    if _CBMS_CACHE_MEM is not None:
+        return _CBMS_CACHE_MEM
+    try:
+        if _CBMS_CACHE_PATH.exists():
+            loaded = json.loads(_CBMS_CACHE_PATH.read_text(encoding="utf-8"))
+            _CBMS_CACHE_MEM = loaded if isinstance(loaded, dict) else {}
+        else:
+            _CBMS_CACHE_MEM = {}
+    except Exception:
+        _CBMS_CACHE_MEM = {}
+    return _CBMS_CACHE_MEM
+
+
+def _save_disk_cache(d: dict[str, dict[str, Any]]) -> None:
+    global _CBMS_CACHE_MEM
+    _CBMS_CACHE_MEM = d
+    try:
+        _CBMS_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        _CBMS_CACHE_PATH.write_text(
+            json.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+    except Exception:
+        pass  # cache na dysku jest best-effort -- nigdy nie blokuje retrieve()
+
+
+def _cache_get(query: str, top_k: int) -> dict[str, Any] | None:
+    if not cache_enabled():
+        return None
+    try:
+        key = _cache_key(query, top_k)
+        entry = _load_disk_cache().get(key)
+        if not entry:
+            return None
+        age = time.time() - float(entry.get("ts") or 0)
+        if age > cache_ttl_s():
+            return None
+        result = entry.get("result")
+        return dict(result) if isinstance(result, dict) else None
+    except Exception:
+        return None
+
+
+def _cache_put(query: str, top_k: int, result: dict[str, Any]) -> None:
+    if not cache_enabled():
+        return
+    try:
+        key = _cache_key(query, top_k)
+        d = _load_disk_cache()
+        d[key] = {"ts": time.time(), "query": query, "top_k": top_k, "result": result}
+        if len(d) > 500:  # cap growth -- keep 500 najnowszych wpisow
+            newest = sorted(d.items(), key=lambda kv: kv[1].get("ts", 0), reverse=True)[:500]
+            d = dict(newest)
+        _save_disk_cache(d)
+    except Exception:
+        pass
 
 
 def _aions_path() -> Path:
@@ -112,6 +219,32 @@ def _get_codebook() -> Any | None:
             return None
         _CODEBOOK = Codebook.load(path)
         return _CODEBOOK
+    except Exception:
+        return None
+
+
+def _get_vector_store() -> Any | None:
+    """Singleton VectorStore (Chroma). Naprawia glowna przyczyne 18s: przed
+    ta zmiana _chroma_hits() tworzylo NOWA instancje VectorStore (a wiec
+    pelna re-inicjalizacje kolekcji Chroma, widoczna jako "Add of existing
+    embedding ID...") przy KAZDYM wywolaniu retrieve(), nawet w ramach tego
+    samego procesu / po tym jak _MEMORY i _CODEBOOK byly juz cache'owane."""
+    global _VECTOR_STORE
+    if _VECTOR_STORE is not None:
+        return _VECTOR_STORE
+    try:
+        _ensure_server_path()
+        os.environ.setdefault("CHROMA_PATH", str(REPO_ROOT / "data" / "chroma"))
+        # Faza 3 (ALWAYS-ON): centralna fabryka store_selector -- probuje
+        # HttpClient do rezydentnego serwera Chroma (:8000, patrz
+        # runtime/chroma_server_run.cmd) i tylko gdy ten jest niedostepny,
+        # spada do PersistentClient (embedded, jak wczesniej). Eliminuje
+        # cold-start (7-18s) ladowania kolekcji przy kazdym nowym procesie.
+        os.environ.setdefault("CHROMA_USE_HTTP", "true")  # unika podwojnego auto-detect connect w store_selector
+        from server.store_selector import VectorStore  # type: ignore
+
+        _VECTOR_STORE = VectorStore(persist_path=os.environ.get("CHROMA_PATH"))
+        return _VECTOR_STORE
     except Exception:
         return None
 
@@ -190,11 +323,9 @@ def _load_chunk(mem: Any, chunk_id: str) -> dict[str, Any] | None:
 def _chroma_hits(query: str, top_k: int = 5) -> list[dict[str, Any]]:
     """Best-effort Chroma — często padnięta lokalnie; nie blokuje gate."""
     try:
-        _ensure_server_path()
-        os.environ.setdefault("CHROMA_PATH", str(REPO_ROOT / "data" / "chroma"))
-        from server.store import VectorStore  # type: ignore
-
-        store = VectorStore(persist_path=os.environ.get("CHROMA_PATH"))
+        store = _get_vector_store()
+        if store is None:
+            return []
         raw = store.search("claude_marcin_main", query, top_k=top_k)
         out: list[dict[str, Any]] = []
         for h in raw:
@@ -216,6 +347,11 @@ def _chroma_hits(query: str, top_k: int = 5) -> list[dict[str, Any]]:
 
 def retrieve(query: str, top_k: int = 5) -> dict[str, Any]:
     """Główny retrieval: Korean Keys + lexical + codebook + (opcjonalnie) Chroma."""
+    cached = _cache_get(query, top_k)
+    if cached is not None:
+        cached["_cache_hit"] = True
+        return cached
+
     mem = _get_memory()
     symbols = encode_query_symbols(query)
     hits: list[dict[str, Any]] = []
@@ -404,7 +540,7 @@ def retrieve(query: str, top_k: int = 5) -> dict[str, Any]:
     confidence = float(hits[0]["score"]) if hits else 0.0
     hangul_keys = [h["hangul_key"] for h in hits if h.get("hangul_key")]
 
-    return {
+    result = {
         "query": query,
         "confidence": round(confidence, 4),
         "hits": hits,
@@ -412,6 +548,8 @@ def retrieve(query: str, top_k: int = 5) -> dict[str, Any]:
         "hangul_keys": hangul_keys,
         "n_candidates": len(candidates),
     }
+    _cache_put(query, top_k, result)
+    return result
 
 
 def gate_decide(retrieval: dict[str, Any], threshold: float = 0.7) -> dict[str, Any]:

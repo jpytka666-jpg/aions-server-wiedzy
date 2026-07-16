@@ -1,0 +1,35 @@
+{
+  "id": "linux.net.ports",
+  "type": "skill",
+  "name": "Nasluchujace porty TCP (Linux)",
+  "description": "Listuje nasluchujace porty TCP i procesy je obslugujace (ss -tlnp) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba sprawdzic co nasluchuje na jakim porcie.",
+  "tags": [
+    "linux",
+    "net",
+    "network",
+    "ss",
+    "ports",
+    "porty",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "listening",
+      "type": "list"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

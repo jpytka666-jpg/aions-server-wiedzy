@@ -1,0 +1,20 @@
+{
+  "id": "note.save",
+  "type": "skill",
+  "name": "Zapisz notatke do pamieci",
+  "description": "Zapisuje krotka notatke lub wniosek do pamieci na przyszlosc. Uzyj gdy trzeba cos zapamietac lub odlozyc wynik.",
+  "tags": ["zapamietaj", "notatka", "pamiec", "zapisz", "wniosek", "memory", "save", "note"],
+  "inputs": [
+    {"name": "text", "type": "str", "required": true},
+    {"name": "session", "type": "str", "required": false}
+  ],
+  "outputs": [
+    {"name": "saved", "type": "bool"},
+    {"name": "note_id", "type": "int"}
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "handler": "handler:run",
+  "version": "1.0"
+}

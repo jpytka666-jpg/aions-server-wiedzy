@@ -1,0 +1,16 @@
+{
+  "id": "linux.disk.usage",
+  "type": "skill",
+  "name": "Uzycie dysku (Linux)",
+  "description": "Sprawdza uzycie dysku (df -h) oraz 10 najwiekszych katalogow w / (du -h --max-depth=1) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba sprawdzic ile miejsca zostalo na dysku VM.",
+  "tags": ["linux", "disk", "df", "du", "dysk", "miejsce", "storage", "ssh"],
+  "inputs": [{"name": "host_alias", "type": "str", "required": false}],
+  "outputs": [{"name": "filesystems", "type": "list"}, {"name": "top_dirs", "type": "list"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

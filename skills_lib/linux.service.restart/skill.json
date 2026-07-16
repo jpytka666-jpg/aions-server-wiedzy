@@ -1,0 +1,22 @@
+{
+  "id": "linux.service.restart",
+  "type": "skill",
+  "name": "Restart uslugi systemd (Linux)",
+  "description": "Restartuje usluge systemd (sudo -n systemctl restart <name>) na zdalnym hoscie Linux przez SSH i sprawdza jej stan (systemctl is-active). Uzyj gdy usluga jest w stanie failed/inactive i trzeba ja przywrocic do dzialania.",
+  "tags": ["linux", "service", "systemd", "systemctl", "restart", "usluga", "naprawa", "ssh"],
+  "inputs": [
+    {"name": "name", "type": "str", "required": true},
+    {"name": "host_alias", "type": "str", "required": false}
+  ],
+  "outputs": [
+    {"name": "restarted", "type": "bool"},
+    {"name": "active", "type": "str"}
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "medium",
+  "access_class": "mutate",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

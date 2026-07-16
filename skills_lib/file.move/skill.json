@@ -1,0 +1,14 @@
+{
+  "id": "file.move",
+  "type": "skill",
+  "name": "Przenies lub zmien nazwe pliku",
+  "description": "Przenosi plik w inne miejsce lub zmienia jego nazwe. Uzyj gdy trzeba przeniesc albo przemianowac plik.",
+  "tags": ["przenies", "zmien", "nazwa", "przenoszenie", "move", "rename", "file"],
+  "inputs": [{"name": "src", "type": "str", "required": true}, {"name": "dst", "type": "str", "required": true}],
+  "outputs": [{"name": "dst", "type": "str"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "medium",
+  "handler": "handler:run",
+  "version": "1.0"
+}

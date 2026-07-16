@@ -1,0 +1,39 @@
+{
+  "id": "linux.process.find",
+  "type": "skill",
+  "name": "Wyszukiwanie procesu po nazwie (Linux)",
+  "description": "Wyszukuje procesy pasujace do wzorca (pgrep -af <pattern>) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba sprawdzic czy dany proces dziala i jaki ma PID.",
+  "tags": [
+    "linux",
+    "process",
+    "pgrep",
+    "find",
+    "proces",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "pattern",
+      "type": "str",
+      "required": true
+    },
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "processes",
+      "type": "list"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

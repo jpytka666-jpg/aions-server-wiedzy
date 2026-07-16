@@ -1,0 +1,14 @@
+{
+  "id": "app.close",
+  "type": "skill",
+  "name": "Zamknij aplikacje",
+  "description": "Zamyka aplikacje po nazwie pliku wykonywalnego (np. notepad.exe). Uzyj gdy trzeba zamknac program.",
+  "tags": ["zamknij", "zakoncz", "aplikacja", "program", "close", "kill", "quit"],
+  "inputs": [{"name": "image", "type": "str", "required": true}],
+  "outputs": [{"name": "closed", "type": "bool"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "medium",
+  "handler": "handler:run",
+  "version": "1.0"
+}

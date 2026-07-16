@@ -1,0 +1,192 @@
+"""llama-cli generate or deterministic stub (Faza 0)."""
+
+from __future__ import annotations
+
+import json
+import os
+import subprocess
+import tempfile
+import time
+from pathlib import Path
+from typing import Any
+
+from . import config
+
+# v2.1 (backlog): szablon czatu byl na sztywno "chatml", co dla Phi-4-mini
+# (model docelowy od v2.0) produkuje smieci -- Phi-4 nie jest modelem ChatML,
+# CLI dopisywalo halucynowane <|im_end|>/kolejne fikcyjne tury. Teraz
+# konfigurowalne przez env AIONS_CHAT_TEMPLATE, default "chatml" zachowany
+# dla wstecznej zgodnosci (starsze configi/modele moga nadal tego uzywac).
+# Specjalna wartosc "jinja" wlacza --jinja (natywny szablon z metadanych
+# GGUF, tak samo jak rezydentny serwer llama-server :8877 z --jinja) zamiast
+# --chat-template <nazwa>. Zweryfikowane na llama-cli: --jinja daje poprawna
+# odpowiedz dla Phi-4-mini; --chat-template chatml -- nie.
+_DEFAULT_CHAT_TEMPLATE = "chatml"
+
+# Keep in sync with llm_mouth.py (usta, not generic assistant)
+UNDERSTAND_SYSTEM = """You are AIONS Mouth (Qwen): a thin intent parser / translator.
+AIONS (the host system) makes all decisions. You do NOT call tools, browse, or invent facts.
+Return ONLY valid JSON (no markdown) with keys:
+- lang: "pl" | "en" | other ISO-ish code of the user text
+- need: one of "cbms" | "memory" | "web" | "tool" (what AIONS should use next)
+- remember: boolean — whether this looks worth storing in memory
+- summary: short 1-2 sentence paraphrase of the user intent
+Do not add other keys. Do not wrap in code fences."""
+
+SPEAK_SYSTEM = """You are AIONS Mouth (Qwen): a thin translator / speaker.
+AIONS decided the facts. You ONLY rephrase the given CONTEXT into a short, clear reply.
+Rules:
+- Use ONLY information present in CONTEXT. Never invent facts, URLs, or tool results.
+- Do not pretend to call tools or search.
+- Keep the answer short (2-6 sentences unless CONTEXT is a list that needs bullets).
+- Match the requested user language (PL or EN).
+- Preserve ANY <addr>...</addr> and <<CB:*>> tokens EXACTLY — they are opaque CBMS addresses, not Korean NLG.
+- If CONTEXT is empty or insufficient, say you lack data — do not guess."""
+
+
+def _stub_generate(system: str, user: str, *, kind: str) -> dict[str, Any]:
+    """Deterministic stub when llama-cli/GGUF unavailable."""
+    if kind == "understand":
+        t = (user or "").lower()
+        need = "cbms"
+        if any(w in t for w in ("pamiętaj", "zapamiętaj", "memory", "remember")):
+            need = "memory"
+        elif any(w in t for w in ("szukaj", "web", "http")):
+            need = "web"
+        content = json.dumps(
+            {
+                "lang": "pl",
+                "need": need,
+                "remember": need == "memory",
+                "summary": (user or "")[:160],
+            },
+            ensure_ascii=False,
+        )
+    else:
+        # speak stub — pass through protected tokens from user/context blob
+        content = (
+            "Na podstawie kontekstu AIONS (stub runner): "
+            + (user or "")[:400]
+        )
+    return {
+        "ok": True,
+        "content": content,
+        "backend": "stub",
+        "mode": "stub",
+        "eval_count": None,
+        "wall_s": 0.0,
+        "model": config.model_tag(),
+    }
+
+
+def _run_llama_cli(system: str, user: str, *, n_predict: int | None = None) -> dict[str, Any]:
+    cli = config.llama_cli_path()
+    gguf = config.gguf_path()
+    if not cli or not cli.is_file():
+        return {"ok": False, "error": "llama-cli not found", "backend": "llamacpp"}
+    if not gguf.is_file():
+        return {"ok": False, "error": f"GGUF missing: {gguf}", "backend": "llamacpp"}
+
+    n = n_predict if n_predict is not None else config.n_predict()
+    # Write prompts to temp files to avoid Windows cmdline length / encoding issues
+    with tempfile.TemporaryDirectory(prefix="aions_gguf_") as tmp:
+        tmp_p = Path(tmp)
+        sys_f = tmp_p / "system.txt"
+        usr_f = tmp_p / "user.txt"
+        sys_f.write_text(system, encoding="utf-8")
+        usr_f.write_text(user, encoding="utf-8")
+
+        chat_template = os.environ.get("AIONS_CHAT_TEMPLATE", _DEFAULT_CHAT_TEMPLATE)
+        template_flags = (
+            ["--jinja"] if chat_template == "jinja" else ["--chat-template", chat_template]
+        )
+        cmd = [
+            str(cli),
+            "-m",
+            str(gguf),
+            "-n",
+            str(n),
+            "-c",
+            str(config.n_ctx()),
+            "--temp",
+            "0.2",
+            *template_flags,
+            "-sysf",
+            str(sys_f),
+            "-f",
+            str(usr_f),
+            "-st",
+            "--no-display-prompt",
+            "--no-perf",
+        ]
+        t0 = time.time()
+        try:
+            proc = subprocess.run(
+                cmd,
+                capture_output=True,
+                timeout=config.timeout_s(),
+                cwd=str(cli.parent),  # DLLs next to llama-cli
+            )
+        except subprocess.TimeoutExpired:
+            return {
+                "ok": False,
+                "error": f"llama-cli timeout after {config.timeout_s()}s",
+                "backend": "llamacpp",
+                "mode": "real",
+            }
+        except OSError as e:
+            return {"ok": False, "error": str(e), "backend": "llamacpp", "mode": "real"}
+
+        wall = round(time.time() - t0, 2)
+        stdout = (proc.stdout or b"").decode("utf-8", errors="replace").strip()
+        stderr = (proc.stderr or b"").decode("utf-8", errors="replace")
+        if proc.returncode != 0 and not stdout:
+            return {
+                "ok": False,
+                "error": f"llama-cli exit {proc.returncode}: {stderr[-500:]}",
+                "backend": "llamacpp",
+                "mode": "real",
+                "wall_s": wall,
+            }
+        # Strip common llama.cpp chatter lines if any leaked
+        lines = [
+            ln
+            for ln in stdout.splitlines()
+            if not ln.startswith("load_")
+            and not ln.startswith("llama_")
+            and not ln.startswith("ggml_")
+            and "main: " not in ln[:20]
+        ]
+        content = "\n".join(lines).strip() or stdout
+        return {
+            "ok": bool(content),
+            "content": content,
+            "backend": "llamacpp",
+            "mode": "real",
+            "wall_s": wall,
+            "model": config.model_tag(),
+            "gguf": str(gguf),
+            "llama_cli": str(cli),
+            "returncode": proc.returncode,
+            "stderr_tail": stderr[-300:] if stderr else "",
+        }
+
+
+def generate(system: str, user: str, *, kind: str = "speak", n_predict: int | None = None) -> dict[str, Any]:
+    mode = config.backend_mode()
+    if mode == "stub":
+        out = _stub_generate(system, user, kind=kind)
+        out["next"] = (
+            "Set AIONS_LLAMA_CLI + AIONS_GGUF_PATH (or place GGUF at models/qwen…) "
+            "and unset AIONS_GGUF_MODE=stub for real generate."
+        )
+        return out
+    result = _run_llama_cli(system, user, n_predict=n_predict)
+    if not result.get("ok"):
+        # soft fallback to stub with error note
+        stub = _stub_generate(system, user, kind=kind)
+        stub["ok"] = True
+        stub["fallback_from_real_error"] = result.get("error")
+        stub["next"] = "Fix llama-cli/GGUF path; stub used after real failure."
+        return stub
+    return result

@@ -1,0 +1,10 @@
+{
+  "id": "folder.unzip",
+  "type": "skill",
+  "name": "Rozpakuj ZIP",
+  "description": "Rozpakowuje archiwum ZIP do wskazanego folderu. Uzyj gdy trzeba wypakowac plik zip.",
+  "tags": ["rozpakuj", "wypakuj", "zip", "archiwum", "unzip", "extract", "unpack"],
+  "inputs": [{"name": "zip", "type": "str", "required": true}, {"name": "dest", "type": "str", "required": true}],
+  "outputs": [{"name": "dest", "type": "str"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

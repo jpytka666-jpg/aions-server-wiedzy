@@ -1,0 +1,40 @@
+{
+  "id": "linux.service.failed",
+  "type": "skill",
+  "name": "Lista uslug failed (Linux)",
+  "description": "Listuje uslugi systemd w stanie failed (systemctl --failed) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba sprawdzic czy cos sie wywalilo.",
+  "tags": [
+    "linux",
+    "service",
+    "systemd",
+    "systemctl",
+    "failed",
+    "usluga",
+    "awaria",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "failed",
+      "type": "list"
+    },
+    {
+      "name": "count",
+      "type": "int"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

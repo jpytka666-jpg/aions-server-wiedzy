@@ -149,7 +149,10 @@ def cbms_context(query: str, top_k: int = 3, session: str = "claude_marcin_main"
         if str(REPO_ROOT) not in sys.path:
             sys.path.insert(0, str(REPO_ROOT))
         os.environ.setdefault("CHROMA_PATH", str(REPO_ROOT / "data" / "chroma"))
-        from server.store import VectorStore  # type: ignore
+        # ALWAYS-ON (Faza 3): centralna fabryka store_selector -- HttpClient
+        # do rezydentnego serwera Chroma :8000, fallback do PersistentClient.
+        os.environ.setdefault("CHROMA_USE_HTTP", "true")  # unika podwojnego auto-detect connect
+        from server.store_selector import VectorStore  # type: ignore
 
         store = VectorStore(persist_path=os.environ.get("CHROMA_PATH"))
         hits = store.search(session, query, top_k=top_k)

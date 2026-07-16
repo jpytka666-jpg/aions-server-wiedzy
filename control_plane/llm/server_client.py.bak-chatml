@@ -1,0 +1,113 @@
+"""HTTP klient do rezydentnego llama-server (Bielik-4.5B, CPU-only).
+
+Serwer jest uruchamiany osobno (runtime/llama_server_run.cmd, zadanie
+harmonogramu "AIONS_LLM_Server") i trzyma model w RAM na stale -- brak
+kosztu zaladowania modelu od zera przy kazdym wywolaniu (jak w
+wrapper/generate.py::_run_llama_cli, ktory spawnuje llama-cli.exe per
+wywolanie).
+
+Format promptu jest budowany RECZNIE tak, aby 1:1 odtworzyc to, co
+llama-cli dostaje przez flagi `-sysf/-f --chat-template chatml`: standardowy
+szablon ChatML (system/user/assistant, tokeny <|im_start|>/<|im_end|>).
+Endpoint /completion llama-servera NIE aplikuje zadnego szablonu sam --
+dlatego prompt budujemy tutaj.
+
+generate_http() nigdy nie rzuca wyjatku na zewnatrz -- kazdy problem
+(serwer wylaczony, timeout, zly JSON, polaczenie odrzucone) konczy sie
+zwrotem {"ok": False, ...}, tak aby wolajacy mogl bez ryzyka fallbackowac
+do dotychczasowej sciezki llama-cli.
+"""
+
+from __future__ import annotations
+
+import json
+import time
+import urllib.error
+import urllib.request
+from typing import Any
+
+# Musi byc zgodny z --port w runtime/llama_server_run.cmd.
+SERVER_URL = "http://127.0.0.1:8877"
+
+_STOP_TOKENS = ["<|im_end|>", "<|im_start|>"]
+
+
+def _build_chatml(system: str, user: str) -> str:
+    """1:1 odtworzenie szablonu ChatML uzywanego przez llama-cli
+    (--chat-template chatml) z wrapper/generate.py::_run_llama_cli."""
+    return (
+        f"<|im_start|>system\n{system}<|im_end|>\n"
+        f"<|im_start|>user\n{user}<|im_end|>\n"
+        f"<|im_start|>assistant\n"
+    )
+
+
+def generate_http(
+    system: str,
+    user: str,
+    *,
+    n_predict: int = 200,
+    timeout: float = 90.0,
+) -> dict[str, Any]:
+    """POST /completion do rezydentnego llama-server.
+
+    Zwraca {"ok": True, "content": str, "wall_s": float, "mode": "server"}
+    przy sukcesie, albo {"ok": False, "error": str, "mode": "server"} przy
+    KAZDYM problemie (brak serwera, timeout, zly JSON) -- nigdy wyjatku.
+    """
+    t0 = time.time()
+    prompt = _build_chatml(system or "", user or "")
+    payload = {
+        "prompt": prompt,
+        "n_predict": int(n_predict),
+        "temperature": 0.2,
+        "stop": _STOP_TOKENS,
+        "cache_prompt": True,
+    }
+    try:
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            f"{SERVER_URL}/completion",
+            data=data,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            raw = resp.read().decode("utf-8", errors="replace")
+        body = json.loads(raw)
+    except Exception as e:  # noqa: BLE001 -- twardy firewall, patrz docstring
+        return {
+            "ok": False,
+            "error": f"{type(e).__name__}: {e}",
+            "backend": "llama-server",
+            "mode": "server",
+            "wall_s": round(time.time() - t0, 2),
+        }
+
+    wall = round(time.time() - t0, 2)
+    content = (body.get("content") or "").strip()
+    if not content:
+        return {
+            "ok": False,
+            "error": f"empty_response: {body!r}"[:300],
+            "backend": "llama-server",
+            "mode": "server",
+            "wall_s": wall,
+        }
+    return {
+        "ok": True,
+        "content": content,
+        "backend": "llama-server",
+        "mode": "server",
+        "wall_s": wall,
+    }
+
+
+def health(timeout: float = 3.0) -> bool:
+    """Szybki health-check /health -- True jesli serwer odpowiada 200."""
+    try:
+        req = urllib.request.Request(f"{SERVER_URL}/health", method="GET")
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return resp.status == 200
+    except Exception:
+        return False

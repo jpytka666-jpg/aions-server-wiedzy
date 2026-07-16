@@ -1,0 +1,9 @@
+{
+  "id": "sys.who_am_i",
+  "type": "skill",
+  "name": "Kto i na jakim kompie",
+  "description": "Podaje nazwe zalogowanego uzytkownika, nazwe komputera i folder domowy. Uzyj gdy trzeba znac uzytkownika lub sciezke profilu.",
+  "tags": ["uzytkownik", "user", "komputer", "host", "profil", "whoami", "konto"],
+  "inputs": [], "outputs": [{"name": "user", "type": "str"}, {"name": "host", "type": "str"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

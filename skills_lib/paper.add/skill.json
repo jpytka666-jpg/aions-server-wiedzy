@@ -1,0 +1,15 @@
+{
+  "id": "paper.add",
+  "type": "skill",
+  "name": "Dodaj papier do ogarniecia",
+  "description": "Zapisuje sprawe do ogarniecia (papier, rachunek, formularz, telefon, termin) do pamieci AIONS, zeby jej nie zgubic. Uzyj gdy trzeba cos zapamietac do zrobienia.",
+  "tags": ["papier", "sprawa", "rachunek", "formularz", "termin", "todo", "zadanie", "przypomnij", "dodaj", "add", "task"],
+  "inputs": [
+    {"name": "title", "type": "str", "required": true},
+    {"name": "deadline", "type": "str", "required": false},
+    {"name": "note", "type": "str", "required": false},
+    {"name": "priority", "type": "str", "required": false}
+  ],
+  "outputs": [{"name": "id", "type": "str"}, {"name": "title", "type": "str"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

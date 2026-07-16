@@ -1,0 +1,60 @@
+{
+  "id": "linux.net.ping",
+  "type": "skill",
+  "name": "Ping hosta (Linux)",
+  "description": "Wykonuje ping do hosta (ping -c <count> -W 3 <host>) ze zdalnego hosta Linux przez SSH i parsuje statystyki. Uzyj gdy trzeba sprawdzic osiagalnosc hosta z perspektywy VM.",
+  "tags": [
+    "linux",
+    "net",
+    "network",
+    "ping",
+    "host",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "host",
+      "type": "str",
+      "required": true
+    },
+    {
+      "name": "count",
+      "type": "int",
+      "required": false
+    },
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "host",
+      "type": "str"
+    },
+    {
+      "name": "transmitted",
+      "type": "int"
+    },
+    {
+      "name": "received",
+      "type": "int"
+    },
+    {
+      "name": "loss_pct",
+      "type": "float"
+    },
+    {
+      "name": "avg_ms",
+      "type": "float"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

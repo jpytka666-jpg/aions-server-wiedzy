@@ -1,0 +1,14 @@
+{
+  "id": "sys.free_space",
+  "type": "skill",
+  "name": "Wolne miejsce na dysku",
+  "description": "Podaje ile wolnego miejsca zostalo na dysku (w GB). Uzyj gdy trzeba sprawdzic miejsce na dysku.",
+  "tags": ["dysk", "miejsce", "wolne", "gb", "disk", "space", "free", "storage"],
+  "inputs": [{"name": "drive", "type": "str", "required": false}],
+  "outputs": [{"name": "free_gb", "type": "float"}, {"name": "total_gb", "type": "float"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "handler": "handler:run",
+  "version": "1.0"
+}

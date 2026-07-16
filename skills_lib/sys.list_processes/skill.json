@@ -1,0 +1,14 @@
+{
+  "id": "sys.list_processes",
+  "type": "skill",
+  "name": "Lista uruchomionych programow",
+  "description": "Pokazuje liste uruchomionych procesow (programow) w systemie. Uzyj gdy trzeba sprawdzic co jest uruchomione.",
+  "tags": ["procesy", "programy", "uruchomione", "lista", "process", "tasklist", "running"],
+  "inputs": [{"name": "top", "type": "int", "required": false}],
+  "outputs": [{"name": "processes", "type": "list"}],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "handler": "handler:run",
+  "version": "1.0"
+}

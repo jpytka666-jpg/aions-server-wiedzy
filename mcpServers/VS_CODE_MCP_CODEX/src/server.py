@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import os
+import queue
 import sys
 import re
 import hashlib
@@ -33,6 +34,7 @@ import threading
 import shutil
 import functools
 import platform
+import time
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Callable
@@ -167,6 +169,22 @@ SEARCH_INDEX_PATH = Path(
 SEARCH_AUTO_REFRESH_SECONDS = int(os.environ.get("AIONS_SEARCH_AUTO_REFRESH_SECONDS", "900"))
 DESKTOP_ENABLED = _env_truthy("DESKTOP_ENABLED", default=(os.name == "nt"))
 
+
+def _clamped_float_env(name: str, default: float, minimum: float, maximum: float) -> float:
+    try:
+        value = float(os.environ.get(name, str(default)))
+    except (TypeError, ValueError):
+        value = default
+    return min(max(value, minimum), maximum)
+
+
+SYSTEM_HEALTH_TIMEOUT_SECONDS = _clamped_float_env(
+    "AIONS_SYSTEM_HEALTH_TIMEOUT_S",
+    12.0,
+    1.0,
+    15.0,
+)
+
 # AIONS - AIONS_PATH env var, then common locations
 AIONS_V10 = _find_dir("AIONS_PATH", [
     "E:/server wiedzy/aions_core",
@@ -241,6 +259,23 @@ def _success(payload: Dict[str, Any], guard: bool = True) -> str:
             "summary": ", ".join(summary_parts) if summary_parts else "large payload"
         }, ensure_ascii=False)
 
+    return result_json
+
+def _guard(result_json: str, guard: bool = True) -> str:
+    """Context guard for pre-serialized JSON strings (control-plane tools).
+
+    Additive helper restoring aions_plan / aions_execute_step /
+    aions_execution_status. Mirrors _success() offload behavior but accepts an
+    already-serialized JSON string instead of a payload dict.
+    """
+    if guard and len(result_json) > CONTEXT_GUARD_THRESHOLD:
+        ref_id = f"OFF_{str(uuid.uuid4())[:8]}"
+        _offload_cache[ref_id] = result_json
+        return json.dumps({
+            "status": "ok", "timestamp": _now_iso(),
+            "offloaded": ref_id, "size": len(result_json),
+            "summary": "large control-plane payload"
+        }, ensure_ascii=False)
     return result_json
 
 def _error(message: str) -> str:
@@ -578,16 +613,25 @@ def _build_everything_ext_query(extension: str, folder: str = "") -> str:
         return f"{_normalize_folder_prefix(folder)}*.{ext}"
     return f"ext:{ext}"
 
-def _everything_search(query: str, max_results: int, timeout: int = 15) -> Dict[str, Any]:
+def _everything_search(query: str, max_results: int, timeout: int = 15, folder: str = "") -> Dict[str, Any]:
     if not EVERYTHING_CLI.exists():
         return {"ok": False, "error": "Everything CLI not found"}
-    cmd = [str(EVERYTHING_CLI), "-n", str(max_results), query]
+    cmd = [str(EVERYTHING_CLI), "-n", str(max_results)]
+    # Everything treats each CLI argument as a search term (ANDed together).
+    # Passing the folder as its own term filters by path-substring (the whole
+    # subtree), while the query term matches the file name/path anywhere under
+    # it. This is more reliable than concatenating folder+query into one literal
+    # path prefix, which silently missed files living in sub-directories.
+    if folder:
+        cmd.append(folder.rstrip("\\/"))
+    if query:
+        cmd.append(query)
     result = _run_command(cmd, timeout=timeout)
     if not result["success"]:
         err = result.get("error") or result.get("stderr") or "Search failed"
         return {"ok": False, "error": err}
     files = [f for f in result["stdout"].strip().split("\n") if f.strip()]
-    return {"ok": True, "files": files, "query": query}
+    return {"ok": True, "files": files, "query": (f"{folder} {query}".strip() if folder else query)}
 
 def _search_provider() -> str:
     return resolve_search_provider_name(
@@ -599,11 +643,7 @@ def _search_provider() -> str:
 def _platform_search(query: str, max_results: int, folder: str = "") -> Dict[str, Any]:
     provider = _search_provider()
     if provider == "everything":
-        search_query = query
-        if folder:
-            prefix = _normalize_folder_prefix(folder)
-            search_query = f"{prefix}{query}" if query else prefix.rstrip("\\")
-        payload = _everything_search(search_query, max_results, timeout=10)
+        payload = _everything_search(query, max_results, timeout=10, folder=folder)
         payload["provider"] = provider
         return payload
     if provider == LINUX_SEARCH_PROVIDER.provider_name:
@@ -1227,44 +1267,160 @@ def cbms_get_chunk(chunk_id: str) -> str:
         return _error(str(e))
 
 # =============================================================================
+# OPERATOR SENSES — Google Calendar (read-only)
+# =============================================================================
+
+def _calendar_get_events_impl(
+    start: str,
+    end: str,
+    max_results: int = 10,
+) -> dict[str, Any]:
+    """Load calendar integration and fetch events (raises on misconfiguration)."""
+    if str(REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(REPO_ROOT))
+    from runtime.integrations.calendar.get_events import get_events as _cal_get_events
+
+    events = _cal_get_events(start, end, max_results=max_results)
+    return {
+        "count": len(events),
+        "events": events,
+        "start": start,
+        "end": end,
+        "max_results": max_results,
+    }
+
+
+@mcp_server.tool(
+    name="calendar_get_events",
+    description=(
+        "Google Calendar read-only: list events between start and end (ISO date/datetime). "
+        "Alias: calendar.get_events. Requires runtime/secrets/google_calendar_token.json."
+    ),
+)
+@auto_logged
+def calendar_get_events(start: str, end: str, max_results: int = 10) -> str:
+    try:
+        payload = _calendar_get_events_impl(start, end, max_results=max_results)
+        return _success(payload)
+    except Exception as exc:
+        name = type(exc).__name__
+        if name in ("NotConfiguredError", "DependencyMissingError"):
+            return _error(str(exc))
+        return _error(f"calendar_get_events failed: {exc}")
+
+# =============================================================================
 # SYSTEM HEALTH (AUTO-LOGGED)
 # =============================================================================
 
-@mcp_server.tool(name="system_health", description="System health check.")
-@auto_logged
-def system_health() -> str:
-    try:
-        health = {
-            "server": "v6 DEBILOODPORNE",
-            "platform": PLATFORM_NAME,
-            "deployment_profile": DEPLOYMENT_PROFILE,
-            "vector_backend": _vector_store_backend(),
-            "api_base_url": API_BASE_URL if _vector_store_backend() == "api" else None,
-            "search_provider": _search_provider(),
-            "search": search_provider_status(
-                _search_provider(),
-                linux_provider=LINUX_SEARCH_PROVIDER,
-                everything_available=EVERYTHING_CLI.exists(),
-            ),
-            "auto_log_buffer": len(_auto_log_buffer),
-            "auto_log_threshold": _auto_log_threshold,
-            "scan_status": _scan_status.get("state", "idle"),
-            "everything": "ok" if EVERYTHING_CLI.exists() else "missing",
-            "docker": "ok" if shutil.which("docker") else "missing",
-            "wsl": "ok" if shutil.which("wsl") else "missing",
-            "git": "ok" if shutil.which("git") else "missing",
-        }
+def _component_state(component: Any) -> str:
+    if component == "FAILED":
+        return "failed"
+    if component is None:
+        return "not_loaded"
+    return "ready"
+
+
+def _run_with_wall_timeout(fn: Callable[[], Dict[str, Any]], timeout_s: float) -> Dict[str, Any]:
+    """Return within timeout_s even if the worker is stuck in slow startup code."""
+    result_queue: "queue.Queue[Dict[str, Any]]" = queue.Queue(maxsize=1)
+
+    def _worker() -> None:
         try:
-            health["desktop_enabled"] = DESKTOP_ENABLED
-            health["desktop_provider"] = getattr(DESKTOP_PROVIDER, "provider_name", "unknown")
+            result_queue.put({"ok": True, "payload": fn()}, block=False)
+        except Exception as exc:
+            result_queue.put({"ok": False, "error": str(exc)}, block=False)
+
+    thread = threading.Thread(target=_worker, daemon=True, name="aions-system-health")
+    thread.start()
+    try:
+        result = result_queue.get(timeout=timeout_s)
+    except queue.Empty:
+        return {"ok": False, "error": "timeout"}
+    return result
+
+
+def _system_health_payload(deep: bool = False) -> Dict[str, Any]:
+    backend = _vector_store_backend()
+    provider = _search_provider()
+    health = {
+        "server": "v6 DEBILOODPORNE",
+        "platform": PLATFORM_NAME,
+        "deployment_profile": DEPLOYMENT_PROFILE,
+        "health_mode": "deep" if deep else "fast",
+        "health_timeout_s": SYSTEM_HEALTH_TIMEOUT_SECONDS,
+        "vector_backend": backend,
+        "api_base_url": API_BASE_URL if backend == "api" else None,
+        "search_provider": provider,
+        "search": search_provider_status(
+            provider,
+            linux_provider=LINUX_SEARCH_PROVIDER,
+            everything_available=EVERYTHING_CLI.exists(),
+        ),
+        "auto_log_buffer": len(_auto_log_buffer),
+        "auto_log_threshold": _auto_log_threshold,
+        "scan_status": _scan_status.get("state", "idle"),
+        "everything": "ok" if EVERYTHING_CLI.exists() else "missing",
+        "docker": "ok" if shutil.which("docker") else "missing",
+        "wsl": "ok" if shutil.which("wsl") else "missing",
+        "git": "ok" if shutil.which("git") else "missing",
+        "chromadb": {
+            "state": _component_state(_vector_store),
+            "check": "deferred" if not deep else "deep",
+        },
+        "cbms": {
+            "state": _component_state(_cbms_memory),
+            "check": "deferred" if not deep else "deep",
+        },
+    }
+    try:
+        health["desktop_enabled"] = DESKTOP_ENABLED
+        health["desktop_provider"] = getattr(DESKTOP_PROVIDER, "provider_name", "unknown")
+        if deep:
             health["desktop_capabilities"] = desktop_provider_capabilities(DESKTOP_PROVIDER)
             health["desktop"] = "ok" if DESKTOP_ENABLED and DESKTOP_PROVIDER.is_ready() else DESKTOP_PROVIDER.unavailable_message()
-        except Exception as de:
-            health["desktop"] = f"unavailable: {de}"
+        else:
+            health["desktop"] = "deferred"
+    except Exception as de:
+        health["desktop"] = f"unavailable: {de}"
+
+    if deep:
         vs = get_vector_store()
-        health["chromadb"] = f"{vs.sessions_count()} sessions" if vs else "failed"
+        health["chromadb"] = {
+            "state": "ready" if vs else "failed",
+            "sessions": vs.sessions_count() if vs else None,
+            "check": "deep",
+        }
         cbms = get_cbms()
-        health["cbms"] = f"{cbms.get_memory_stats().get('total_chunks', 0)} chunks" if cbms else "failed"
+        health["cbms"] = {
+            "state": "ready" if cbms else "failed",
+            "chunks": cbms.get_memory_stats().get("total_chunks", 0) if cbms else None,
+            "check": "deep",
+        }
+    return health
+
+
+@mcp_server.tool(name="system_health", description="System health check.")
+@auto_logged
+def system_health(deep: bool = False) -> str:
+    start = time.perf_counter()
+    timeout_s = SYSTEM_HEALTH_TIMEOUT_SECONDS
+    try:
+        result = _run_with_wall_timeout(lambda: _system_health_payload(deep=bool(deep)), timeout_s)
+        elapsed_ms = int((time.perf_counter() - start) * 1000)
+        if not result.get("ok"):
+            if result.get("error") == "timeout":
+                return json.dumps({
+                    "status": "error",
+                    "error": "timeout",
+                    "message": f"system_health exceeded {timeout_s:.1f}s wall-clock deadline",
+                    "elapsed_ms": elapsed_ms,
+                    "timeout_s": timeout_s,
+                    "deep": bool(deep),
+                    "timestamp": _now_iso(),
+                }, ensure_ascii=False)
+            return _error(result.get("error", "system_health failed"))
+        health = result["payload"]
+        health["elapsed_ms"] = elapsed_ms
         return _success(health)
     except Exception as e:
         return _error(str(e))
@@ -2208,7 +2364,7 @@ except ImportError:
 
 @mcp_server.tool(
     name="llm_understand",
-    description="Parse user text into intent JSON (lang, need, remember, summary) via local Qwen/Ollama mouth. AIONS decides next tools.",
+    description="Parse user text into intent JSON (lang, need, remember, summary) via local mouth (llamacpp/GGUF or Ollama). AIONS decides next tools.",
 )
 @auto_logged
 def llm_understand(text: str) -> str:
@@ -2220,6 +2376,9 @@ def llm_understand(text: str) -> str:
             "intent": result["intent"],
             "model": result.get("model"),
             "host": result.get("host"),
+            "backend": result.get("backend") or llm_mouth.mouth_backend(),
+            "mode": result.get("mode"),
+            "fallback_from": result.get("fallback_from"),
         })
     except Exception as e:
         return _error(str(e))
@@ -2227,7 +2386,7 @@ def llm_understand(text: str) -> str:
 
 @mcp_server.tool(
     name="llm_speak",
-    description="Short PL/EN reply from provided CONTEXT only via local Qwen/Ollama mouth. Does not invent facts.",
+    description="Short PL/EN reply from provided CONTEXT only via local mouth (llamacpp/GGUF or Ollama). Does not invent facts.",
 )
 @auto_logged
 def llm_speak(context: str, user_lang: str = "pl") -> str:
@@ -2240,6 +2399,9 @@ def llm_speak(context: str, user_lang: str = "pl") -> str:
             "user_lang": result.get("user_lang"),
             "model": result.get("model"),
             "host": result.get("host"),
+            "backend": result.get("backend") or llm_mouth.mouth_backend(),
+            "mode": result.get("mode"),
+            "fallback_from": result.get("fallback_from"),
         })
     except Exception as e:
         return _error(str(e))
@@ -2358,6 +2520,80 @@ def aions_execution_status(plan_id: str) -> str:
         return _guard(json.dumps(payload, indent=2))
     except Exception as exc:
         return _error(f"aions_execution_status failed: {exc}")
+
+
+@mcp_server.tool(name="skill_list", description="AIONS Skill Engine: list available skill/recipe blocks (plug-and-play from skills_lib/).")
+def skill_list() -> str:
+    try:
+        from control_plane.skills import mcp_bridge
+        return _success(mcp_bridge.list_skills())
+    except Exception as exc:
+        return _error(f"skill_list failed: {exc}")
+
+
+@mcp_server.tool(name="skill_search", description="AIONS Skill Engine: find skill blocks matching an intent.")
+def skill_search(query: str, top_k: int = 5) -> str:
+    try:
+        from control_plane.skills import mcp_bridge
+        return _success(mcp_bridge.search_skills(query, top_k))
+    except Exception as exc:
+        return _error(f"skill_search failed: {exc}")
+
+
+@mcp_server.tool(name="skill_run", description="AIONS Skill Engine: run one skill block by id with JSON inputs, e.g. inputs_json='{\"name\":\"notepad.exe\"}'.")
+def skill_run(skill_id: str, inputs_json: str = "{}") -> str:
+    try:
+        import json as _json
+        from control_plane.skills import mcp_bridge
+        inputs = _json.loads(inputs_json or "{}")
+        return _success(mcp_bridge.run_skill(skill_id, inputs))
+    except Exception as exc:
+        return _error(f"skill_run failed: {exc}")
+
+
+@mcp_server.tool(name="task_run", description="AIONS Skill Engine: run a task by intent. Replays a learned recipe if present, else returns candidate skills to compose.")
+def task_run(intent: str) -> str:
+    try:
+        from control_plane.skills import mcp_bridge
+        return _success(mcp_bridge.run_task(intent))
+    except Exception as exc:
+        return _error(f"task_run failed: {exc}")
+
+
+@mcp_server.tool(name="recipe_list", description="AIONS Skill Engine: list learned success recipes.")
+def recipe_list() -> str:
+    try:
+        from control_plane.skills import mcp_bridge
+        return _success(mcp_bridge.list_recipes())
+    except Exception as exc:
+        return _error(f"recipe_list failed: {exc}")
+
+
+@mcp_server.tool(name="forge_request", description="AIONS forge: file a request for a NEW skill block that AIONS lacks (queued for the big model to build).")
+def forge_request(name: str, description: str = "", why: str = "") -> str:
+    try:
+        from control_plane.skills import forge
+        return _success(forge.request_skill(name, description, why=why, requested_by="mcp"))
+    except Exception as exc:
+        return _error(f"forge_request failed: {exc}")
+
+
+@mcp_server.tool(name="forge_list", description="AIONS forge: list pending skill requests waiting to be built.")
+def forge_list() -> str:
+    try:
+        from control_plane.skills import forge
+        return _success({"pending": forge.list_requests("requested")})
+    except Exception as exc:
+        return _error(f"forge_list failed: {exc}")
+
+
+@mcp_server.tool(name="forge_promote", description="AIONS forge: verify a built block (skills_requests/built/<name>) and promote it into skills_lib. Verify-before-trust.")
+def forge_promote(name: str) -> str:
+    try:
+        from control_plane.skills import forge
+        return _success(forge.promote(name))
+    except Exception as exc:
+        return _error(f"forge_promote failed: {exc}")
 
 
 @mcp_server.tool(name="offload_get", description="Retrieve full content from offloaded response by ref_id (OFF_xxx).")

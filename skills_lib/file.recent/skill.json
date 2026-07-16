@@ -1,0 +1,10 @@
+{
+  "id": "file.recent",
+  "type": "skill",
+  "name": "Ostatnio zmienione pliki",
+  "description": "Pokazuje najnowsze (ostatnio modyfikowane) pliki w danym folderze. Uzyj gdy trzeba znalezc nad czym ostatnio pracowano.",
+  "tags": ["ostatnie", "najnowsze", "pliki", "recent", "zmienione", "modyfikowane", "latest"],
+  "inputs": [{"name": "folder", "type": "str", "required": true}, {"name": "top", "type": "int", "required": false}],
+  "outputs": [{"name": "recent", "type": "list"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

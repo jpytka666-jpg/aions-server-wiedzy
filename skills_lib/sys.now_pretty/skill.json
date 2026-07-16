@@ -1,0 +1,9 @@
+{
+  "id": "sys.now_pretty",
+  "type": "skill",
+  "name": "Data po ludzku",
+  "description": "Podaje ktora jest godzina i jaka dzisiaj data w czytelnej polskiej formie (np. poniedzialek, 14 lipca 2026, 22:30). Uzyj gdy trzeba wiedziec ktora godzina albo jaki dzien.",
+  "tags": ["ktora", "godzina", "godzine", "data", "dzien", "czas", "zegar", "kalendarz", "date", "time", "dzisiaj", "today"],
+  "inputs": [], "outputs": [{"name": "pretty", "type": "str"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

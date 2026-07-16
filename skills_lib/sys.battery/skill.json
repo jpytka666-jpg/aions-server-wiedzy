@@ -1,0 +1,9 @@
+{
+  "id": "sys.battery",
+  "type": "skill",
+  "name": "Stan baterii",
+  "description": "Podaje poziom naladowania baterii w procentach (dla laptopow). Uzyj gdy trzeba sprawdzic baterie.",
+  "tags": ["bateria", "naladowanie", "battery", "procent", "laptop", "power"],
+  "inputs": [], "outputs": [{"name": "battery_pct", "type": "int"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

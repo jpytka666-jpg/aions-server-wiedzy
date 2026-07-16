@@ -1,0 +1,9 @@
+{
+  "id": "paper.list",
+  "type": "skill",
+  "name": "Pokaz wszystkie papiery",
+  "description": "Wypisuje wszystkie otwarte sprawy do ogarniecia posortowane wg terminu. Uzyj gdy trzeba zobaczyc co jest do zrobienia.",
+  "tags": ["papiery", "sprawy", "lista", "todo", "co do zrobienia", "zadania", "list", "pokaz"],
+  "inputs": [], "outputs": [{"name": "papers", "type": "list"}, {"name": "count", "type": "int"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}

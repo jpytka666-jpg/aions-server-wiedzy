@@ -1,0 +1,41 @@
+{
+  "id": "linux.disk.largest",
+  "type": "skill",
+  "name": "Najwieksze pliki i katalogi (Linux)",
+  "description": "Znajduje 20 najwiekszych plikow/katalogow (du -ah <path> | sort -rh | head -20) na zdalnym hoscie Linux przez SSH. Uzyj gdy trzeba znalezc co zajmuje najwiecej miejsca.",
+  "tags": [
+    "linux",
+    "disk",
+    "du",
+    "largest",
+    "najwieksze",
+    "miejsce",
+    "storage",
+    "ssh"
+  ],
+  "inputs": [
+    {
+      "name": "path",
+      "type": "str",
+      "required": false
+    },
+    {
+      "name": "host_alias",
+      "type": "str",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "items",
+      "type": "list"
+    }
+  ],
+  "requires": [],
+  "avoid_when": [],
+  "risk": "low",
+  "access_class": "read",
+  "platform": "linux",
+  "handler": "handler:run",
+  "version": "1.0"
+}

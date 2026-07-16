@@ -1,0 +1,9 @@
+{
+  "id": "sys.mute",
+  "type": "skill",
+  "name": "Wycisz",
+  "description": "Wycisza lub wlacza dzwiek systemu (przelacznik). Uzyj gdy trzeba wyciszyc glosnik.",
+  "tags": ["wycisz", "mute", "dzwiek", "glosnosc", "cisza", "sound", "silence"],
+  "inputs": [], "outputs": [{"name": "ok", "type": "bool"}],
+  "requires": [], "avoid_when": [], "risk": "low", "handler": "handler:run", "version": "1.0"
+}
