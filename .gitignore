@@ -109,3 +109,7 @@ aions_core/seeds/
 control_plane/__pycache__/
 server/__pycache__/
 .cursor/
+
+# Artefakty pomiarowe audytu 2026-08 - zawieraja podglady tresci blokow pamieci
+_measure/
+

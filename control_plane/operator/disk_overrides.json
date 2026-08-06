@@ -1,0 +1,13 @@
+{
+  "_opis": "Wykluczenia i progi per-wolumen dla alarmu disk_full w petli operatora. Odczyt przy kazdym cyklu - zmiana nie wymaga restartu. Usuniecie pliku przywraca globalny prog DISK_USE_PCT_THRESHOLD dla wszystkich wolumenow.",
+  "_pola": {
+    "ignore": "true = nigdy nie zglaszaj disk_full dla tego mounta",
+    "threshold_pct": "prog procentowy tylko dla tego mounta, nadpisuje globalny 90.0"
+  },
+  "/mnt/f": {
+    "ignore": true,
+    "reason": "F: to host dla Dev Drive D:. F:\\workspace.vhdx = 220,00 GB (kontener D:, ktory ma 219,94 GB) + pagefile 15,5 GB = 235,5 z 238 GB. Kontener ma STALY rozmiar, nie rosnie. Zapelnienie 98-99% jest stanem poprawnym i stalym - nie ma czego czyscic. Ustalono pomiarem 2026-08-06, potwierdzone przez wlasciciela.",
+    "ustalono": "2026-08-06",
+    "blok_pamieci": "KE2969827A76F"
+  }
+}

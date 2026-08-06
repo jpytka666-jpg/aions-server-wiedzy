@@ -83,114 +83,11 @@ class CBMSMemory:
         with open(self.manifest_file, 'w', encoding='utf-8') as f:
             json.dump(self.manifest, f, indent=2, ensure_ascii=False)
     
-    # --- BRAMKA ZAPISU (2026-08-04) -------------------------------------------
-    # Reguly odrzucania. Zmierzone na pelnym korpusie 621 blokow:
-    # lapia 457 blokow, z czego 455 to smieci, 2 to puste UNCERTAIN.
-    # FALSZYWE ALARMY na 164 blokach REAL_KNOWLEDGE: 0.
-    # Zrodlo pomiaru: _measure/chunk_classification.json
-    _GATE_RULES = [
-        ("R1_nic_nie_znaleziono",
-         r"No\s+(prior|direct)\s+knowledge\s+found\s+for:|Based on 0 knowledge|Na podstawie 0 fragment"),
-        ("R2_opakowanie_syntezy",
-         r"^\s*(Based on \d+ knowledge chunks:|Na podstawie \d+ fragment(ow|ów|y|u) wiedzy:)"),
-        ("R3_marker_generatora",
-         r"\[Analysis completed using Claude reasoning patterns|\[Zrodlo: CBMS,|\[Źródło: CBMS,"),
-        ("R4_zrzut_uslug_windows",
-         r"(?:Status\s*:\s*(?:Stopped|Running)[\s\S]*?){3,}"),
-        ("R5_sama_lista_id",
-         None),   # obslugiwane osobno, nie regexem
-        ("R6_za_krotkie",
-         None),   # obslugiwane osobno
-        ("R7_zrzut_plikow",
-         r"DESKTOP FILES ANALYSIS|files found"),
-        ("R8_log_rozmowy",
-         r"Podsumowanie rozmowy|ostatnie \d+ wymian"),
-    ]
-
-    def learning_gate(self, content: str, concept: str = "") -> tuple:
-        """
-        Bramka zapisu wiedzy. Zwraca (czy_zapisac: bool, powod: str).
-
-        DLACZEGO ISTNIEJE (pomiar 2026-08-04):
-        73,3% bazy (455 z 621 blokow) to nie wiedza, tylko echo:
-        - "No prior knowledge found for: ..."  <- zapis, ze NICZEGO nie znaleziono
-        - "Based on N knowledge chunks: ..."   <- sklejka istniejacych blokow
-        - zrzuty listy plikow i statusow uslug Windows
-        90,65% z 49 374 krawedzi grafu prowadzi do tych smieci.
-
-        PRZYCZYNA: _should_create_new_chunk() decydowal o zapisie na podstawie
-        KSZTALTU PYTANIA (len>50 lub "new"/"how"), a nie tego, czy czegokolwiek
-        sie nauczono. System zapisywal wlasne echo jako nowa wiedze.
-
-        Ta bramka NIE blokuje uczenia sie. Blokuje echo.
-        Realny kanal uczenia to blends (mistake -> analyzer -> conclusion),
-        ktory zapisuje wnioski z wykonanych zadan, nie sklejki zapytan.
-
-        WYLACZNIK: AIONS_WRITE_GATE=0
-        """
-        if os.environ.get("AIONS_WRITE_GATE", "1") == "0":
-            return True, "gate_off"
-
-        import re as _re
-        text = (content or "")
-        stripped = text.strip()
-
-        # R6 - za krotkie, zeby cokolwiek znaczyc
-        if len(stripped) < 25:
-            return False, "R6_za_krotkie"
-
-        # R5 - tresc to praktycznie sama lista ID blokow
-        _ids = _re.findall(r"\bK[0-9A-F]{8,14}\b", stripped)
-        if len(_ids) >= 3:
-            _bez_id = _re.sub(r"\bK[0-9A-F]{8,14}\b", "", stripped)
-            if len(_re.findall(r"[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]", _bez_id)) < 40:
-                return False, "R5_sama_lista_id"
-
-        for _name, _pat in self._GATE_RULES:
-            if not _pat:
-                continue
-            try:
-                if _re.search(_pat, text, _re.IGNORECASE | _re.MULTILINE):
-                    return False, _name
-            except Exception:
-                continue
-
-        return True, "ok"
-
-    def _log_gate_rejection(self, reason: str, concept: str, content: str) -> None:
-        """Odrzucenia sa logowane - musi byc widac, co bramka blokuje."""
-        try:
-            rec = {
-                "ts": datetime.now().isoformat(),
-                "reason": reason,
-                "concept": concept,
-                "len": len(content or ""),
-                "preview": (content or "")[:200],
-            }
-            with open(self.memory_dir / "gate_rejections.jsonl", "a", encoding="utf-8") as f:
-                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
-        except Exception:
-            pass
-    # --------------------------------------------------------------------------
-
     def create_knowledge_chunk(self, content: str, concept: str,
                              references: List[str] = None,
-                             meta: Dict[str, Any] = None,
-                             bypass_gate: bool = False) -> str:
-        """
-        Create new knowledge chunk with CBMS ID.
-
-        bypass_gate=True omija bramke zapisu - dla wywolujacych, ktorzy wiedza,
-        co robia (np. ingest zatwierdzonych blendow, import z zewnatrz).
-        Zwraca None gdy bramka odrzuci tresc.
-        """
-
-        if not bypass_gate:
-            _ok, _reason = self.learning_gate(content, concept)
-            if not _ok:
-                self._log_gate_rejection(_reason, concept, content)
-                return None
-
+                             meta: Dict[str, Any] = None) -> str:
+        """Create new knowledge chunk with CBMS ID"""
+        
         # Generate CBMS-style ID
         hash_obj = hashlib.sha256(content.encode('utf-8'))
         chunk_id = "K" + hash_obj.hexdigest()[:12].upper()  # K = Knowledge
@@ -227,12 +124,6 @@ class CBMSMemory:
         with open(chunk_file, 'w', encoding='utf-8') as f:
             json.dump(chunk_data, f, indent=2, ensure_ascii=False)
 
-        # DEDUPLIKACJA (2026-08-04):
-        # chunk_id to hash tresci, wiec identyczna tresc nadpisuje TEN SAM plik.
-        # Ale licznik total_chunks i concept_map rosly BEZWARUNKOWO przy kazdym
-        # wywolaniu - stad rozjazd manifestu z rzeczywistoscia.
-        _juz_znany = chunk_id in self.manifest["chunk_index"]
-
         # Update manifest
         self.manifest["chunk_index"][chunk_id] = {
             "concept": concept,
@@ -244,11 +135,9 @@ class CBMSMemory:
         # Update concept map
         if concept not in self.manifest["concept_map"]:
             self.manifest["concept_map"][concept] = []
-        if chunk_id not in self.manifest["concept_map"][concept]:
-            self.manifest["concept_map"][concept].append(chunk_id)
-
-        if not _juz_znany:
-            self.manifest["total_chunks"] += 1
+        self.manifest["concept_map"][concept].append(chunk_id)
+        
+        self.manifest["total_chunks"] += 1
         self._save_manifest()
 
         # Update korean-keys in-memory index for this new chunk
@@ -495,12 +384,8 @@ class CBMSMemory:
                 self._primary_concept(concepts),
                 relevant_chunks
             )
-            if new_chunk_id:
-                thinking_session["result_chunks"].append(new_chunk_id)
-                thinking_session["reasoning"].append(f"Created new chunk: {new_chunk_id}")
-            else:
-                # Bramka zapisu odrzucila tresc - powod w memory/gate_rejections.jsonl
-                thinking_session["reasoning"].append("Write gate: odrzucono (echo, nie wiedza)")
+            thinking_session["result_chunks"].append(new_chunk_id)
+            thinking_session["reasoning"].append(f"Created new chunk: {new_chunk_id}")
         
         thinking_session["processing_time"] = time.time() - start_time
         
@@ -721,8 +606,7 @@ class CBMSMemory:
                 content=new_chunk_content,
                 concept="generated_analysis"
             )
-            if new_chunk_id:
-                unique_chunks.append(new_chunk_id)
+            unique_chunks.append(new_chunk_id)
             synthesized_knowledge = new_chunk_content
         
         # PHASE 4: Uncertainty Management and Validation

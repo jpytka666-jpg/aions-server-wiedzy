@@ -83,114 +83,11 @@ class CBMSMemory:
         with open(self.manifest_file, 'w', encoding='utf-8') as f:
             json.dump(self.manifest, f, indent=2, ensure_ascii=False)
     
-    # --- BRAMKA ZAPISU (2026-08-04) -------------------------------------------
-    # Reguly odrzucania. Zmierzone na pelnym korpusie 621 blokow:
-    # lapia 457 blokow, z czego 455 to smieci, 2 to puste UNCERTAIN.
-    # FALSZYWE ALARMY na 164 blokach REAL_KNOWLEDGE: 0.
-    # Zrodlo pomiaru: _measure/chunk_classification.json
-    _GATE_RULES = [
-        ("R1_nic_nie_znaleziono",
-         r"No\s+(prior|direct)\s+knowledge\s+found\s+for:|Based on 0 knowledge|Na podstawie 0 fragment"),
-        ("R2_opakowanie_syntezy",
-         r"^\s*(Based on \d+ knowledge chunks:|Na podstawie \d+ fragment(ow|ów|y|u) wiedzy:)"),
-        ("R3_marker_generatora",
-         r"\[Analysis completed using Claude reasoning patterns|\[Zrodlo: CBMS,|\[Źródło: CBMS,"),
-        ("R4_zrzut_uslug_windows",
-         r"(?:Status\s*:\s*(?:Stopped|Running)[\s\S]*?){3,}"),
-        ("R5_sama_lista_id",
-         None),   # obslugiwane osobno, nie regexem
-        ("R6_za_krotkie",
-         None),   # obslugiwane osobno
-        ("R7_zrzut_plikow",
-         r"DESKTOP FILES ANALYSIS|files found"),
-        ("R8_log_rozmowy",
-         r"Podsumowanie rozmowy|ostatnie \d+ wymian"),
-    ]
-
-    def learning_gate(self, content: str, concept: str = "") -> tuple:
-        """
-        Bramka zapisu wiedzy. Zwraca (czy_zapisac: bool, powod: str).
-
-        DLACZEGO ISTNIEJE (pomiar 2026-08-04):
-        73,3% bazy (455 z 621 blokow) to nie wiedza, tylko echo:
-        - "No prior knowledge found for: ..."  <- zapis, ze NICZEGO nie znaleziono
-        - "Based on N knowledge chunks: ..."   <- sklejka istniejacych blokow
-        - zrzuty listy plikow i statusow uslug Windows
-        90,65% z 49 374 krawedzi grafu prowadzi do tych smieci.
-
-        PRZYCZYNA: _should_create_new_chunk() decydowal o zapisie na podstawie
-        KSZTALTU PYTANIA (len>50 lub "new"/"how"), a nie tego, czy czegokolwiek
-        sie nauczono. System zapisywal wlasne echo jako nowa wiedze.
-
-        Ta bramka NIE blokuje uczenia sie. Blokuje echo.
-        Realny kanal uczenia to blends (mistake -> analyzer -> conclusion),
-        ktory zapisuje wnioski z wykonanych zadan, nie sklejki zapytan.
-
-        WYLACZNIK: AIONS_WRITE_GATE=0
-        """
-        if os.environ.get("AIONS_WRITE_GATE", "1") == "0":
-            return True, "gate_off"
-
-        import re as _re
-        text = (content or "")
-        stripped = text.strip()
-
-        # R6 - za krotkie, zeby cokolwiek znaczyc
-        if len(stripped) < 25:
-            return False, "R6_za_krotkie"
-
-        # R5 - tresc to praktycznie sama lista ID blokow
-        _ids = _re.findall(r"\bK[0-9A-F]{8,14}\b", stripped)
-        if len(_ids) >= 3:
-            _bez_id = _re.sub(r"\bK[0-9A-F]{8,14}\b", "", stripped)
-            if len(_re.findall(r"[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]", _bez_id)) < 40:
-                return False, "R5_sama_lista_id"
-
-        for _name, _pat in self._GATE_RULES:
-            if not _pat:
-                continue
-            try:
-                if _re.search(_pat, text, _re.IGNORECASE | _re.MULTILINE):
-                    return False, _name
-            except Exception:
-                continue
-
-        return True, "ok"
-
-    def _log_gate_rejection(self, reason: str, concept: str, content: str) -> None:
-        """Odrzucenia sa logowane - musi byc widac, co bramka blokuje."""
-        try:
-            rec = {
-                "ts": datetime.now().isoformat(),
-                "reason": reason,
-                "concept": concept,
-                "len": len(content or ""),
-                "preview": (content or "")[:200],
-            }
-            with open(self.memory_dir / "gate_rejections.jsonl", "a", encoding="utf-8") as f:
-                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
-        except Exception:
-            pass
-    # --------------------------------------------------------------------------
-
     def create_knowledge_chunk(self, content: str, concept: str,
                              references: List[str] = None,
-                             meta: Dict[str, Any] = None,
-                             bypass_gate: bool = False) -> str:
-        """
-        Create new knowledge chunk with CBMS ID.
-
-        bypass_gate=True omija bramke zapisu - dla wywolujacych, ktorzy wiedza,
-        co robia (np. ingest zatwierdzonych blendow, import z zewnatrz).
-        Zwraca None gdy bramka odrzuci tresc.
-        """
-
-        if not bypass_gate:
-            _ok, _reason = self.learning_gate(content, concept)
-            if not _ok:
-                self._log_gate_rejection(_reason, concept, content)
-                return None
-
+                             meta: Dict[str, Any] = None) -> str:
+        """Create new knowledge chunk with CBMS ID"""
+        
         # Generate CBMS-style ID
         hash_obj = hashlib.sha256(content.encode('utf-8'))
         chunk_id = "K" + hash_obj.hexdigest()[:12].upper()  # K = Knowledge
@@ -227,12 +124,6 @@ class CBMSMemory:
         with open(chunk_file, 'w', encoding='utf-8') as f:
             json.dump(chunk_data, f, indent=2, ensure_ascii=False)
 
-        # DEDUPLIKACJA (2026-08-04):
-        # chunk_id to hash tresci, wiec identyczna tresc nadpisuje TEN SAM plik.
-        # Ale licznik total_chunks i concept_map rosly BEZWARUNKOWO przy kazdym
-        # wywolaniu - stad rozjazd manifestu z rzeczywistoscia.
-        _juz_znany = chunk_id in self.manifest["chunk_index"]
-
         # Update manifest
         self.manifest["chunk_index"][chunk_id] = {
             "concept": concept,
@@ -244,11 +135,9 @@ class CBMSMemory:
         # Update concept map
         if concept not in self.manifest["concept_map"]:
             self.manifest["concept_map"][concept] = []
-        if chunk_id not in self.manifest["concept_map"][concept]:
-            self.manifest["concept_map"][concept].append(chunk_id)
-
-        if not _juz_znany:
-            self.manifest["total_chunks"] += 1
+        self.manifest["concept_map"][concept].append(chunk_id)
+        
+        self.manifest["total_chunks"] += 1
         self._save_manifest()
 
         # Update korean-keys in-memory index for this new chunk
@@ -285,57 +174,6 @@ class CBMSMemory:
         """Find all chunks related to a concept"""
         return self.manifest["concept_map"].get(concept, [])
     
-    def expand_with_references(self, seed_ids: List[str], min_support: int = 2,
-                               max_expand: int = 10, max_out_degree: int = 40,
-                               max_seeds: int = 20) -> List[tuple]:
-        """
-        CRLA "chain reaction", krok 1: rozwiniecie wynikow o sasiadow z grafu 'references'.
-
-        Bloki CBMS maja pole 'references' tworzace graf ~49k krawedzi.
-        Do 2026-08-04 ZADEN kod retrievalu po nim nie chodzil (audyt 2026-08-04) -
-        graf byl zapisywany i nigdy nieczytany.
-
-        Zabezpieczenia:
-        - min_support: sasiad musi byc wskazany przez >= N blokow z wynikow.
-          Jeden glos = przypadek. Kilka glosow = realne powiazanie (co-cytowanie).
-        - max_out_degree: bloki z ogromna liczba referencji sa POMIJANE.
-          Przed poprawka limitu retrievalu create_knowledge_chunk() zapisywalo
-          CALA liste wynikow (~295 ID) jako 'references' - stad bloki z 300-446
-          pozycjami. To zapis "co bylo na ekranie", nie realne powiazanie.
-          Bloki z mala liczba referencji powstaly przy waskich wynikach -> wiarygodne.
-        - pomijane sa wpisy nie-blokowe: w 'references' sa tez URL-e (8 szt.)
-          i sciezki plikow (127 szt.) - patrz audyt.
-
-        Zwraca liste krotek (chunk_id, liczba_glosow), posortowana malejaco.
-        """
-        if not seed_ids:
-            return []
-        seen = set(seed_ids)
-        votes = {}
-        for cid in seed_ids[:max_seeds]:
-            try:
-                data = self.retrieve_chunk(cid)
-            except Exception:
-                continue
-            if not data:
-                continue
-            refs = data.get("references") or []
-            if not isinstance(refs, list):
-                continue
-            if len(refs) > max_out_degree:
-                continue  # zatruty hub - nie ufamy jego krawedziom
-            for rid in refs:
-                if not isinstance(rid, str):
-                    continue
-                if rid in seen:
-                    continue
-                if not rid.startswith("K"):
-                    continue  # URL / sciezka pliku / etykieta, nie ID bloku
-                votes[rid] = votes.get(rid, 0) + 1
-        ranked = [(rid, v) for rid, v in votes.items() if v >= min_support]
-        ranked.sort(key=lambda x: (-x[1], x[0]))
-        return ranked[:max_expand]
-
     def cbms_think(self, query: str, context: List[str] = None) -> Dict:
         """Process query using CBMS thinking pattern"""
         
@@ -356,19 +194,6 @@ class CBMSMemory:
         thinking_session["reasoning"].append(f"Identified concepts: {concepts}")
         
         # Step 2: Retrieve relevant chunks (korean keys first, then concepts, optional symbols)
-        # --- RETRIEVAL CAPS (2026-08-04) --------------------------------------
-        # BUG: worki pojec (find_chunks_by_concept) byly dodawane BEZ LIMITU.
-        # Pomiar 2026-08-04: srednio 295 z 613 blokow na zapytanie (48% bazy),
-        # a do syntezy trafialo tylko 15. Reszta = szum + zatruwanie grafu,
-        # bo create_knowledge_chunk() zapisuje CALA te liste jako 'references'
-        # (stad bloki z 300-446 referencjami).
-        # Limity przed poprawka: KR=50, symbolic=7, concept=BRAK.
-        # WYLACZNIK: AIONS_RETRIEVAL_LIMIT=0 przywraca stare zachowanie 1:1.
-        _cap_total = int(os.environ.get("AIONS_RETRIEVAL_LIMIT", "40"))
-        _cap_kr = int(os.environ.get("AIONS_RETRIEVAL_KR_LIMIT", "25"))
-        _cap_concept = int(os.environ.get("AIONS_RETRIEVAL_CONCEPT_LIMIT", "8"))
-        _caps_on = _cap_total > 0
-        # ----------------------------------------------------------------------
         relevant_chunks = []
         # Inject provided context chunk IDs up-front for fast-path recall
         try:
@@ -387,8 +212,7 @@ class CBMSMemory:
                 if ov > 0:
                     scores[cid] = ov
             ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-            _kr_take = _cap_kr if _caps_on else 50
-            relevant_chunks.extend([cid for cid, _ in ranked[:_kr_take]])
+            relevant_chunks.extend([cid for cid, _ in ranked[:50]])
             thinking_session["reasoning"].append(f"Korean-keys hits: {len(relevant_chunks)}")
         # Optional symbolic matches via Esperanto/CBMS codes (does not replace KR)
         if self.symbolic_enabled and self._symbolic_idx is not None:
@@ -403,58 +227,10 @@ class CBMSMemory:
                 thinking_session["reasoning"].append("Symbolic hits: error")
         for concept in concepts:
             chunk_ids = self.find_chunks_by_concept(concept)
-            if _caps_on:
-                chunk_ids = chunk_ids[:_cap_concept]
             for cid in chunk_ids:
                 if cid not in relevant_chunks:
                     relevant_chunks.append(cid)
-
-        if _caps_on and len(relevant_chunks) > _cap_total:
-            _before_cap = len(relevant_chunks)
-            relevant_chunks = relevant_chunks[:_cap_total]
-            thinking_session["reasoning"].append(
-                f"Retrieval cap: {_before_cap} -> {_cap_total}"
-            )
-
-        # --- CRLA CHAIN REACTION (2026-08-04) ---------------------------------
-        # Rozwiniecie wynikow o sasiadow z grafu 'references' (co-cytowanie).
-        # Dopisywane NA KONIEC listy, wiec pierwsze 15 - jedyne uzywane przez
-        # _synthesize_chunks() - pozostaja NIETKNIETE. Zero ryzyka regresji
-        # jakosci odpowiedzi; sasiedzi sa udostepniani konsumentom listy.
-        # STATUS 2026-08-04: DOMYSLNIE WYLACZONE.
-        # Pomiar wykazal, ze mechanizm dziala poprawnie technicznie (odwracalny
-        # 10/10, zero regresji na pierwszych 15, zero bledow, narzut ~5ms),
-        # ALE znajduje glownie smieci. Powod NIE jest w tym kodzie:
-        # graf jest zatruty samoreferencyjnym klastrem blokow-syntez
-        # ("Based on N knowledge chunks: ... No prior knowledge found for ..."),
-        # ktore cytuja siebie nawzajem. Maja niska liczbe referencji, wiec filtr
-        # max_out_degree ich nie lapie, a wysokie co-cytowanie - wiec podnoszenie
-        # min_support tez nie pomaga (sprawdzone: min_support=3 nie usuwa klastra).
-        # WNIOSEK: najpierw bramka zapisu (zatrzymac produkcje smieci),
-        # potem czyszczenie, dopiero potem wlaczyc graf.
-        # WLACZNIK: AIONS_GRAPH_EXPAND=1
-        if os.environ.get("AIONS_GRAPH_EXPAND", "0") != "0":
-            try:
-                _expanded = self.expand_with_references(
-                    relevant_chunks,
-                    min_support=int(os.environ.get("AIONS_GRAPH_MIN_SUPPORT", "2")),
-                    max_expand=int(os.environ.get("AIONS_GRAPH_MAX_EXPAND", "10")),
-                    max_out_degree=int(os.environ.get("AIONS_GRAPH_MAX_DEGREE", "40")),
-                )
-                if _expanded:
-                    relevant_chunks.extend([rid for rid, _v in _expanded])
-                    thinking_session["graph_expanded"] = [
-                        {"id": rid, "support": _v} for rid, _v in _expanded
-                    ]
-                    thinking_session["reasoning"].append(
-                        f"Graph expand: +{len(_expanded)} sasiadow (co-cytowanie)"
-                    )
-                else:
-                    thinking_session["reasoning"].append("Graph expand: 0")
-            except Exception as _ge:
-                thinking_session["reasoning"].append(f"Graph expand: error {_ge}")
-        # ----------------------------------------------------------------------
-
+        
         thinking_session["retrieved_chunks"] = relevant_chunks
         thinking_session["reasoning"].append(f"Retrieved {len(relevant_chunks)} chunks")
 
@@ -495,12 +271,8 @@ class CBMSMemory:
                 self._primary_concept(concepts),
                 relevant_chunks
             )
-            if new_chunk_id:
-                thinking_session["result_chunks"].append(new_chunk_id)
-                thinking_session["reasoning"].append(f"Created new chunk: {new_chunk_id}")
-            else:
-                # Bramka zapisu odrzucila tresc - powod w memory/gate_rejections.jsonl
-                thinking_session["reasoning"].append("Write gate: odrzucono (echo, nie wiedza)")
+            thinking_session["result_chunks"].append(new_chunk_id)
+            thinking_session["reasoning"].append(f"Created new chunk: {new_chunk_id}")
         
         thinking_session["processing_time"] = time.time() - start_time
         
@@ -511,7 +283,6 @@ class CBMSMemory:
             "answer": synthesized_knowledge,
             "response": synthesized_knowledge, # Alias for AIONS_ULTIMATE compatibility
             "chunk_references": relevant_chunks,
-            "graph_expanded": thinking_session.get("graph_expanded", []),
             "new_chunks": thinking_session["result_chunks"],
             "thinking_trace": thinking_session["reasoning"],
             "latency_ms": round((time.time() - start_time) * 1000.0, 3),
@@ -721,8 +492,7 @@ class CBMSMemory:
                 content=new_chunk_content,
                 concept="generated_analysis"
             )
-            if new_chunk_id:
-                unique_chunks.append(new_chunk_id)
+            unique_chunks.append(new_chunk_id)
             synthesized_knowledge = new_chunk_content
         
         # PHASE 4: Uncertainty Management and Validation

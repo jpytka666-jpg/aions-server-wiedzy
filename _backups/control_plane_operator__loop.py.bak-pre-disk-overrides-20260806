@@ -59,15 +59,6 @@ SNAPSHOT_FILE = STATE_DIR / "last_snapshot.json"
 INCIDENTS_FILE = REPO / "runtime" / "state" / "operator_incidents.jsonl"
 BASELINE_FILE = REPO / "runtime" / "state" / "operator_baseline.json"
 RESTARTS_FILE = REPO / "runtime" / "state" / "operator_restarts.json"
-# Wykluczenia i progi per-wolumen dla disk_full. Odczyt przy kazdym cyklu.
-# Powod istnienia: 2026-07-31..2026-08-06 petla wygenerowala 1812 falszywych
-# alarmow dla /mnt/f (host Dev Drive D:, 99% to stan poprawny i staly),
-# z czego 1746 dodatkowo uruchomilo lokalny model do skomentowania
-# nieistniejacego problemu. Patrz blok pamieci KE2969827A76F.
-# Lezy przy kodzie, nie w runtime/state/ - bo to KONFIGURACJA (sledzona w git),
-# a nie stan systemu. runtime/ jest w .gitignore, wiec plik tam bylby tracony
-# przy kazdym swiezym klonie i falszywy alarm by wracal.
-DISK_OVERRIDES_FILE = Path(__file__).resolve().parent / "disk_overrides.json"
 
 DISK_USE_PCT_THRESHOLD = 90.0
 LOAD_1M_THRESHOLD = 4.0
@@ -162,21 +153,6 @@ def _record_baseline(state: dict, count: int) -> None:
     history.append(count)
     if len(history) > LOG_SPIKE_HISTORY_LEN:
         del history[0: len(history) - LOG_SPIKE_HISTORY_LEN]
-
-
-def _load_disk_overrides() -> dict:
-    """
-    Wykluczenia / progi per-wolumen dla alarmu disk_full.
-
-    Format pliku (runtime/state/operator_disk_overrides.json):
-        {"/mnt/f": {"ignore": true, "reason": "..."}}
-        {"/mnt/x": {"threshold_pct": 95.0}}
-
-    Brak pliku, zly JSON albo brak wpisu dla danego mounta => zachowanie
-    domyslne (globalny DISK_USE_PCT_THRESHOLD). Petla NIGDY tu nie zapisuje -
-    to konfiguracja czlowieka, nie stan systemu.
-    """
-    return _load_json_dict(DISK_OVERRIDES_FILE, {})
 
 
 def _load_restarts() -> dict:
@@ -290,21 +266,9 @@ def diagnose(snapshot: dict, baseline_state: dict | None = None) -> list:
     """
     issues = []
 
-    disk_overrides = _load_disk_overrides()
     for fs in (snapshot.get("disk", {}) or {}).get("filesystems", []) or []:
         pct = _pct_to_float(fs.get("use_pct"))
-        if pct is None:
-            continue
-        override = disk_overrides.get(fs.get("mounted_on")) or {}
-        if not isinstance(override, dict):
-            override = {}
-        if override.get("ignore"):
-            continue
-        try:
-            prog = float(override.get("threshold_pct", DISK_USE_PCT_THRESHOLD))
-        except (TypeError, ValueError):
-            prog = DISK_USE_PCT_THRESHOLD
-        if pct > prog:
+        if pct is not None and pct > DISK_USE_PCT_THRESHOLD:
             issues.append({
                 "type": "disk_full",
                 "detail": f"{fs.get('mounted_on')} ({fs.get('filesystem')}) use={fs.get('use_pct')}",
