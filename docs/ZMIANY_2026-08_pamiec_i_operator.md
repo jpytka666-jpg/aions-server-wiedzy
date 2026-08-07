@@ -230,6 +230,76 @@ Przeszedł przez bramkę zapisu. Licznik 613 → 614.
 
 ---
 
+## 7. Czyszczenie bloków-śmieci
+
+**Wykonane 2026-08-06, trzy etapy, wszystko odwracalne.**
+
+Pliki **przeniesione, nie skasowane** — `aions_core/memory/chunks_quarantine/`.
+
+### Przebieg
+
+| Etap | Bloków | Kryterium |
+|---|---:|---|
+| 1 | 3 | zero referencji przychodzących |
+| 2 | 399 | wskazywane wyłącznie przez inne śmieci |
+| 1 (ponownie) | 2 | osierocone po etapie 2 |
+| 3 | 51 | wskazywane też przez prawdziwą wiedzę |
+| **razem** | **455** | |
+
+### Stan
+
+| | Przed | Po |
+|---|---:|---:|
+| Plików bloków | 622 | 167 |
+| `total_chunks` | 614 | 159 |
+| W kwarantannie | 0 | 455 |
+
+Dwa pojęcia straciły wszystkich członków i zniknęły z `concept_map`: `conversation_summary`, `desktop_files_analysis`. Oba były w całości śmieciowe.
+
+### Efekt — pomiar na 10 zapytaniach
+
+| | Przed czyszczeniem | Po czyszczeniu |
+|---|---:|---:|
+| **Śmieci w pierwszych 15** | **44,0%** | **0,0%** |
+| **Prawdziwa wiedza w pierwszych 15** | ~53% | **96,7%** (145/150) |
+| Mediana czasu | 10,3 ms | **7,6 ms** |
+| Wyników na zapytanie | ~33 | 29 |
+
+Zapytanie „chunki wiedzy" — przed czyszczeniem **15/15 śmieci, zero prawdziwej wiedzy** — po czyszczeniu **15/15 prawdziwej wiedzy**.
+
+### Dlaczego etap 3 mimo ryzyka
+
+Etap 3 oznaczał, że 14 bloków prawdziwej wiedzy straci referencje. Decyzja: **wykonać**, bo:
+
+1. **Referencja z prawdziwej wiedzy do śmiecia sama jest śmieciem.** Blok nie traci treści, tylko wskaźnik na coś, co nie powinno było powstać.
+2. System już tolerował zwisające referencje (463 sztuki po etapie 2) bez żadnych błędów — `retrieve_chunk()` zwraca `None`, wywołujący to obsługują.
+3. W etapie 3 był blok **`K5BFE2E3E256C`** — zawierający otwartym tekstem klucz API OpenAI, hasło i parę e-mail+hasło, **aktywnie zwracany przez wyszukiwanie** przy zwykłych pytaniach. To był argument rozstrzygający.
+
+Po etapie 3 ten blok **nie jest już w żywej pamięci**. Leży w kwarantannie — nadal wymaga unieważnienia poświadczeń, ale przestał wychodzić w odpowiedziach.
+
+### Efekt uboczny — graf się rozpadł
+
+| | Przed | Po |
+|---|---:|---:|
+| Składowych spójnych | 45 | 87 |
+| Największa składowa | 92,9% węzłów | 60,9% |
+| Węzłów izolowanych | 44 | 86 |
+
+Usunięcie bloków-hubów (jeden miał 446 referencji) zerwało spoiwo, które sztucznie łączyło bazę w jedną całość. **To spoiwo było śmieciem** — ale oznacza, że rozwijanie po grafie ma teraz mniejszy zasięg. Bez znaczenia dopóki `AIONS_GRAPH_EXPAND=0`; do ponownej oceny przed włączeniem.
+
+### Jak cofnąć
+
+```
+python _measure/restore_quarantine.py --list
+python _measure/restore_quarantine.py --run-id <id> --execute
+python _measure/restore_quarantine.py --all --execute
+```
+
+Pełna kopia sprzed czyszczenia: `backups/cbms_20260806_pre_quarantine/` (622 pliki + manifest).
+Kopie per-etap: `_measure/quarantine_backups/<znacznik>/`.
+
+---
+
 ## Znane, nienaprawione
 
 | # | Rzecz | Skutek |
