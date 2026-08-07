@@ -347,3 +347,45 @@ Wszystkie liczby w tym dokumencie pochodzą z plików w `_measure/` (nieśledzon
 | `chunk_classification.json` | klasyfikacja wszystkich 621 bloków |
 | `gate_test_report.txt` | testy bramki zapisu |
 | `risk_analysis.json`, `search_simulation.json` | analiza czyszczenia |
+
+---
+
+## 8. Haki gita — usunięcie martwego husky po edytorze Kiro
+
+**Objaw:** każda operacja gita wypisywała `cd: too many arguments`.
+
+**Przyczyna.** W `.git/hooks/` leżało 18 haków wygenerowanych przez **husky 0.13.4**, wszystkie datowane 17.12.2025, każdy z linią:
+
+```sh
+cd tu huje/.kiro/Kiro/resources/app
+```
+
+Ścieżka zawiera spację i nie jest w cudzysłowach, więc `cd` dostaje dwa argumenty i przerywa.
+
+**Po co powstały (sprawdzone przed usunięciem).** Nie powstały dla AIONS. To produkt uboczny instalacji edytora **Kiro** — husky przy instalacji wpisał własny katalog roboczy do haków tego repozytorium. Haki husky uruchamiają `npm run <skrypt>` z `package.json`. W `E:\server wiedzy` **nie ma `package.json`** i nigdy nie było — to repozytorium jest pythonowe. Wskazywany katalog `tu huje/.kiro/Kiro/resources/app` również tu nie istnieje.
+
+**Czy blokowały commity — nie.** Zmierzone bezpośrednio:
+
+```
+sh .git/hooks/pre-commit  →  kod wyjścia 0
+```
+
+`cd` zawodzi, ale powłoka idzie dalej; `has_hook_script precommit` sprawdza `[ -f package.json ]`, dostaje fałsz i hak kończy się przez `exit 0`. Były wyłącznie hałasem na wyjściu błędów, nie przeszkodą. Wcześniejsze commity robione z `--no-verify` były zabezpieczone nadmiarowo.
+
+**Dlaczego mimo to usunięte.** To mina: gdyby w repozytorium kiedykolwiek pojawił się `package.json` ze skryptem `precommit`, 18 haków zaczęłoby próbować uruchamiać `npm` z katalogu, którego nie ma.
+
+**Działanie.** Przeniesione (nie skasowane) do `.git/hooks_disabled_husky_kiro_20260807/`. Pozostały wyłącznie pliki `.sample` — domyślne wzorce gita, bezczynne z definicji.
+
+| | przed | po |
+|---|---:|---:|
+| aktywne haki | 18 | 0 |
+| pliki `.sample` | 14 | 14 |
+
+**Cofnięcie:**
+```bash
+mv "E:/server wiedzy/.git/hooks_disabled_husky_kiro_20260807/"* "E:/server wiedzy/.git/hooks/"
+```
+
+**Uwaga:** `.git/` nie jest śledzony przez gita, więc ta zmiana nie ma commita — istnieje tylko lokalnie i ten wpis jest jej jedynym śladem.
+
+**Niezałatwione, powiązane:** `docs/CBMS_HUMAN_GUIDE.md` pokazuje 132 wstawienia i 132 usunięcia bez zmiany treści — to różnica w znakach końca linii (CRLF/LF). Wymaga `.gitattributes`. Ujęte w zaległych drobnych naprawach.
