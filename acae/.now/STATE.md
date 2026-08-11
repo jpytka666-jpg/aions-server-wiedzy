@@ -493,3 +493,37 @@ nic — bo stdlib to proza o strukturach danych, nie o maszynach i infrastruktur
 - wynik NEGATYWNY -> **zamykamy kierunek**. Nie dorabiam teorii, ze „wiekszy korpus by pomogl".
   Jesli 50 tysiecy par z wlasciwym mechanizmem nie ruszy ani jednej z trzech miar, to
   twierdzenie „dwa miliony ruszyloby" bedzie hipoteza bez pokrycia, a nie wnioskiem.
+
+## 2026-08-11T21:25 — M4.6: HIPOTEZA ODRZUCONA. Kierunek zamkniety.
+
+| miara | baseline | M4.6 | wymagane | werdykt |
+|---|---|---|---|---|
+| recall@10 | 26,6% | **20,0%** | >= 34,6% | NIE |
+| recall@25 | 36,6% | 36,6% | — | bez zmiany |
+| MRR | 0,172 | 0,169 | >= 0,172 | NIE |
+| negatywy/pozytywy | 85,2% | 86,7% | <= 85,2% | NIE |
+
+Wszystkie trzy warunki niespelnione. Zewnetrzny korpus nie tylko nie pomogl —
+**pogorszyl `recall@10` o 6,6 punktu**, dajac najgorszy wynik ze wszystkich szesciu
+wariantow M4. Przewidywanie zapisane przed pomiarem sie potwierdzilo.
+
+**Zgodnie z prerejestracja kierunek jest ZAMKNIETY.** Bez CodeSearchNet, bez The Stack v2,
+bez architektury produkcyjnej dla tego pomyslu. Nie dorabiam teorii, dlaczego wiekszy
+korpus by pomogl — pomiar mowi, ze ten mechanizm na tym zadaniu szkodzi.
+
+### Bilans koncowy ablacji M4 — szesc wariantow, szesc odrzucen
+
+| wariant | recall@10 | recall@25 | MRR | neg/poz |
+|---|---|---|---|---|
+| baseline (M2) | 26,6% | 36,6% | **0,172** | 85,2% |
+| M4.1 BM25F | 23,3% | 33,3% | 0,156 | 97,0% |
+| M4.2 PRF stosunek | 30,0% | 40,0% | 0,139 | 80,7% |
+| M4.2b PRF + LLR | **33,3%** | 36,6% | 0,153 | **80,4%** |
+| M4.3 proza repo | 26,6% | 36,6% | 0,172 | 84,9% |
+| M4.4 graf Suade | 26,6% | **40,0%** | 0,172 | 85,2% |
+| M4.6 docstringi zewnetrzne | 20,0% | 36,6% | 0,169 | 86,7% |
+
+`MRR` nie przekroczyl 0,172 ani razu. Najlepszy `recall@10` (33,3%) nie siegnal progu 34,6%.
+Zaden wariant nie spelnil kryterium, ktore bylo zapisane przed jego pomiarem.
+
+Held-out (`blake2b256:e5d8e5b4...`) **NIETKNIETY** — nie ma kandydata do sprawdzenia.
