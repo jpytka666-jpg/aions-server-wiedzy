@@ -46,6 +46,11 @@ TERM_RE = re.compile(r"[a-z0-9_]+")
 # tylko dlatego, ze termin pada w kazdym jego symbolu.
 W_NAME, W_SIGNATURE, W_PATH = 3, 2, 1
 
+# Gorny limit wagi rzadkosci. Bez niego termin wystepujacy raz w calym repo (literowka,
+# nazwa wlasna, przypadkowy identyfikator) dostawalby wage rowna liczbie symboli
+# i jednym trafieniem przewracalby caly ranking.
+RARITY_CAP = 64
+
 
 def query_terms(text: str, min_len: int = 3) -> list[str]:
     """Rozbior zapytania na terminy. Ta sama regula co w baseline z M0."""
