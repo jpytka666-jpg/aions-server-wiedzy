@@ -266,7 +266,7 @@ def expand(
     pack_hash: str,
     rule: str,
     min_cooccurrence: int = MIN_COOCCURRENCE,
-    min_ratio_permille: int = MIN_RATIO_PERMILLE,
+    min_g2: float = MIN_G2,
     min_terms_covered: int = MIN_TERMS_COVERED,
     max_per_term: int = MAX_PER_TERM,
     max_total: int = MAX_TOTAL,
