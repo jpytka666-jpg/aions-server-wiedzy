@@ -138,7 +138,12 @@ def test_waga_rzadkosci_jest_ograniczona_z_gory():
     entries = [{
         "path": "a/b.py",
         "lang": "python",
-        "symbols": [{"name_path": f"f{i}", "signature": "def f():", "line": i, "kind": "function"} for i in range(500)],
+        # Symboli musi byc wiecej niz RARITY_CAP, inaczej sufit w ogole sie nie uruchamia
+        # i test sprawdzalby dzielenie zamiast ograniczenia.
+        "symbols": [
+            {"name_path": f"f{i}", "signature": "def f():", "line": i, "kind": "function"}
+            for i in range(RARITY_CAP * 2)
+        ],
     }]
     assert term_rarity(entries, ["nieobecny"])["nieobecny"] == RARITY_CAP
 
