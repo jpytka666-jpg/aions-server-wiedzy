@@ -39,7 +39,8 @@ from acae.bm25f import Bm25fIndex  # noqa: E402
 from acae.canon import canonical_json, content_hash  # noqa: E402
 from acae.core import PackRequest, build_pack, collect_entries  # noqa: E402
 from acae.expand import (  # noqa: E402
-    Corpus, code_window_documents, expand, prose_documents, symbol_vocabulary,
+    Corpus, code_window_documents, docstring_documents, expand, prose_documents,
+    symbol_vocabulary,
 )
 from acae.graph import DAMP_PERMILLE, HOPS, SEED_K, build_graph  # noqa: E402
 from acae.pack import FsLocator, FsReader  # noqa: E402
