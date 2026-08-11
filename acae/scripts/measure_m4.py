@@ -285,11 +285,13 @@ def main() -> int:
         ctx["index"] = Bm25fIndex(entries)
     elif args.variant == "graph":
         ctx["graph"] = build_graph(entries, reader)
-    elif args.variant in ("prf_code", "prf_prose"):
-        documents = (
-            code_window_documents(entries, reader) if args.variant == "prf_code"
-            else prose_documents(str(repo_root))
-        )
+    elif args.variant in ("prf_code", "prf_prose", "assoc"):
+        if args.variant == "prf_code":
+            documents = code_window_documents(entries, reader)
+        elif args.variant == "prf_prose":
+            documents = prose_documents(str(repo_root))
+        else:
+            documents = docstring_documents()
         ctx["corpus"] = Corpus(documents)
         ctx["vocabulary"] = symbol_vocabulary(entries)
         # pack_hash trafia do kazdego paragonu jako warunek waznosci — krawedz
