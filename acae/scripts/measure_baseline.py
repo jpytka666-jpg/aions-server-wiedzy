@@ -85,6 +85,26 @@ def run_git(args: list[str]) -> str:
     return proc.stdout.decode("utf-8", errors="replace").strip()
 
 
+def submodule_paths() -> list[str]:
+    """
+    Sciezki submodulow wg indeksu gita (wpisy o trybie 160000, tzw. gitlink).
+
+    Submodul to OSOBNE repozytorium. Jego tresc nie jest odtwarzalna z tego repo,
+    a git check-ignore odmawia obslugi jakiejkolwiek sciezki w jego wnetrzu. Wchodzi
+    wiec do raportu pominiec, nie do zakresu.
+    """
+    out = run_git(["ls-files", "--stage"])
+    paths = []
+    for line in out.split("\n"):
+        if not line.startswith("160000 "):
+            continue
+        # format: <mode> <sha> <stage>\t<sciezka>
+        _, _, rest = line.partition("\t")
+        if rest:
+            paths.append(rest.strip())
+    return sorted(paths)
+
+
 def gitignored(rel_paths: list[str]) -> set[str]:
     """
     Ktore z podanych sciezek git uznaje za ignorowane.
