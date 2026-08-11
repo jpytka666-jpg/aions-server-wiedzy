@@ -66,7 +66,7 @@ SCHEMA = "acae.baseline.v1"
 # zmiana tej listy zmienia ranking, wiec uniewaznia baseline.
 STOPWORDS = frozenset({
     "and", "are", "back", "does", "every", "for", "from", "how", "its", "not",
-    "the", "их", "this", "that", "them", "then", "there", "was", "were", "what",
+    "the", "this", "that", "them", "then", "there", "was", "were", "what",
     "when", "where", "which", "who", "why", "with",
 })
 
