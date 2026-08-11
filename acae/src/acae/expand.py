@@ -191,9 +191,34 @@ def _tokenize(text: str) -> set[str]:
     return set(TOKEN_RE.findall(text.lower()))
 
 
+class Corpus:
+    """
+    Korpus stokenizowany RAZ, wraz ze statystyka `df`.
+
+    Bez tego kazde zapytanie tokenizowaloby od nowa wszystkie okna kodu — przy 36 pytaniach
+    i kilku tysiacach okien to roznica miedzy sekundami a minutami. `df` jest wlasnoscia
+    korpusu, nie zapytania, wiec liczenie go per zapytanie bylo tez merytorycznie bledne:
+    ta sama krawedz dostawalaby rozny stosunek zaleznie od tego, o co akurat pytamy.
+    """
+
+    def __init__(self, documents: Iterable[Document]) -> None:
+        self.docs: list[tuple[Document, frozenset[str]]] = []
+        self.df: collections.Counter = collections.Counter()
+        for doc in documents:
+            tokens = _tokenize(doc.text)
+            if not tokens:
+                continue
+            self.docs.append((doc, frozenset(tokens)))
+            for token in tokens:
+                self.df[token] += 1
+
+    def __len__(self) -> int:
+        return len(self.docs)
+
+
 def expand(
     query_terms: Sequence[str],
-    documents: Iterable[Document],
+    corpus: Corpus,
     vocabulary: set[str],
     pack_hash: str,
     rule: str,
