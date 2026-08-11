@@ -156,6 +156,10 @@ def collect_files(roots: list[str], prune_dirs: set[str], max_bytes: int) -> tup
     candidates: list[str] = []
     too_large: list[dict] = []
     missing_roots: list[str] = []
+    in_submodule: list[str] = []
+
+    submodules = submodule_paths()
+    sub_prefixes = tuple(f"{s}/" for s in submodules)
 
     for root in roots:
         root_dir = REPO_ROOT / root
