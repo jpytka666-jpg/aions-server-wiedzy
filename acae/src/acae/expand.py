@@ -106,6 +106,7 @@ class Receipt:
                 "cooccurrence": self.cooccurrence,
                 "doc_freq": self.doc_freq,
                 "ratio_permille": self.ratio_permille,
+                "g2_milli": self.g2_milli,
                 "terms_covered": self.terms_covered,
             },
             "weight_class": self.weight_class,
