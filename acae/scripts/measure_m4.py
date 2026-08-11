@@ -106,21 +106,29 @@ def is_hit(item, question) -> bool:
     return False
 
 
-def evaluate(entries, index, queries, variant, depth=DEPTH):
+def evaluate(entries, ctx, queries, variant, depth=DEPTH):
     positives, negatives, per_query = [], [], []
     for q in queries:
         terms = query_terms(q["question"])
+        receipts: list[dict] = []
         if variant == "baseline":
             ranked = rank_baseline(entries, terms, depth)
         elif variant == "bm25f":
-            ranked = index.rank(terms, depth)
+            ranked = ctx["index"].rank(terms, depth)
+        elif variant == "prf_code":
+            ranked, receipts = rank_with_expansion(
+                entries, terms, depth, ctx["corpus"], ctx["vocabulary"], ctx["pack_hash"], "code_window",
+            )
         else:
             raise SystemExit(f"nieznany wariant: {variant}")
 
         top1 = ranked[0]["score"] if ranked else 0
         if q["kind"] == "negative":
             negatives.append(top1)
-            per_query.append({"id": q["id"], "kind": "negative", "top1_score": top1, "returned": len(ranked)})
+            per_query.append({
+                "id": q["id"], "kind": "negative", "top1_score": top1,
+                "returned": len(ranked), "expansion": receipts,
+            })
             continue
 
         rank_of_hit = 0
