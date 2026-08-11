@@ -62,6 +62,34 @@ def rank_baseline(entries, terms, depth):
     return outline
 
 
+def rank_with_expansion(entries, terms, depth, corpus, vocabulary, pack_hash, rule):
+    """
+    Baseline ranker + terminy rozszerzone, wazone o polowe slabiej niz oryginalne.
+
+    Rozszerzenia sa wazone slabiej, bo sa HIPOTEZA o slownictwie, a nie tym, o co
+    czlowiek zapytal. Zrownanie ich z terminami oryginalnymi sprawialoby, ze symbol
+    nazwany dokladnie jak termin rozszerzony bilby symbol nazwany jak samo pytanie.
+
+    Zwraca (ranking, paragony) — paragony ida do artefaktu, zeby dalo sie odtworzyc,
+    DLACZEGO kazdy termin wszedl.
+    """
+    pairs = expand(terms, corpus, vocabulary, pack_hash, rule)
+    extra = [t for t, _ in pairs if t not in terms]
+    rarity = term_rarity(entries, list(terms) + extra)
+
+    ranked = []
+    for entry in entries:
+        path = str(entry["path"])
+        for row in entry["symbols"]:
+            score = score_symbol(path, row, terms, rarity)
+            if extra:
+                score += score_symbol(path, row, extra, rarity) // 2
+            if score > 0:
+                ranked.append({"score": score, "path": path, "lang": entry.get("lang"), "row": row})
+    ranked.sort(key=lambda d: (-d["score"], d["path"], d["row"]["line"], d["row"]["name_path"]))
+    return ranked[:depth], [receipt.as_dict() for _, receipt in pairs]
+
+
 def is_hit(item, question) -> bool:
     """
     Trafienie: dokladny `name_path` albo sama nazwa liscia przy zgodnym pliku.
