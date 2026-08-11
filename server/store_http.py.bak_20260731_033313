@@ -13,7 +13,6 @@ Usage:
 """
 
 from __future__ import annotations
-import logging
 import os
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Tuple
@@ -24,27 +23,10 @@ from chromadb.config import Settings
 
 from .context_schema import normalize_metadata
 
-logger = logging.getLogger(__name__)
-
 # Configuration
 CHROMA_HOST = os.environ.get("CHROMA_HOST", "127.0.0.1")  # ALWAYS-ON fix: "localhost" wprowadzal ~4s IPv6/DNS lag na Windows
 CHROMA_PORT = int(os.environ.get("CHROMA_PORT", "8000"))
 CHROMA_PATH = os.environ.get("CHROMA_PATH", os.path.join(os.path.dirname(__file__), "..", "data", "chroma"))
-DEGRADED_LOG_PATH = os.path.join(os.path.dirname(__file__), "..", "runtime", "state", "aions_store_degraded.log")
-
-
-def _log_degraded(reason: str) -> None:
-    """Make a silent fallback to embedded mode observable: log it and append
-    a line to a dedicated runtime log file so it is visible next to the other
-    runtime logs, even though this process's stdout is not captured anywhere."""
-    logger.error("VectorStore degraded to embedded PersistentClient: %s", reason)
-    try:
-        os.makedirs(os.path.dirname(DEGRADED_LOG_PATH), exist_ok=True)
-        ts = datetime.now(timezone.utc).isoformat()
-        with open(DEGRADED_LOG_PATH, "a", encoding="utf-8") as f:
-            f.write(f"{ts} DEGRADED_TO_EMBEDDED reason={reason}\n")
-    except Exception:
-        logger.exception("Failed to write degraded-mode log entry")
 
 # Connection mode tracking
 _connection_mode: str = "unknown"
@@ -88,17 +70,13 @@ class VectorStore:
         self.host = chroma_host or CHROMA_HOST
         self.port = chroma_port or CHROMA_PORT
         self._collections: Dict[str, chromadb.api.models.Collection.Collection] = {}
-        self.degraded: bool = False  # set True if we had to fall back to embedded mode
 
         # Try HTTP client first
         self.client = self._connect_http()
 
         if self.client is None:
             # Fallback to embedded PersistentClient
-            reason = f"ChromaDB HTTP not available at {self.host}:{self.port}, using embedded mode"
-            print(f"[STORE] {reason}")
-            self.degraded = True
-            _log_degraded(reason)
+            print(f"[STORE] ChromaDB HTTP not available at {self.host}:{self.port}, using embedded mode")
             os.makedirs(self.persist_path, exist_ok=True)
             self.client = chromadb.PersistentClient(path=self.persist_path)
             _connection_mode = "embedded"
@@ -115,7 +93,6 @@ class VectorStore:
             return client
         except Exception as e:
             print(f"[STORE] HTTP connection failed: {e}")
-            logger.error("ChromaDB HTTP connection failed: %s", e)
             return None
 
     def reconnect_http(self) -> bool:

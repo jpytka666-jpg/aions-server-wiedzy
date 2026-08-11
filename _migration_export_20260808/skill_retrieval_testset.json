@@ -1,0 +1,1466 @@
+{
+ "meta": {
+  "total": 131,
+  "pl": 39,
+  "pl_diacritics": 27,
+  "pl_no_diacritics": 12,
+  "natural_speech": 87,
+  "paraphrase_no_rare_vocab": 44,
+  "should_return_nothing": 16,
+  "new_in_round0": 44,
+  "unique_skills_registry_loaded": 87,
+  "derived_from": "real skill.json files in skills_lib/ via control_plane/skills/registry.py SkillRegistry.discover()",
+  "built": "2026-07-31 before any semantic_search.py modification (evidence gate)",
+  "round0_expanded_at": "2026-07-31 (iterative optimisation task, round 0)",
+  "round0_expanded_from": 48,
+  "lang_tagged_at": "2026-07-31 (English-optimisation task, step 1)",
+  "en": 92,
+  "hard_paraphrase": 12,
+  "typo_casual": 6,
+  "new_in_step2_en_expansion": 39,
+  "step2_expanded_at": "2026-07-31 (English-optimisation task, step 2)",
+  "step2_expanded_from": 92
+ },
+ "cases": [
+  {
+   "query": "Zablokuj mój ekran, wychodzę na chwilę",
+   "expected": "sys.lock",
+   "categories": [
+    "pl",
+    "diacritics",
+    "natural"
+   ],
+   "idx": 1,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "Ściągnij mi ten plik z internetu pod tym adresem",
+   "expected": "web.download",
+   "categories": [
+    "pl",
+    "diacritics",
+    "natural"
+   ],
+   "idx": 2,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "Jak długo działa mój komputer bez restartu?",
+   "expected": "sys.uptime",
+   "categories": [
+    "pl",
+    "diacritics",
+    "natural"
+   ],
+   "idx": 3,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "Wyłącz dźwięk, bo mnie rozprasza",
+   "expected": "sys.mute",
+   "categories": [
+    "pl",
+    "diacritics",
+    "natural"
+   ],
+   "idx": 4,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "Podnieś głośność, bo nic nie słyszę",
+   "expected": "sys.volume_up",
+   "categories": [
+    "pl",
+    "diacritics",
+    "natural"
+   ],
+   "idx": 5,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "Jaka jest pojemność wolnego miejsca na dysku C?",
+   "expected": "sys.free_space",
+   "categories": [
+    "pl",
+    "diacritics"
+   ],
+   "idx": 6,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "Wyczyść śmieci tymczasowe, żeby zwolnić miejsce",
+   "expected": "sys.empty_temp",
+   "categories": [
+    "pl",
+    "diacritics",
+    "natural"
+   ],
+   "idx": 7,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "Zmień tło pulpitu na nowy obrazek",
+   "expected": "sys.wallpaper",
+   "categories": [
+    "pl",
+    "diacritics"
+   ],
+   "idx": 8,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "Przełącz się na okno przeglądarki",
+   "expected": "app.focus",
+   "categories": [
+    "pl",
+    "diacritics"
+   ],
+   "idx": 9,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "Jaką mam baterię, czy się ładuje?",
+   "expected": "sys.battery",
+   "categories": [
+    "pl",
+    "diacritics",
+    "natural"
+   ],
+   "idx": 10,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "usun ten plik z dysku",
+   "expected": "file.delete",
+   "categories": [
+    "pl"
+   ],
+   "idx": 11,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "sprawdz jaki mam adres ip",
+   "expected": "net.my_ip",
+   "categories": [
+    "pl"
+   ],
+   "idx": 12,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "otworz kalkulator",
+   "expected": "app.open_calc",
+   "categories": [
+    "pl"
+   ],
+   "idx": 13,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "zrob zrzut ekranu",
+   "expected": "sys.screenshot",
+   "categories": [
+    "pl"
+   ],
+   "idx": 14,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "sprawdz pogode w Krakowie",
+   "expected": "web.weather",
+   "categories": [
+    "pl"
+   ],
+   "idx": 15,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "moj komputer strasznie muli, co go tak zzera",
+   "expected": "sys.list_processes",
+   "categories": [
+    "pl",
+    "natural"
+   ],
+   "idx": 16,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "od jak dawna komputer jest wlaczony bez wylaczania",
+   "expected": "sys.uptime",
+   "categories": [
+    "pl",
+    "natural"
+   ],
+   "idx": 17,
+   "new": false,
+   "lang": "pl"
+  },
+  {
+   "query": "my computer feels really sluggish, what's hogging everything",
+   "expected": "sys.list_processes",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 18,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "can you check if example.com is even reachable from here",
+   "expected": "net.ping",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 19,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "show me whatever's sitting in that little buffer i just grabbed onto",
+   "expected": "clip.get_text",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 20,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "something's stuck and totally unresponsive, shut it down by force",
+   "expected": "proc.kill",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 21,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "what time even is it right now",
+   "expected": "sys.now_pretty",
+   "categories": [
+    "natural"
+   ],
+   "idx": 22,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "make a new folder for this project",
+   "expected": "folder.create",
+   "categories": [
+    "natural"
+   ],
+   "idx": 23,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "turn it back a little, it's blasting too loud",
+   "expected": "sys.volume_down",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 24,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "my hard drive is almost full, is there junk you can clear out automatically",
+   "expected": "sys.empty_temp",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 25,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "when's the last time this machine got rebooted, and how much time has passed since",
+   "expected": "sys.uptime",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 26,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "should I grab an umbrella today, what's it like outside in Gdansk",
+   "expected": "web.weather",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 27,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "what have I been touching in that folder most lately",
+   "expected": "file.recent",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 28,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "what connections can this laptop see around it right now",
+   "expected": "net.wifi_list",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 29,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "hang onto this bit of text so I can drop it in somewhere else afterward",
+   "expected": "clip.set_text",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 30,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "get everything out of the way so I can see the background",
+   "expected": "window.minimize_all",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 31,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "who am i logged in as on this pc",
+   "expected": "sys.who_am_i",
+   "categories": [
+    "natural"
+   ],
+   "idx": 32,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "check open ports listening on the linux server",
+   "expected": "linux.net.ports",
+   "categories": [],
+   "idx": 33,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "what are the top space hogs on that remote box",
+   "expected": "linux.disk.largest",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 34,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "how many systemd services failed on the remote linux host",
+   "expected": "linux.service.failed",
+   "categories": [],
+   "idx": 35,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "restart the nginx service on the linux server",
+   "expected": "linux.service.restart",
+   "categories": [],
+   "idx": 36,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "search for the word ERROR inside my log file",
+   "expected": "text.find_in_file",
+   "categories": [],
+   "idx": 37,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "open my gmail inbox",
+   "expected": "web.open_gmail",
+   "categories": [],
+   "idx": 38,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "find a file named report.docx somewhere on this pc",
+   "expected": "fs.find_file",
+   "categories": [],
+   "idx": 39,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "compress this folder into a zip archive",
+   "expected": "folder.zip",
+   "categories": [],
+   "idx": 40,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "count how many words are in this document",
+   "expected": "file.word_count",
+   "categories": [],
+   "idx": 41,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "remember this note for later: buy milk",
+   "expected": "note.save",
+   "categories": [],
+   "idx": 42,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "what bills or tasks do I still need to deal with",
+   "expected": "paper.list",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 43,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "translate this paragraph into Spanish for me",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "idx": 44,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "send a text message to my mom saying I'll be late",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "idx": 45,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "set a timer for 10 minutes",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "idx": 46,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "print this document on the office printer",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "idx": 47,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "convert this video file to mp3 audio",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "idx": 48,
+   "new": false,
+   "lang": "en"
+  },
+  {
+   "query": "Zamknij mi tego notepada, już mi niepotrzebny",
+   "expected": "app.close",
+   "categories": [
+    "pl",
+    "natural",
+    "diacritics"
+   ],
+   "idx": 49,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Odpal kalkulator, muszę coś policzyć",
+   "expected": "app.open_calc",
+   "categories": [
+    "pl",
+    "natural",
+    "diacritics"
+   ],
+   "idx": 50,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Pokaż mi jakie okna mam teraz otwarte",
+   "expected": "app.list_windows",
+   "categories": [
+    "pl",
+    "natural",
+    "diacritics"
+   ],
+   "idx": 51,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Skopiuj ten plik do innego folderu",
+   "expected": "file.copy",
+   "categories": [
+    "pl"
+   ],
+   "idx": 52,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Przenieś ten plik do innego katalogu i zmień mu nazwę",
+   "expected": "file.move",
+   "categories": [
+    "pl",
+    "natural",
+    "diacritics"
+   ],
+   "idx": 53,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Otwórz ten plik w domyślnym programie",
+   "expected": "file.open",
+   "categories": [
+    "pl",
+    "diacritics"
+   ],
+   "idx": 54,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "wczytaj zawartosc tego pliku tekstowego i pokaz mi co tam jest",
+   "expected": "file.read_text",
+   "categories": [
+    "pl",
+    "natural"
+   ],
+   "idx": 55,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "zapisz ten tekst jako nowy plik na dysku",
+   "expected": "file.write_text",
+   "categories": [
+    "pl"
+   ],
+   "idx": 56,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Sprawdź co jest w tym folderze",
+   "expected": "folder.list",
+   "categories": [
+    "pl",
+    "diacritics"
+   ],
+   "idx": 57,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "rozpakuj to archiwum zip do tego katalogu",
+   "expected": "folder.unzip",
+   "categories": [
+    "pl"
+   ],
+   "idx": 58,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "wpisz ten tekst tam gdzie mam teraz kursor w aktywnym oknie",
+   "expected": "input.type_text",
+   "categories": [
+    "pl",
+    "natural"
+   ],
+   "idx": 59,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Przyciemnij trochę ekran, razi mnie w oczy",
+   "expected": "sys.brightness",
+   "categories": [
+    "pl",
+    "natural",
+    "paraphrase",
+    "diacritics"
+   ],
+   "idx": 60,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Otwórz ustawienia systemu Windows",
+   "expected": "sys.open_settings",
+   "categories": [
+    "pl",
+    "diacritics"
+   ],
+   "idx": 61,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Sprawdź ile pamięci RAM mam wolnej",
+   "expected": "sys.resources",
+   "categories": [
+    "pl",
+    "diacritics"
+   ],
+   "idx": 62,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Wyślij mi jakieś powiadomienie, żebym o tym nie zapomniał",
+   "expected": "sys.notify",
+   "categories": [
+    "pl",
+    "natural",
+    "paraphrase",
+    "diacritics"
+   ],
+   "idx": 63,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Dodaj sobie przypomnienie o rachunku za prąd, termin za tydzień",
+   "expected": "paper.add",
+   "categories": [
+    "pl",
+    "natural",
+    "diacritics"
+   ],
+   "idx": 64,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Odhacz sprawę numer pięć jako załatwioną",
+   "expected": "paper.done",
+   "categories": [
+    "pl",
+    "diacritics"
+   ],
+   "idx": 65,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Co mam pilnego na najbliższe dni",
+   "expected": "paper.due",
+   "categories": [
+    "pl",
+    "natural",
+    "paraphrase",
+    "diacritics"
+   ],
+   "idx": 66,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Znajdź tę sprawę z urzędu skarbowego w moich papierach",
+   "expected": "paper.find",
+   "categories": [
+    "pl",
+    "natural",
+    "diacritics"
+   ],
+   "idx": 67,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Zrób skrót do tego programu na pulpicie",
+   "expected": "shortcut.create",
+   "categories": [
+    "pl",
+    "diacritics"
+   ],
+   "idx": 68,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Zamów mi taksówkę na lotnisko za godzinę",
+   "expected": null,
+   "categories": [
+    "pl",
+    "none",
+    "diacritics"
+   ],
+   "idx": 69,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "Policz ile mam pieniędzy na koncie bankowym",
+   "expected": null,
+   "categories": [
+    "pl",
+    "none",
+    "diacritics"
+   ],
+   "idx": 70,
+   "new": true,
+   "lang": "pl"
+  },
+  {
+   "query": "close down the chrome window, i'm done using it for now",
+   "expected": "app.close",
+   "categories": [
+    "natural"
+   ],
+   "idx": 71,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "fire up my browser real quick",
+   "expected": "app.launch",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 72,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "show me everything I've got open on screen right now",
+   "expected": "app.list_windows",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 73,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "pull up that project directory so I can see what's inside",
+   "expected": "app.open_folder",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 74,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "I need a blank page to jot something down real quick",
+   "expected": "app.open_notepad",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 75,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "I want the exact same file sitting in a different folder too",
+   "expected": "file.copy",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 76,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "put these words into whatever I've got focused on screen at the moment",
+   "expected": "input.type_text",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 77,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "how much room is left on the remote server's drive",
+   "expected": "linux.disk.usage",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 78,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "dig up a config file by its name somewhere on that linux machine",
+   "expected": "linux.files.find",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 79,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "peek at what's inside that directory on the remote linux box",
+   "expected": "linux.files.list",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 80,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "how many times does the word timeout show up across the logs on that machine",
+   "expected": "linux.files.search",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 81,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "check how much working memory is available on that box and how hard it's being pushed",
+   "expected": "linux.memory.info",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 82,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "check if anything called worker is still running out there on the server",
+   "expected": "linux.process.find",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 83,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "who's currently logged into that linux server",
+   "expected": "linux.users.sessions",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 84,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "just google this for me",
+   "expected": "web.search",
+   "categories": [
+    "natural"
+   ],
+   "idx": 85,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "I don't have a skill for this yet, can you go request one be built",
+   "expected": "skill.request",
+   "categories": [
+    "natural"
+   ],
+   "idx": 86,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "jot down a quick reminder to call the bank tomorrow",
+   "expected": "note.save",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 87,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "pull up directions to some place I need to find",
+   "expected": "web.open_maps",
+   "categories": [
+    "natural",
+    "paraphrase"
+   ],
+   "idx": 88,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "bring my minimized windows back the way they were",
+   "expected": "window.restore_all",
+   "categories": [
+    "natural"
+   ],
+   "idx": 89,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "play some relaxing music in the background",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "idx": 90,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "book a table for two at an italian restaurant tonight",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "idx": 91,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "generate a picture of a cat riding a bicycle",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "idx": 92,
+   "new": true,
+   "lang": "en"
+  },
+  {
+   "query": "my machine is crawling, what's eating it",
+   "expected": "sys.list_processes",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 93
+  },
+  {
+   "query": "get rid of that stuck program",
+   "expected": "proc.kill",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 94
+  },
+  {
+   "query": "can you dim the screen a bit, it's too bright",
+   "expected": "sys.brightness",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 95
+  },
+  {
+   "query": "how much charge do I have left on this laptop",
+   "expected": "sys.battery",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 96
+  },
+  {
+   "query": "I'm heading out for a sec, lock it up",
+   "expected": "sys.lock",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 97
+  },
+  {
+   "query": "what's my computer's IP address",
+   "expected": "net.my_ip",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 98
+  },
+  {
+   "query": "grab a screenshot of this for me",
+   "expected": "sys.screenshot",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 99
+  },
+  {
+   "query": "how long has this box been running without a reboot",
+   "expected": "sys.uptime",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 100
+  },
+  {
+   "query": "is my internet even connected right now",
+   "expected": "net.ping",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 101
+  },
+  {
+   "query": "swap my desktop background for something new",
+   "expected": "sys.wallpaper",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 102
+  },
+  {
+   "query": "can you turn the volume up a notch, I can barely hear it",
+   "expected": "sys.volume_up",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 103
+  },
+  {
+   "query": "quiet down that sound a little",
+   "expected": "sys.volume_down",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 104
+  },
+  {
+   "query": "what folder have I been messing with most recently",
+   "expected": "file.recent",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 105
+  },
+  {
+   "query": "ping me a reminder about this in a bit",
+   "expected": "sys.notify",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 106
+  },
+  {
+   "query": "ditch the clutter and show me the desktop",
+   "expected": "window.minimize_all",
+   "categories": [
+    "natural"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 107
+  },
+  {
+   "query": "make that document disappear from my drive for good",
+   "expected": "file.delete",
+   "categories": [
+    "natural",
+    "paraphrase",
+    "hard_paraphrase"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 108
+  },
+  {
+   "query": "get chrome up and running on my screen",
+   "expected": "app.launch",
+   "categories": [
+    "natural",
+    "paraphrase",
+    "hard_paraphrase"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 109
+  },
+  {
+   "query": "shrink this whole directory down into one single package",
+   "expected": "folder.zip",
+   "categories": [
+    "natural",
+    "paraphrase",
+    "hard_paraphrase"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 110
+  },
+  {
+   "query": "spill the contents of that compressed package into a folder",
+   "expected": "folder.unzip",
+   "categories": [
+    "natural",
+    "paraphrase",
+    "hard_paraphrase"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 111
+  },
+  {
+   "query": "get rid of the junk piling up and buy me back some room",
+   "expected": "sys.empty_temp",
+   "categories": [
+    "natural",
+    "paraphrase",
+    "hard_paraphrase"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 112
+  },
+  {
+   "query": "what hotspots can this laptop pick up from here",
+   "expected": "net.wifi_list",
+   "categories": [
+    "natural",
+    "paraphrase",
+    "hard_paraphrase"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 113
+  },
+  {
+   "query": "kill all the noise coming out of this thing",
+   "expected": "sys.mute",
+   "categories": [
+    "natural",
+    "paraphrase",
+    "hard_paraphrase"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 114
+  },
+  {
+   "query": "set up a quick-launch icon for this on my desktop",
+   "expected": "shortcut.create",
+   "categories": [
+    "natural",
+    "paraphrase",
+    "hard_paraphrase"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 115
+  },
+  {
+   "query": "help me figure out how to get to this address",
+   "expected": "web.open_maps",
+   "categories": [
+    "natural",
+    "paraphrase",
+    "hard_paraphrase"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 116
+  },
+  {
+   "query": "what's breathing down my neck this week",
+   "expected": "paper.due",
+   "categories": [
+    "natural",
+    "paraphrase",
+    "hard_paraphrase"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 117
+  },
+  {
+   "query": "kick that thing back into life on the server",
+   "expected": "linux.service.restart",
+   "categories": [
+    "natural",
+    "paraphrase",
+    "hard_paraphrase"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 118
+  },
+  {
+   "query": "stash these words for a second, I'll need them again shortly",
+   "expected": "clip.set_text",
+   "categories": [
+    "natural",
+    "paraphrase",
+    "hard_paraphrase"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 119
+  },
+  {
+   "query": "cant close this app its stuck",
+   "expected": "app.close",
+   "categories": [
+    "natural",
+    "typo"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 120
+  },
+  {
+   "query": "wut time is it rn",
+   "expected": "sys.now_pretty",
+   "categories": [
+    "natural",
+    "typo"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 121
+  },
+  {
+   "query": "delete dis file plz",
+   "expected": "file.delete",
+   "categories": [
+    "typo"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 122
+  },
+  {
+   "query": "hows my batery doin",
+   "expected": "sys.battery",
+   "categories": [
+    "natural",
+    "typo"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 123
+  },
+  {
+   "query": "opne the calc app quick",
+   "expected": "app.open_calc",
+   "categories": [
+    "typo"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 124
+  },
+  {
+   "query": "waht wifi networks r around",
+   "expected": "net.wifi_list",
+   "categories": [
+    "natural",
+    "typo"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 125
+  },
+  {
+   "query": "order me a pizza for delivery",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 126
+  },
+  {
+   "query": "what's my bank account balance",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 127
+  },
+  {
+   "query": "turn off the living room lights",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 128
+  },
+  {
+   "query": "write a poem about the ocean",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 129
+  },
+  {
+   "query": "call my sister on the phone",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 130
+  },
+  {
+   "query": "what's the score of tonight's game",
+   "expected": null,
+   "categories": [
+    "none"
+   ],
+   "lang": "en",
+   "new": true,
+   "round": "en_opt_step2",
+   "idx": 131
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+# Piny sa czescia kontraktu determinizmu (ryzyko R9 planu).
+# Zmiana wersji gramatyki zmienia outline, wiec zmienia pack_hash miedzy maszynami.
+tree-sitter==0.26.0
+tree-sitter-language-pack==1.14.3
+# Licznik tokenow baseline'u (D3). Proxy tokenizera Claude'a, nie sam tokenizer.
+tiktoken==0.13.0

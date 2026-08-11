@@ -11,6 +11,27 @@ from .context_schema import normalize_metadata
 
 CHROMA_PATH = os.environ.get("CHROMA_PATH", os.path.join(os.path.dirname(__file__), "..", "data", "chroma"))
 
+def _distance_to_similarity(distance: float, space: str | None) -> float:
+    """Convert a Chroma query distance into a 0..1 similarity score.
+
+    Chroma's distance meaning depends on the collection's hnsw:space:
+      - "cosine": distance = 1 - cosine_similarity (range 0..2) -> similarity = 1 - distance
+      - "ip":     distance = 1 - inner_product; for unit-normalised embeddings this
+                  behaves like cosine distance -> similarity = 1 - distance
+      - "l2" (or unset/None): Chroma's DEFAULT when hnsw:space is not explicitly
+                  configured. This is SQUARED L2 distance, not cosine distance.
+                  For unit-normalised embeddings (e.g. all-MiniLM-L6-v2 output),
+                  squared_L2 = 2 - 2*cosine_similarity, so:
+                      cosine_similarity = 1 - (squared_L2 / 2)
+    """
+    space_key = (space or "l2").strip().lower()
+    if space_key in ("cosine", "ip", "dot", "inner_product"):
+        similarity = 1.0 - distance
+    else:  # "l2" / squared L2 (Chroma default when hnsw:space is unset)
+        similarity = 1.0 - (distance / 2.0)
+    return max(0.0, min(1.0, similarity))
+
+
 class VectorStore:
     """Session-scoped collections in ChromaDB persistent client."""
     def __init__(self, persist_path: str | None = None) -> None:
@@ -54,10 +75,18 @@ class VectorStore:
             docs = res["documents"][0]
             dists = res.get("distances", [[0.0]*len(ids)])[0]
             metas = res.get("metadatas", [[None]*len(ids)])[0]
+            coll_space = None
+            try:
+                coll_meta = getattr(coll, "metadata", None) or {}
+                coll_space = coll_meta.get("hnsw:space")
+            except Exception:
+                coll_space = None
             for i in range(len(ids)):
-                # Chroma returns distance where lower is better; convert to score 0..1 (roughly)
+                # Chroma returns distance where lower is better; convert to score 0..1
+                # using the collection's actual distance metric (defaults to squared L2,
+                # which is Chroma's default when hnsw:space is not set explicitly).
                 dist = float(dists[i]) if i < len(dists) else 0.0
-                base_score = max(0.0, 1.0 - dist)
+                base_score = _distance_to_similarity(dist, coll_space)
                 keyword_bonus = 0.0
                 if keyword_bias and docs[i]:
                     normalized = docs[i].lower()

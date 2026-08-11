@@ -1,0 +1,265 @@
+"""AIONS Skill Engine - semantic (Chroma/CBMS) retrieval over skills.
+
+WHAT THIS FILE DOES
+--------------------
+Bridges control_plane/skills/registry.py (lexical, stem-based token overlap)
+to the SAME always-on Chroma HTTP store CBMS already uses
+(server/store_selector.VectorStore), following the exact pattern
+control_plane/skills/recipes.py already established for recipe intents
+(session_aions_recipes). This module creates and queries ONE new Chroma
+collection: session_aions_skills (via VectorStore._get_coll("aions_skills")).
+
+Deliberately reuses the DEFAULT embedding function: VectorStore/store_http.py
+never passes embedding_function= to get_or_create_collection(), so every
+collection it creates (including CBMS's session_claude_marcin_main and the
+existing session_aions_recipes) gets Chroma's default client-side embedder
+(all-MiniLM-L6-v2, 384 dims). Going through VectorStore here means this
+collection is embedded identically to every other collection in this Chroma
+instance, with no extra imports and no risk of a mismatched embedding model.
+
+WHY IT EXISTS
+-------------
+SkillRegistry.search() (control_plane/skills/registry.py) scores purely on
+stemmed token overlap between the query and each skill's
+id+name+description+tags blob. If a query paraphrases a skill without
+sharing a surface token (e.g. PL "nagly wysyp awarii" vs. tags
+"errors"/"spike"/"count"), the score is exactly 0 and the skill is
+structurally invisible to any caller, including the LLM-constrained
+candidate list in goal_planner.plan_goal(). This module adds a semantic
+retrieval path on top, without ever removing or weakening the lexical path.
+
+PUBLIC API
+----------
+build_skill_index(registry=None, force=False) -> dict
+    One-time / re-runnable full build of the session_aions_skills Chroma
+    collection from the current skills_lib/ contents. Safe to call
+    repeatedly: upsert() is keyed by stable skill id, so re-running after an
+    edit updates the existing vector in place; a removed skill.json just
+    stops being re-upserted (see stale-vector note below).
+
+semantic_skill_search(query, top_k=8, threshold=0.35, registry=None) -> list[dict]
+    Semantic-first skill search with a MANDATORY keyword fallback/merge, so
+    this can never return less than what registry.search() alone would
+    return. Return shape is IDENTICAL to SkillRegistry.search():
+        [{"id": str, "type": "skill", "score": float}, ...]
+    making it a drop-in replacement at any registry.search(...) call site.
+
+ENV VARS
+--------
+    AIONS_SKILL_SEMANTIC=1|0         (default 1)    master on/off switch.
+                                      If "0": semantic_skill_search() returns
+                                      EXACTLY registry.search()'s output,
+                                      nothing more, nothing less.
+    AIONS_SKILL_SEM_THRESHOLD=0.35   (default 0.35) min score (0..1, higher
+                                      is better) to accept a semantic hit.
+
+SAFETY / FAILURE MODE
+----------------------
+Every Chroma/HTTP call in this module is wrapped in try/except. ANY failure
+(Chroma down, collection not built yet, network error, bad response shape)
+silently degrades semantic_skill_search() to the pure-lexical
+registry.search() path -- identical in spirit to how
+control_plane/cbms_gate.py::_chroma_hits() and
+control_plane/skills/recipes.py::find_recipe_semantic() already treat Chroma
+as strictly best-effort. This module cannot raise into a caller from a
+Chroma-side failure, and it never writes to, deletes from, or modifies any
+Chroma collection other than session_aions_skills.
+
+Anti-hallucination: any semantic hit whose id is not currently present in
+the loaded SkillRegistry (registry.get(id) is None) is dropped before it can
+reach a caller -- this protects against a stale vector for a skill that was
+since deleted or renamed in skills_lib/.
+
+ROLLBACK
+--------
+This module is purely additive; it does not modify registry.py, schema.py,
+store_http.py, or any existing caller.
+1. Fastest rollback (no file changes): set env var AIONS_SKILL_SEMANTIC=0.
+   semantic_skill_search() then returns exactly registry.search()'s output.
+2. If this module has been wired into a caller (e.g. goal_planner.py), just
+   revert that one-line `from control_plane.skills.semantic_search import
+   semantic_skill_search` / call-site change back to `registry.search(...)`.
+3. Full removal: delete this file, and optionally delete the Chroma
+   collection it created:
+       DELETE http://127.0.0.1:8000/api/v1/collections/session_aions_skills
+   This has zero effect on any other collection (session_aions_recipes,
+   session_claude_marcin_main, etc.) -- verified: this module only ever
+   calls vs._get_coll("aions_skills"), never touches any other session id.
+"""
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+from typing import Any
+
+REPO = Path(__file__).resolve().parents[2]
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+
+from . import registry as registry_mod  # noqa: E402
+
+_SKILL_SESSION = "aions_skills"  # -> Chroma collection "session_aions_skills"
+_SEM_THRESHOLD_DEFAULT = 0.35
+
+_VS: Any = None          # in-process VectorStore singleton
+_REGISTRY: Any = None    # in-process SkillRegistry singleton (lexical fallback + anti-hallucination check)
+
+
+def semantic_enabled() -> bool:
+    return os.environ.get("AIONS_SKILL_SEMANTIC", "1").lower() in ("1", "true", "on", "yes")
+
+
+def _sem_threshold() -> float:
+    try:
+        return float(os.environ.get("AIONS_SKILL_SEM_THRESHOLD", _SEM_THRESHOLD_DEFAULT))
+    except Exception:
+        return _SEM_THRESHOLD_DEFAULT
+
+
+def _get_vs():
+    """Lazily create VectorStore (HTTP -> always-on Chroma :8000, embedded
+    fallback). Singleton per process. Returns None if unavailable -- callers
+    MUST treat that as "fall back to lexical", never as a hard error."""
+    global _VS
+    if _VS is not None:
+        return _VS
+    try:
+        os.environ.setdefault("CHROMA_USE_HTTP", "true")
+        from server.store_selector import VectorStore  # type: ignore
+
+        _VS = VectorStore()
+        return _VS
+    except Exception:
+        return None
+
+
+def _get_registry():
+    """Lazily create + discover a SkillRegistry singleton, reused both as the
+    source of truth for build_skill_index() and as the lexical fallback +
+    anti-hallucination check inside semantic_skill_search()."""
+    global _REGISTRY
+    if _REGISTRY is not None:
+        return _REGISTRY
+    reg = registry_mod.SkillRegistry()
+    reg.discover()
+    _REGISTRY = reg
+    return _REGISTRY
+
+
+def build_skill_index(registry=None, force: bool = False) -> dict:
+    """One-time / re-runnable full build of the session_aions_skills Chroma
+    collection from the current skills_lib/ contents.
+
+    Safe to call repeatedly (e.g. after forge.py writes a new skill.json, or
+    from a periodic task): upsert() is keyed by the stable skill id, so
+    re-running after an edit updates the existing vector in place instead of
+    erroring on a duplicate id, and a brand-new skill just gets added.
+
+    `force` is accepted for API symmetry with other AIONS build/rebuild
+    entrypoints; because upsert is always idempotent here there is currently
+    no cheaper "skip" path -- kept as a parameter so a future version can add
+    a change-hash short-circuit without breaking callers.
+
+    Returns a dict describing the outcome; never raises.
+    """
+    try:
+        reg = registry or _get_registry()
+        if registry is None:
+            reg.discover()  # re-read skills_lib/ from disk so edits/new skills are picked up
+
+        vs = _get_vs()
+        if vs is None:
+            return {"ok": False, "reason": "vector_store_unavailable", "indexed": 0}
+
+        try:
+            coll = vs._get_coll(_SKILL_SESSION)
+        except Exception as e:
+            return {"ok": False, "reason": f"collection_unavailable: {e}", "indexed": 0}
+
+        ids, docs, metas = [], [], []
+        for obj in reg.objects.values():
+            if obj.type != "skill":
+                continue
+            # Reuse AObject.blob() (id + name + description + tags) -- the SAME
+            # text the lexical registry.search() already scores against, so the
+            # two retrieval paths stay conceptually aligned.
+            ids.append(obj.id)
+            docs.append(obj.blob())
+            metas.append({
+                "name": obj.name,
+                "description": obj.description,
+                "tags": " ".join(obj.tags),
+                "risk": obj.risk,
+                "handler": obj.handler,
+                "source_dir": obj.source_dir,
+                "type": "skill",
+            })
+
+        if not ids:
+            return {"ok": True, "indexed": 0, "reason": "no_skills_found"}
+
+        try:
+            coll.upsert(ids=ids, documents=docs, metadatas=metas)
+        except Exception as e:
+            return {"ok": False, "reason": f"upsert_failed: {e}", "indexed": 0}
+
+        return {"ok": True, "indexed": len(ids), "collection": f"session_{_SKILL_SESSION}"}
+    except Exception as e:
+        return {"ok": False, "reason": f"unexpected_error: {e}", "indexed": 0}
+
+
+def semantic_skill_search(query: str, top_k: int = 8, threshold: float | None = None,
+                           registry=None) -> list:
+    """Semantic-first skill search with mandatory keyword fallback so this
+    NEVER regresses behaviour vs. today's registry.search().
+
+    If AIONS_SKILL_SEMANTIC=0, returns EXACTLY registry.search(query,
+    top_k=top_k, types=("skill",))'s output -- nothing more, nothing less.
+
+    Otherwise returns the SAME shape registry.search() already returns:
+        [{"id": str, "type": "skill", "score": float}, ...]
+    (semantic hits first, ranked by score, then any lexical-only hits the
+    semantic pass missed) so it is a drop-in replacement at every existing
+    registry.search(...) call site.
+    """
+    reg = registry or _get_registry()
+
+    if not semantic_enabled():
+        return reg.search(query, top_k=top_k, types=("skill",))
+
+    thr = _sem_threshold() if threshold is None else float(threshold)
+
+    semantic_hits = []
+    try:
+        vs = _get_vs()
+        if vs is not None:
+            raw = vs.search(_SKILL_SESSION, query, top_k=top_k)
+            for h in raw or []:
+                score = float(h.get("score") or 0.0)
+                if score < thr:
+                    continue
+                sid = h.get("id")
+                if not sid or reg.get(sid) is None:
+                    # Anti-hallucination: never return an id that isn't a
+                    # real, currently-loaded skill (index may be stale vs.
+                    # skills_lib/ -- e.g. skill was deleted after the last
+                    # build_skill_index() run).
+                    continue
+                semantic_hits.append({"id": sid, "type": "skill", "score": round(score, 4)})
+    except Exception:
+        semantic_hits = []  # Chroma/HTTP down, collection missing, bad response -> fall through to lexical only
+
+    # Mandatory keyword fallback / top-up: always compute lexical hits and
+    # merge so semantic outages or an unbuilt/stale index degrade gracefully
+    # to exactly today's behaviour instead of returning nothing.
+    lexical_hits = reg.search(query, top_k=top_k, types=("skill",))
+
+    seen = {h["id"] for h in semantic_hits}
+    merged = list(semantic_hits)
+    for h in lexical_hits:
+        if h["id"] not in seen:
+            merged.append(h)
+            seen.add(h["id"])
+
+    return merged[:top_k]

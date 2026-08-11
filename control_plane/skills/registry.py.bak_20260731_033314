@@ -31,17 +31,6 @@ SKILLS_DIR = REPO / "skills_lib"
 _EN_SUFFIXES_SIBILANT = ("s", "x", "z", "h")
 _PL_SUFFIXES = ("ów", "ami", "ach", "om", "ie", "y", "i", "a", "e")
 
-# Bug A fix: PL diacritics must be folded to base letters BEFORE suffix
-# stripping, and identically for query + indexed text (single choke point:
-# _stem_token). Explicit table (NOT bare NFKD -- NFKD does not decompose
-# Polish l-with-stroke, which is a distinct letter, not l + combining mark).
-_PL_DIACRITICS_MAP = str.maketrans({
-    "ą": "a", "ć": "c", "ę": "e", "ł": "l", "ń": "n",
-    "ó": "o", "ś": "s", "ź": "z", "ż": "z",
-    "Ą": "a", "Ć": "c", "Ę": "e", "Ł": "l", "Ń": "n",
-    "Ó": "o", "Ś": "s", "Ź": "z", "Ż": "z",
-})
-
 
 def _stem_en(word: str) -> str:
     if len(word) > 4 and word.endswith("ies"):
@@ -67,7 +56,6 @@ def _stem_token(word: str) -> str:
     indeksu (blob/tags) i zapytania -- wazna jest tylko spojnosc, nie
     lingwistyczna poprawnosc."""
     w = word.lower()
-    w = w.translate(_PL_DIACRITICS_MAP)
     w = _stem_en(w)
     w = _stem_pl(w)
     return w

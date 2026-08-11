@@ -1,0 +1,551 @@
+"""AIONS Skill Engine - semantic (Chroma/CBMS) retrieval over skills.
+
+WHAT THIS FILE DOES
+--------------------
+Bridges control_plane/skills/registry.py (lexical, stem-based token overlap)
+to the SAME always-on Chroma HTTP store CBMS already uses
+(server/store_selector.VectorStore), following the pattern
+control_plane/skills/recipes.py already established for recipe intents
+(session_aions_recipes). Creates/queries ONE Chroma collection:
+session_aions_skills (via VectorStore._get_coll("aions_skills")). Reuses the
+DEFAULT embedding function (all-MiniLM-L6-v2, 384 dims, same as every other
+collection in this Chroma instance) -- no extra imports, no model mismatch.
+
+v2 (evidence-gated rebuild, 2026-07-31): v1 of this module was never wired
+into any caller. Head-to-head on a 48-case labelled test set
+(runtime/skill_retrieval_testset.json; 17 PL incl. diacritics, 26
+natural-speech/paraphrase, 5 no-capability "nothing" cases) built from the
+real skills_lib/ corpus found:
+  - registry.search() alone: top1 51.2% (22/43), top3 62.8%, but 80% (4/5)
+    FALSE-POSITIVE rate on "nothing" queries.
+  - raw Chroma similarity alone: top1 55.8% (24/43), top3 76.7%, 0/5 FP at a
+    0.35 floor -- but a real, reproducible weakness: full-sentence Polish
+    queries pull in a cluster of short-blob skills (paper.done, note.save,
+    skill.request, web.search) as embedding "attractors" that outscore the
+    correct answer, sometimes keeping it out of the top 10 entirely. This is
+    an embedding-quality gap, not a threshold artifact -- the WRONG
+    candidate has the HIGHEST raw score, so no threshold fixes it.
+  - v1's merge (semantic hits unconditionally first if >=0.35, then lexical
+    top-up) actively made things worse than lexical alone on several PL
+    queries: no way to prefer a correct lexical winner over an
+    above-threshold-but-wrong semantic attractor.
+This version replaces that merge with a calibrated blend re-ranker (see
+semantic_skill_search() below), tuned on split A of the test set and
+verified COLD on the held-out split B:
+    held-out top1: hybrid 61.9% (13/21) vs lexical 42.9% (9/21)
+    held-out top3: hybrid 71.4% (15/21) vs lexical 57.1% (12/21)
+    held-out FP :  hybrid 50.0% (1/2)   vs lexical 100.0% (2/2)
+4 cases fixed, 0 regressions on the held-out half.
+
+v3 (iterative optimisation task, R0-R4, 2026-07-31): test set expanded
+48->92 cases, tune/holdout split re-randomised ONCE (fixed seed, see
+runtime/skill_retrieval_split.json), never touched again. Held-out results
+per round: R0 baseline top1 56.4%/top3 64.1%/FP 71.4%. R1 multi-doc index
+(session_aions_skills_v2, MAX-over-docs) top1 56.4%/top3 66.7%/FP 71.4% --
+kept (no regression). R2 anti-hub score penalty: top1 56.4% flat, FP
+WORSENED to 85.7% in isolation -- honest negative, superseded by R3. R3
+joint grid retune (2000+ points, tune-half only, fp-tiered selection after
+a naive top1-only search overfit the 3-case tune none-sample to 100%
+held-out FP): winning config has hub_w=0 -- plain retuned thresholds beat
+every hub-corrected variant. FINAL top1 59.0%/top3 66.7%/FP 57.1%. R4
+per-skill dynamic sem-only bar: tied R3 exactly (0pp) -- confirmed plateau,
+reverted to the simpler flat-threshold R3 config. Ceiling: held-out top1
+did not move past ~59% under any blend/threshold/anti-hub combination
+tried; remaining misses are hard paraphrases (embedding-similarity ceiling)
+and sibling-skill families (app.*, window.*, linux.service.*/files.*/
+logs.*) that are genuinely close in embedding space -- fixing these needs a
+different/stronger embedder, out of scope here by design.
+
+v4 (multilingual embedder gate, 2026-07-31): tested the "different/stronger
+embedder" lever v3 flagged as out of scope. New collection
+session_aions_skills_v3 (see runtime/build_skill_index_v3.py) indexes the
+IDENTICAL v2 corpus (same normalize_text/gen_examples, only the embedder
+changes) using sentence-transformers `paraphrase-multilingual-MiniLM-L12-v2`
+(50+ languages incl. Polish, 384-dim), embedded CLIENT-SIDE (this module
+computes the query vector itself and calls Chroma with query_embeddings=...
+-- Chroma's default embedding function is never invoked for that
+collection). Blend weights were grid-searched independently on the tune
+half (same fp-tiered method as R3/R4; see _W_LEX_DEFAULT_V3 etc. below for
+the winning point). SHIP GATE was held-out top1 >= 64% AND FP <= 57.1%.
+Result: top1 61.5% (24/39, +2.5pp over v2's 59.0%, still short of the +5pp
+bar) and FP 85.7% (6/7, far WORSE than v2's 57.1%) -- GATE FAILED, v2
+remains the default. Diagnosis (see runtime/_v3_none_diag.py): the
+multilingual model's raw cosine similarity for genuinely-unrelated queries
+runs systematically HIGHER than v2's default embedder (spot check on 5 of
+the 10 "nothing" cases: v2 best-wrong-candidate similarity 0.30-0.40 vs
+v3's 0.47-0.61 on the SAME queries) -- i.e. this embedder is measurably
+BETTER at pulling correct cross-lingual paraphrases closer (explaining the
+top1/top3 gain) but also flatter/less discriminative for out-of-domain
+text, so no single threshold on this test set separates "real hit" from
+"nothing" as cleanly as v2's. Not a threshold-search or code artifact: the
+same fp-tiered grid method that found v2's config searched 2310 points here
+too. Kept available behind AIONS_SKILL_EMBEDDER=v3 (opt-in, off by default)
+for future experimentation; session_aions_skills_v3 is left indexed (706
+docs, harmless, not queried unless that env var is set). Next candidate
+worth trying if this is revisited: a LARGER multilingual model with a
+stronger separation margin (e.g. bge-m3 or multilingual-e5-base/large) --
+the failure mode here looks like embedding capacity/anisotropy, not a
+Polish-coverage or utterance-generation gap (v3 out-ranked v2 on the
+in-domain PL cases it was actually supposed to help with).
+
+WHY IT EXISTS
+-------------
+SkillRegistry.search() scores purely on stemmed token overlap. A query that
+paraphrases a skill without sharing a surface token (e.g. PL "nagly wysyp
+awarii" vs. tags "errors"/"spike"/"count") scores exactly 0 and is
+structurally invisible to any caller, including goal_planner.plan_goal().
+This module adds semantic retrieval BLENDED with (never simply replacing)
+the lexical path.
+
+PUBLIC API
+----------
+build_skill_index(registry=None, force=False) -> dict
+    One-time / re-runnable full build of session_aions_skills from the
+    current skills_lib/. Unchanged from v1. upsert() is keyed by skill id.
+
+semantic_skill_search(query, top_k=8, threshold=None, registry=None) -> list[dict]
+    HYBRID re-ranker over the UNION of lexical (registry.search) and
+    semantic (Chroma) candidates. Return shape IDENTICAL to
+    SkillRegistry.search(): [{"id": str, "type": "skill", "score": float}].
+
+    Scoring: final = W_LEX * normalised_lexical + W_SEM * semantic_similarity
+      - normalised_lexical = min(1.0, raw_lexical_score / LEX_SATURATION) --
+        a FIXED saturation point, NOT per-query max-normalisation (tried,
+        measurably worse: lets one incidental token overlap on an unrelated
+        "nothing" query rescale to 1.0 just because nothing else scored
+        higher in that query either).
+      - semantic_similarity is Chroma's native 0..1 cosine similarity.
+    Acceptance:
+      - found by BOTH, or by lexical alone: needs final >= BASE_MIN.
+      - found by semantic ALONE (lexical score exactly 0): needs its RAW
+        semantic_similarity >= SEM_ONLY_MIN, a materially HIGHER standalone
+        bar -- keeps PL "attractor" skills from winning on semantic alone.
+    threshold= (legacy kwarg) overrides SEM_ONLY_MIN for this call only.
+
+ENV VARS
+--------
+    AIONS_SKILL_SEMANTIC=1|0              (default 1) master on/off switch.
+                                           "0": returns EXACTLY
+                                           registry.search()'s output.
+    AIONS_SKILL_EMBEDDER=v2|v3            (default "v2") which collection/
+                                           embedder the semantic side queries.
+                                           "v3" = multilingual client-side
+                                           embeddings (session_aions_skills_v3,
+                                           see v4 note above) -- OPT-IN ONLY:
+                                           the v4 gate failed on held-out FP,
+                                           so v2 stays the shipped default.
+    AIONS_SKILL_HYBRID_W_LEX=0.4          weight on normalised lexical
+                                           score (w_sem is always 1-w_lex).
+    AIONS_SKILL_HYBRID_LEX_SATURATION=6.0 raw lexical score treated as
+                                           "fully confident" (-> norm 1.0).
+    AIONS_SKILL_HYBRID_BASE_MIN=0.25      min blended score to be returned.
+    AIONS_SKILL_HYBRID_SEM_ONLY_MIN=0.4   min RAW semantic similarity for a
+                                           semantic-only candidate.
+The four HYBRID_* knobs above are the v2 defaults; when AIONS_SKILL_EMBEDDER
+=v3 they instead default to _W_LEX_DEFAULT_V3/_LEX_SATURATION_DEFAULT_V3/
+_BASE_MIN_DEFAULT_V3/_SEM_ONLY_MIN_DEFAULT_V3 (still overridable by the SAME
+env var names -- see _active_defaults()). All four v2 tuned defaults come
+from a joint grid search (2000+ points) on the tune half of the 92-case
+test set (fixed split in runtime/skill_retrieval_split.json), selected via
+fp-count-tiering to avoid overfitting the thin none-case sample, frozen and
+verified cold on the held-out half -- see v3 note above. The v3 defaults
+came from an identical fp-tiered grid search (2310 points, tune half only)
+-- see v4 note above for why they are not the shipped default.
+
+SAFETY / FAILURE MODE
+----------------------
+Every Chroma/HTTP call here is wrapped in try/except. If Chroma is down, the
+collection doesn't exist yet, or the response shape is wrong,
+semantic_skill_search() DEGRADES SILENTLY to exactly registry.search(query,
+top_k=top_k, types=("skill",))'s output -- same spirit as
+control_plane/cbms_gate.py::_chroma_hits() and
+control_plane/skills/recipes.py::find_recipe_semantic(). Never raises into a
+caller from a Chroma-side failure; never writes/deletes/modifies any Chroma
+collection other than session_aions_skills.
+
+NOTE (behaviour change from v1): when Chroma IS available but the blend
+legitimately finds no candidate clearing its bar (most often a genuine
+"nothing" query), this now returns [] instead of falling back to raw
+lexical hits. v1's "always return at least what lexical would" guarantee is
+exactly what capped lexical's false-positive rate as a ceiling nobody could
+improve on -- beating that ceiling was the point of this rebuild. Callers
+already treat an empty list as "no capability found" (goal_planner.plan_goal:
+"if not candidates: return escalate").
+
+Anti-hallucination: any semantic hit whose id is not currently present in
+the loaded SkillRegistry (registry.get(id) is None) is dropped before it can
+reach a caller -- protects against a stale vector for a skill deleted or
+renamed in skills_lib/ since the last build_skill_index() run.
+
+ROLLBACK
+--------
+1. Fastest (no file changes): set env var AIONS_SKILL_SEMANTIC=0.
+   semantic_skill_search() then returns exactly registry.search()'s output.
+2. If wired into a caller (e.g. goal_planner.py), revert that one-line
+   `from control_plane.skills.semantic_search import semantic_skill_search`
+   / call-site change back to `registry.search(...)`.
+3. Full removal: delete this file, optionally delete the Chroma
+   collection(s):
+       DELETE http://127.0.0.1:8000/api/v1/collections/session_aions_skills
+       DELETE http://127.0.0.1:8000/api/v1/collections/session_aions_skills_v2
+   Zero effect on any other collection -- this module only ever touches
+   "aions_skills" (legacy v1, via the legacy build_skill_index() below) and
+   "aions_skills_v2" (active, via runtime/build_skill_index_v2.py).
+"""
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+from typing import Any
+
+REPO = Path(__file__).resolve().parents[2]
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+
+from . import registry as registry_mod  # noqa: E402
+
+_PL_DIACRITICS_MAP = str.maketrans({
+    "ą": "a", "ć": "c", "ę": "e", "ł": "l", "ń": "n",
+    "ó": "o", "ś": "s", "ź": "z", "ż": "z",
+    "Ą": "a", "Ć": "c", "Ę": "e", "Ł": "l", "Ń": "n",
+    "Ó": "o", "Ś": "s", "Ź": "z", "Ż": "z",
+})
+
+
+def _normalize_text(s: str) -> str:
+    """Lowercase + fold PL diacritics to base Latin letters. Mirrors
+    runtime/build_skill_index_v2.py's doc-side normalize_text EXACTLY --
+    queries and documents must be folded identically before embedding."""
+    if not s:
+        return s
+    return s.lower().translate(_PL_DIACRITICS_MAP)
+
+
+_SKILL_SESSION_V1 = "aions_skills"     # legacy single-blob-per-skill (rollback target, untouched by v3)
+_SKILL_SESSION_V2 = "aions_skills_v2"  # multi-document-per-skill (see runtime/build_skill_index_v2.py)
+_SKILL_SESSION_V3 = "aions_skills_v3"  # multilingual client-side-embedding collection (see runtime/build_skill_index_v3.py, module docstring v4 note)
+_SKILL_SESSION = _SKILL_SESSION_V2      # ACTIVE collection as of v3 -- v2 won (module docstring v3 note)
+
+_V3_MODEL_NAME = "paraphrase-multilingual-MiniLM-L12-v2"  # 50+ languages incl. Polish, 384-dim, client-side only
+
+# v3 (iterative optimisation, 2026-07-31): re-tuned on the expanded 92-case
+# test set, tune/holdout split fixed once (seed 20260731).
+_W_LEX_DEFAULT = 0.4
+_LEX_SATURATION_DEFAULT = 6.0
+_BASE_MIN_DEFAULT = 0.25
+_SEM_ONLY_MIN_DEFAULT = 0.4
+
+# v4 (multilingual embedder gate, 2026-07-31): SEPARATE blend defaults for
+# the v3 embedder path, grid-searched independently on the SAME tune half
+# (v2's defaults above are untouched; see runtime/_v3_grid_final.py). GATE
+# FAILED on held-out (top1 61.5% < 64% bar, FP 85.7% > 57.1% bar) -- these
+# are the best point the grid found, kept only for the AIONS_SKILL_EMBEDDER
+# =v3 opt-in path, NOT the shipped default. See module docstring v4 note.
+_W_LEX_DEFAULT_V3 = 0.4
+_LEX_SATURATION_DEFAULT_V3 = 4.0
+_BASE_MIN_DEFAULT_V3 = 0.35
+_SEM_ONLY_MIN_DEFAULT_V3 = 0.6
+
+_POOL_K_LEXICAL = 30    # >> corpus size headroom (87 skills) so "found by
+                        # lexical at all" is never an artifact of a small pool
+_POOL_K_SEMANTIC = 100  # v2 indexes ~6-10 raw DOCUMENTS per skill, so the
+                        # raw candidate pool must be wide enough to surface
+                        # enough DISTINCT skills after grouping by skill_id
+                        # -- 100 is Chroma's own per-query cap.
+
+_VS: Any = None          # in-process VectorStore singleton
+_REGISTRY: Any = None    # in-process SkillRegistry singleton
+_V3_MODEL: Any = None    # in-process sentence-transformers singleton (v3 only; never loaded unless AIONS_SKILL_EMBEDDER=v3 is actually used)
+
+
+def semantic_enabled() -> bool:
+    return os.environ.get("AIONS_SKILL_SEMANTIC", "1").lower() in ("1", "true", "on", "yes")
+
+
+def _active_embedder() -> str:
+    """AIONS_SKILL_EMBEDDER=v2|v3 (default "v2" until/unless the v4 gate
+    note says otherwise). Any other value silently falls back to "v2" --
+    never raises, same firewall spirit as the rest of this module."""
+    v = os.environ.get("AIONS_SKILL_EMBEDDER", "v2").strip().lower()
+    return v if v in ("v2", "v3") else "v2"
+
+
+def _env_float(name: str, default: float) -> float:
+    try:
+        return float(os.environ.get(name, default))
+    except Exception:
+        return default
+
+
+def _active_defaults() -> tuple:
+    """(w_lex, lex_saturation, base_min, sem_only_min) defaults for whichever
+    embedder AIONS_SKILL_EMBEDDER currently selects. Env-var overrides
+    (AIONS_SKILL_HYBRID_*) still apply ON TOP of whichever default this
+    returns -- see the four functions below."""
+    if _active_embedder() == "v3":
+        return (_W_LEX_DEFAULT_V3, _LEX_SATURATION_DEFAULT_V3,
+                _BASE_MIN_DEFAULT_V3, _SEM_ONLY_MIN_DEFAULT_V3)
+    return (_W_LEX_DEFAULT, _LEX_SATURATION_DEFAULT,
+            _BASE_MIN_DEFAULT, _SEM_ONLY_MIN_DEFAULT)
+
+
+def _weight_lex() -> float:
+    d, _, _, _ = _active_defaults()
+    w = _env_float("AIONS_SKILL_HYBRID_W_LEX", d)
+    return min(1.0, max(0.0, w))
+
+
+def _lex_saturation() -> float:
+    _, d, _, _ = _active_defaults()
+    v = _env_float("AIONS_SKILL_HYBRID_LEX_SATURATION", d)
+    return v if v > 0 else d
+
+
+def _base_min() -> float:
+    _, _, d, _ = _active_defaults()
+    return _env_float("AIONS_SKILL_HYBRID_BASE_MIN", d)
+
+
+def _sem_only_min() -> float:
+    _, _, _, d = _active_defaults()
+    return _env_float("AIONS_SKILL_HYBRID_SEM_ONLY_MIN", d)
+
+
+def _get_vs():
+    """Lazily create VectorStore (HTTP -> always-on Chroma :8000, embedded
+    fallback). Singleton per process. Returns None if unavailable -- callers
+    MUST treat that as "fall back to lexical", never as a hard error."""
+    global _VS
+    if _VS is not None:
+        return _VS
+    try:
+        os.environ.setdefault("CHROMA_USE_HTTP", "true")
+        from server.store_selector import VectorStore  # type: ignore
+
+        _VS = VectorStore()
+        return _VS
+    except Exception:
+        return None
+
+
+def _get_registry():
+    """Lazily create + discover a SkillRegistry singleton, reused both as the
+    source of truth for build_skill_index() and as the lexical side +
+    anti-hallucination check inside semantic_skill_search()."""
+    global _REGISTRY
+    if _REGISTRY is not None:
+        return _REGISTRY
+    reg = registry_mod.SkillRegistry()
+    reg.discover()
+    _REGISTRY = reg
+    return _REGISTRY
+
+
+def _get_v3_model():
+    """Lazily load the multilingual sentence-transformers model. Only ever
+    called from the v3 code path, so AIONS_SKILL_EMBEDDER=v2 (the default)
+    never pays the torch/model-load cost. Singleton per process, same
+    pattern as _get_vs()/_get_registry()."""
+    global _V3_MODEL
+    if _V3_MODEL is not None:
+        return _V3_MODEL
+    from sentence_transformers import SentenceTransformer  # heavy import, deliberately lazy
+    _V3_MODEL = SentenceTransformer(_V3_MODEL_NAME)
+    return _V3_MODEL
+
+
+def _v3_semantic_scores(query: str, top_k_pool: int) -> dict:
+    """Client-side-embedding query against session_aions_skills_v3. Computes
+    the query embedding itself (normalize_embeddings=True, matching how
+    runtime/build_skill_index_v3.py embedded the documents) and passes it to
+    Chroma via query_embeddings=... -- Chroma's own embedding function is
+    NEVER invoked for this collection. Returns {skill_id: max_similarity}
+    exactly like the v2 path, so the blend logic downstream is
+    embedder-agnostic. Any failure here is caught by the CALLER's try/except
+    (semantic_skill_search) and degrades to pure lexical, same contract v2
+    already has."""
+    vs = _get_vs()
+    if vs is None or getattr(vs, "client", None) is None:
+        return {}
+    model = _get_v3_model()
+    nq = _normalize_text(query)
+    emb = model.encode([nq], normalize_embeddings=True)[0].tolist()
+    coll = vs.client.get_or_create_collection(name="session_%s" % _SKILL_SESSION_V3)
+    res = coll.query(query_embeddings=[emb], n_results=max(1, min(100, top_k_pool)))
+    best: dict = {}
+    if res and res.get("ids"):
+        ids = res["ids"][0]
+        dists = res.get("distances", [[0.0] * len(ids)])[0]
+        metas = res.get("metadatas", [[None] * len(ids)])[0]
+        for i in range(len(ids)):
+            meta = metas[i] or {}
+            sid = meta.get("skill_id")
+            if not sid:
+                continue
+            dist = float(dists[i]) if i < len(dists) else 0.0
+            sim = max(0.0, min(1.0, 1.0 - dist))  # collection is hnsw:space=cosine -> distance = 1-cos_sim
+            if sid not in best or sim > best[sid]:
+                best[sid] = sim
+    return best
+
+
+def build_skill_index(registry=None, force: bool = False) -> dict:
+    """LEGACY (v1, single-blob-per-skill) builder -- kept only as a
+    rollback target. The ACTIVE collection is session_aions_skills_v2,
+    built/rebuilt via runtime/build_skill_index_v2.py; this function always
+    targets _SKILL_SESSION_V1 explicitly (never the swappable _SKILL_SESSION)
+    so it can never accidentally corrupt v2's multi-document structure.
+
+    One-time / re-runnable full build of the session_aions_skills Chroma
+    collection from the current skills_lib/ contents.
+
+    Safe to call repeatedly (e.g. after forge.py writes a new skill.json, or
+    from a periodic task): upsert() is keyed by the stable skill id, so
+    re-running after an edit updates the existing vector in place instead of
+    erroring on a duplicate id, and a brand-new skill just gets added.
+
+    `force` is accepted for API symmetry with other AIONS build/rebuild
+    entrypoints; because upsert is always idempotent here there is currently
+    no cheaper "skip" path -- kept as a parameter so a future version can add
+    a change-hash short-circuit without breaking callers.
+
+    Returns a dict describing the outcome; never raises.
+    """
+    try:
+        reg = registry or _get_registry()
+        if registry is None:
+            reg.discover()  # re-read skills_lib/ from disk so edits/new skills are picked up
+
+        vs = _get_vs()
+        if vs is None:
+            return {"ok": False, "reason": "vector_store_unavailable", "indexed": 0}
+
+        try:
+            coll = vs._get_coll(_SKILL_SESSION_V1)  # legacy v1 target ONLY
+        except Exception as e:
+            return {"ok": False, "reason": f"collection_unavailable: {e}", "indexed": 0}
+
+        ids, docs, metas = [], [], []
+        for obj in reg.objects.values():
+            if obj.type != "skill":
+                continue
+            # Reuse AObject.blob() (id + name + description + tags) -- the SAME
+            # text the lexical registry.search() already scores against, so the
+            # two retrieval paths stay conceptually aligned.
+            ids.append(obj.id)
+            docs.append(obj.blob())
+            metas.append({
+                "name": obj.name,
+                "description": obj.description,
+                "tags": " ".join(obj.tags),
+                "risk": obj.risk,
+                "handler": obj.handler,
+                "source_dir": obj.source_dir,
+                "type": "skill",
+            })
+
+        if not ids:
+            return {"ok": True, "indexed": 0, "reason": "no_skills_found"}
+
+        try:
+            coll.upsert(ids=ids, documents=docs, metadatas=metas)
+        except Exception as e:
+            return {"ok": False, "reason": f"upsert_failed: {e}", "indexed": 0}
+
+        return {"ok": True, "indexed": len(ids), "collection": f"session_{_SKILL_SESSION_V1}"}
+    except Exception as e:
+        return {"ok": False, "reason": f"unexpected_error: {e}", "indexed": 0}
+
+
+def semantic_skill_search(query: str, top_k: int = 8, threshold: float | None = None,
+                           registry=None) -> list:
+    """Hybrid (lexical UNION semantic) re-ranker. See module docstring for the
+    scoring formula, acceptance rule, and the held-out evidence behind the
+    tuned defaults.
+
+    If AIONS_SKILL_SEMANTIC=0, returns EXACTLY registry.search(query,
+    top_k=top_k, types=("skill",))'s output -- nothing more, nothing less.
+
+    `threshold`, if given, overrides AIONS_SKILL_HYBRID_SEM_ONLY_MIN for this
+    call only (legacy kwarg name kept for signature compatibility).
+    """
+    reg = registry or _get_registry()
+
+    # Lexical side is always computed first: it is both a scoring input AND
+    # the mandatory silent-degrade path if semantic turns out unavailable.
+    lexical_hits = reg.search(query, top_k=_POOL_K_LEXICAL, types=("skill",))
+
+    if not semantic_enabled():
+        return lexical_hits[:top_k]
+
+    lex_scores = {h["id"]: h["score"] for h in lexical_hits}
+
+    semantic_scores: dict = {}
+    semantic_available = False
+    try:
+        vs = _get_vs()
+        if vs is not None:
+            if _active_embedder() == "v3":
+                # v4 note: client-side multilingual embedding query against
+                # session_aions_skills_v3 -- see _v3_semantic_scores() above.
+                raw_scores = _v3_semantic_scores(query, _POOL_K_SEMANTIC)
+                semantic_available = True
+                for sid, sc in raw_scores.items():
+                    if reg.get(sid) is None:
+                        # Anti-hallucination: id not currently loaded in registry.
+                        continue
+                    if sid not in semantic_scores or sc > semantic_scores[sid]:
+                        semantic_scores[sid] = sc
+            else:
+                nq = _normalize_text(query)
+                raw = vs.search(_SKILL_SESSION, nq, top_k=_POOL_K_SEMANTIC)
+                semantic_available = True
+                for h in raw or []:
+                    # v2 indexes SEVERAL documents per skill sharing metadata
+                    # {"skill_id": ...}; score per skill = MAX over its docs.
+                    meta = h.get("metadata") or {}
+                    sid = meta.get("skill_id")
+                    if not sid or reg.get(sid) is None:
+                        # Anti-hallucination: id not currently loaded in registry
+                        # (stale vector for a deleted/renamed skill) -- drop it.
+                        continue
+                    sc = float(h.get("score") or 0.0)
+                    if sid not in semantic_scores or sc > semantic_scores[sid]:
+                        semantic_scores[sid] = sc
+    except Exception:
+        semantic_available = False
+
+    if not semantic_available:
+        # Chroma down / collection missing / bad response -> silent degrade
+        # to pure lexical, per module contract.
+        return lexical_hits[:top_k]
+
+    w_lex = _weight_lex()
+    w_sem = 1.0 - w_lex
+    lex_sat = _lex_saturation()
+    base_min = _base_min()
+    sem_only_min = float(threshold) if threshold is not None else _sem_only_min()
+
+    candidate_ids = set(lex_scores) | set(semantic_scores)
+    scored = []
+    for cid in candidate_ids:
+        lraw = lex_scores.get(cid, 0.0)
+        sraw = semantic_scores.get(cid, 0.0)
+        lnorm = min(1.0, lraw / lex_sat) if lex_sat > 0 else 0.0
+        final = w_lex * lnorm + w_sem * sraw
+
+        found_by_lexical = cid in lex_scores
+        if not found_by_lexical and sraw < sem_only_min:
+            # semantic-only candidate below the higher standalone bar -> drop
+            continue
+        if final < base_min:
+            continue
+
+        if reg.get(cid) is None:
+            continue  # anti-hallucination (belt-and-braces)
+
+        scored.append((final, cid))
+
+    scored.sort(key=lambda t: (-t[0], t[1]))
+    return [{"id": cid, "type": "skill", "score": round(final, 4)} for final, cid in scored[:top_k]]

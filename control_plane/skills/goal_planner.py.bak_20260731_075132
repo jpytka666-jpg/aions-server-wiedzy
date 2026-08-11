@@ -97,7 +97,7 @@ import time
 from pathlib import Path
 from typing import Any, Optional
 
-from . import executor, planner, recipes, semantic_search
+from . import executor, planner, recipes
 
 # control_plane/skills/goal_planner.py -> parents[2] == repo root (tak samo
 # jak w recipes.py / gate.py).
@@ -537,13 +537,7 @@ def plan_goal(goal: str, registry, max_steps: int = 5) -> dict:
             _log_cbms_decision(goal, {"decision": "error", "error": str(e)})
     # --- koniec CBMS-first cache; cache_info["hit"] == False -> idziemy do LLM
 
-    # v2.2c (evidence-gated hybrid, 2026-07-31): held-out top1 61.9% vs
-    # lexical-alone 42.9% and lower false-positive rate on a 48-case labelled
-    # set (see runtime/skill_retrieval_testset.json) -- semantic_skill_search
-    # blends this SAME registry.search() with Chroma similarity and silently
-    # degrades back to plain registry.search() if semantic is unavailable or
-    # AIONS_SKILL_SEMANTIC=0, so this call site is never worse-off than before.
-    candidates = semantic_search.semantic_skill_search(goal, top_k=_TOP_K_CANDIDATES, registry=registry)
+    candidates = registry.search(goal, top_k=_TOP_K_CANDIDATES, types=("skill",))
     if not candidates:
         return {"status": "escalate", "reason": "no_candidates", "steps": [], "cache": cache_info}
 

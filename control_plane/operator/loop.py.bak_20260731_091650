@@ -1,0 +1,711 @@
+"""AIONS Control Plane — Operator loop (B1, utwardzony w B1.1, B4: LLM comment).
+
+observe() -> diagnose() -> act() -> verify() -> learn()
+
+Wszystkie wywolania skilli ida przez control_plane.skills.executor.run_skill,
+czyli przez ta sama bramke ryzyka (gate.py) i ten sam audyt, co kazdy inny
+konsument silnika skilli. Ten modul niczego z control_plane/skills/* nie
+zmienia — jest wylacznie nowym konsumentem istniejacego API.
+
+B1.1 utwardzenie:
+  - log_spike liczony bez sufitu -n przez nowy skill linux.logs.count
+    (journalctl -p err ... | wc -l), zamiast probki -n 100 z linux.logs.errors.
+  - log_spike ma baseline: alarm tylko gdy biezaca wartosc > prog ORAZ
+    > 2x srednia krocząca z ostatnich 5 cykli (runtime/state/operator_baseline.json).
+    Pierwszy cykl (pusta historia) tylko zapisuje probke, nigdy nie alarmuje.
+  - Cooldown restartow: max 3 restarty tego samego unitu w 30 min
+    (runtime/state/operator_restarts.json). Po przekroczeniu operator NIE
+    restartuje — oznacza issue jako escalated/needs_human i zapisuje w
+    incydencie rekomendacje (sprawdz recznie / dodaj approval).
+  - --watch --max-iterations N + graceful stop (SIGINT/SIGTERM konczy po
+    biezacym cyklu, nie w jego trakcie).
+  - Kazdy cykl konczy sie jednoliniowym podsumowaniem:
+    CYCLE_RESULT issues=X actions=Y resolved=Z escalated=W
+
+B4 (usta LLM -- WYLACZNIE komentarz, zero decyzji):
+  - Gdy incydent zapisany przez learn() ma escalated_count>0 LUB verified=False,
+    doklejane jest pole "llm_comment" (krotki PL komentarz z istniejacych ust
+    llama.cpp -- patrz control_plane/operator/mouth.py) i drukowana jest linia
+    "LLM: <komentarz>". Usta NIE decyduja o niczym -- wszystkie decyzje
+    (restart/cooldown/eskalacja) zapadaja wczesniej, deterministycznie, w act().
+    Jesli usta sa niedostepne (brak modelu/binarki/timeout), llm_comment=None
+    i petla dziala dalej identycznie jak bez ust (graceful fallback).
+  - Flaga CLI --no-llm calkowicie wylacza wywolanie ust (bez pola llm_comment).
+
+CLI:
+    python -m control_plane.operator.loop --once
+    python -m control_plane.operator.loop --once --no-llm
+    python -m control_plane.operator.loop --watch 30
+    python -m control_plane.operator.loop --watch 30 --max-iterations 4
+    python -m control_plane.operator.loop                # domyslnie jak --once
+"""
+from __future__ import annotations
+
+import argparse
+import datetime
+import json
+import signal
+import sys
+import time
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[2]
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+
+STATE_DIR = REPO / "runtime" / "state" / "operator"
+SNAPSHOT_FILE = STATE_DIR / "last_snapshot.json"
+INCIDENTS_FILE = REPO / "runtime" / "state" / "operator_incidents.jsonl"
+BASELINE_FILE = REPO / "runtime" / "state" / "operator_baseline.json"
+RESTARTS_FILE = REPO / "runtime" / "state" / "operator_restarts.json"
+
+DISK_USE_PCT_THRESHOLD = 90.0
+LOAD_1M_THRESHOLD = 4.0
+LOG_SPIKE_THRESHOLD = 20
+LOG_SINCE = "10 minutes ago"
+
+LOG_SPIKE_HISTORY_LEN = 5
+LOG_SPIKE_BASELINE_MULTIPLIER = 2.0
+
+RESTART_COOLDOWN_MAX = 3
+RESTART_COOLDOWN_WINDOW_MIN = 30
+
+NODE_ID = "operator"
+
+# Set by the SIGINT/SIGTERM handler installed in main() during --watch.
+# The watch loop checks this flag between cycles (never mid-cycle) so a
+# stop request always finishes the current observe->...->learn cycle first.
+_stop_requested = False
+
+
+def _now_iso() -> str:
+    return datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+
+def _pct_to_float(pct_str):
+    try:
+        return float(str(pct_str).strip().rstrip("%"))
+    except (TypeError, ValueError):
+        return None
+
+
+def _issue_key(issue: dict):
+    """Identity used to compare an issue before/after verify()."""
+    if issue["type"] == "service_failed":
+        return (issue["type"], issue.get("unit"))
+    if issue["type"] == "disk_full":
+        return (issue["type"], issue.get("mounted_on"))
+    return (issue["type"],)
+
+
+# --------------------------------------------------------------------------
+# STATE HELPERS (baseline dla log_spike, cooldown dla restartow)
+# --------------------------------------------------------------------------
+
+def _load_json_dict(path: Path, default: dict) -> dict:
+    if not path.exists():
+        return json.loads(json.dumps(default))  # deep copy of the default
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else json.loads(json.dumps(default))
+    except Exception:
+        return json.loads(json.dumps(default))
+
+
+def _save_json_dict(path: Path, data: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+
+
+def _load_baseline() -> dict:
+    data = _load_json_dict(BASELINE_FILE, {"log_spike": {"history": []}})
+    data.setdefault("log_spike", {}).setdefault("history", [])
+    return data
+
+
+def _save_baseline(state: dict) -> None:
+    _save_json_dict(BASELINE_FILE, state)
+
+
+def _log_spike_baseline(state: dict, count: int) -> dict:
+    """Pure read: decide whether `count` is a spike relative to the rolling
+    baseline WITHOUT mutating `state`. Baseline = mean of up to the last
+    LOG_SPIKE_HISTORY_LEN prior cycle counts (current cycle NOT included).
+    First cycle (empty history) never alarms — it only seeds the baseline."""
+    history = state.get("log_spike", {}).get("history", [])
+    first_cycle = len(history) == 0
+    baseline = (sum(history) / len(history)) if history else None
+    alarm = (
+        not first_cycle
+        and count > LOG_SPIKE_THRESHOLD
+        and baseline is not None
+        and count > LOG_SPIKE_BASELINE_MULTIPLIER * baseline
+    )
+    return {"first_cycle": first_cycle, "baseline": baseline, "alarm": alarm}
+
+
+def _record_baseline(state: dict, count: int) -> None:
+    """Append `count` to the log_spike rolling history (mutates `state` in
+    place, keeps only the last LOG_SPIKE_HISTORY_LEN values). Caller persists
+    via _save_baseline(). Called exactly once per outer run_cycle()."""
+    history = state.setdefault("log_spike", {}).setdefault("history", [])
+    history.append(count)
+    if len(history) > LOG_SPIKE_HISTORY_LEN:
+        del history[0: len(history) - LOG_SPIKE_HISTORY_LEN]
+
+
+def _load_restarts() -> dict:
+    return _load_json_dict(RESTARTS_FILE, {})
+
+
+def _save_restarts(state: dict) -> None:
+    _save_json_dict(RESTARTS_FILE, state)
+
+
+def _prune_restart_window(timestamps: list, now: datetime.datetime) -> list:
+    cutoff = now - datetime.timedelta(minutes=RESTART_COOLDOWN_WINDOW_MIN)
+    kept = []
+    for ts in timestamps or []:
+        try:
+            t = datetime.datetime.fromisoformat(ts)
+        except (TypeError, ValueError):
+            continue
+        if t.tzinfo is None:
+            t = t.replace(tzinfo=datetime.timezone.utc)
+        if t > cutoff:
+            kept.append(ts)
+    return kept
+
+
+def _check_restart_cooldown(state: dict, unit: str) -> dict:
+    """Prunes stale timestamps for `unit` (mutates state[unit] in place) and
+    returns whether a new restart is allowed right now."""
+    now = datetime.datetime.now(datetime.timezone.utc)
+    pruned = _prune_restart_window(state.get(unit, []), now)
+    state[unit] = pruned
+    return {"allowed": len(pruned) < RESTART_COOLDOWN_MAX, "count_in_window": len(pruned)}
+
+
+def _register_restart(state: dict, unit: str) -> None:
+    state.setdefault(unit, []).append(_now_iso())
+
+
+# --------------------------------------------------------------------------
+# OBSERVE
+# --------------------------------------------------------------------------
+
+def observe(registry, ctx, node_id: str = NODE_ID) -> dict:
+    """Run the read-only observation skills through the real skill engine
+    (executor.run_skill -> gate -> audit) and persist the snapshot.
+
+    Decyzja B1.1 (log_spike bez sufitu): licznik bledow do log_spike NIE jest
+    liczony z linux.logs.errors (ktory tnie wynik do -n 100 wpisow, wiec przy
+    realnym spike'u > 100 zawsze zwrocilby 100 i falszywie zanizyl skale
+    problemu). Zamiast wolac SSHExecutor bezposrednio z loop.py (co omineloby
+    gate.py/audit i zlamalo jedyny-funnel dla wszystkich akcji operatora,
+    zadeklarowany w docstringu tego modulu), dodany zostal nowy, osobny skill
+    read-only: linux.logs.count (journalctl -p err ... --no-pager | wc -l,
+    risk=low). Jest wolany przez ten sam executor.run_skill co reszta
+    obserwacji — jednolita klasyfikacja ryzyka i audyt dla kazdej operacji,
+    zero specjalnych wyjatkow w kodzie petli.
+    """
+    from control_plane.skills import executor
+
+    mem = executor.run_skill(registry, "linux.memory.info", {}, ctx, node_id=node_id)
+    disk = executor.run_skill(registry, "linux.disk.usage", {}, ctx, node_id=node_id)
+    failed = executor.run_skill(registry, "linux.service.failed", {}, ctx, node_id=node_id)
+    logs = executor.run_skill(registry, "linux.logs.errors", {"since": LOG_SINCE}, ctx, node_id=node_id)
+    log_count = executor.run_skill(registry, "linux.logs.count", {"since": LOG_SINCE}, ctx, node_id=node_id)
+
+    logs_outputs = dict(logs.get("outputs", {}) or {})
+    count_outputs = log_count.get("outputs", {}) or {}
+    if log_count.get("status") == "ok" and "count" in count_outputs:
+        # Uncapped count from linux.logs.count overrides the -n 100 sample
+        # count coming from linux.logs.errors.
+        logs_outputs["count"] = count_outputs["count"]
+        logs_outputs["count_uncapped"] = True
+    else:
+        logs_outputs.setdefault("count_uncapped", False)
+
+    snapshot = {
+        "ts": _now_iso(),
+        "memory": mem.get("outputs", {}) or {},
+        "disk": disk.get("outputs", {}) or {},
+        "failed_services": failed.get("outputs", {}) or {},
+        "log_errors": logs_outputs,
+        "skill_status": {
+            "linux.memory.info": mem["status"],
+            "linux.disk.usage": disk["status"],
+            "linux.service.failed": failed["status"],
+            "linux.logs.errors": logs["status"],
+            "linux.logs.count": log_count["status"],
+        },
+    }
+
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    SNAPSHOT_FILE.write_text(
+        json.dumps(snapshot, ensure_ascii=False, indent=2, default=str), encoding="utf-8"
+    )
+    return snapshot
+
+
+# --------------------------------------------------------------------------
+# DIAGNOSE
+# --------------------------------------------------------------------------
+
+def diagnose(snapshot: dict, baseline_state: dict | None = None) -> list:
+    """Apply simple threshold rules to a snapshot and return a list of issues.
+
+    `baseline_state` is the (already loaded) operator_baseline.json content
+    used for the log_spike rolling-average check. It is read here but never
+    written — run_cycle() is solely responsible for persisting an updated
+    baseline (via _record_baseline + _save_baseline), exactly once per outer
+    cycle, so that verify()'s extra diagnose() call does not double-count
+    samples into the history.
+    """
+    issues = []
+
+    for fs in (snapshot.get("disk", {}) or {}).get("filesystems", []) or []:
+        pct = _pct_to_float(fs.get("use_pct"))
+        if pct is not None and pct > DISK_USE_PCT_THRESHOLD:
+            issues.append({
+                "type": "disk_full",
+                "detail": f"{fs.get('mounted_on')} ({fs.get('filesystem')}) use={fs.get('use_pct')}",
+                "filesystem": fs.get("filesystem"),
+                "mounted_on": fs.get("mounted_on"),
+                "use_pct": pct,
+            })
+
+    failed_list = (snapshot.get("failed_services", {}) or {}).get("failed", []) or []
+    for unit in failed_list:
+        issues.append({
+            "type": "service_failed",
+            "detail": f"unit {unit.get('name')} sub={unit.get('sub')}",
+            "unit": unit.get("name"),
+        })
+
+    load1 = ((snapshot.get("memory", {}) or {}).get("loadavg", {}) or {}).get("load_1m")
+    if load1 is not None and load1 > LOAD_1M_THRESHOLD:
+        issues.append({
+            "type": "high_load",
+            "detail": f"load_1m={load1} (prog {LOAD_1M_THRESHOLD})",
+            "load_1m": load1,
+        })
+
+    log_count = (snapshot.get("log_errors", {}) or {}).get("count", 0) or 0
+    bstate = baseline_state if baseline_state is not None else _load_baseline()
+    spike = _log_spike_baseline(bstate, log_count)
+    if spike["alarm"]:
+        baseline_txt = f"{spike['baseline']:.1f}" if spike["baseline"] is not None else "n/a"
+        issues.append({
+            "type": "log_spike",
+            "detail": (
+                f"{log_count} bledow w ostatnich 10 minutach (prog {LOG_SPIKE_THRESHOLD}, "
+                f"baseline={baseline_txt}, > {LOG_SPIKE_BASELINE_MULTIPLIER}x baseline)"
+            ),
+            "count": log_count,
+            "baseline": spike["baseline"],
+        })
+
+    return issues
+
+
+# --------------------------------------------------------------------------
+# ACT
+# --------------------------------------------------------------------------
+
+def act(registry, ctx, issues: list, node_id: str = NODE_ID) -> list:
+    """Map issues to remedies. service_failed -> linux.service.restart
+    (medium risk: logged + executed by the gate), UNLESS the unit has already
+    been restarted RESTART_COOLDOWN_MAX times in the last
+    RESTART_COOLDOWN_WINDOW_MIN minutes — in that case the operator does NOT
+    restart again; the issue is escalated (decision "needs_human") with a
+    recommendation to check the unit manually or add an approval.
+    Everything else remains a text-only recommendation — no automatic action.
+    """
+    from control_plane.skills import executor
+
+    actions = []
+    restarts_state = _load_restarts()
+    restarts_dirty = False
+
+    for issue in issues:
+        itype = issue["type"]
+        if itype == "service_failed":
+            unit = issue.get("unit")
+            cooldown = _check_restart_cooldown(restarts_state, unit)
+            restarts_dirty = True  # pruning alone can change state[unit]
+            if not cooldown["allowed"]:
+                issue["escalated"] = True
+                actions.append({
+                    "issue": issue,
+                    "action": "escalated_cooldown",
+                    "inputs": {"name": unit},
+                    "result": None,
+                    "decision": "needs_human",
+                    "recommendation": (
+                        f"Unit {unit}: {cooldown['count_in_window']} restarty w ostatnich "
+                        f"{RESTART_COOLDOWN_WINDOW_MIN} min (limit {RESTART_COOLDOWN_MAX}). "
+                        "Cooldown aktywny -- operator NIE restartuje automatycznie. "
+                        f"Sprawdz unit recznie (journalctl -u {unit}, systemctl status {unit}) "
+                        "albo dodaj wpis w runtime/state/approvals.json, jesli restart ma "
+                        "byc kontynuowany automatycznie."
+                    ),
+                })
+                continue
+
+            res = executor.run_skill(
+                registry, "linux.service.restart", {"name": unit}, ctx, node_id=node_id
+            )
+            _register_restart(restarts_state, unit)
+            actions.append({
+                "issue": issue,
+                "action": "linux.service.restart",
+                "inputs": {"name": unit},
+                "result": res,
+                "decision": "auto",
+                "recommendation": None,
+            })
+        elif itype == "disk_full":
+            actions.append({
+                "issue": issue,
+                "action": "recommend_only",
+                "inputs": None,
+                "result": None,
+                "decision": "recommend",
+                "recommendation": (
+                    f"Dysk {issue.get('mounted_on')} ({issue.get('filesystem')}) "
+                    f"uzycie {issue.get('use_pct')}% > {DISK_USE_PCT_THRESHOLD}%. "
+                    "Sprawdz linux.disk.largest i wyczysc/rozszerz wolumen. Brak automatycznej akcji."
+                ),
+            })
+        elif itype == "high_load":
+            actions.append({
+                "issue": issue,
+                "action": "recommend_only",
+                "inputs": None,
+                "result": None,
+                "decision": "recommend",
+                "recommendation": (
+                    f"load_1m={issue.get('load_1m')} > {LOAD_1M_THRESHOLD}. "
+                    "Sprawdz linux.process.top, zidentyfikuj winowajce. Brak automatycznej akcji."
+                ),
+            })
+        elif itype == "log_spike":
+            actions.append({
+                "issue": issue,
+                "action": "recommend_only",
+                "inputs": None,
+                "result": None,
+                "decision": "recommend",
+                "recommendation": (
+                    f"{issue.get('count')} bledow w logach w 10 min > {LOG_SPIKE_THRESHOLD} "
+                    f"i > {LOG_SPIKE_BASELINE_MULTIPLIER}x baseline={issue.get('baseline')}. "
+                    "Przejrzyj journalctl -p err, ustal zrodlo. Brak automatycznej akcji."
+                ),
+            })
+        else:
+            actions.append({
+                "issue": issue,
+                "action": "unknown_issue_type",
+                "inputs": None,
+                "result": None,
+                "decision": None,
+                "recommendation": None,
+            })
+
+    if restarts_dirty:
+        _save_restarts(restarts_state)
+
+    return actions
+
+
+# --------------------------------------------------------------------------
+# VERIFY
+# --------------------------------------------------------------------------
+
+def verify(registry, ctx, issues: list, node_id: str = NODE_ID, baseline_state: dict | None = None) -> dict:
+    """Re-observe and check, issue by issue, whether the condition still holds."""
+    snapshot_after = observe(registry, ctx, node_id=node_id)
+    issues_after = diagnose(snapshot_after, baseline_state)
+    remaining_keys = {_issue_key(i) for i in issues_after}
+
+    per_issue = []
+    for i in issues:
+        resolved = _issue_key(i) not in remaining_keys
+        per_issue.append({"issue": i, "resolved": resolved})
+
+    all_resolved = all(pi["resolved"] for pi in per_issue) if issues else True
+    return {
+        "snapshot_after": snapshot_after,
+        "issues_after": issues_after,
+        "per_issue": per_issue,
+        "all_resolved": all_resolved,
+    }
+
+
+# --------------------------------------------------------------------------
+# LEARN
+# --------------------------------------------------------------------------
+
+def _snapshot_digest(snapshot: dict) -> dict:
+    """Short excerpt of a snapshot for the incident log (not the full payload)."""
+    disk = snapshot.get("disk", {}) or {}
+    mem = snapshot.get("memory", {}) or {}
+    failed = snapshot.get("failed_services", {}) or {}
+    logs = snapshot.get("log_errors", {}) or {}
+    use_pcts = [
+        p for p in (_pct_to_float(fs.get("use_pct")) for fs in disk.get("filesystems", []) or [])
+        if p is not None
+    ]
+    return {
+        "ts": snapshot.get("ts"),
+        "disk_use_pct_max": max(use_pcts) if use_pcts else None,
+        "load_1m": (mem.get("loadavg", {}) or {}).get("load_1m"),
+        "failed_count": failed.get("count"),
+        "log_error_count": logs.get("count"),
+    }
+
+
+def learn(snapshot_before: dict, issues: list, actions: list, verify_result: dict, *, use_llm: bool = True) -> dict:
+    """Append one incident record to runtime/state/operator_incidents.jsonl.
+
+    B4: gdy incydent zostal eskalowany (escalated_count>0) lub nie zostal w
+    pelni zweryfikowany (verified=False), doklejane jest pole "llm_comment" --
+    krotki PL komentarz wygenerowany przez istniejace usta operatora (llama.cpp,
+    patrz control_plane/operator/mouth.py). To WYLACZNIE komentarz dla
+    czlowieka -- LLM niczego tu nie decyduje i nie wywoluje zadnej akcji;
+    wszystkie decyzje (restart/cooldown/eskalacja) zapadly juz wczesniej w
+    act(). Jesli use_llm=False (flaga CLI --no-llm) pole w ogole nie jest
+    dodawane. Jesli usta sa niedostepne (brak modelu/binarki/timeout), pole
+    jest obecne z wartoscia None -- nigdy wyjatku na zewnatrz.
+    """
+    INCIDENTS_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+    action_records = []
+    for a in actions:
+        res = a.get("result") or {}
+        action_records.append({
+            "issue_type": a["issue"]["type"],
+            "action": a["action"],
+            "inputs": a.get("inputs"),
+            "status": res.get("status"),
+            "outputs": res.get("outputs"),
+            "decision": a.get("decision"),
+            "recommendation": a.get("recommendation"),
+        })
+
+    escalated_count = sum(1 for a in actions if a.get("decision") == "needs_human")
+
+    incident = {
+        "ts": _now_iso(),
+        "issues": issues,
+        "actions": action_records,
+        "verified": verify_result["all_resolved"],
+        "escalated_count": escalated_count,
+        "per_issue_resolution": [
+            {"type": pi["issue"]["type"], "resolved": pi["resolved"]}
+            for pi in verify_result["per_issue"]
+        ],
+        "snapshot_before": _snapshot_digest(snapshot_before),
+        "snapshot_after": _snapshot_digest(verify_result["snapshot_after"]),
+    }
+
+    if use_llm and (escalated_count > 0 or not incident["verified"]):
+        try:
+            from control_plane.operator import mouth
+            incident["llm_comment"] = mouth.comment_incident(incident)
+        except Exception as e:
+            # Twardy firewall: usta NIGDY nie moga wywrocic petli operatora --
+            # nawet nieoczekiwany blad importu/wywolania konczy sie None.
+            print(f"[operator.loop] WARN: llm_comment nieudany: {e}", file=sys.stderr)
+            incident["llm_comment"] = None
+
+    with open(INCIDENTS_FILE, "a", encoding="utf-8") as f:
+        f.write(json.dumps(incident, ensure_ascii=False, default=str) + "\n")
+    return incident
+
+
+# --------------------------------------------------------------------------
+# CYCLE + CLI
+# --------------------------------------------------------------------------
+
+def run_cycle(registry=None, ctx=None, node_id: str = NODE_ID, verbose: bool = True, use_llm: bool = True) -> dict:
+    """One full observe -> diagnose -> act -> verify -> learn cycle."""
+    from control_plane.skills.registry import SkillRegistry
+    from control_plane.skills.context import build_context
+
+    if registry is None:
+        registry = SkillRegistry()
+        disc = registry.discover()
+        if verbose:
+            print(f"registry: loaded={disc['loaded']} errors={disc['errors']}")
+    if ctx is None:
+        ctx = build_context()
+
+    if verbose:
+        print(f"\n===== OPERATOR CYCLE {_now_iso()} =====")
+        print("\n--- OBSERVE ---")
+    snapshot = observe(registry, ctx, node_id=node_id)
+    if verbose:
+        print(json.dumps(snapshot, ensure_ascii=False, indent=2, default=str)[:3000])
+
+    if verbose:
+        print("\n--- DIAGNOSE ---")
+    baseline_state = _load_baseline()
+    issues = diagnose(snapshot, baseline_state)
+    log_count = (snapshot.get("log_errors", {}) or {}).get("count", 0) or 0
+    _record_baseline(baseline_state, log_count)
+    _save_baseline(baseline_state)
+    if verbose:
+        if issues:
+            for i in issues:
+                print(f"  ISSUE {i['type']}: {i['detail']}")
+        else:
+            print("  brak wykrytych problemow")
+
+    if verbose:
+        print("\n--- ACT ---")
+    actions = act(registry, ctx, issues, node_id=node_id)
+    if verbose:
+        if actions:
+            for a in actions:
+                if a["action"] == "recommend_only":
+                    print(f"  RECOMMEND [{a['issue']['type']}]: {a['recommendation']}")
+                elif a["action"] == "escalated_cooldown":
+                    print(f"  ESCALATED [{a['issue']['type']}] unit={a['inputs'].get('name')}: {a['recommendation']}")
+                else:
+                    res = a.get("result") or {}
+                    print(
+                        f"  ACTION {a['action']} inputs={a.get('inputs')} "
+                        f"-> status={res.get('status')} outputs={res.get('outputs')}"
+                    )
+        else:
+            print("  brak akcji (brak issues)")
+
+    if verbose:
+        print("\n--- VERIFY ---")
+    if issues:
+        verify_result = verify(registry, ctx, issues, node_id=node_id, baseline_state=baseline_state)
+        if verbose:
+            for pi in verify_result["per_issue"]:
+                print(f"  {pi['issue']['type']}: {'RESOLVED' if pi['resolved'] else 'STILL PRESENT'}")
+            print(f"  all_resolved={verify_result['all_resolved']}")
+    else:
+        verify_result = {
+            "snapshot_after": snapshot,
+            "issues_after": [],
+            "per_issue": [],
+            "all_resolved": True,
+        }
+        if verbose:
+            print("  nic do weryfikacji (cykl czysty, brak issues)")
+
+    if verbose:
+        print("\n--- LEARN ---")
+    incident = None
+    if issues:
+        incident = learn(snapshot, issues, actions, verify_result, use_llm=use_llm)
+        if verbose:
+            print(f"  incydent zapisany -> {INCIDENTS_FILE}")
+            print(json.dumps(incident, ensure_ascii=False, indent=2, default=str)[:2500])
+        # B4: drukowane zawsze (niezaleznie od verbose), analogicznie do
+        # CYCLE_RESULT -- ale tylko gdy pole llm_comment w ogole istnieje
+        # (tj. incydent byl eskalowany/niezweryfikowany i --no-llm nie bylo
+        # ustawione).
+        if "llm_comment" in incident:
+            comment = incident["llm_comment"]
+            if comment:
+                print(f"LLM: {comment}")
+            else:
+                print("LLM: (brak komentarza -- usta niedostepne lub timeout, patrz stderr)")
+    else:
+        if verbose:
+            print("  brak incydentow do zapisania (cykl czysty)")
+
+    resolved_count = sum(1 for pi in verify_result.get("per_issue", []) if pi["resolved"])
+    escalated_count = sum(1 for a in actions if a.get("decision") == "needs_human")
+    # Zawsze drukowane, niezaleznie od verbose -- stalu-formatu linia do
+    # parsowania przez testy/chaos harness.
+    print(
+        f"CYCLE_RESULT issues={len(issues)} actions={len(actions)} "
+        f"resolved={resolved_count} escalated={escalated_count}"
+    )
+
+    return {
+        "snapshot": snapshot,
+        "issues": issues,
+        "actions": actions,
+        "verify": verify_result,
+        "incident": incident,
+    }
+
+
+def _request_stop(signum, frame):
+    global _stop_requested
+    _stop_requested = True
+    print(f"\nOPERATOR WATCH: otrzymano sygnal {signum} -- zatrzymanie po biezacym cyklu (graceful stop).")
+
+
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(
+        prog="python -m control_plane.operator.loop",
+        description="AIONS Operator Loop — observe -> diagnose -> act -> verify -> learn",
+    )
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--once", action="store_true", help="jeden cykl (domyslne zachowanie)")
+    group.add_argument("--watch", type=int, metavar="N", help="petla co N sekund; Ctrl+C aby zatrzymac (graceful)")
+    parser.add_argument(
+        "--max-iterations", type=int, default=None, metavar="N",
+        help="tylko z --watch: zatrzymaj po N cyklach (domyslnie: bez limitu)",
+    )
+    parser.add_argument(
+        "--no-llm", action="store_true",
+        help="B4: wylacz komentarze LLM (usta llama.cpp) przy eskalacji/niezweryfikowanych incydentach",
+    )
+    args = parser.parse_args(argv)
+
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
+    use_llm = not args.no_llm
+
+    if args.watch:
+        global _stop_requested
+        _stop_requested = False
+        for sig in ("SIGINT", "SIGTERM"):
+            handler_sig = getattr(signal, sig, None)
+            if handler_sig is None:
+                continue
+            try:
+                signal.signal(handler_sig, _request_stop)
+            except Exception:
+                pass  # e.g. not the main thread, or platform doesn't support it
+
+        limit_txt = f" max_iterations={args.max_iterations}." if args.max_iterations else " (bez limitu iteracji)."
+        print(f"OPERATOR WATCH: cykl co {args.watch}s.{limit_txt} Ctrl+C aby zatrzymac (graceful).")
+        iteration = 0
+        try:
+            while True:
+                iteration += 1
+                run_cycle(use_llm=use_llm)
+                if args.max_iterations and iteration >= args.max_iterations:
+                    print(f"OPERATOR WATCH: osiagnieto max_iterations={args.max_iterations} -- zatrzymanie.")
+                    break
+                if _stop_requested:
+                    break
+                time.sleep(args.watch)
+        except KeyboardInterrupt:
+            print("\nOPERATOR WATCH: zatrzymano (Ctrl+C).")
+        return 0
+
+    # default behaviour (also covers --once)
+    run_cycle(use_llm=use_llm)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

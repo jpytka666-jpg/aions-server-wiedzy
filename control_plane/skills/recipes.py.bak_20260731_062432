@@ -23,14 +23,7 @@ RECIPES_PATH = REPO / "runtime" / "state" / "skill_recipes.json"
 
 # --- BRIDGE recipes<->CBMS ------------------------------------------------
 _RECIPE_SESSION = "aions_recipes"  # -> kolekcja Chroma "session_aions_recipes"
-# Measured 2026-07-31: true paraphrases of a cached recipe score 0.72-0.93;
-# unrelated queries score 0.52-0.61 (e.g. plan_goal on "znajdz plik raport.docx
-# i otworz go" matched an unrelated cached recipe at 0.63 and returned steps
-# that wrote a hardcoded poem and opened it -- confidently wrong action).
-# 0.70 sits above the entire observed false-positive band (max 0.61) and
-# below the entire observed true-positive band (min 0.72). Do NOT lower this
-# without new measured score data -- see control_plane docs/checkpoint notes.
-_SEM_THRESHOLD_DEFAULT = 0.70
+_SEM_THRESHOLD_DEFAULT = 0.55
 _VS = None  # in-process singleton VectorStore
 
 

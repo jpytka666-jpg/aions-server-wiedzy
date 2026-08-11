@@ -97,7 +97,7 @@ import time
 from pathlib import Path
 from typing import Any, Optional
 
-from . import executor, planner, recipes, semantic_search
+from . import executor, planner, recipes
 
 # control_plane/skills/goal_planner.py -> parents[2] == repo root (tak samo
 # jak w recipes.py / gate.py).
@@ -537,13 +537,7 @@ def plan_goal(goal: str, registry, max_steps: int = 5) -> dict:
             _log_cbms_decision(goal, {"decision": "error", "error": str(e)})
     # --- koniec CBMS-first cache; cache_info["hit"] == False -> idziemy do LLM
 
-    # v2.2c (evidence-gated hybrid, 2026-07-31): held-out top1 61.9% vs
-    # lexical-alone 42.9% and lower false-positive rate on a 48-case labelled
-    # set (see runtime/skill_retrieval_testset.json) -- semantic_skill_search
-    # blends this SAME registry.search() with Chroma similarity and silently
-    # degrades back to plain registry.search() if semantic is unavailable or
-    # AIONS_SKILL_SEMANTIC=0, so this call site is never worse-off than before.
-    candidates = semantic_search.semantic_skill_search(goal, top_k=_TOP_K_CANDIDATES, registry=registry)
+    candidates = registry.search(goal, top_k=_TOP_K_CANDIDATES, types=("skill",))
     if not candidates:
         return {"status": "escalate", "reason": "no_candidates", "steps": [], "cache": cache_info}
 
@@ -576,23 +570,17 @@ def plan_goal(goal: str, registry, max_steps: int = 5) -> dict:
         }
 
     valid_steps = []
-    dropped_steps = []  # v2.2: visibility for hallucinated/invalid steps dropped below
     raw_steps = parsed.get("steps")
     if isinstance(raw_steps, list):
         for step in raw_steps[:max_steps]:
             if not isinstance(step, dict):
-                dropped_steps.append({"skill": None, "reason": "step_not_object"})
                 continue
             skill_id = step.get("skill")
             if not isinstance(skill_id, str) or skill_id not in candidate_ids:
-                # nie ma w liscie kandydatow -> halucynacja, odrzuc
-                dropped_steps.append({"skill": skill_id, "reason": "hallucinated_not_in_candidates"})
-                continue
+                continue  # nie ma w liscie kandydatow -> halucynacja, odrzuc
             obj = registry.get(skill_id)
             if obj is None:
-                # nie istnieje w registry -> odrzuc
-                dropped_steps.append({"skill": skill_id, "reason": "not_in_registry"})
-                continue
+                continue  # nie istnieje w registry -> odrzuc
             allowed_keys = {i.get("name") for i in (obj.inputs or [])}
             raw_inputs = step.get("inputs")
             inputs = {}
@@ -606,39 +594,24 @@ def plan_goal(goal: str, registry, max_steps: int = 5) -> dict:
             valid_steps.append({"skill": skill_id, "inputs": inputs})
 
     if not valid_steps:
-        result = {
+        return {
             "status": "escalate",
             "reason": "no_valid_steps_after_validation",
             "raw_llm": raw_content,
             "steps": [],
             "cache": cache_info,
         }
-        if dropped_steps:
-            result["dropped_steps"] = dropped_steps
-        return result
 
     why = parsed.get("why")
     cache_info["source"] = "llm_compose"
-    # v2.2 (proven live bug): steps dropped as hallucinations used to vanish
-    # silently -- caller got a "planned" result missing a step, with no way
-    # to tell the plan was pruned (observed: goal "close windows and lock
-    # the screen" -> hallucinated app.close_all dropped, remaining plan was
-    # window.restore_all + sys.lock, i.e. semantically OPPOSITE of "close",
-    # but returned as if complete). Any drop now flips status to
-    # "incomplete" and lists what/why in dropped_steps. Clean plans (no
-    # drops) keep the EXACT previous shape -- no dropped_steps key, status
-    # stays "planned" -- so existing callers see no behaviour change.
-    result = {
-        "status": "incomplete" if dropped_steps else "planned",
+    return {
+        "status": "planned",
         "steps": valid_steps,
         "source": "llm_compose",
         "why": why if isinstance(why, str) else "",
         "raw_llm": raw_content,
         "cache": cache_info,
     }
-    if dropped_steps:
-        result["dropped_steps"] = dropped_steps
-    return result
 
 
 def _step_explicit_ok_false(step_result: dict) -> bool:

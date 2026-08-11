@@ -13,7 +13,6 @@ Usage:
 """
 
 from __future__ import annotations
-import logging
 import os
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Tuple
@@ -24,27 +23,10 @@ from chromadb.config import Settings
 
 from .context_schema import normalize_metadata
 
-logger = logging.getLogger(__name__)
-
 # Configuration
 CHROMA_HOST = os.environ.get("CHROMA_HOST", "127.0.0.1")  # ALWAYS-ON fix: "localhost" wprowadzal ~4s IPv6/DNS lag na Windows
 CHROMA_PORT = int(os.environ.get("CHROMA_PORT", "8000"))
 CHROMA_PATH = os.environ.get("CHROMA_PATH", os.path.join(os.path.dirname(__file__), "..", "data", "chroma"))
-DEGRADED_LOG_PATH = os.path.join(os.path.dirname(__file__), "..", "runtime", "state", "aions_store_degraded.log")
-
-
-def _log_degraded(reason: str) -> None:
-    """Make a silent fallback to embedded mode observable: log it and append
-    a line to a dedicated runtime log file so it is visible next to the other
-    runtime logs, even though this process's stdout is not captured anywhere."""
-    logger.error("VectorStore degraded to embedded PersistentClient: %s", reason)
-    try:
-        os.makedirs(os.path.dirname(DEGRADED_LOG_PATH), exist_ok=True)
-        ts = datetime.now(timezone.utc).isoformat()
-        with open(DEGRADED_LOG_PATH, "a", encoding="utf-8") as f:
-            f.write(f"{ts} DEGRADED_TO_EMBEDDED reason={reason}\n")
-    except Exception:
-        logger.exception("Failed to write degraded-mode log entry")
 
 # Connection mode tracking
 _connection_mode: str = "unknown"
@@ -53,27 +35,6 @@ _connection_mode: str = "unknown"
 def get_connection_mode() -> str:
     """Return current connection mode: 'http' or 'embedded'"""
     return _connection_mode
-
-
-def _distance_to_similarity(distance: float, space: str | None) -> float:
-    """Convert a Chroma query distance into a 0..1 similarity score.
-
-    Chroma's distance meaning depends on the collection's hnsw:space:
-      - "cosine": distance = 1 - cosine_similarity (range 0..2) -> similarity = 1 - distance
-      - "ip":     distance = 1 - inner_product; for unit-normalised embeddings this
-                  behaves like cosine distance -> similarity = 1 - distance
-      - "l2" (or unset/None): Chroma's DEFAULT when hnsw:space is not explicitly
-                  configured. This is SQUARED L2 distance, not cosine distance.
-                  For unit-normalised embeddings (e.g. all-MiniLM-L6-v2 output),
-                  squared_L2 = 2 - 2*cosine_similarity, so:
-                      cosine_similarity = 1 - (squared_L2 / 2)
-    """
-    space_key = (space or "l2").strip().lower()
-    if space_key in ("cosine", "ip", "dot", "inner_product"):
-        similarity = 1.0 - distance
-    else:  # "l2" / squared L2 (Chroma default when hnsw:space is unset)
-        similarity = 1.0 - (distance / 2.0)
-    return max(0.0, min(1.0, similarity))
 
 
 class VectorStore:
@@ -88,17 +49,13 @@ class VectorStore:
         self.host = chroma_host or CHROMA_HOST
         self.port = chroma_port or CHROMA_PORT
         self._collections: Dict[str, chromadb.api.models.Collection.Collection] = {}
-        self.degraded: bool = False  # set True if we had to fall back to embedded mode
 
         # Try HTTP client first
         self.client = self._connect_http()
 
         if self.client is None:
             # Fallback to embedded PersistentClient
-            reason = f"ChromaDB HTTP not available at {self.host}:{self.port}, using embedded mode"
-            print(f"[STORE] {reason}")
-            self.degraded = True
-            _log_degraded(reason)
+            print(f"[STORE] ChromaDB HTTP not available at {self.host}:{self.port}, using embedded mode")
             os.makedirs(self.persist_path, exist_ok=True)
             self.client = chromadb.PersistentClient(path=self.persist_path)
             _connection_mode = "embedded"
@@ -115,7 +72,6 @@ class VectorStore:
             return client
         except Exception as e:
             print(f"[STORE] HTTP connection failed: {e}")
-            logger.error("ChromaDB HTTP connection failed: %s", e)
             return None
 
     def reconnect_http(self) -> bool:
@@ -164,18 +120,10 @@ class VectorStore:
             docs = res["documents"][0]
             dists = res.get("distances", [[0.0]*len(ids)])[0]
             metas = res.get("metadatas", [[None]*len(ids)])[0]
-            coll_space = None
-            try:
-                coll_meta = getattr(coll, "metadata", None) or {}
-                coll_space = coll_meta.get("hnsw:space")
-            except Exception:
-                coll_space = None
             for i in range(len(ids)):
-                # Chroma returns distance where lower is better; convert to score 0..1
-                # using the collection's actual distance metric (defaults to squared L2,
-                # which is Chroma's default when hnsw:space is not set explicitly).
+                # Chroma returns distance where lower is better; convert to score 0..1 (roughly)
                 dist = float(dists[i]) if i < len(dists) else 0.0
-                base_score = _distance_to_similarity(dist, coll_space)
+                base_score = max(0.0, 1.0 - dist)
                 keyword_bonus = 0.0
                 if keyword_bias and docs[i]:
                     normalized = docs[i].lower()

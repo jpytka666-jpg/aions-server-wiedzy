@@ -1,0 +1,57 @@
+{
+  "schema": "acae.queries.v1",
+  "frozen_at_head": "06fdfe2",
+  "note": "Dziesiec zamrozonych zapytan. Kazde to realne wejscie w kod tego repo. Zamrozone znaczy: zmiana tresci uniewaznia baseline i wymaga przeliczenia B_query od nowa.",
+  "queries": [
+    {
+      "id": "q01-memory-cbms",
+      "topic": "pamiec / CBMS",
+      "text": "how are CBMS memory chunks stored and read back from the store"
+    },
+    {
+      "id": "q02-mcp-tools",
+      "topic": "MCP",
+      "text": "how is an MCP tool registered and exposed on the FastMCP server"
+    },
+    {
+      "id": "q03-tree-sitter",
+      "topic": "tree-sitter",
+      "text": "how are code symbols and outlines extracted with tree-sitter parsers"
+    },
+    {
+      "id": "q04-crla",
+      "topic": "CRLA",
+      "text": "what does CRLA evaluate and how is the resulting score computed"
+    },
+    {
+      "id": "q05-config",
+      "topic": "konfiguracja",
+      "text": "where is configuration loaded from and which environment variables are read"
+    },
+    {
+      "id": "q06-tests",
+      "topic": "testy",
+      "text": "how are tests organized and which assertions cover the memory layer"
+    },
+    {
+      "id": "q07-startup",
+      "topic": "skrypty startowe",
+      "text": "how is the server started and which launcher scripts set up the environment"
+    },
+    {
+      "id": "q08-provenance",
+      "topic": "provenance",
+      "text": "how is provenance recorded on every memory write with agent host and surface"
+    },
+    {
+      "id": "q09-retrieval",
+      "topic": "retrieval",
+      "text": "how does semantic search rank candidates and return results with scores"
+    },
+    {
+      "id": "q10-hooks",
+      "topic": "hooki",
+      "text": "which hooks run before a write and what do they block or checkpoint"
+    }
+  ]
+}

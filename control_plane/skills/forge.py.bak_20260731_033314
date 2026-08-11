@@ -20,7 +20,6 @@ import subprocess
 from pathlib import Path
 
 from . import schema
-from .registry import _stem_set as _reg_stem_set
 
 REPO = Path(__file__).resolve().parents[2]
 REQ = REPO / "skills_requests"
@@ -68,74 +67,14 @@ def list_requests(status="requested"):
     return out
 
 
-# Stopwords (EN+PL function words) dropped before counting content tokens --
-# measured 2026-07-31: raw-word-count normalisation still divided by filler
-# prepositions/aux-words in multi-word intents (e.g. "sprawdz wolne miejsce
-# na dysku" counted "na" as a token), understating the real match density.
-_GAP_STOPWORDS = {
-    "a", "an", "the", "of", "to", "for", "in", "on", "at", "is", "are", "do",
-    "does", "my", "your", "please", "how", "what", "i", "you", "it", "this",
-    "that", "and", "or", "me", "can", "could",
-    "w", "na", "z", "do", "o", "jest", "czy", "prosze", "ile", "jaki", "jaka",
-    "jakie", "ty", "moj", "twoj", "sie", "jak", "dla", "za", "ze", "sa",
-    "byc", "tego", "tej", "te",
-}
-_GAP_STOPWORD_STEMS = _reg_stem_set(_GAP_STOPWORDS)
-
-
-def _content_token_count(intent: str) -> int:
-    """Content-token count used to normalise gap_detect's raw registry score.
-
-    Uses the SAME stemmer as SkillRegistry.search() (_stem_set from
-    registry.py) so the divisor matches how the raw score was actually
-    produced (registry.search stems both query and blob before overlap/
-    taghit), then drops stopwords so filler words don't inflate the
-    divisor. Falls back to the unfiltered stem set if stopword-removal
-    would empty it (degenerate all-stopword query).
-    """
-    raw = intent.lower().replace(",", " ").replace(".", " ").split()
-    stems = _reg_stem_set(raw)
-    content = stems - _GAP_STOPWORD_STEMS
-    return max(1, len(content or stems))
-
-
-def gap_detect(registry, intent, min_score=0.5):
-    """Bug B fix (v1): SkillRegistry.search() scores as overlap + 0.5*taghit,
-    and BOTH terms are bounded by the number of query tokens -- so raw score
-    is NOT comparable across query lengths. v1 normalised by raw
-    len(intent.split()) (ALL words, including stopwords).
-
-    Bug B fix v2 (2026-07-31): raw word-count normalisation still
-    miscalibrated short functional intents. PROVEN FAILURE: "check battery
-    level" has a real matching skill (sys.battery) but raw score 1.5 / 3
-    raw-words = 0.5, below the old min_score=1.0 threshold -> wrongly
-    reported as a capability gap. Fix: normalise by CONTENT tokens (same
-    _stem_set tokeniser the registry itself uses, stopwords dropped -- see
-    _content_token_count) instead of raw word count, AND recalibrate
-    min_score down to 0.5.
-
-    Content-token normalisation alone does not fully fix "check battery
-    level" (neither "check" nor "level" is a stopword, so ctok stays 3,
-    same as raw -> normalised score still 0.5) -- measured true-positive
-    intents ("check battery level", "sprawdz baterie") normalise to exactly
-    0.50, while measured true-gap intents (no real matching skill, e.g.
-    "ugotuj obiad z makaronem", "wymysl imie dla kota") normalise to <=0.33,
-    and totally unrelated intents score 0.0 (empty hits). 0.5 sits at the
-    true-positive floor and above the measured true-gap ceiling (0.33) --
-    see control_plane checkpoint notes for the full measured table before
-    changing this again.
-
-    types=("skill",) so non-executable objects (docs, etc.) can't supply a
-    hit that suppresses a real gap.
-    """
-    hits = registry.search(intent, top_k=3, types=("skill",))
-    ctok = _content_token_count(intent)
-    if hits and (hits[0]["score"] / ctok) >= min_score:
+def gap_detect(registry, intent, min_score=2.0):
+    hits = registry.search(intent, top_k=3)
+    if hits and hits[0]["score"] >= min_score:
         return {"gap": False, "best": hits[0]}
     return {"gap": True, "suggested": {"name": _slug(intent), "description": intent}}
 
 
-def plan_or_request(registry, intent, min_score=0.5):
+def plan_or_request(registry, intent, min_score=2.0):
     g = gap_detect(registry, intent, min_score)
     if not g["gap"]:
         return {"action": "have_skill", "best": g["best"]}

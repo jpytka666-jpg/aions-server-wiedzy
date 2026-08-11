@@ -1,0 +1,21 @@
+# ACAE — konfiguracja zakresu.
+# Wszystkie sciezki sa WZGLEDNE wobec korzenia repo (decyzja D5 planu):
+# ACAE siedzi w repo, wiec zadna sciezka absolutna tu nie pada.
+
+[pack]
+roots = ["aions_core", "server", "mcpServers", "control_plane", "tools", "scripts"]
+mode = "outline"
+max_file_bytes = 1048576
+
+[baseline]
+# Ile plikow z rankingu grepowego symuluje jedno wejscie w kod (Grep -> Read).
+top_k = 5
+# Terminy krotsze niz to sa odrzucane przy rozbiorze zapytania.
+min_term_len = 3
+tokenizer = "cl100k_base"
+# Katalogi odcinane przy chodzeniu po drzewie, zanim zapyta sie gita o .gitignore.
+prune_dirs = [
+    ".git", "__pycache__", "node_modules", ".venv", "venv",
+    ".mypy_cache", ".pytest_cache", ".ruff_cache",
+    ".idea", ".vscode", "_backups",
+]

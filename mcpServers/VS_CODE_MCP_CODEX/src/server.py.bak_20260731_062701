@@ -347,87 +347,6 @@ _auto_log_session: str = "claude_marcin_main"
 _auto_log_threshold: int = 5
 _auto_log_last_dump: datetime = datetime.now(timezone.utc)
 
-# =============================================================================
-# PROVENANCE — one Claude, many machines
-# =============================================================================
-# The session stays single (_auto_log_session). Which host / surface produced a
-# write is METADATA, not a separate memory. Purely additive: every key here is
-# new, callers always win on collision, and records missing these keys are simply
-# "written before the split" — no backfill required to keep working.
-# Filterable via store.search(metadata_filter={"host": "..."}) — these are scalar
-# keys on purpose, because `tags` gets comma-joined into a string and Chroma
-# cannot substring-match a string in a `where` clause.
-
-_RUN_ID: str = (
-    f"{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S')}-{uuid.uuid4().hex[:8]}"
-)
-
-
-def _default_host() -> str:
-    try:
-        import socket
-
-        name = socket.gethostname()
-        if name:
-            return name.strip().lower()
-    except Exception:
-        pass
-    return (os.environ.get("COMPUTERNAME") or "unknown").strip().lower()
-
-
-def _client_identity() -> Dict[str, str]:
-    """Identity the CALLER declared via HTTP headers, if any.
-
-    Provenance is computed server-side, so without this every remote write would
-    be stamped with the server's hostname — a laptop in another room would look
-    like it was typed here. Remote clients declare themselves:
-
-        claude mcp add --transport http aions <url> \
-          --header "X-AIONS-Host: ubuntu-dev" \
-          --header "X-AIONS-Surface: code-cli"
-
-    Never raises: stdio calls simply have no request context, and a write must
-    never fail because provenance could not be determined.
-    """
-    try:
-        from mcp.server.lowlevel.server import request_ctx
-
-        headers = getattr(getattr(request_ctx.get(), "request", None), "headers", None)
-        if not headers:
-            return {}
-        found: Dict[str, str] = {}
-        for header, key in (("x-aions-host", "host"), ("x-aions-surface", "surface")):
-            value = headers.get(header)
-            if value:
-                found[key] = str(value).strip().lower()[:64]
-        return found
-    except Exception:
-        return {}
-
-
-def provenance() -> Dict[str, str]:
-    """Who wrote this, wearing which machine."""
-    server_host = os.environ.get("AIONS_HOST", _default_host())
-    prov = {
-        "agent": os.environ.get("AIONS_AGENT", "claude"),
-        "host": server_host,          # who wrote it (client wins if declared)
-        "server_host": server_host,   # where it physically landed — always true
-        "surface": os.environ.get("AIONS_SURFACE", "unknown"),
-        "run_id": _RUN_ID,
-        "os": platform.system().lower(),
-        "era": "multi-machine",
-    }
-    prov.update(_client_identity())
-    return prov
-
-
-def with_provenance(metadata: Optional[Dict] = None) -> Dict:
-    """Additive merge — caller's keys win, nothing existing is dropped."""
-    merged = provenance()
-    merged.update(metadata or {})
-    return merged
-
-
 # Tools to SKIP logging (to avoid infinite loops)
 SKIP_LOG_TOOLS = {
     "conv_log", "conv_dump", "conv_status", "conv_set_threshold",
@@ -485,12 +404,12 @@ def _auto_dump_logs():
         vs = get_vector_store()
         if vs:
             doc_id = f"autolog_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-            metadata = with_provenance({
+            metadata = {
                 "type": "auto_log",
                 "entry_count": len(_auto_log_buffer),
                 "tools_used": ",".join(set(e["tool"] for e in _auto_log_buffer)),
                 "timestamp": _now_iso()
-            })
+            }
             vs.add_items(_auto_log_session, [(doc_id, log_text, metadata)])
         
         log(f"AUTO-DUMP: {len(_auto_log_buffer)} entries saved")
@@ -1249,7 +1168,7 @@ def memory_store(session_id: str, text: str, ttl_days: int = 30) -> str:
     try:
         doc_id = _generate_id()
         categories = extract_categories(text)
-        metadata = with_provenance({"categories": ",".join(categories), "timestamp": _now_iso()})
+        metadata = {"categories": ",".join(categories), "timestamp": _now_iso()}
         vs = get_vector_store()
         if vs:
             vs.add_items(session_id, [(doc_id, text, metadata)])
@@ -1276,48 +1195,27 @@ def memory_recall(session_id: str, query: str, top_k: int = 5) -> str:
         cbms = get_cbms()
         if cbms:
             try:
-                # FIX (score fabrication): previously every CBMS hit was hardcoded
-                # to score=0.5 regardless of actual relevance, corrupting blended
-                # ranking. Use the real graded confidence from control_plane's
-                # cbms_gate.retrieve() (Korean-key overlap + lexical + Chroma
-                # boost) instead of inventing a number. If a genuine score is
-                # unavailable for a given chunk, mark it honestly rather than
-                # faking one.
-                cbms_score_by_id = {}
-                try:
-                    from control_plane.cbms_gate import retrieve as _cbms_gate_retrieve
-                    gate_hits = _cbms_gate_retrieve(query, top_k=3).get("hits", [])
-                    cbms_score_by_id = {h.get("id"): h.get("score") for h in gate_hits if h.get("id")}
-                except Exception:
-                    cbms_score_by_id = {}
                 for cid in cbms.cbms_think(query).get("chunk_references", [])[:3]:
                     chunk = cbms.retrieve_chunk(cid)
                     if chunk:
-                        real_score = cbms_score_by_id.get(cid)
-                        entry = {"id": f"cbms:{cid}", "text": chunk.get("content", "")[:300], "source": "cbms"}
-                        if real_score is not None:
-                            entry["score"] = real_score
-                        else:
-                            entry["score"] = None
-                            entry["score_available"] = False
-                        results.append(entry)
+                        results.append({"id": f"cbms:{cid}", "text": chunk.get("content", "")[:300], "score": 0.5, "source": "cbms"})
             except:
                 pass
         chroma_results = [r for r in results if r["source"] == "chromadb"]
         other_results = [r for r in results if r["source"] != "chromadb"]
         if chroma_results:
-            chroma_results.sort(key=lambda x: (x["score"] if x["score"] is not None else -1), reverse=True)
-            other_results.sort(key=lambda x: (x["score"] if x["score"] is not None else -1), reverse=True)
+            chroma_results.sort(key=lambda x: x["score"], reverse=True)
+            other_results.sort(key=lambda x: x["score"], reverse=True)
             results = chroma_results + other_results
         else:
             chroma_results = [r for r in results if r["source"] == "chromadb"]
         other_results = [r for r in results if r["source"] != "chromadb"]
         if chroma_results:
-            chroma_results.sort(key=lambda x: (x["score"] if x["score"] is not None else -1), reverse=True)
-            other_results.sort(key=lambda x: (x["score"] if x["score"] is not None else -1), reverse=True)
+            chroma_results.sort(key=lambda x: x["score"], reverse=True)
+            other_results.sort(key=lambda x: x["score"], reverse=True)
             results = chroma_results + other_results
         else:
-            results.sort(key=lambda x: (x["score"] if x["score"] is not None else -1), reverse=True)
+            results.sort(key=lambda x: x["score"], reverse=True)
         return _success({"results": results[:top_k]})
     except Exception as e:
         return _error(str(e))
@@ -2564,51 +2462,10 @@ def _cp_tool_runner(tool: str, args: dict) -> str:
 @mcp_server.tool(name="aions_plan", description="Create execution plan from user intent (Control Plane).")
 def aions_plan(intent: str) -> str:
     try:
-        # FIX (blind fallback): previously this always used control_plane.planner
-        # .create_plan(), a 4-branch regex classifier that defaults to
-        # system_health for anything it does not recognize -- completely
-        # disconnected from the real skill registry. Now wired to the actual
-        # skill-registry planner (control_plane/skills/goal_planner.py::plan_goal),
-        # which does recipe replay / CBMS-cache / LLM-composed selection from the
-        # live skills_lib registry with hallucination validation (every returned
-        # skill id must exist in the registry).
-        from control_plane.models import Plan, PlanStep, new_plan_id, new_step_id
+        from control_plane.planner import create_plan
         from control_plane.executor import store_plan
-        from control_plane.skills.goal_planner import plan_goal
-        from control_plane.skills.registry import SkillRegistry
 
-        registry = SkillRegistry()
-        registry.discover()
-        result = plan_goal(intent, registry)
-
-        if result.get("status") != "planned" or not result.get("steps"):
-            # Honest failure: no capability found -> say so explicitly instead
-            # of returning an unrelated generic action that looks like a plan.
-            payload = {
-                "plan_id": None,
-                "intent": intent,
-                "steps": [],
-                "cbms_context": [],
-                "status": "no_plan",
-                "reason": result.get("reason") or result.get("status") or "planner_returned_no_steps",
-                "source": result.get("source"),
-                "why": result.get("why"),
-            }
-            return _guard(json.dumps(payload, indent=2, default=str))
-
-        steps = []
-        for s in result["steps"]:
-            skill_id = s.get("skill")
-            obj = registry.get(skill_id)
-            desc = obj.description if obj is not None else skill_id
-            steps.append(PlanStep(new_step_id(), desc, skill_id, s.get("inputs", {})))
-
-        plan = store_plan(Plan(
-            id=new_plan_id(),
-            intent=intent,
-            steps=steps,
-            cbms_context=[result.get("cache", {})],
-        ))
+        plan = store_plan(create_plan(intent))
         payload = {
             "plan_id": plan.id,
             "intent": plan.intent,
@@ -2617,11 +2474,8 @@ def aions_plan(intent: str) -> str:
                 for s in plan.steps
             ],
             "cbms_context": plan.cbms_context,
-            "status": "planned",
-            "source": result.get("source"),
-            "why": result.get("why"),
         }
-        return _guard(json.dumps(payload, indent=2, default=str))
+        return _guard(json.dumps(payload, indent=2))
     except Exception as exc:
         return _error(f"aions_plan failed: {exc}")
 

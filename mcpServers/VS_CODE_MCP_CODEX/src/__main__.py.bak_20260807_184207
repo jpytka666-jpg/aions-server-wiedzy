@@ -92,46 +92,6 @@ def main():
                     )
 
         anyio.run(run_stdio)
-    elif transport in ("http", "streamable-http", "sse"):
-        # LAN mode: same FastMCP instance, exposed over HTTP so a remote
-        # Claude Code client (other machine on the network) can attach.
-        # Host/port are env-driven so nothing network-specific is baked in.
-        host = os.environ.get("AIONS_HTTP_HOST", "0.0.0.0")
-        port = int(os.environ.get("AIONS_HTTP_PORT", "8787"))
-        mcp_server.settings.host = host
-        mcp_server.settings.port = port
-
-        # The SDK's DNS-rebinding guard rejects any Host header that is not
-        # localhost (HTTP 421), which blocks LAN clients. Opt out explicitly
-        # with "*", or pin the exact hosts the server should answer to.
-        from mcp.server.transport_security import TransportSecuritySettings
-
-        allowed = [
-            h.strip()
-            for h in os.environ.get("AIONS_HTTP_ALLOWED_HOSTS", "*").split(",")
-            if h.strip()
-        ]
-        if "*" in allowed:
-            mcp_server.settings.transport_security = TransportSecuritySettings(
-                enable_dns_rebinding_protection=False
-            )
-            log("HTTP host check: DISABLED (AIONS_HTTP_ALLOWED_HOSTS=*)")
-        else:
-            mcp_server.settings.transport_security = TransportSecuritySettings(
-                enable_dns_rebinding_protection=True,
-                allowed_hosts=allowed,
-                allowed_origins=[f"http://{h}" for h in allowed],
-            )
-            log(f"HTTP host check: {allowed}")
-
-        wire = "sse" if transport == "sse" else "streamable-http"
-        path = (
-            mcp_server.settings.sse_path
-            if wire == "sse"
-            else mcp_server.settings.streamable_http_path
-        )
-        log(f"HTTP transport={wire} listening on http://{host}:{port}{path}")
-        mcp_server.run(transport=wire)
     else:
         print(f"Unsupported transport: {transport}", file=sys.stderr)
         sys.exit(1)

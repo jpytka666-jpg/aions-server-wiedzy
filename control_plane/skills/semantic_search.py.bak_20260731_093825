@@ -1,0 +1,350 @@
+"""AIONS Skill Engine - semantic (Chroma/CBMS) retrieval over skills.
+
+WHAT THIS FILE DOES
+--------------------
+Bridges control_plane/skills/registry.py (lexical, stem-based token overlap)
+to the SAME always-on Chroma HTTP store CBMS already uses
+(server/store_selector.VectorStore), following the pattern
+control_plane/skills/recipes.py already established for recipe intents
+(session_aions_recipes). Creates/queries ONE Chroma collection:
+session_aions_skills (via VectorStore._get_coll("aions_skills")). Reuses the
+DEFAULT embedding function (all-MiniLM-L6-v2, 384 dims, same as every other
+collection in this Chroma instance) -- no extra imports, no model mismatch.
+
+v2 (evidence-gated rebuild, 2026-07-31): v1 of this module was never wired
+into any caller. Head-to-head on a 48-case labelled test set
+(runtime/skill_retrieval_testset.json; 17 PL incl. diacritics, 26
+natural-speech/paraphrase, 5 no-capability "nothing" cases) built from the
+real skills_lib/ corpus found:
+  - registry.search() alone: top1 51.2% (22/43), top3 62.8%, but 80% (4/5)
+    FALSE-POSITIVE rate on "nothing" queries.
+  - raw Chroma similarity alone: top1 55.8% (24/43), top3 76.7%, 0/5 FP at a
+    0.35 floor -- but a real, reproducible weakness: full-sentence Polish
+    queries pull in a cluster of short-blob skills (paper.done, note.save,
+    skill.request, web.search) as embedding "attractors" that outscore the
+    correct answer, sometimes keeping it out of the top 10 entirely. This is
+    an embedding-quality gap, not a threshold artifact -- the WRONG
+    candidate has the HIGHEST raw score, so no threshold fixes it.
+  - v1's merge (semantic hits unconditionally first if >=0.35, then lexical
+    top-up) actively made things worse than lexical alone on several PL
+    queries: no way to prefer a correct lexical winner over an
+    above-threshold-but-wrong semantic attractor.
+This version replaces that merge with a calibrated blend re-ranker (see
+semantic_skill_search() below), tuned on split A of the test set and
+verified COLD on the held-out split B:
+    held-out top1: hybrid 61.9% (13/21) vs lexical 42.9% (9/21)
+    held-out top3: hybrid 71.4% (15/21) vs lexical 57.1% (12/21)
+    held-out FP :  hybrid 50.0% (1/2)   vs lexical 100.0% (2/2)
+4 cases fixed, 0 regressions on the held-out half.
+
+WHY IT EXISTS
+-------------
+SkillRegistry.search() scores purely on stemmed token overlap. A query that
+paraphrases a skill without sharing a surface token (e.g. PL "nagly wysyp
+awarii" vs. tags "errors"/"spike"/"count") scores exactly 0 and is
+structurally invisible to any caller, including goal_planner.plan_goal().
+This module adds semantic retrieval BLENDED with (never simply replacing)
+the lexical path.
+
+PUBLIC API
+----------
+build_skill_index(registry=None, force=False) -> dict
+    One-time / re-runnable full build of session_aions_skills from the
+    current skills_lib/. Unchanged from v1. upsert() is keyed by skill id.
+
+semantic_skill_search(query, top_k=8, threshold=None, registry=None) -> list[dict]
+    HYBRID re-ranker over the UNION of lexical (registry.search) and
+    semantic (Chroma) candidates. Return shape IDENTICAL to
+    SkillRegistry.search(): [{"id": str, "type": "skill", "score": float}].
+
+    Scoring: final = W_LEX * normalised_lexical + W_SEM * semantic_similarity
+      - normalised_lexical = min(1.0, raw_lexical_score / LEX_SATURATION) --
+        a FIXED saturation point, NOT per-query max-normalisation (tried,
+        measurably worse: lets one incidental token overlap on an unrelated
+        "nothing" query rescale to 1.0 just because nothing else scored
+        higher in that query either).
+      - semantic_similarity is Chroma's native 0..1 cosine similarity.
+    Acceptance:
+      - found by BOTH, or by lexical alone: needs final >= BASE_MIN.
+      - found by semantic ALONE (lexical score exactly 0): needs its RAW
+        semantic_similarity >= SEM_ONLY_MIN, a materially HIGHER standalone
+        bar -- keeps PL "attractor" skills from winning on semantic alone.
+    threshold= (legacy kwarg) overrides SEM_ONLY_MIN for this call only.
+
+ENV VARS
+--------
+    AIONS_SKILL_SEMANTIC=1|0              (default 1) master on/off switch.
+                                           "0": returns EXACTLY
+                                           registry.search()'s output.
+    AIONS_SKILL_HYBRID_W_LEX=0.5          weight on normalised lexical
+                                           score (w_sem is always 1-w_lex).
+    AIONS_SKILL_HYBRID_LEX_SATURATION=4.0 raw lexical score treated as
+                                           "fully confident" (-> norm 1.0).
+    AIONS_SKILL_HYBRID_BASE_MIN=0.15      min blended score to be returned.
+    AIONS_SKILL_HYBRID_SEM_ONLY_MIN=0.4   min RAW semantic similarity for a
+                                           semantic-only candidate.
+All four tuned defaults come from a grid search on split A of
+runtime/skill_retrieval_testset.json (stratified PL / natural-English /
+"nothing"), frozen and verified cold on split B -- see v2 note above.
+
+SAFETY / FAILURE MODE
+----------------------
+Every Chroma/HTTP call here is wrapped in try/except. If Chroma is down, the
+collection doesn't exist yet, or the response shape is wrong,
+semantic_skill_search() DEGRADES SILENTLY to exactly registry.search(query,
+top_k=top_k, types=("skill",))'s output -- same spirit as
+control_plane/cbms_gate.py::_chroma_hits() and
+control_plane/skills/recipes.py::find_recipe_semantic(). Never raises into a
+caller from a Chroma-side failure; never writes/deletes/modifies any Chroma
+collection other than session_aions_skills.
+
+NOTE (behaviour change from v1): when Chroma IS available but the blend
+legitimately finds no candidate clearing its bar (most often a genuine
+"nothing" query), this now returns [] instead of falling back to raw
+lexical hits. v1's "always return at least what lexical would" guarantee is
+exactly what capped lexical's false-positive rate as a ceiling nobody could
+improve on -- beating that ceiling was the point of this rebuild. Callers
+already treat an empty list as "no capability found" (goal_planner.plan_goal:
+"if not candidates: return escalate").
+
+Anti-hallucination: any semantic hit whose id is not currently present in
+the loaded SkillRegistry (registry.get(id) is None) is dropped before it can
+reach a caller -- protects against a stale vector for a skill deleted or
+renamed in skills_lib/ since the last build_skill_index() run.
+
+ROLLBACK
+--------
+1. Fastest (no file changes): set env var AIONS_SKILL_SEMANTIC=0.
+   semantic_skill_search() then returns exactly registry.search()'s output.
+2. If wired into a caller (e.g. goal_planner.py), revert that one-line
+   `from control_plane.skills.semantic_search import semantic_skill_search`
+   / call-site change back to `registry.search(...)`.
+3. Full removal: delete this file, optionally delete the Chroma collection:
+       DELETE http://127.0.0.1:8000/api/v1/collections/session_aions_skills
+   Zero effect on any other collection -- this module only ever calls
+   vs._get_coll("aions_skills").
+"""
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+from typing import Any
+
+REPO = Path(__file__).resolve().parents[2]
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+
+from . import registry as registry_mod  # noqa: E402
+
+_SKILL_SESSION = "aions_skills"  # -> Chroma collection "session_aions_skills"
+
+# Tuned on split A of runtime/skill_retrieval_testset.json, verified cold on
+# split B -- see module docstring v2 note for the held-out numbers.
+_W_LEX_DEFAULT = 0.5
+_LEX_SATURATION_DEFAULT = 4.0
+_BASE_MIN_DEFAULT = 0.15
+_SEM_ONLY_MIN_DEFAULT = 0.4
+
+_POOL_K_LEXICAL = 30   # >> corpus size headroom (87 skills) so "found by
+                       # lexical at all" is never an artifact of a small pool
+_POOL_K_SEMANTIC = 10  # Chroma nearest-neighbour candidate net
+
+_VS: Any = None          # in-process VectorStore singleton
+_REGISTRY: Any = None    # in-process SkillRegistry singleton
+
+
+def semantic_enabled() -> bool:
+    return os.environ.get("AIONS_SKILL_SEMANTIC", "1").lower() in ("1", "true", "on", "yes")
+
+
+def _env_float(name: str, default: float) -> float:
+    try:
+        return float(os.environ.get(name, default))
+    except Exception:
+        return default
+
+
+def _weight_lex() -> float:
+    w = _env_float("AIONS_SKILL_HYBRID_W_LEX", _W_LEX_DEFAULT)
+    return min(1.0, max(0.0, w))
+
+
+def _lex_saturation() -> float:
+    v = _env_float("AIONS_SKILL_HYBRID_LEX_SATURATION", _LEX_SATURATION_DEFAULT)
+    return v if v > 0 else _LEX_SATURATION_DEFAULT
+
+
+def _base_min() -> float:
+    return _env_float("AIONS_SKILL_HYBRID_BASE_MIN", _BASE_MIN_DEFAULT)
+
+
+def _sem_only_min() -> float:
+    return _env_float("AIONS_SKILL_HYBRID_SEM_ONLY_MIN", _SEM_ONLY_MIN_DEFAULT)
+
+
+def _get_vs():
+    """Lazily create VectorStore (HTTP -> always-on Chroma :8000, embedded
+    fallback). Singleton per process. Returns None if unavailable -- callers
+    MUST treat that as "fall back to lexical", never as a hard error."""
+    global _VS
+    if _VS is not None:
+        return _VS
+    try:
+        os.environ.setdefault("CHROMA_USE_HTTP", "true")
+        from server.store_selector import VectorStore  # type: ignore
+
+        _VS = VectorStore()
+        return _VS
+    except Exception:
+        return None
+
+
+def _get_registry():
+    """Lazily create + discover a SkillRegistry singleton, reused both as the
+    source of truth for build_skill_index() and as the lexical side +
+    anti-hallucination check inside semantic_skill_search()."""
+    global _REGISTRY
+    if _REGISTRY is not None:
+        return _REGISTRY
+    reg = registry_mod.SkillRegistry()
+    reg.discover()
+    _REGISTRY = reg
+    return _REGISTRY
+
+
+def build_skill_index(registry=None, force: bool = False) -> dict:
+    """One-time / re-runnable full build of the session_aions_skills Chroma
+    collection from the current skills_lib/ contents.
+
+    Safe to call repeatedly (e.g. after forge.py writes a new skill.json, or
+    from a periodic task): upsert() is keyed by the stable skill id, so
+    re-running after an edit updates the existing vector in place instead of
+    erroring on a duplicate id, and a brand-new skill just gets added.
+
+    `force` is accepted for API symmetry with other AIONS build/rebuild
+    entrypoints; because upsert is always idempotent here there is currently
+    no cheaper "skip" path -- kept as a parameter so a future version can add
+    a change-hash short-circuit without breaking callers.
+
+    Returns a dict describing the outcome; never raises.
+    """
+    try:
+        reg = registry or _get_registry()
+        if registry is None:
+            reg.discover()  # re-read skills_lib/ from disk so edits/new skills are picked up
+
+        vs = _get_vs()
+        if vs is None:
+            return {"ok": False, "reason": "vector_store_unavailable", "indexed": 0}
+
+        try:
+            coll = vs._get_coll(_SKILL_SESSION)
+        except Exception as e:
+            return {"ok": False, "reason": f"collection_unavailable: {e}", "indexed": 0}
+
+        ids, docs, metas = [], [], []
+        for obj in reg.objects.values():
+            if obj.type != "skill":
+                continue
+            # Reuse AObject.blob() (id + name + description + tags) -- the SAME
+            # text the lexical registry.search() already scores against, so the
+            # two retrieval paths stay conceptually aligned.
+            ids.append(obj.id)
+            docs.append(obj.blob())
+            metas.append({
+                "name": obj.name,
+                "description": obj.description,
+                "tags": " ".join(obj.tags),
+                "risk": obj.risk,
+                "handler": obj.handler,
+                "source_dir": obj.source_dir,
+                "type": "skill",
+            })
+
+        if not ids:
+            return {"ok": True, "indexed": 0, "reason": "no_skills_found"}
+
+        try:
+            coll.upsert(ids=ids, documents=docs, metadatas=metas)
+        except Exception as e:
+            return {"ok": False, "reason": f"upsert_failed: {e}", "indexed": 0}
+
+        return {"ok": True, "indexed": len(ids), "collection": f"session_{_SKILL_SESSION}"}
+    except Exception as e:
+        return {"ok": False, "reason": f"unexpected_error: {e}", "indexed": 0}
+
+
+def semantic_skill_search(query: str, top_k: int = 8, threshold: float | None = None,
+                           registry=None) -> list:
+    """Hybrid (lexical UNION semantic) re-ranker. See module docstring for the
+    scoring formula, acceptance rule, and the held-out evidence behind the
+    tuned defaults.
+
+    If AIONS_SKILL_SEMANTIC=0, returns EXACTLY registry.search(query,
+    top_k=top_k, types=("skill",))'s output -- nothing more, nothing less.
+
+    `threshold`, if given, overrides AIONS_SKILL_HYBRID_SEM_ONLY_MIN for this
+    call only (legacy kwarg name kept for signature compatibility).
+    """
+    reg = registry or _get_registry()
+
+    # Lexical side is always computed first: it is both a scoring input AND
+    # the mandatory silent-degrade path if semantic turns out unavailable.
+    lexical_hits = reg.search(query, top_k=_POOL_K_LEXICAL, types=("skill",))
+
+    if not semantic_enabled():
+        return lexical_hits[:top_k]
+
+    lex_scores = {h["id"]: h["score"] for h in lexical_hits}
+
+    semantic_scores: dict = {}
+    semantic_available = False
+    try:
+        vs = _get_vs()
+        if vs is not None:
+            raw = vs.search(_SKILL_SESSION, query, top_k=_POOL_K_SEMANTIC)
+            semantic_available = True
+            for h in raw or []:
+                sid = h.get("id")
+                if not sid or reg.get(sid) is None:
+                    # Anti-hallucination: id not currently loaded in registry
+                    # (stale vector for a deleted/renamed skill) -- drop it.
+                    continue
+                semantic_scores[sid] = float(h.get("score") or 0.0)
+    except Exception:
+        semantic_available = False
+
+    if not semantic_available:
+        # Chroma down / collection missing / bad response -> silent degrade
+        # to pure lexical, per module contract.
+        return lexical_hits[:top_k]
+
+    w_lex = _weight_lex()
+    w_sem = 1.0 - w_lex
+    lex_sat = _lex_saturation()
+    base_min = _base_min()
+    sem_only_min = float(threshold) if threshold is not None else _sem_only_min()
+
+    candidate_ids = set(lex_scores) | set(semantic_scores)
+    scored = []
+    for cid in candidate_ids:
+        lraw = lex_scores.get(cid, 0.0)
+        sraw = semantic_scores.get(cid, 0.0)
+        lnorm = min(1.0, lraw / lex_sat) if lex_sat > 0 else 0.0
+        final = w_lex * lnorm + w_sem * sraw
+
+        found_by_lexical = cid in lex_scores
+        if not found_by_lexical and sraw < sem_only_min:
+            # semantic-only candidate below the higher standalone bar -> drop
+            continue
+        if final < base_min:
+            continue
+
+        if reg.get(cid) is None:
+            continue  # anti-hallucination (belt-and-braces)
+
+        scored.append((final, cid))
+
+    scored.sort(key=lambda t: (-t[0], t[1]))
+    return [{"id": cid, "type": "skill", "score": round(final, 4)} for final, cid in scored[:top_k]]
