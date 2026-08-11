@@ -366,3 +366,38 @@ na pierwsze miejsce). Ale prototyp byl wewnatrzprobkowy, wiec ta przeslanka jest
 Jesli proza tez przegra, wniosek brzmi: **deterministyczny most leksykalny nie zamyka
 luki miedzy opisem a nazwa** — i to jest wynik wart raportu, a nie porazka wymagajaca
 dokladania kolejnych warstw.
+
+## 2026-08-11T13:10 — M4.3 most z prozy: ZMIERZONY I ODRZUCONY
+
+| miara | baseline | M4.3 (proza) | wymagane | werdykt |
+|---|---|---|---|---|
+| recall@10 | 26,6% | **26,6%** | >= 34,6% | NIE |
+| recall@25 | 36,6% | 36,6% | — | bez zmiany |
+| MRR | 0,172 | 0,172 | >= 0,172 | TAK (rowno) |
+| negatywy/pozytywy | 85,2% | 84,9% | <= 85,2% | TAK |
+
+Liczby IDENTYCZNE z baseline, mimo ze most wyprodukowal **427 terminow** na 36 pytan
+(limit 12 na pytanie osiagniety wszedzie). Nie jest to blad — sprawdzone: korpus ma
+13 878 dokumentow, 14 116 unikalnych tokenow, `df(machine)=26`, `df(provenance)=13`.
+
+**Diagnoza — druga strona LLR.** Najwyzsze G^2 w prozie maja generyczne pary
+z dokumentacji:
+```
+styling -> conversation  G2=786.8  co=92   df=190
+memory  -> facts         G2=639.4  co=141  df=212
+chat    -> post          G2=405.3  co=84   df=160
+```
+G^2 nagradza WYSOKIE WSPARCIE — o to prosilem, zeby odciac mala probe. Ale w prozie
+wysokie wsparcie maja slowa czeste i puste. Krawedz `machine -> provenance` (co=2, df=13)
+przegrywa z nimi i wypada poza limit trzech na termin. A `conversation`, `facts`, `post`
+sa w KODZIE czeste, wiec `term_rarity` daje im niska wage i po podzieleniu przez dwa
+nie ruszaja rankingu w ogole.
+
+**LLR naprawil jeden tryb awarii i wprowadzil przeciwny:** przedtem wygrywaly krawedzie
+rzadkie bez wsparcia, teraz czeste bez tresci. To nie jest argument za trzecim progiem —
+to jest argument, ze pojedyncza statystyka wspolwystepowania nie rozdziela „czeste"
+od „istotne" w tym korpusie.
+
+**Ta sama klasa bledu po raz CZWARTY** (rowne wagi -> RARITY_CAP -> stosunek bez wsparcia
+-> LLR bez kontroli pospolitosci). Cztery razy w jednym projekcie to nie pech, tylko
+sygnal o problemie, a nie o parametrze.
