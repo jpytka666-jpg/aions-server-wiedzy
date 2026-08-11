@@ -93,6 +93,80 @@ def rank_with_expansion(entries, terms, depth, corpus, vocabulary, pack_hash, ru
     return ranked[:depth], [receipt.as_dict() for _, receipt in pairs]
 
 
+def rank_graph(entries, terms, depth, graph, seed_k=SEED_K, boost_permille=BOOST_PERMILLE):
+    """
+    Baseline ranker + propagacja Suade po grafie wywolan (M4.4).
+
+    Zbior zainteresowania to `seed_k` najlepszych z rankera leksykalnego — to, w co
+    ranker JUZ wierzy. Propagacja dokłada punkty symbolom, ktorych ranker nie trafil
+    leksykalnie, ale ktore leza o skok lub dwa od tego, co trafil.
+
+    SKALA PREMII
+    ------------
+    Wynik propagacji jest w promilach [0,1000], a wyniki baseline'u to sumy wag
+    rzadkosci o zupelnie innej skali (tysiace). Zderzenie ich wprost nie znaczyloby
+    nic. Premia jest wiec liczona WZGLEDEM czolowego wyniku TEGO zapytania:
+
+        premia = propagacja_promile * top1 * BOOST_PERMILLE / 1000 / 1000
+
+    czyli symbol o pelnej propagacji (1000 promili) dostaje polowe czolowego wyniku.
+    Propagacja moze wiec WYPCHNAC symbol w gore rankingu, ale nie moze sama z siebie
+    postawic na czele czegos, czego ranker w ogole nie widzial.
+
+    Zasiew premii nie dostaje — patrz `CallGraph.propagate`.
+
+    Zwraca (ranking, paragony). Paragony ida do artefaktu: dla kazdego wypromowanego
+    symbolu zapisujemy, z ktorych symbolow zasiewu przyszedl wklad.
+    """
+    rarity = term_rarity(entries, terms)
+    scored = []
+    for entry in entries:
+        path = str(entry["path"])
+        for row in entry["symbols"]:
+            scored.append({
+                "score": score_symbol(path, row, terms, rarity),
+                "path": path, "lang": entry.get("lang"), "row": row,
+            })
+    scored.sort(key=lambda d: (-d["score"], d["path"], d["row"]["line"], d["row"]["name_path"]))
+
+    hits = [d for d in scored if d["score"] > 0]
+    if not hits:
+        return [], []
+
+    seeds = {(d["path"], str(d["row"]["name_path"])) for d in hits[:seed_k]}
+    spread = graph.propagate_with_sources(seeds)
+    scale = (hits[0]["score"] * boost_permille) // 1000
+
+    ranked = []
+    for d in scored:
+        key = (d["path"], str(d["row"]["name_path"]))
+        permille = 0 if key in seeds else spread.get(key, (0, []))[0]
+        bonus = (permille * scale) // 1000
+        total = d["score"] + bonus
+        if total > 0:
+            ranked.append({
+                "score": total, "path": d["path"], "lang": d["lang"], "row": d["row"],
+                "base_score": d["score"], "graph_permille": permille,
+            })
+    ranked.sort(key=lambda d: (-d["score"], d["path"], d["row"]["line"], d["row"]["name_path"]))
+
+    promoted = sorted(
+        ((k, v) for k, v in spread.items() if v[0] > 0),
+        key=lambda it: (-it[1][0], it[0]),
+    )[:RECEIPT_LIMIT]
+    receipts = [
+        {
+            "rule": "suade_call_graph",
+            "target": {"path": key[0], "name_path": key[1]},
+            "score_permille": value,
+            "from_seeds": [{"path": p, "name_path": n} for p, n in sources[:RECEIPT_LIMIT]],
+            "stats": {"seeds": len(seeds), "hops": HOPS, "damp_permille": DAMP_PERMILLE},
+        }
+        for key, (value, sources) in promoted
+    ]
+    return ranked[:depth], receipts
+
+
 def is_hit(item, question) -> bool:
     """
     Trafienie: dokladny `name_path` albo sama nazwa liscia przy zgodnym pliku.
