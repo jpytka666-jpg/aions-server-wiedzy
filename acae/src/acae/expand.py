@@ -47,7 +47,19 @@ SCHEMA = "acae.expansion.v1"
 
 # Progi wziete z literatury i z ksztaltu problemu, NIE strojone na zbiorze testowym.
 MIN_COOCCURRENCE = 2       # krawedz musi miec co najmniej dwa niezalezne swiadectwa
-MIN_RATIO_PERMILLE = 250   # kandydat wspolwystepuje z terminem w >=25% swoich wystapien
+MIN_RATIO_PERMILLE = 250   # raportowane, JUZ NIE FILTRUJE — patrz MIN_G2
+
+# Prog log-likelihood ratio. To NIE jest liczba dobrana, zeby cos przeszlo: to wartosc
+# krytyczna chi-kwadrat dla 1 stopnia swobody przy p < 0.001. Bierze sie z rozkladu.
+#
+# DLACZEGO G^2 ZAMIAST SUROWEGO STOSUNKU (M4.2 -> M4.2b)
+# ------------------------------------------------------
+# Stosunek `co/df >= 25%` byl trywialnie spelnialny przy malym mianowniku: termin
+# wystepujacy w calym repo dwa razy, oba razy obok terminu z pytania, dostawal 1000
+# promili i przechodzil bez zadnego dowodu (`file -> sha12`, `rows -> is_refusal`).
+# G^2 karze rzadkie zdarzenia za brak wsparcia zamiast nagradzac je za wysoki stosunek —
+# jest standardem w wydobywaniu kolokacji od Dunninga (1993) wlasnie dlatego.
+MIN_G2 = 10.83
 MIN_TERMS_COVERED = 2      # regula LCA: kandydat trafia >=2 rozne terminy zapytania
 MAX_PER_TERM = 3           # ile rozszerzen na jeden termin zapytania
 MAX_TOTAL = 12             # twardy sufit calego rozszerzenia
