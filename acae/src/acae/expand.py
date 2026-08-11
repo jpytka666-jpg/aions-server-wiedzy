@@ -89,6 +89,7 @@ class Receipt:
     cooccurrence: int
     doc_freq: int
     ratio_permille: int
+    g2_milli: int
     terms_covered: int
     weight_class: str
     valid_for_pack: str
