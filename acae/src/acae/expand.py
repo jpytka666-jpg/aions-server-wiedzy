@@ -203,6 +203,60 @@ def prose_documents(repo_root: str) -> list[Document]:
     return docs
 
 
+def docstring_documents(cap_per_root: int = 4000) -> list[Document]:
+    """
+    Korpus ZEWNETRZNY: pary (nazwa symbolu, docstring) z biblioteki standardowej
+    Pythona i z `site-packages` tego venva.
+
+    PO CO ZEWNETRZNY
+    ----------------
+    M4.2 i M4.3 pokazaly pomiarem, ze mostu „identyfikator <-> slowo opisu" NIE DA SIE
+    wyprowadzic z tego repo — jest w nim za malo prozy przypietej do symboli. Ten korpus
+    ma tego samego ksztaltu pary, ale w liczbie ~50 tysiecy: cudze opisy, ktore moga
+    wskazac NASZE identyfikatory.
+
+    Dokument to `nazwa + docstring` w jednym tekscie. To jest istotne: `expand()` szuka
+    wspolwystepowania SLOWA Z PYTANIA (z prozy docstringu) z IDENTYFIKATOREM ze slownika
+    (z nazwy symbolu). Rozdzielenie ich na dwa dokumenty zerwaloby cala krawedz.
+
+    Slownik docelowy pozostaje `symbol_vocabulary(entries)`, czyli most moze wskazac
+    wylacznie identyfikator, ktory NAPRAWDE istnieje w naszym packu. Cudzy korpus
+    dostarcza skojarzen, nie tresci.
+    """
+    import ast
+
+    docs: list[Document] = []
+    roots = (
+        ("stdlib", Path(sys.base_prefix) / "Lib"),
+        ("venv", Path(sys.prefix) / "Lib" / "site-packages"),
+    )
+    for label, root in roots:
+        if not root.is_dir():
+            continue
+        seen = 0
+        for path in sorted(root.rglob("*.py")):
+            posix = path.as_posix()
+            if "/test" in posix or "/site-packages/pip/" in posix:
+                continue
+            try:
+                tree = ast.parse(path.read_bytes())
+            except (SyntaxError, ValueError, OSError):
+                continue
+            seen += 1
+            for node in ast.walk(tree):
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                    doc = ast.get_docstring(node)
+                    if doc:
+                        docs.append(Document(
+                            "docstring",
+                            f"{label}:{path.name}:{node.name}",
+                            f"{node.name} {doc}",
+                        ))
+            if seen >= cap_per_root:
+                break
+    return docs
+
+
 def code_window_documents(
     entries: Sequence[Mapping[str, object]],
     reader,
