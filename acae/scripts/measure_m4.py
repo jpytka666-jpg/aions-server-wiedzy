@@ -203,8 +203,12 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             ranked = rank_baseline(entries, terms, depth)
         elif variant == "bm25f":
             ranked = ctx["index"].rank(terms, depth)
-        elif variant in ("prf_code", "prf_prose"):
-            rule = "code_window" if variant == "prf_code" else "prose_cooccurrence"
+        elif variant in ("prf_code", "prf_prose", "assoc"):
+            rule = {
+                "prf_code": "code_window",
+                "prf_prose": "prose_cooccurrence",
+                "assoc": "docstring_cooccurrence",
+            }[variant]
             ranked, receipts = rank_with_expansion(
                 entries, terms, depth, ctx["corpus"], ctx["vocabulary"], ctx["pack_hash"], rule,
             )
