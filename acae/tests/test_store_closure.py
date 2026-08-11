@@ -142,7 +142,10 @@ def test_i9_stats_zgadza_sie_ze_skanem_po_reopenie(tmp_path):
         store.forget(do_usuniecia, reason="kontrola", observed_at=T1)
 
     with BlockStore(path) as store:
-        assert store.stats()["blocks"] == len(store.list_blocks()) == 4
+        statystyki = store.stats()
+        assert statystyki["blocks_live"] == len(store.list_blocks()) == 4
+        assert statystyki["tombstoned"] == 1
+        assert statystyki["blocks_total"] == 5, "tombstone skasowal wiersz zamiast go oznaczyc"
 
 
 def test_c4_odbudowa_indeksow_dziala_na_bazie_z_dysku(tmp_path):
