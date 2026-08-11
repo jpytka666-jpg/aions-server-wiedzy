@@ -1,0 +1,309 @@
+{
+  "depth": 25,
+  "head": "cb26499",
+  "metrics": {
+    "counts": {
+      "negative": 6,
+      "positive": 30
+    },
+    "mean_top1_negative": 6010,
+    "mean_top1_positive": 6193,
+    "mrr_permille": 156,
+    "negative_ratio_permille": 970,
+    "recall_at_10_permille": 233,
+    "recall_at_25_permille": 333
+  },
+  "packages": {
+    "tiktoken": "0.13.0"
+  },
+  "per_query": [
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d001",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 7991
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d002",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 7765
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d003",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 5845
+    },
+    {
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d004",
+      "kind": "positive",
+      "rank": 8,
+      "top1_score": 5671
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d005",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 7481
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d006",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 4803
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d007",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 5558
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d008",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 5520
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d009",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 5578
+    },
+    {
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d010",
+      "kind": "positive",
+      "rank": 6,
+      "top1_score": 5603
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d011",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 5841
+    },
+    {
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d012",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 8570
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d013",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 7315
+    },
+    {
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d014",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 6223
+    },
+    {
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d015",
+      "kind": "positive",
+      "rank": 5,
+      "top1_score": 7939
+    },
+    {
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d016",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 5357
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d017",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 5678
+    },
+    {
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d018",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 5630
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d019",
+      "kind": "positive",
+      "rank": 17,
+      "top1_score": 5190
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d020",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 6266
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d021",
+      "kind": "positive",
+      "rank": 12,
+      "top1_score": 5644
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d022",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 8190
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d023",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 5520
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d024",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 5170
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d025",
+      "kind": "positive",
+      "rank": 16,
+      "top1_score": 5555
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d026",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 8929
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d027",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 5056
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d028",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 6730
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d029",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3934
+    },
+    {
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d030",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 5245
+    },
+    {
+      "id": "d031",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 6046
+    },
+    {
+      "id": "d032",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 7398
+    },
+    {
+      "id": "d033",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 5151
+    },
+    {
+      "id": "d034",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 8569
+    },
+    {
+      "id": "d035",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 4945
+    },
+    {
+      "id": "d036",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 3955
+    }
+  ],
+  "question_set": {
+    "content_hash": "blake2b256:278f2dc2b92fd4573bdbd3ae37bbc690d5a59ab0fc0d78af5ade6ad97dded4da",
+    "file": "dev_questions.json",
+    "name": "dev"
+  },
+  "result_hash": "blake2b256:97e3c98d2604ef77d9b0fcf064d9276219553477ef408a34cb89991ae19e4671",
+  "schema": "acae.m4.v1",
+  "scope": {
+    "files": 169,
+    "symbols": 1598
+  },
+  "variant": "bm25f"
+}
