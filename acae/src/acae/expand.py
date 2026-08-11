@@ -241,15 +241,10 @@ def expand(
         return []
 
     co: dict[str, collections.Counter] = {t: collections.Counter() for t in terms}
-    df: collections.Counter = collections.Counter()
+    df = corpus.df
     witness: dict[tuple[str, str], Document] = {}
 
-    for doc in documents:
-        tokens = _tokenize(doc.text)
-        if not tokens:
-            continue
-        for token in tokens:
-            df[token] += 1
+    for doc, tokens in corpus.docs:
         present = [t for t in terms if t in tokens]
         if not present:
             continue
