@@ -1,0 +1,117 @@
+{
+  "schema": "acae.heldout.v1",
+  "queries": [
+    {
+      "id": "q101",
+      "question": "How is the raw closeness number coming back from a nearest-neighbour lookup turned into a normalized 0-to-1 relevance value, depending on whether the collection was built with cosine, inner-product or squared Euclidean geometry?",
+      "answer_symbols": ["_distance_to_similarity"],
+      "answer_files": ["server/store_http.py"],
+      "why": "This helper maps a raw metric value to a clamped 0..1 relevance number, branching on the collection's configured geometry and halving the squared Euclidean case.",
+      "leak_check": "Neither 'distance' nor 'similarity' appears in the question text."
+    },
+    {
+      "id": "q102",
+      "question": "When the vector database layer quietly drops from the shared network service down to the embedded on-disk mode, where do we make that fact visible by appending a timestamped line to a dedicated runtime file?",
+      "answer_symbols": ["_log_degraded"],
+      "answer_files": ["server/store_http.py"],
+      "why": "This function emits the error to the logger and appends a timestamped DEGRADED_TO_EMBEDDED line to a dedicated runtime file so the silent fallback becomes observable.",
+      "leak_check": "Neither 'log' nor 'degraded' appears in the question text."
+    },
+    {
+      "id": "q103",
+      "question": "Where do we merge a user's time-limited obligations from two separate lists in their stored settings, keep only those falling inside a two-week window or already late, and order them by urgency?",
+      "answer_symbols": ["collect_deadlines"],
+      "answer_files": ["control_plane/scheduler.py"],
+      "why": "It walks both the explicit obligations list and the ongoing matters, de-duplicates, filters to the horizon window plus anything overdue, and sorts by days remaining.",
+      "leak_check": "Neither 'collect' nor 'deadlines' appears in the question text."
+    },
+    {
+      "id": "q104",
+      "question": "Before an entry gets written into the vector index, where are its descriptive attributes flattened so that only plain scalars survive - a list collapsed into one comma-joined string, anything else serialized to JSON - and an expiry moment computed from a retention window?",
+      "answer_symbols": ["normalize_metadata", "ContextMetadata/to_dict"],
+      "answer_files": ["server/context_schema.py"],
+      "why": "This routine coerces incoming attributes into a typed container, joins the label list into one string, JSON-encodes any non-scalar and derives the lapse moment from the retention window.",
+      "leak_check": "Neither 'normalize' nor 'metadata' (nor 'context'/'to_dict') appears in the question text."
+    },
+    {
+      "id": "q105",
+      "question": "Where do we lazily test whether the optional native libraries for screen capture and mouse automation are available, remembering only a positive outcome so that a transient failure gets retried on the next attempt?",
+      "answer_symbols": ["_check_deps"],
+      "answer_files": ["mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py"],
+      "why": "It probes the optional native modules on demand and deliberately caches only success, resetting its flag on failure so the probe repeats later.",
+      "leak_check": "Neither 'check' nor 'deps' appears in the question text."
+    },
+    {
+      "id": "q106",
+      "question": "When the local text-generation service refuses the connection or takes too long to answer, where do we translate the low-level transport exception into a readable message telling the operator to start the server or raise the waiting limit?",
+      "answer_symbols": ["_call_ollama", "LLMError"],
+      "answer_files": ["control_plane/llm_adapter.py"],
+      "why": "This function catches connection and timeout exceptions from the HTTP client and re-raises a dedicated exception type carrying an operator-facing hint about starting the server or raising the waiting limit.",
+      "leak_check": "None of 'call', 'ollama', 'LLM' or 'error' appears in the question text."
+    },
+    {
+      "id": "q107",
+      "question": "Where do we turn an arbitrary caller-supplied label into something safe to use as a file name, swapping every character that is not a letter, digit, dash or underscore, and rejecting the case where nothing usable remains?",
+      "answer_symbols": ["_sanitize_vault_id"],
+      "answer_files": ["scripts/vault/_core.py"],
+      "why": "It rewrites all characters outside the alphanumeric/dash/underscore set and raises when the cleaned result would be empty, before the value is used to build a file path.",
+      "leak_check": "None of 'sanitize', 'vault' or 'id' appears in the question text."
+    },
+    {
+      "id": "q108",
+      "question": "Before a stored credential gets decrypted, where do we refuse to go any further unless a small sentinel file exists and still unwraps correctly for the current Windows account?",
+      "answer_symbols": ["verify_operator_marker"],
+      "answer_files": ["scripts/vault/_core.py"],
+      "why": "It raises when the sentinel file is absent and raises again when the decrypted bytes do not match the expected constant, gating every read of encrypted content.",
+      "leak_check": "None of 'verify', 'operator' or 'marker' appears in the question text."
+    },
+    {
+      "id": "q109",
+      "question": "How does the local file lookup rank its hits - what tiered point values get handed out for an exact match on the file name, a file name that merely starts with the term, and a term that only shows up somewhere deeper in the folder path?",
+      "answer_symbols": ["AionsLinuxIndexProvider/_score_query"],
+      "answer_files": ["mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"],
+      "why": "This static helper returns the graded integer weights (150 exact, 120 prefix, 90 substring, 70/55 relative path, 40 full path, 0 otherwise) used to order results.",
+      "leak_check": "Neither 'score' nor 'query' appears in the question text."
+    },
+    {
+      "id": "q110",
+      "question": "Where do we decide that the saved catalogue of files on disk has aged past its allowed lifetime - comparing how long ago that catalogue file was last written against a configured number of seconds - so that it must be rebuilt?",
+      "answer_symbols": ["AionsLinuxIndexProvider/_is_stale"],
+      "answer_files": ["mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"],
+      "why": "It compares the catalogue file's modification age against the configured refresh interval (and treats a missing file as needing a rebuild), driving the automatic rebuild.",
+      "leak_check": "Neither 'stale' nor the standalone word 'is' appears in the question text."
+    },
+    {
+      "id": "q111",
+      "question": "On first use, when the list of known machines comes up empty, where do we create one entry for the current computer and choose its capability tags according to whether the operating system happens to be Windows?",
+      "answer_symbols": ["_seed_default_local_node", "_ensure_loaded"],
+      "answer_files": ["control_plane/node_registry.py"],
+      "why": "When nothing was restored from disk this function fabricates a single entry, picking identifier and capability tags based on the detected platform, and persists it.",
+      "leak_check": "None of 'seed', 'default', 'local' or 'node' appears in the question text."
+    },
+    {
+      "id": "q112",
+      "question": "Where do we fold a single execution outcome into a capability's accumulated telemetry - updating the mean duration incrementally from the previous count and blending the reliability ratio with a speed factor into one weighted trust number?",
+      "answer_symbols": ["record"],
+      "answer_files": ["control_plane/skills/stats.py"],
+      "why": "It increments the pass/fail counters, recomputes the running mean duration from the prior sample count, and derives a weighted 0.8/0.2 blend of reliability and speed.",
+      "leak_check": "The word 'record' does not appear in the question text."
+    },
+    {
+      "id": "q113",
+      "question": "When we extract which libraries a source file pulls in and the syntax tree cannot be produced because the file contains a syntax mistake, what mechanism takes over instead?",
+      "answer_symbols": ["parse_python_imports"],
+      "answer_files": ["scripts/turbo_scanner.py"],
+      "why": "It walks the abstract syntax tree first and, on a syntax failure, falls back to a regular-expression sweep over the raw text to recover dependency names.",
+      "leak_check": "None of 'parse', 'python' or 'imports' appears in the question text."
+    },
+    {
+      "id": "q114",
+      "question": "Where do we slice each alphanumeric word into overlapping three-character fragments and additionally derive two more three-character chunks from a digest of that same word, returning the whole lot as a set of short lookup tokens?",
+      "answer_symbols": ["build_keys", "_trigrams"],
+      "answer_files": ["aions_core/server/korean_keys.py"],
+      "why": "This pair produces the prefixed three-character fragments from the first twelve characters of each token plus two three-character slices of the token's SHA1 digest, returned as a set.",
+      "leak_check": "None of 'build', 'keys' or 'trigrams' appears in the question text."
+    }
+  ]
+}
