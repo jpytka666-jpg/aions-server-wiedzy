@@ -96,3 +96,43 @@ obawiac, ze przesloni zainstalowany pakiet `acae` przy `python -m acae` z korzen
 Nie przeslania: editable install rejestruje finder w `sys.meta_path`, a te maja pierwszenstwo
 przed wyszukiwaniem po `sys.path`. Sprawdzone: `import acae` z korzenia repo wskazuje
 na `acae/src/acae/__init__.py`.
+
+## 2026-08-11T07:10 — M2 zamkniety, outline-then-drill 10/10
+Done: `src/acae/retrieve.py` — ranking symboli pod zapytanie, wycinek szkieletu, drill cial.
+Nowa komenda `acae ask --query "..." --drill N --outline-limit M`.
+`scripts/measure_m2.py` liczy bramke D4 na dziesieciu zamrozonych zapytaniach.
+Z `core.py` wydzielone `collect_entries`, z `symbols.py` — `index_from_bytes` i `body_of`,
+zeby M1 i M2 liczyly na TYM SAMYM zbiorze plikow i dotykaly prywatnej `_walk` w jednym miejscu.
+`pack_hash` po obu refaktorach niezmieniony — dowod, ze przenoszenie logiki nic nie zmienilo.
+
+Proven:
+- `python scripts/measure_m2.py` -> exit 0, **10/10** przy wymaganych 8
+- wycinki: 1174-3428 tokenow wobec `B_query` 25237-52406, czyli **2,7-7,4% kosztu**
+- `diff _out/m2_run1.json _out/m2_run2.json` -> exit 0, pomiar deterministyczny
+- `python -m pytest` -> exit 0, **67 testow**
+- baseline z M0 nadal wazny przy przesunietym HEAD: `B_ceiling` 349766 i wszystkie `B_query`
+  bit w bit takie same, bo `acae/` nie lezy w rootach z configu. Porownanie jest uczciwe.
+
+Next: M1-F (dwa narzedzia MCP, wymaga dotkniecia server.py) albo M3 (magazyn `acae/store/`).
+
+## Gotcha — zielona bramka nie znaczy dzialajaca funkcja
+Bramka M2 mierzy KOSZT, nie UZYTECZNOSC. Przeszla 10/10 zanim ranking w ogole trafial
+w odpowiedz. Sprawdzenie recznie, na pytaniu „how is provenance recorded on memory writes",
+pokazalo ze wycinek podaje `CBMSMemory` i `MemoryGraph`, a MILCZY o `provenance()`
+i `with_provenance()` — mimo ze oba sa w packu (content.txt:1442-1443).
+
+Przyczyna: kazdy termin wazyl tyle samo. `CBMSMemory` dostawal 6 pkt za czeste „memory"
+(nazwa + sygnatura + sciezka), `provenance()` tylko 5 za rzadkie „provenance"
+(nazwa + sygnatura, bo sciezka to server.py). Czyli tlo bilo odpowiedz.
+
+Naprawione wazeniem rzadkoscia (`term_rarity`, decyzja M2-a). Efekt uboczny: wycinki
+ZMALALY, bo mniej nietrafionych symboli wchodzi do szkieletu — q10-hooks 4095 -> 2362.
+Lekcja: gdybym oddal M2 po samym odczytaniu bramki, oddalbym tanszy sposob na nietrafianie.
+
+## Gotcha — checkpoint sprzata przy KAZDEJ edycji istniejacego pliku
+Regula z M0 („tylko nowe pliki") nie skaluje sie na M1/M2, bo wlasny kod trzeba poprawiac.
+Dzialajacy wzorzec: commituj `acae/` do czysta PRZED kazda seria edycji. Wtedy
+`git status --porcelain` pokazuje juz tylko brudny submodul, `git add -A` nie ma czego
+zestage'owac, `git commit` konczy sie „nothing to commit" i hook jest faktycznym no-opem.
+Gdy drzewo jest brudne, kazda edycja produkuje commit „checkpoint: before edit of X"
+o mylacej etykiecie — nieszkodliwy, bo obejmuje tylko `acae/`, ale zasmieca historie.
