@@ -70,6 +70,21 @@ Zmiana ktoregokolwiek z ponizszych uniewaznia baseline i wymaga przeliczenia `B_
 | piny `tree-sitter` / `tree-sitter-language-pack` | zmiana wersji gramatyki zmienia outline, wiec `pack_hash` (ryzyko R9) | `requirements.txt`, `pyproject.toml`, `.now/CONTRACT.md` |
 | `core.autocrlf=true` w repo | bez `normalize_source` na brzegu `pack_hash` rozjezdza sie miedzy systemami | `tests/test_determinism.py` |
 
+## Zmierzone i odrzucone
+
+Moduly, ktore ZOSTAJA w repo, ale **nie sa podpiete**. Wynik negatywny z dzialajaca
+implementacja da sie zmierzyc ponownie; wynik negatywny bez implementacji jest opinia.
+Tabela istnieje po to, zeby nikt — lacznie ze mna za miesiac — nie podpial ich ponownie,
+nie wiedzac, ze juz przegraly.
+
+| Modul | Kiedy | Wynik | Warunek ponownego rozpatrzenia |
+|---|---|---|---|
+| `src/acae/bm25f.py` (M4.1) | zbior roboczy 30+/6- | recall@10 26,6% -> **23,3%**, MRR 0,172 -> **0,156**, negatywy/pozytywy 85,2% -> **97,0%**. Implementacja poprawna (zapytania z doslowna nazwa trafiaja #1), wiec to prawdziwy wynik, nie blad | tylko wobec NOWEJ prerejestracji i tylko jesli zmieni sie reszta pipeline'u — np. gdyby nasycenie zaczelo miec znaczenie po wprowadzeniu rozszerzania zapytan |
+
+Wniosek architektoniczny z M4.1, wazniejszy niz sam werdykt: oba rankery daja ~25%
+`recall@10` na pytaniach opisowych, mimo ze jeden jest ad-hoc, a drugi ma dwadziescia lat
+teorii. **Fundament nie byl waskim gardlem** — jest nim brak mostu slownikowego.
+
 ## Znane luki
 
 | Luka | Skutek | Kiedy rozstrzygnac |
