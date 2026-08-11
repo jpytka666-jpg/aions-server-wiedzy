@@ -207,6 +207,8 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             ranked, receipts = rank_with_expansion(
                 entries, terms, depth, ctx["corpus"], ctx["vocabulary"], ctx["pack_hash"], rule,
             )
+        elif variant == "graph":
+            ranked, receipts = rank_graph(entries, terms, depth, ctx["graph"])
         else:
             raise SystemExit(f"nieznany wariant: {variant}")
 
