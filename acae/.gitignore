@@ -1,0 +1,11 @@
+# Artefakty instalacji editable (pip install -e ./acae)
+src/acae.egg-info/
+*.egg-info/
+
+# Bajtkod i cache narzedzi
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Wyjscie packa — artefakt, nie zrodlo. Do repo trafia tylko baseline z _baseline/.
+_out/

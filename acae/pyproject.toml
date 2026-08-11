@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acae"
+version = "0.1.0"
+description = "Deterministyczny pack repozytorium: sygnatury zamiast cial funkcji."
+requires-python = ">=3.11"
+# Piny sa czescia kontraktu determinizmu (ryzyko R9 planu): zmiana wersji gramatyki
+# zmienia outline, wiec zmienia pack_hash miedzy maszynami.
+dependencies = [
+    "tree-sitter==0.26.0",
+    "tree-sitter-language-pack==1.14.3",
+    "tiktoken==0.13.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+acae = "acae.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# -q bo wyjscie testow czytamy w terminalu, a nie w CI z ladnym raportem.
+addopts = "-q"

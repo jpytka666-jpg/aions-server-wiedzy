@@ -1,0 +1,15 @@
+# Determinizm konczy sie tam, gdzie git zaczyna przepisywac bajty.
+#
+# To repo ma wlaczona konwersje koncow linii (git ostrzega "LF will be replaced by
+# CRLF" przy kazdym add). Dla ACAE to nie kosmetyka: content_hash jest liczony
+# jako blake2b256 z SUROWYCH bajtow, wiec to samo zrodlo pobrane na Windowsie
+# i na Linuksie daloby inny hash, a pack_hash przestalby byc porownywalny miedzy
+# maszynami. To jest ryzyko R9 planu, tylko innym kanalem niz wersja gramatyki.
+#
+# W calym poddrzewie acae/ wymuszamy LF, niezaleznie od core.autocrlf.
+* text eol=lf
+
+# Artefakty pomiarowe i packi: nigdy nie konwertowac, traktowac bajtowo.
+# result_hash w baseline opisuje bajty tego pliku — konwersja by go uniewaznila.
+_baseline/*.json -text
+_out/** -text
