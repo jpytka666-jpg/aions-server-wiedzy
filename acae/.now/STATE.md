@@ -47,3 +47,52 @@ kazdej sciezki wewnatrz submodulu. Wykrywanie submodulow idzie po `git ls-files 
 i trybie `160000` (gitlink), nie po `.gitmodules` — tego pliku w repo NIE MA, mimo ze
 `tools/ChromaFlowStudio` jest w indeksie jako submodul. Wpis-sierota: git wie, ze tam jest
 cudze repo, ale nie wie, skad je wziac.
+
+## 2026-08-11T06:05 — M1 zamkniety, pack outline deterministyczny
+Done: `acae/src/acae/` — canon, ports, symbols, secrets, core, pack, cli, __main__.
+Rdzen (`core.py`) nie dotyka dysku: cale I/O siedzi za trzema protokolami z `ports.py`,
+a adaptery dyskowe zyja w `pack.py`. Pakiet zainstalowany editable (`pip install -e ./acae`),
+wiec `python -m acae pack --root .` dziala z korzenia repo dokladnie tak, jak zaklada §8 planu.
+Doinstalowane: pytest, wheel. TMPDIR ustawiony na E: na czas instalacji, bo na C: bylo malo miejsca.
+
+Trzy rzeczy, ktore odbiegly od PLAN v2 i sa opisane w TERMS.md jako decyzje M1-a..M1-d:
+hash liczony z bajtow znormalizowanych zamiast doslownie surowych; `symbols.py` sklada
+`SymbolIndex` z bajtow przez prywatna `_walk`, bo `from_file()` sam otwiera plik i lamalby
+bramke „rdzen bez dysku"; liczba tokenow nie wchodzi do manifestu, zeby `pack_hash` nie
+zalezal od wersji tiktokena.
+
+Proven:
+- `python -m pytest` -> exit 0, **51 testow**, 2,79 s
+- `python -m acae pack --root . --budget 174883` -> exit 0, **36492 tokeny** wobec budzetu 174883
+- dwa przebiegi -> `diff content.txt` i `diff manifest.json` exit 0, ten sam
+  `pack_hash blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db`
+- 169 plikow, 1598 symboli, 869 pominietych — zakres identyczny z M0, wiec bramka jest porownywalna
+- czas: 9,4 s na przebieg, bramka byla 60 s
+- cztery testy determinizmu zielone: powtorzenie, Locator zwracajacy liste odwrocona,
+  zmiana mtime, inny katalog roboczy. Piaty dolozony: podmiana koncow linii na dysku
+- redukcja wobec B_ceiling: 349766 -> 36492, czyli **10,4% sufitu** przy bramce 50%
+
+Next: M2 (drill) albo M1-F (dwa narzedzia MCP). M1-F wymaga najpierw przeczytania
+`server.py:957-1049`, bo mechanizm trzymania stanu zadania jest nadal nieznany.
+
+## Gotcha — core.autocrlf=true jest cichym wrogiem determinizmu
+Git w tym repo konwertuje konce linii przy kazdym `add` („LF will be replaced by CRLF").
+Dla ACAE to nie kosmetyka: `content_hash` bierze bajty, wiec ten sam commit dalby inny
+hash na Windowsie i na Linuksie, a `pack_hash` przestalby byc porownywalny miedzy maszynami.
+Dwa zabezpieczenia: `acae/.gitattributes` wymusza LF w calym poddrzewie, a `canon.normalize_source`
+sprowadza CRLF/CR do LF i scina BOM na brzegu, w porcie Reader. Kolejnosc podmian ma znaczenie —
+najpierw CRLF, potem samotne CR, inaczej CRLF rozpadlby sie na dwie linie.
+Pilnuje tego `test_konce_linii_na_dysku_nie_zmieniaja_pack_hash`.
+
+## Gotcha — `pip install -e` bez `wheel` przy --no-build-isolation
+Editable install padal na `error: invalid command 'bdist_wheel'`. Przyczyna nie jest
+w pyproject.toml, tylko w tym, ze `--no-build-isolation` kaze setuptools uzyc pakietow
+z venv, a `wheel` tam nie bylo. Instalacja `wheel` rozwiazala sprawe. Bez `--no-build-isolation`
+pip zbudowalby tymczasowe srodowisko — szybciej, ale z pobieraniem i z zapisem do TEMP.
+
+## Nie-gotcha, warta zapisania, zeby nikt sie nie przestraszyl
+Katalog projektu `acae/` w korzeniu repo wyglada jak pakiet przestrzeni nazw i mozna sie
+obawiac, ze przesloni zainstalowany pakiet `acae` przy `python -m acae` z korzenia repo.
+Nie przeslania: editable install rejestruje finder w `sys.meta_path`, a te maja pierwszenstwo
+przed wyszukiwaniem po `sys.path`. Sprawdzone: `import acae` z korzenia repo wskazuje
+na `acae/src/acae/__init__.py`.
