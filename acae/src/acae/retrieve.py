@@ -56,20 +56,63 @@ def query_terms(text: str, min_len: int = 3) -> list[str]:
     return sorted(terms)
 
 
-def _hits(haystack: str, terms: Sequence[str]) -> int:
-    """Ile ROZNYCH terminow wystepuje w tekscie. Nie ile razy — inaczej wygrywalyby powtorzenia."""
-    low = haystack.lower()
-    return sum(1 for term in terms if term in low)
+def _haystack(path: str, row: Mapping[str, object]) -> str:
+    return f"{path} {row.get('name_path') or ''} {row.get('signature') or ''}".lower()
 
 
-def score_symbol(path: str, row: Mapping[str, object], terms: Sequence[str]) -> int:
+def term_rarity(entries: Sequence[Mapping[str, object]], terms: Sequence[str]) -> dict[str, int]:
+    """
+    Waga terminu odwrotnie proporcjonalna do tego, jak czesto pada w repo.
+
+    DLACZEGO TO JEST KONIECZNE
+    --------------------------
+    Bez tego kazdy termin wazy tyle samo, a wtedy wygrywa termin CZESTY, nie ISTOTNY.
+    Zmierzone na zywym repo dla pytania „how is provenance recorded on memory writes":
+    `CBMSMemory` dostawal 6 punktow (trafienie w czeste „memory" w nazwie, sygnaturze
+    I sciezce), a funkcja `provenance()` tylko 5 (rzadkie „provenance" w nazwie
+    i sygnaturze) — czyli odpowiedz przegrywala z tlem.
+
+    Waga jest CALKOWITA (zadnych floatow w porzadkowaniu) i ograniczona z gory, zeby
+    literowka wystepujaca raz w calym repo nie zmiotla rankingu jednym trafieniem.
+    """
+    if not terms:
+        return {}
+    df = {term: 0 for term in terms}
+    total = 0
+    for entry in entries:
+        path = str(entry["path"])
+        for row in entry["symbols"]:  # type: ignore[index]
+            total += 1
+            hay = _haystack(path, row)
+            for term in terms:
+                if term in hay:
+                    df[term] += 1
+    return {term: max(1, min(RARITY_CAP, total // (1 + df[term]))) for term in terms}
+
+
+def score_symbol(
+    path: str,
+    row: Mapping[str, object],
+    terms: Sequence[str],
+    rarity: Mapping[str, int] | None = None,
+) -> int:
+    """
+    Punkty symbolu dla zapytania. Bez `rarity` kazdy termin wazy 1 — tak licza testy
+    jednostkowe wag pol; `select` zawsze podaje wagi rzadkosci policzone na calym zbiorze.
+    """
     if not terms:
         return 0
-    return (
-        W_NAME * _hits(str(row.get("name_path") or ""), terms)
-        + W_SIGNATURE * _hits(str(row.get("signature") or ""), terms)
-        + W_PATH * _hits(path, terms)
-    )
+    weights = rarity or {}
+    name = str(row.get("name_path") or "").lower()
+    signature = str(row.get("signature") or "").lower()
+    low_path = path.lower()
+
+    score = 0
+    for term in terms:
+        pola = W_NAME * (term in name) + W_SIGNATURE * (term in signature) + W_PATH * (term in low_path)
+        if pola:
+            score += weights.get(term, 1) * pola
+    return score
 
 
 def select(
@@ -84,11 +127,12 @@ def select(
     Remis rozstrzyga (sciezka, linia, name_path). Bez tego dwa symbole o tym samym
     wyniku ustawialyby sie wedlug kolejnosci wstawiania do slownika.
     """
+    rarity = term_rarity(entries, terms)
     ranked: list[dict] = []
     for entry in entries:
         path = str(entry["path"])
         for row in entry["symbols"]:  # type: ignore[index]
-            score = score_symbol(path, row, terms)
+            score = score_symbol(path, row, terms, rarity)
             if score > 0:
                 ranked.append({
                     "score": score,
