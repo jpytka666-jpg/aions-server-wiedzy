@@ -168,9 +168,12 @@ def build_slice(
 
     bodies: list[dict] = []
     for path in sorted(wanted):
+        # Tylko OSError. Plik doszedl az tutaj przez collect_entries, wiec ma gramatyke
+        # i da sie sparsowac — gdyby jednak nie dal, ma byc glosno, a nie po cichu.
+        # To ta sama regula, ktora wytykamy scan_dir w ts_symbols.py (:282-283).
         try:
             idx = index_from_bytes(path, reader.read(path))
-        except (OSError, Exception):  # noqa: B014 — brak ciala nie moze wywrocic wycinka
+        except OSError:
             continue
         for name_path in sorted(wanted[path]):
             text = body_of(idx, name_path)
