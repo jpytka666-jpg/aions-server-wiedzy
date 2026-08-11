@@ -459,3 +459,37 @@ wlasciwego rozkladu dziedzinowego korpusu.
 
 **Held-out (14 pytan, `blake2b256:e5d8e5b4...`) pozostaje NIETKNIETY.** Nie ma sensu go
 otwierac, dopoki nie ma kandydata, ktory przeszedl na zbiorze roboczym.
+
+## 2026-08-11T21:00 — PREREJESTRACJA M4.6: most z ZEWNETRZNEGO korpusu docstringow
+
+**Hipoteza:** brakujaca warstwa skojarzen „identyfikator <-> slowo opisu" nie da sie
+wyprowadzic z tego repo (M4.2, M4.3 pokazaly to pomiarem), ale da sie ja wziac
+z ZEWNETRZNEGO korpusu par (symbol, docstring). Jesli tak, most powstanie z cudzych
+opisow, a wskaze NASZE identyfikatory.
+
+**Korpus:** biblioteka standardowa Pythona + `venv/Lib/site-packages`. Zmierzone:
+**50 663 par (symbol, docstring)**, ~3,05 mln slow opisu, 7 099 unikalnych tokenow
+identyfikatorow. Lokalny, licencyjnie czysty, bez pobierania czegokolwiek.
+
+**Zmienia sie DOKLADNIE JEDNA RZECZ wobec M4.3: zrodlo korpusu.** Wszystko inne bez ruchu:
+`G^2 >= 10.83`, pokrycie LCA >= 2, maks 3 rozszerzenia na termin, maks 12 razem,
+waga rozszerzenia 1/2, ten sam ranker bazowy, ten sam `expand()`.
+Slownik docelowy to nadal `symbol_vocabulary(entries)` — czyli most moze wskazac
+WYLACZNIE identyfikator, ktory naprawde istnieje w naszym packu.
+
+**KRYTERIUM PRZYJECIA — identyczne jak M4.2b i M4.3, zeby wyniki byly porownywalne:**
+- `recall@10` >= **34,6%**, ORAZ
+- `MRR` >= **0,172**, ORAZ
+- `negatywy/pozytywy` <= **85,2%**.
+Wszystkie trzy naraz. **Jedno podejscie.**
+
+**PRZEWIDYWANIE ZAPISANE PRZED POMIAREM (zeby nie dalo sie go potem przemilczec):**
+spodziewam sie PORAZKI. Eksploracja tej samej tabeli pokazala, ze `remove -> pop, clear,
+clean, strip` powstaje swietnie, ale `machine -> host` NIE POWSTAJE, a `computer` nie daje
+nic — bo stdlib to proza o strukturach danych, nie o maszynach i infrastrukturze.
+
+**Co z tego wynika dla decyzji o CodeSearchNet:**
+- wynik POZYTYWNY -> mechanizm dziala i warto sprawdzic wiekszy korpus o innym rozkladzie,
+- wynik NEGATYWNY -> **zamykamy kierunek**. Nie dorabiam teorii, ze „wiekszy korpus by pomogl".
+  Jesli 50 tysiecy par z wlasciwym mechanizmem nie ruszy ani jednej z trzech miar, to
+  twierdzenie „dwa miliony ruszyloby" bedzie hipoteza bez pokrycia, a nie wnioskiem.
