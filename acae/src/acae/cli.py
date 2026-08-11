@@ -1,9 +1,13 @@
 """
-cli.py — `acae pack --root .`
+cli.py — `acae pack` i `acae ask`.
 
 Dziala bez uruchomionego serwera MCP i bez zadnego demona. To jest bramka M1:
 pack ma byc narzedziem, ktore da sie odpalic z terminala, a nie funkcja dostepna
 wylacznie przez transport, ktory offloaduje duze wyniki.
+
+`pack` buduje caly szkielet repo. `ask` robi to, po co ten szkielet istnieje:
+tnie go pod jedno pytanie i dociaga ciala kilku symboli. To jest wzorzec
+outline-then-drill w postaci komendy.
 """
 
 from __future__ import annotations
@@ -13,8 +17,9 @@ import tomllib
 from pathlib import Path
 
 from .canon import canonical_json
-from .core import PackRequest, build_pack
+from .core import PackRequest, build_pack, collect_entries
 from .pack import FsLocator, FsReader, FsStore, write_pack
+from .retrieve import build_slice
 
 DEFAULT_CONFIG = Path(__file__).resolve().parents[2] / "config" / "acae.toml"
 
@@ -24,9 +29,23 @@ def _load_config(path: Path) -> dict:
         return tomllib.load(fh)
 
 
+def _ports(args: argparse.Namespace) -> tuple[Path, FsLocator, FsReader, dict]:
+    """Wspolne wejscie obu komend: config, korzen, Locator i Reader."""
+    cfg = _load_config(Path(args.config) if args.config else DEFAULT_CONFIG)
+    pack_cfg = cfg["pack"]
+    root = Path(args.root).resolve()
+    locator = FsLocator(
+        root=str(root),
+        roots=pack_cfg["roots"],
+        prune_dirs=cfg.get("baseline", {}).get("prune_dirs", []),
+        max_file_bytes=pack_cfg["max_file_bytes"],
+    )
+    return root, locator, FsReader(str(root)), cfg
+
+
 def _count_tokens(data: bytes) -> int | None:
     """
-    Liczba tokenow tresci packa — tylko na stdout, NIGDY do manifestu.
+    Liczba tokenow — tylko na stdout, NIGDY do manifestu.
 
     Gdyby trafila do manifestu, pack_hash zalezalby od wersji tiktokena, czyli od
     czegos, co nie ma nic wspolnego z trescia repo.
@@ -40,23 +59,10 @@ def _count_tokens(data: bytes) -> int | None:
 
 
 def _cmd_pack(args: argparse.Namespace) -> int:
-    cfg = _load_config(Path(args.config) if args.config else DEFAULT_CONFIG)
-    pack_cfg = cfg["pack"]
-    prune = cfg.get("baseline", {}).get("prune_dirs", [])
-
-    root = Path(args.root).resolve()
-    locator = FsLocator(
-        root=str(root),
-        roots=pack_cfg["roots"],
-        prune_dirs=prune,
-        max_file_bytes=pack_cfg["max_file_bytes"],
-    )
-    reader = FsReader(str(root))
-    request = PackRequest(root=root.name, mode=args.mode)
-
-    result = build_pack(request, locator, reader)
-
+    root, locator, reader, _ = _ports(args)
+    result = build_pack(PackRequest(root=root.name, mode=args.mode), locator, reader)
     counts = result.manifest["counts"]
+
     if args.out:
         written = write_pack(result, FsStore(args.out))
         print(f"content   {written['content']}")
@@ -78,22 +84,61 @@ def _cmd_pack(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_ask(args: argparse.Namespace) -> int:
+    """
+    Wycinek szkieletu pod jedno pytanie plus ciala kilku najlepiej trafionych symboli.
+
+    Bez --out tresc idzie na stdout i nic wiecej, zeby dalo sie ja przepuscic potokiem.
+    Podsumowanie pojawia sie tylko wtedy, gdy tresc trafia do pliku.
+    """
+    root, locator, reader, _ = _ports(args)
+    entries, _skipped = collect_entries(locator, reader)
+    text, meta = build_slice(
+        entries,
+        args.query,
+        reader,
+        outline_limit=args.outline_limit,
+        drill_limit=args.drill,
+    )
+
+    if args.out:
+        location = FsStore(args.out).write("slice.txt", text)
+        print(f"slice     {location}")
+        print(f"terminy   {' '.join(meta['terms'])}")
+        print(f"symbole   {meta['outline_symbols']} w szkielecie, {meta['drilled']} z cialem")
+        print(f"pliki     {meta['files']}")
+        tokens = _count_tokens(text)
+        if tokens is not None:
+            print(f"tokeny    {tokens}")
+            if args.budget:
+                verdict = "OK" if tokens < args.budget else "PRZEKROCZONY"
+                print(f"budzet    {tokens} / {args.budget} -> {verdict}")
+                if tokens >= args.budget:
+                    return 1
+    else:
+        print(text.decode("utf-8"), end="")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="acae", description="Deterministyczny pack repozytorium.")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
-    p = sub.add_parser("pack", help="Zbuduj pack w trybie outline.")
-    p.add_argument("--root", default=".", help="Korzen repo do spakowania.")
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument("--root", default=".", help="Korzen repo.")
+    common.add_argument("--config", default=None, help="Sciezka do acae.toml. Domyslnie config/acae.toml modulu.")
+    common.add_argument("--out", default=None, help="Katalog wyjsciowy.")
+    common.add_argument("--budget", type=int, default=None, help="Limit tokenow; przekroczenie konczy sie kodem 1.")
+
+    p = sub.add_parser("pack", parents=[common], help="Zbuduj pack w trybie outline.")
     p.add_argument("--mode", default="outline", choices=("outline",))
-    p.add_argument("--out", default=None, help="Katalog wyjsciowy. Bez niego manifest idzie na stdout.")
-    p.add_argument("--config", default=None, help="Sciezka do acae.toml. Domyslnie config/acae.toml modulu.")
-    p.add_argument(
-        "--budget",
-        type=int,
-        default=None,
-        help="Maksymalna liczba tokenow content.txt. Przekroczenie konczy sie kodem 1.",
-    )
     p.set_defaults(func=_cmd_pack)
+
+    a = sub.add_parser("ask", parents=[common], help="Wytnij szkielet pod pytanie i dociagnij ciala.")
+    a.add_argument("--query", required=True, help="Pytanie w jezyku naturalnym.")
+    a.add_argument("--outline-limit", type=int, default=40, help="Ile symboli trafia do szkieletu.")
+    a.add_argument("--drill", type=int, default=5, help="Ile symboli dostaje pelne cialo.")
+    a.set_defaults(func=_cmd_ask)
 
     args = parser.parse_args(argv)
     return int(args.func(args))
