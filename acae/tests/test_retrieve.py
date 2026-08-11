@@ -71,6 +71,52 @@ def test_brak_terminow_daje_zero_punktow():
     assert score_symbol("pkg/a.py", row, []) == 0
 
 
+def test_termin_rzadki_wazy_wiecej_niz_czesty():
+    """
+    Regresja na realnej wpadce: przy rownych wagach `CBMSMemory` (trafienie w czeste
+    „memory" w nazwie, sygnaturze i sciezce) bil funkcje `provenance()` (rzadkie
+    „provenance" w nazwie i sygnaturze), czyli odpowiedz przegrywala z tlem.
+    """
+    from acae.retrieve import term_rarity
+
+    # Zbior, w ktorym „memory" jest wszedzie, a „provenance" tylko w jednym symbolu.
+    entries = [
+        {
+            "path": "aions_core/cbms_memory.py",
+            "lang": "python",
+            "symbols": [
+                {"name_path": f"Memory{i}", "signature": "class MemoryThing:", "line": i, "kind": "class"}
+                for i in range(1, 12)
+            ],
+        },
+        {
+            "path": "mcpServers/src/server.py",
+            "lang": "python",
+            "symbols": [
+                {"name_path": "provenance", "signature": "def provenance() -> Dict:", "line": 1, "kind": "function"},
+            ],
+        },
+    ]
+    terms = ["memory", "provenance"]
+    rarity = term_rarity(entries, terms)
+    assert rarity["provenance"] > rarity["memory"]
+
+    outline, _ = select(entries, terms, outline_limit=1, drill_limit=1)
+    assert outline[0]["row"]["name_path"] == "provenance"
+
+
+def test_waga_rzadkosci_jest_ograniczona_z_gory():
+    """Termin wystepujacy raz nie moze dostac wagi rownej liczbie symboli."""
+    from acae.retrieve import RARITY_CAP, term_rarity
+
+    entries = [{
+        "path": "a/b.py",
+        "lang": "python",
+        "symbols": [{"name_path": f"f{i}", "signature": "def f():", "line": i, "kind": "function"} for i in range(500)],
+    }]
+    assert term_rarity(entries, ["nieobecny"])["nieobecny"] == RARITY_CAP
+
+
 def test_select_zwraca_malejaco_po_wyniku(entries):
     outline, _ = select(entries, ["delta", "alpha"], outline_limit=10, drill_limit=2)
     wyniki = [item["score"] for item in outline]
