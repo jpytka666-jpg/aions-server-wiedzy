@@ -232,7 +232,7 @@ class CallGraph:
         hop2_k: int = HOP2_K,
         damp_permille: int = DAMP_PERMILLE,
     ) -> dict[NodeKey, tuple[int, list[NodeKey]]]:
-        """Jak `propagate`, ale z lista wezlow, ktore wnioslyy wklad — do paragonu."""
+        """Jak `propagate`, ale z lista wezlow, ktore wniosly wklad — do paragonu."""
         seed_set = frozenset(seeds)
         if not seed_set or hops < 1:
             return {}
