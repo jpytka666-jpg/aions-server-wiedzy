@@ -75,7 +75,10 @@ def query_terms(text: str, min_len: int = 3) -> list[str]:
 
 
 def _haystack(path: str, row: Mapping[str, object]) -> str:
-    return f"{path} {row.get('name_path') or ''} {row.get('signature') or ''}".lower()
+    return (
+        f"{path} {row.get('name_path') or ''} "
+        f"{row.get('signature') or ''} {row.get('doc') or ''}"
+    ).lower()
 
 
 def term_rarity(entries: Sequence[Mapping[str, object]], terms: Sequence[str]) -> dict[str, int]:
