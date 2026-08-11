@@ -161,3 +161,23 @@ ADR-002 §4.1". W dokumencie tych nazw NIE MA — jest jedno pole `provenance` o
 `trust_tier` tez nie ma, sa tylko przyklady `T1` i `T3`. Ksztalt uzyty w `store.py` jest
 wiec WYBOREM ACAE i tak jest opisany w TERMS.md — to znowu ryzyko R6 (plan cytuje jako
 kontrakt cos, co jest interpretacja).
+
+## 2026-08-11T09:15 — zbior testowy M4 ZAMROZONY (przed napisaniem M4)
+`acae/tests/heldout_questions.json` — 14 pytan opisowych (q101-q114) z prawda podstawowa.
+Wygenerowane przez OSOBNEGO agenta, ktory nie widzial algorytmu ani tej rozmowy i mial
+kategoryczny zakaz zagladania do `acae/`. Pytania opisuja zachowanie, nie nazywaja symboli.
+
+**Hasz zamrozony: `blake2b256:e5d8e5b4dc9e3aec6b0e178170564ea7adeaea0d6fa2bd0903b2962f507f3cea`**
+(9318 bajtow, 14 pozycji)
+
+Ten wpis powstaje ZANIM istnieje jakikolwiek kod M4. Kolejnosc jest widoczna w historii
+gita i to jest cala gwarancja: commit ze zbiorem poprzedza commit z algorytmem.
+
+Weryfikacja strukturalna (skrypt widzial tresc, ja nie):
+- 14/14 pozycji ma prawde podstawowa wskazujaca na symbole ISTNIEJACE w packu
+- 12/14 czyste w kontroli wycieku; pozostale 2 to falszywy alarm — kontroler rozbil
+  `to_dict` na `to`+`dict` i trafil w angielskie „to" w pytaniu. Realnie 14/14.
+
+Regula na czas M4: **nie otwieram tego pliku.** Po ewaluacji wolno mi zmienic diagnoze,
+nie wolno stroic wag ani progow — strojenie po odsloniecie zbioru zamienia go z powrotem
+w zbior treningowy i cala ta ostroznosc idzie do kosza.
