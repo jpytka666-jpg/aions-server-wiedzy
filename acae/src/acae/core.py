@@ -61,17 +61,20 @@ def _content_lines(entries: Sequence[Mapping[str, object]]) -> list[str]:
     return out
 
 
-def build_pack(request: PackRequest, locator: Locator, reader: Reader) -> PackResult:
+def collect_entries(locator: Locator, reader: Reader) -> tuple[list[dict], list[dict]]:
     """
-    Zlozenie packa z tego, co podaja porty.
+    Przefiltrowane wpisy plikow plus raport pominiec. Czysta funkcja nad portami.
 
     Kolejnosc plikow narzucamy TUTAJ, przez sorted(), zamiast ufac kontraktowi portu.
     Bramka M1 wymaga, zeby Locator zwracajacy liste odwrocona dal ten sam pack_hash —
     a to jest wlasnosc rdzenia, nie uprzejmosc adaptera.
+
+    Wydzielone z build_pack, bo M2 (drill) potrzebuje DOKLADNIE tego samego zbioru
+    plikow co M1. Druga kopia regul odrzucania rozjechalaby sie przy pierwszej zmianie
+    i bramka M2 przestalaby byc porownywalna z M1.
     """
     skipped: list[dict] = [dict(s) for s in locator.skipped()]
     entries: list[dict] = []
-    total_symbols = 0
 
     for rel in sorted(locator.list_files()):
         try:
@@ -100,7 +103,6 @@ def build_pack(request: PackRequest, locator: Locator, reader: Reader) -> PackRe
             skipped.append({"path": rel, "reason": "no_grammar"})
             continue
 
-        total_symbols += len(rows)
         entries.append({
             "path": rel,
             "lang": lang_for(rel),
@@ -108,6 +110,14 @@ def build_pack(request: PackRequest, locator: Locator, reader: Reader) -> PackRe
             "content_hash": content_hash(raw),
             "symbols": rows,
         })
+
+    return entries, skipped
+
+
+def build_pack(request: PackRequest, locator: Locator, reader: Reader) -> PackResult:
+    """Zlozenie packa z tego, co podaja porty."""
+    entries, skipped = collect_entries(locator, reader)
+    total_symbols = sum(len(e["symbols"]) for e in entries)
 
     content = "\n".join(_content_lines(entries)).encode("utf-8")
 
