@@ -141,6 +141,7 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             "id": q["id"], "kind": "positive", "rank": rank_of_hit, "top1_score": top1,
             "hit_at_10": bool(rank_of_hit and rank_of_hit <= 10),
             "hit_at_25": bool(rank_of_hit and rank_of_hit <= 25),
+            "expansion": receipts,
         })
 
     n = max(1, len(positives))
