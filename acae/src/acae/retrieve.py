@@ -49,7 +49,16 @@ W_NAME, W_SIGNATURE, W_PATH = 3, 2, 1
 # Gorny limit wagi rzadkosci. Bez niego termin wystepujacy raz w calym repo (literowka,
 # nazwa wlasna, przypadkowy identyfikator) dostawalby wage rowna liczbie symboli
 # i jednym trafieniem przewracalby caly ranking.
-RARITY_CAP = 64
+#
+# DLACZEGO 512, A NIE 64
+# ----------------------
+# Przy 64 sufit bил za nisko i SPLASZCZAL realne roznice: dla pytania
+# „provenance memory write" termin `provenance` (~5 symboli) i `write` (~24 symbole)
+# dostawaly identyczna wage 64. `provenance()` konczylo z 320 punktami — dokladnie tyle
+# samo co `_write_vm_log` i `_write_status` — a remis rozstrzygala sciezka alfabetycznie,
+# wiec odpowiedz wypadala poza drill. Sufit ma chronic przed df=1, a nie zrownywac
+# terminu bardzo rzadkiego ze srednio czestym.
+RARITY_CAP = 512
 
 
 def query_terms(text: str, min_len: int = 3) -> list[str]:
