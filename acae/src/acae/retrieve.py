@@ -46,6 +46,10 @@ TERM_RE = re.compile(r"[a-z0-9_]+")
 # tylko dlatego, ze termin pada w kazdym jego symbolu.
 W_NAME, W_SIGNATURE, W_PATH = 3, 2, 1
 
+# Docstring wazy tyle co sygnatura. To jedyne pole, w ktorym kod jest opisany JEZYKIEM
+# NATURALNYM, wiec jako jedyne lapie pytania zadane opisem zamiast identyfikatorem.
+W_DOC = 2
+
 # Gorny limit wagi rzadkosci. Bez niego termin wystepujacy raz w calym repo (literowka,
 # nazwa wlasna, przypadkowy identyfikator) dostawalby wage rowna liczbie symboli
 # i jednym trafieniem przewracalby caly ranking.
