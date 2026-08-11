@@ -180,10 +180,20 @@ def main() -> int:
         prune_dirs=cfg.get("baseline", {}).get("prune_dirs", []),
         max_file_bytes=cfg["pack"]["max_file_bytes"],
     )
-    entries, _ = collect_entries(locator, FsReader(str(repo_root)))
-    index = Bm25fIndex(entries) if args.variant == "bm25f" else None
+    reader = FsReader(str(repo_root))
+    entries, _ = collect_entries(locator, reader)
 
-    result = evaluate(entries, index, queries, args.variant)
+    ctx: dict = {"index": None, "corpus": None, "vocabulary": None, "pack_hash": ""}
+    if args.variant == "bm25f":
+        ctx["index"] = Bm25fIndex(entries)
+    elif args.variant == "prf_code":
+        ctx["corpus"] = Corpus(code_window_documents(entries, reader))
+        ctx["vocabulary"] = symbol_vocabulary(entries)
+        # pack_hash trafia do kazdego paragonu jako warunek waznosci — krawedz
+        # wyprowadzona dla jednego stanu repo nie moze cicho przezyc jego zmiany.
+        ctx["pack_hash"] = build_pack(PackRequest(root=repo_root.name), locator, reader).pack_hash
+
+    result = evaluate(entries, ctx, queries, args.variant)
 
     payload = {
         "schema": SCHEMA,
