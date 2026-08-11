@@ -136,3 +136,28 @@ Dzialajacy wzorzec: commituj `acae/` do czysta PRZED kazda seria edycji. Wtedy
 zestage'owac, `git commit` konczy sie „nothing to commit" i hook jest faktycznym no-opem.
 Gdy drzewo jest brudne, kazda edycja produkuje commit „checkpoint: before edit of X"
 o mylacej etykiecie — nieszkodliwy, bo obejmuje tylko `acae/`, ale zasmieca historie.
+
+## 2026-08-11T08:30 — M3 zamkniety, magazyn blokow
+Done: `src/acae/store.py` + `tests/test_store.py`. Jeden silnik SQLite, tresc w kolumnie BLOB.
+Niezmienniki ADR-002 §4.2 w postaci wykonywalnej: I2 (rewizja tworzy nowy blok, stary dostaje
+`valid_to`), I5 (idempotencja po `content_hash`+`scope`), I6 (prowenancja sumowana), I7
+(trust_tier spada do najnizszego ze zrodel), I8 (`forget` = tombstone + journal), I9 (`stats`
+liczone skanem), C4 (skasowanie indeksow nie zmienia odpowiedzi).
+
+Proven: `python -m pytest` -> exit 0, **84 testy** (16 nowych).
+
+Odstepstwo od PLAN v2: plan mowil „SQLite + blobbing", czyli dwa silniki. ADR-002 §5.4
+zabrania dual-write bez wspolnej transakcji, a I4 zada atomowej widocznosci — wiec bloby
+ida do kolumny BLOB. Decyzja M3-a w TERMS.md.
+
+Next: M4. **Blokada: zbior testowy nie istnieje** — agent generujacy 14 pytan opisowych
+padl na limicie sesji Anthropic. Bez niego M4 nie ma na czym byc oceniony, a pisanie go
+wczesniej znaczy projektowanie pod jedyny przyklad, ktory widzialem (q08/provenance).
+
+## Gotcha — ADR-002 nie mowi tego, co plan mu przypisuje
+PLAN v2 podawal prowenancje jako `{source_uri, job_id, tool, trust_tier}` „w ksztalcie
+ADR-002 §4.1". W dokumencie tych nazw NIE MA — jest jedno pole `provenance` opisane jako
+„zrodlo, job, narzedzie, trust tier", bez nazw podpol i bez typow. Dozwolonych wartosci
+`trust_tier` tez nie ma, sa tylko przyklady `T1` i `T3`. Ksztalt uzyty w `store.py` jest
+wiec WYBOREM ACAE i tak jest opisany w TERMS.md — to znowu ryzyko R6 (plan cytuje jako
+kontrakt cos, co jest interpretacja).
