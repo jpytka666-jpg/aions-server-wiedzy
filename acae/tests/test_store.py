@@ -118,8 +118,16 @@ def test_nieznany_trust_tier_jest_odrzucony(store):
 
 def test_magazyn_nie_dotyka_cbms():
     """D1 w postaci wykonywalnej: zaden import z aions_core nie moze wejsc do store.py."""
+    import ast
     import pathlib
 
     src = pathlib.Path(__file__).resolve().parents[1] / "src" / "acae" / "store.py"
-    tekst = src.read_text(encoding="utf-8")
-    assert "aions_core" not in tekst and "chroma" not in tekst.lower()
+    drzewo = ast.parse(src.read_bytes())
+    moduly = set()
+    for node in ast.walk(drzewo):
+        if isinstance(node, ast.Import):
+            moduly.update(a.name for a in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            moduly.add(node.module)
+    zakazane = [m for m in moduly if "aions_core" in m or "chroma" in m.lower() or "cbms" in m.lower()]
+    assert not zakazane, f"store.py importuje zakazane moduly: {zakazane}"
