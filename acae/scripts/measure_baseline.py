@@ -175,6 +175,9 @@ def collect_files(roots: list[str], prune_dirs: set[str], max_bytes: int) -> tup
             if path.suffix.lower() not in LANGS:
                 continue
             rel = path.relative_to(REPO_ROOT).as_posix()
+            if rel.startswith(sub_prefixes):
+                in_submodule.append(rel)
+                continue
             size = path.stat().st_size
             if size > max_bytes:
                 too_large.append({"path": rel, "bytes": size})
