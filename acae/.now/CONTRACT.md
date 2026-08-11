@@ -25,7 +25,9 @@ pack, ktory te liczbe bije o rzad wielkosci.
 - [x] `diff _out/m2_run1.json _out/m2_run2.json` exits 0 — pomiar M2 deterministyczny
 - [x] `python -m acae ask --query "..."` zwraca wycinek szkieletu plus ciala symboli
 - [ ] M1-F: dwa narzedzia MCP (`acae_pack`, `acae_pack_status`) — NIE ROZPOCZETE
-- [ ] M3: magazyn `acae/store/` — NIE ROZPOCZETE
+- [x] M3: `python -m pytest tests/test_store.py` exits 0 — 16 testow, niezmienniki I2/I5/I6/I7/I8/I9 i test C4
+- [x] M3: `store.py` nie importuje `aions_core`, `cbms` ani `chroma` — sprawdzane przez AST, nie przez grep po tekscie
+- [ ] M4: semantic layer — zbior testowy 14 pytan opisowych NIE ISTNIEJE (agent padl na limicie sesji)
 
 ## Constraints
 Root: E:\server wiedzy (istniejace repo, rozszerzane a nie forkowane)
