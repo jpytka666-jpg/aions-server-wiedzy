@@ -253,7 +253,7 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
 def main() -> int:
     parser = argparse.ArgumentParser(description="Ablacja M4 dla ACAE.")
     parser.add_argument(
-        "--variant", required=True, choices=("baseline", "bm25f", "prf_code", "prf_prose"),
+        "--variant", required=True, choices=("baseline", "bm25f", "prf_code", "prf_prose", "graph"),
     )
     parser.add_argument("--set", dest="qset", default="dev", choices=tuple(SETS))
     parser.add_argument("--out", default=None)
