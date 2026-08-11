@@ -44,6 +44,10 @@ to jest dokladnie ta wlasnosc, ktorej ACAE nie powtarza.
 | **M2-b** | wagi pol: `name_path` 3, sygnatura 2, sciezka 1 | nazwa symbolu jest mocniejszym sygnalem niz nazwa katalogu; bez zroznicowania kazdy symbol w `memory.py` dziedziczy trafienie po sciezce |
 | **M2-c** | parametry wycinka (`outline_limit`, `drill`, `max_body_lines`) **NIE sa zamrozone** | zamrozony jest baseline, bo to punkt odniesienia. Parametry wycinka wolno stroic — kazdy przebieg `measure_m2.py` zapisuje je w artefakcie, wiec wynik zawsze wiadomo z czym porownywac |
 | **M2-d** | uciete cialo jest oznaczone w tresci wycinka | ciche ucinanie zamienialoby oszczednosc tokenow w gubienie kodu |
+| **M3-a** | bloby jako kolumna `BLOB` w SQLite, **nie** osobny katalog plikow | PLAN v2 zakladal „SQLite + blobbing", czyli dwa silniki. ADR-002 §5.4 ostrzega, ze silniki bez wspolnej transakcji wymagaja dwufazowego zapisu albo jednego magazynu, a I4 zada atomowej widocznosci. Osobny katalog obok bazy to podrecznikowy dual-write |
+| **M3-b** | skala `trust_tier` = `T0 > T1 > T2 > T3` | **To jest WYBOR ACAE, nie cytat.** ADR-002 nie definiuje wartosci — podaje tylko przyklady `T1` i `T3` oraz to, ze tiery sa uporzadkowane. Plan przypisywal dokumentowi ksztalt `{source_uri, job_id, tool, trust_tier}`, ktorego tam nie ma; nazwy podpol tez sa wyborem ACAE |
+| **M3-c** | czas wstrzykiwany przez `observed_at`, nigdy brany w srodku | bez tego `id` bloku zalezy od zegara i testy przestaja byc powtarzalne. Domyslnie czas systemowy, ale zawsze na brzegu wywolania |
+| **M3-d** | `forget` nie usuwa tresci fizycznie | I8 gwarantuje tombstone i wpis w journalu, nie skasowanie bajtow. Nie obiecujemy wiecej niz kontrakt |
 
 ## Zamrozone razem z `tests/queries.json`
 
