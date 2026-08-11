@@ -20,8 +20,12 @@ pack, ktory te liczbe bije o rzad wielkosci.
 - [x] podlozony klucz konczy w `skipped[]` z `reason: secret`, a jego tresc nie trafia do manifestu
 - [x] pack calego zakresu ponizej 60 s — zmierzone 9,4 s na przebieg
 - [x] `python -m acae pack --root .` dziala bez uruchomionego serwera MCP
+- [x] `python scripts/measure_m2.py` exits 0 — **10/10** zapytan taniej niz `B_query(q)` przy wymaganych 8
+- [x] wycinki mieszcza sie w 2,7-7,4% kosztu dzisiejszego Grep+Read (`_baseline/m2_c8344eb.json`)
+- [x] `diff _out/m2_run1.json _out/m2_run2.json` exits 0 — pomiar M2 deterministyczny
+- [x] `python -m acae ask --query "..."` zwraca wycinek szkieletu plus ciala symboli
 - [ ] M1-F: dwa narzedzia MCP (`acae_pack`, `acae_pack_status`) — NIE ROZPOCZETE
-- [ ] M2: dla >=8 z 10 zapytan wycinek outline + drill taniej niz `B_query(q)`
+- [ ] M3: magazyn `acae/store/` — NIE ROZPOCZETE
 
 ## Constraints
 Root: E:\server wiedzy (istniejace repo, rozszerzane a nie forkowane)
