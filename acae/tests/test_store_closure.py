@@ -78,7 +78,8 @@ def test_i5_i_i6_dzialaja_MIEDZY_sesjami(tmp_path):
         assert sources == ["acae://doc/2", "acae://pack/1"], "prowenancja zgubiona przez reopen"
         # I7: tier schodzi do najnizszego ze zrodel, takze po scaleniu miedzy sesjami.
         assert block["trust_tier"] == "T3"
-        assert store.stats()["blocks"] == 1
+        assert store.stats()["blocks_live"] == 1
+        assert store.stats()["blocks_total"] == 1, "powtorka utworzyla drugi wiersz mimo I5"
 
 
 def test_rewizja_i_valid_to_przezywaja_reopen(tmp_path):
