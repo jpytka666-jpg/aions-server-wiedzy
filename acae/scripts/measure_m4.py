@@ -278,6 +278,8 @@ def main() -> int:
     ctx: dict = {"index": None, "corpus": None, "vocabulary": None, "pack_hash": ""}
     if args.variant == "bm25f":
         ctx["index"] = Bm25fIndex(entries)
+    elif args.variant == "graph":
+        ctx["graph"] = build_graph(entries, reader)
     elif args.variant in ("prf_code", "prf_prose"):
         documents = (
             code_window_documents(entries, reader) if args.variant == "prf_code"
