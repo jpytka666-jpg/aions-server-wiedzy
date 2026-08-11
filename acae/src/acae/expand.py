@@ -123,6 +123,34 @@ class Document:
     text: str
 
 
+def _xlogx(value: float) -> float:
+    return 0.0 if value <= 0 else value * math.log(value)
+
+
+def log_likelihood_ratio(k11: int, k12: int, k21: int, k22: int) -> float:
+    """
+    G^2 Dunninga dla tablicy 2x2 (termin zapytania x kandydat), po dokumentach.
+
+    k11 — dokumenty z OBOMA, k12 — tylko termin, k21 — tylko kandydat, k22 — zaden.
+
+    Zwraca 0 dla zwiazku UJEMNEGO. G^2 jest symetryczne i rosnie tak samo dla
+    przyciagania jak dla odpychania — bez tego warunku wciagalibysmy do zapytania
+    terminy, ktore z pytaniem systematycznie NIE wystepuja.
+    """
+    n = k11 + k12 + k21 + k22
+    if n <= 0 or k11 <= 0:
+        return 0.0
+    row1, row2 = k11 + k12, k21 + k22
+    col1, col2 = k11 + k21, k12 + k22
+    if k11 * n <= row1 * col1:      # obserwacja ponizej oczekiwania = zwiazek ujemny
+        return 0.0
+    return 2.0 * (
+        _xlogx(k11) + _xlogx(k12) + _xlogx(k21) + _xlogx(k22)
+        - _xlogx(row1) - _xlogx(row2) - _xlogx(col1) - _xlogx(col2)
+        + _xlogx(n)
+    )
+
+
 def symbol_vocabulary(entries: Sequence[Mapping[str, object]]) -> set[str]:
     """
     Slownik identyfikatorow, ktore NAPRAWDE istnieja w packu.
