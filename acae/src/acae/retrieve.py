@@ -126,11 +126,17 @@ def score_symbol(
     weights = rarity or {}
     name = str(row.get("name_path") or "").lower()
     signature = str(row.get("signature") or "").lower()
+    doc = str(row.get("doc") or "").lower()
     low_path = path.lower()
 
     score = 0
     for term in terms:
-        pola = W_NAME * (term in name) + W_SIGNATURE * (term in signature) + W_PATH * (term in low_path)
+        pola = (
+            W_NAME * (term in name)
+            + W_SIGNATURE * (term in signature)
+            + W_DOC * (term in doc)
+            + W_PATH * (term in low_path)
+        )
         if pola:
             score += weights.get(term, 1) * pola
     return score
