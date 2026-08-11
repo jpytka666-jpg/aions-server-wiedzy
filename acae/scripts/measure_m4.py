@@ -117,9 +117,10 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             ranked = rank_baseline(entries, terms, depth)
         elif variant == "bm25f":
             ranked = ctx["index"].rank(terms, depth)
-        elif variant == "prf_code":
+        elif variant in ("prf_code", "prf_prose"):
+            rule = "code_window" if variant == "prf_code" else "prose_cooccurrence"
             ranked, receipts = rank_with_expansion(
-                entries, terms, depth, ctx["corpus"], ctx["vocabulary"], ctx["pack_hash"], "code_window",
+                entries, terms, depth, ctx["corpus"], ctx["vocabulary"], ctx["pack_hash"], rule,
             )
         else:
             raise SystemExit(f"nieznany wariant: {variant}")
