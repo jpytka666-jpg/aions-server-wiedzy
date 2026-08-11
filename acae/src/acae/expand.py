@@ -354,7 +354,7 @@ def expand(
     best: dict[str, Receipt] = {}
     for cand, receipt in out:
         prev = best.get(cand)
-        if prev is None or receipt.ratio_permille > prev.ratio_permille:
+        if prev is None or receipt.g2_milli > prev.g2_milli:
             best[cand] = receipt
-    ordered = sorted(best.values(), key=lambda r: (-r.ratio_permille, -r.cooccurrence, r.term))
+    ordered = sorted(best.values(), key=lambda r: (-r.g2_milli, -r.cooccurrence, r.term))
     return [(r.term, r) for r in ordered[:max_total]]
