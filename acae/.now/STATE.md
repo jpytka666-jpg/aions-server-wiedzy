@@ -253,3 +253,40 @@ Kryterium bez zmian: `recall@10` **+8 pkt proc.** ponad 26,6%, czyli **>= 34,6%*
 Regresja: 96 testow zielonych, M2 nadal 10/10, `pack_hash` niezmieniony `6442322d...`.
 Modul zostaje w repo NIEPODPIETY — wynik negatywny z dzialajaca implementacja da sie
 zmierzyc ponownie, gdy zmieni sie reszta pipeline'u. Ale tylko wobec nowej prerejestracji.
+
+## 2026-08-11T12:05 — M4.2 PRF z oknem w kodzie: ZMIERZONY I ODRZUCONY
+
+Kryterium: `recall@10 >= 34,6%` (baseline 26,6% + 8 pkt proc.), kontrole negatywne
+bez pogorszenia. Wynik na zbiorze roboczym:
+
+| miara | baseline | M4.2 | werdykt |
+|---|---|---|---|
+| recall@10 | 26,6% | 30,0% | +3,4 zamiast +8 — **za malo** |
+| recall@25 | 36,6% | 40,0% | +3,4 |
+| MRR | 0,172 | 0,139 | **gorzej** |
+| negatywy/pozytywy | 85,2% | 80,7% | lepiej |
+
+**ODRZUCONY.** Sprzecznosc wewnetrzna jest diagnostyczna: recall rosnie, MRR spada.
+Rozszerzenie wciaga poprawne symbole do top-25, ale wpycha je NIZEJ — dokłada trafnych
+i szumu jednoczesnie.
+
+**Przyczyna, odczytana z paragonow (po to sa):**
+```
+file -> sha12       co=3  df=3   ratio=1000 promili
+rows -> is_refusal  co=2  df=2   ratio=1000 promili
+read -> post_chat   co=2  df=4   ratio= 500 promili
+```
+Filtr `stosunek >= 250 promili` jest TRYWIALNIE spelniony przy malym `df`. Termin
+wystepujacy w calym repo dwa razy, oba razy obok terminu z pytania, dostaje 1000 promili
+i przechodzi — mimo ze dowodu nie ma zadnego. `MIN_COOCCURRENCE=2` tego nie broni,
+bo to ta sama dwojka. Klasyczny problem malej proby: wysoki stosunek, zerowe wsparcie.
+
+To JEST ta sama klasa bledu co `RARITY_CAP` w M2: statystyka bez progu wsparcia.
+Trzeci raz w tym projekcie. Wniosek do zapamietania: **kazda miara oparta na stosunku
+potrzebuje osobnego progu na mianownik**, inaczej maly mianownik produkuje pewnosc
+z niczego.
+
+Czego NIE robie: nie podnosze `MIN_COOCCURRENCE` ani `MIN_RATIO_PERMILLE`, zeby to
+przeszlo. To byloby strojenie po zobaczeniu wyniku — dokladnie to, przed czym chronila
+prerejestracja. Ewentualna poprawka wymaga NOWEJ prerejestracji i jest DRUGIM podejsciem,
+co samo w sobie oslabia sile dowodu i musi byc odnotowane.
