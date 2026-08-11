@@ -181,3 +181,43 @@ Weryfikacja strukturalna (skrypt widzial tresc, ja nie):
 Regula na czas M4: **nie otwieram tego pliku.** Po ewaluacji wolno mi zmienic diagnoze,
 nie wolno stroic wag ani progow — strojenie po odsloniecie zbioru zamienia go z powrotem
 w zbior treningowy i cala ta ostroznosc idzie do kosza.
+
+## 2026-08-11T10:40 — PREREJESTRACJA M4.1-M4.5 (przed jakimkolwiek pomiarem)
+
+Marcin postawil warunek: kazdy mechanizm mierzony OSOBNO, zeby bylo wiadomo co faktycznie
+placi. To jest ablacja i jest sluszne. Ale piec etapow mierzonych na tym samym zbiorze 14
+pytan SPALILOBY ten zbior: kazde spojrzenie na wynik i decyzja „zostawiam/wyrzucam"
+przecieka informacje o zbiorze. Po pieciu takich decyzjach holdout jest treningowy, tylko
+wolniej — adaptacyjne przeuczenie na holdoucie.
+
+**Trzy zabezpieczenia:**
+
+1. **Zbior ROBOCZY, osobny.** Etapy M4.1-M4.5 mierze na `acae/tests/dev_questions.json`
+   (30 pozytywnych + 6 negatywnych, inny agent, ten sam protokol). Zamrozone 14 z
+   `heldout_questions.json` zostaje NIETKNIETE i otwierane DOKLADNIE RAZ, na koncu.
+2. **Kryteria zapisane TUTAJ, przed pomiarem** — patrz tabela nizej. Wtedy pomiar nie
+   wymaga ode mnie osadu, wiec nie przecieka.
+3. **Regresja identyczna na kazdym etapie:** pelny pytest zielony · bramka M2 nadal 10/10 ·
+   `pack_hash` NIEZMIENIONY. To ostatnie jest twardym strażnikiem — zaden mechanizm M4 nie
+   ma prawa ruszyc artefaktu, tylko ranking. Gdyby ruszyl, porownywalnosc z M0/M1/M2 pada.
+
+| etap | co dokłada | KRYTERIUM PRZYJECIA (zapisane przed pomiarem) |
+|---|---|---|
+| M4.1 BM25F | zamiana ad-hoc wag i `RARITY_CAP` na model z osobna normalizacja per pole | `recall@10` >= obecnego ORAZ `MRR` > obecnego. To wymiana fundamentu, nie funkcja — ma nie pogorszyc niczego |
+| M4.2 PRF, okno w kodzie | most z sasiedztwa pozycyjnego w zrodlach | `recall@10` **+8 pkt proc.** ponad M4.1 i kontrole negatywne bez pogorszenia |
+| M4.3 most z prozy | commity i `.md` jako drugi korpus | `recall@10` **+5 pkt proc.** PONAD M4.2. Jesli proza nie dokłada nic ponad kod — wypada |
+| M4.4 propagacja po grafie | `specificity` + `reinforcement` na `refs` | `MRR` **+0,05** ORAZ `recall@25` bez utraty precyzji na kontrolach negatywnych |
+| M4.5 AMAP | rozwijanie skrotow z repo | uruchamiam TYLKO jesli diagnoza M4.1-M4.4 wskaze skroty jako przyczyne chybien |
+
+Kontrola negatywna „bez pogorszenia" znaczy: dla 6 pytan o rzeczy, ktorych w repo NIE MA,
+sredni najwyzszy wynik rankingu nie rosnie. Bez tego kryterium „semantic retrieval"
+i „rozszerzam agresywnie, wiec cos zawsze trafie" wygladaja identycznie.
+
+Uzasadnienie kolejnosci: BM25F pierwszy, bo obecny scoring PEKL DWA RAZY w jednej sesji
+(rowne wagi, potem `RARITY_CAP=64`) — jest wymyslonym od nowa IDF-em bez teorii, wiec
+mierzenie czegokolwiek na nim mierzy szum. Graf ostatni, bo ZMIERZONE: propagacja wzmacnia
+to co ranker mowi, wiec na zlym rankerze wzmacnia bledy (`DifferentiableMemory/write`
+urosl z 873 na 1489).
+
+Stan: `src/acae/expand.py` napisany, ale **NIEPODPIETY** — nie zmienia niczego do M4.2.
+Przyjmuje korpus i nazwe reguly jako parametry, wiec M4.2 i M4.3 dadza sie zmierzyc osobno.
