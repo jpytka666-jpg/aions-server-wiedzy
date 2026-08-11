@@ -105,6 +105,32 @@ def test_termin_rzadki_wazy_wiecej_niz_czesty():
     assert outline[0]["row"]["name_path"] == "provenance"
 
 
+def test_sufit_nie_splaszcza_realnych_roznic_rzadkosci():
+    """
+    Regresja na drugiej wpadce rankingu: przy RARITY_CAP=64 termin wystepujacy
+    w 5 symbolach i termin wystepujacy w 25 dostawaly te sama wage, wiec odpowiedz
+    remisowala z tlem i przegrywala rozstrzygnieciem po sciezce.
+    """
+    from acae.retrieve import term_rarity
+
+    symbols_rzadki = [
+        {"name_path": f"rzadki{i}", "signature": "def f():", "line": i, "kind": "function"}
+        for i in range(5)
+    ]
+    symbols_sredni = [
+        {"name_path": f"sredni{i}", "signature": "def f():", "line": i, "kind": "function"}
+        for i in range(25)
+    ]
+    tlo = [
+        {"name_path": f"inny{i}", "signature": "def f():", "line": i, "kind": "function"}
+        for i in range(600)
+    ]
+    entries = [{"path": "a/b.py", "lang": "python", "symbols": symbols_rzadki + symbols_sredni + tlo}]
+
+    rarity = term_rarity(entries, ["rzadki", "sredni"])
+    assert rarity["rzadki"] > rarity["sredni"], "sufit zrownal termin rzadki ze srednio czestym"
+
+
 def test_waga_rzadkosci_jest_ograniczona_z_gory():
     """Termin wystepujacy raz nie moze dostac wagi rownej liczbie symboli."""
     from acae.retrieve import RARITY_CAP, term_rarity
