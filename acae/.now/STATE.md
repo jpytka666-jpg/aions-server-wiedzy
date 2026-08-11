@@ -323,3 +323,46 @@ Wszystkie trzy naraz. M4.2 spelnil tylko trzeci i to nie wystarczylo.
 gwarantuje poprawy — BM25F byl dokladnie takim zabiegiem i przegral. Jesli LLR tez
 przegra, wniosek brzmi: problemem nie jest statystyka doboru krawedzi, tylko to,
 ze okno pozycyjne w kodzie nie niesie mostu miedzy opisem a nazwa.
+
+## 2026-08-11T12:45 — M4.2b: ZMIERZONY I ODRZUCONY. Most z okna w kodzie zamkniety.
+
+| miara | baseline | M4.2 (stosunek) | M4.2b (LLR) | wymagane | werdykt |
+|---|---|---|---|---|---|
+| recall@10 | 26,6% | 30,0% | **33,3%** | >= 34,6% | NIE, brakło 1,3 pkt |
+| recall@25 | 36,6% | 40,0% | 36,6% | — | — |
+| MRR | 0,172 | 0,139 | **0,153** | >= 0,172 | NIE |
+| negatywy/pozytywy | 85,2% | 80,7% | **80,4%** | <= 85,2% | TAK |
+
+LLR zrobil to, co mial: dobor krawedzi wyraznie lepszy niz surowy stosunek, `recall@10`
+w gore o 3,3 pkt wobec M4.2, kontrola negatywna najlepsza z dotychczasowych. Ale kryterium
+wymagalo TRZECH warunkow naraz.
+
+**Nie obnizam progu.** 34,6% ustalilem, gdy nie wiedzialem, ze wynik wyjdzie 33,3%.
+Obnizenie go teraz uczyniloby cala prerejestracje teatrem. Zgodnie z zapisem — trzeciej
+proby nie ma. **Most z okna pozycyjnego w kodzie: ODRZUCONY DEFINITYWNIE.**
+
+**Obserwacja przekrojowa, wazniejsza od werdyktu:** MRR spadl w OBU podejsciach
+(0,139 i 0,153 wobec 0,172). Rozszerzanie zapytania konsekwentnie spycha poprawne symbole
+NIZEJ, nawet gdy podnosi recall. To wlasnosc mechanizmu, nie doboru krawedzi: dodane
+terminy rozcienczaja sygnal terminow oryginalnych. Hipoteza na przyszlosc, ktorej NIE
+testuje teraz (bo to byloby strojenie): waga rozszerzenia 1/2 moze byc za wysoka.
+
+## 2026-08-11T12:50 — PREREJESTRACJA M4.3 (przed pomiarem)
+
+Korpus prozy: komunikaty commitow + akapity `.md`. **Jedno podejscie.** M4.2 odrzucony,
+wiec proza jest mierzona SAMODZIELNIE wobec baseline, nie jako dodatek do okna w kodzie.
+
+Zmienia sie DOKLADNIE JEDNA RZECZ wobec M4.2b: korpus. Wszystkie filtry i wagi bez ruchu
+(G^2 >= 10.83, pokrycie >= 2, maks 3 na termin, maks 12 razem, waga 1/2, ten sam ranker).
+
+**KRYTERIUM PRZYJECIA — identyczne jak M4.2b, zeby wyniki byly porownywalne:**
+- `recall@10` >= **34,6%**, ORAZ
+- `MRR` >= **0,172**, ORAZ
+- `negatywy/pozytywy` <= **85,2%**.
+
+Zapisuje przewidywanie, zeby nie moc go pozniej przemilczec: w prototypie na jednym
+pytaniu proza wypadla LEPIEJ niz okno w kodzie (to ona wyciagnela `with_provenance`
+na pierwsze miejsce). Ale prototyp byl wewnatrzprobkowy, wiec ta przeslanka jest slaba.
+Jesli proza tez przegra, wniosek brzmi: **deterministyczny most leksykalny nie zamyka
+luki miedzy opisem a nazwa** — i to jest wynik wart raportu, a nie porazka wymagajaca
+dokladania kolejnych warstw.
