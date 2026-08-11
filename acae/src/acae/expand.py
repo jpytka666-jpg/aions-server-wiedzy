@@ -304,18 +304,27 @@ def expand(
         for cand in co[term]:
             covered[cand] += 1
 
+    total_docs = len(corpus.docs)
     out: list[tuple[str, Receipt]] = []
     for term in sorted(terms):
-        ranked = sorted(
-            co[term].items(),
-            key=lambda kv: (-((kv[1] * 1000) // max(1, df[kv[0]])), -kv[1], kv[0]),
-        )
+        # G^2 liczone raz na kandydata, potem sortowanie po nim. Poprzednia wersja
+        # sortowala po surowym stosunku i dlatego na czolo wychodzily krawedzie
+        # o df=2, ktore nie mialy zadnego wsparcia.
+        scored = []
+        for cand, count in co[term].items():
+            k11 = count
+            k12 = df[term] - k11
+            k21 = df[cand] - k11
+            k22 = total_docs - k11 - k12 - k21
+            scored.append((cand, count, log_likelihood_ratio(k11, k12, k21, k22)))
+        scored.sort(key=lambda item: (-item[2], -item[1], item[0]))
+
         taken = 0
-        for cand, count in ranked:
+        for cand, count, g2 in scored:
             if taken >= max_per_term:
                 break
             ratio = (count * 1000) // max(1, df[cand])
-            if count < min_cooccurrence or ratio < min_ratio_permille:
+            if count < min_cooccurrence or g2 < min_g2:
                 continue
             if covered[cand] < min_terms_covered:
                 continue
