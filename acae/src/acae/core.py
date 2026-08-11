@@ -56,7 +56,10 @@ def _content_lines(entries: Sequence[Mapping[str, object]]) -> list[str]:
         out.append(f"## {entry['path']} [{entry['lang']}]")
         for row in entry["symbols"]:  # type: ignore[index]
             sig = (row["signature"] or "").strip()
-            out.append(f"  {row['line']} {row['kind']} {row['name_path']} | {sig}")
+            # Docstring skrocony mocniej niz w wierszu outline'u: w packu placi sie za
+            # niego liczba symboli w calym repo, a pierwsze zdanie niesie wiekszosc sensu.
+            doc = " ".join((row.get("doc") or "").split())[:120]
+            out.append(f"  {row['line']} {row['kind']} {row['name_path']} | {sig}" + (f" :: {doc}" if doc else ""))
     out.append("")
     return out
 
