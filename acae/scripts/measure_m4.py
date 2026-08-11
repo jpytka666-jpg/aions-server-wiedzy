@@ -41,6 +41,7 @@ from acae.core import PackRequest, build_pack, collect_entries  # noqa: E402
 from acae.expand import (  # noqa: E402
     Corpus, code_window_documents, expand, prose_documents, symbol_vocabulary,
 )
+from acae.graph import SEED_K, build_graph  # noqa: E402
 from acae.pack import FsLocator, FsReader  # noqa: E402
 from acae.retrieve import query_terms, score_symbol, select, term_rarity  # noqa: E402
 
