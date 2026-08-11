@@ -401,3 +401,61 @@ od „istotne" w tym korpusie.
 **Ta sama klasa bledu po raz CZWARTY** (rowne wagi -> RARITY_CAP -> stosunek bez wsparcia
 -> LLR bez kontroli pospolitosci). Cztery razy w jednym projekcie to nie pech, tylko
 sygnal o problemie, a nie o parametrze.
+
+## 2026-08-11T20:30 — M4.4 propagacja po grafie: ZMIERZONY I ODRZUCONY. ABLACJA ZAMKNIETA.
+
+| miara | baseline | M4.4 | wymagane | werdykt |
+|---|---|---|---|---|
+| recall@10 | 26,6% | 26,6% | — | bez zmiany |
+| recall@25 | 36,6% | **40,0%** | >= 36,6% | TAK |
+| MRR | 0,172 | 0,172 | >= 0,222 | **NIE** |
+| negatywy/pozytywy | 85,2% | 85,2% | <= 85,2% | TAK (rowno) |
+
+Profil jest diagnostyczny: propagacja dokłada trafienia w pasmie 11-25, ale **nie promuje
+niczego do pierwszej dziesiatki**. Sasiad trafionego symbolu jest sasiadem, nie odpowiedzia.
+
+Implementacja sprawdzona przed zaufaniem wynikowi: arytmetyka calkowita w promilach,
+`NodeKey` zawiera sciezke, laczenie Suade nasycajace, `refs` czytane osobnym przebiegiem
+zeby nie dopisac pola do `outline_rows` i nie ruszyc `pack_hash`. 15 testow zielonych,
+w tym te, ktore pilnuja sedna: `specificity` karze huby, `reinforcement` nagradza
+wielokrotne wskazania, cykle nie zawieszaja.
+
+### PELNA ABLACJA M4 — cztery mechanizmy, cztery odrzucenia
+
+| wariant | recall@10 | recall@25 | MRR | neg/poz |
+|---|---|---|---|---|
+| baseline (M2) | 26,6% | 36,6% | 0,172 | 85,2% |
+| M4.1 BM25F | 23,3% | 33,3% | 0,156 | 97,0% |
+| M4.2 PRF stosunek | 30,0% | 40,0% | 0,139 | 80,7% |
+| M4.2b PRF + LLR | **33,3%** | 36,6% | 0,153 | **80,4%** |
+| M4.3 proza + LLR | 26,6% | 36,6% | 0,172 | 84,9% |
+| M4.4 graf Suade | 26,6% | **40,0%** | 0,172 | 85,2% |
+
+**MRR nie wzrosl ANI RAZU.** Zaden z czterech mechanizmow nie postawil poprawnego symbolu
+wyzej, niz stawial go goły ranker leksykalny. Trzy podnosily recall kosztem MRR, czwarty
+podniosl recall@25 nie ruszajac MRR. To jest jeden i ten sam wynik widziany z czterech stron.
+
+### Wniosek, na ktory pozwalaja te pomiary
+
+Trzy z czterech mechanizmow to warianty **wspolwystepowania slow**, wiec licza sie jako
+jeden dowod, nie trzy. Czwarty jest strukturalny i tez nie ruszyl MRR — a to jest wazne,
+bo nie zalezy od slow w ogole.
+
+Rozpoznanie CBMS domyka diagnoze: `cbms_search` dziala nie przez semantyke, tylko dlatego,
+ze **jego korpus JEST proza w tym samym rejestrze co pytania**, a kod wisi obok jako
+`references`. Blok CBMS to opis z doczepionymi sciezkami. W ACAE korpusem sa identyfikatory.
+Zadna statystyka nie wyprodukuje wiedzy, ktorej w repo nie ma.
+
+**Problem nie lezy w scorerze. Lezy w tym, ze repo nie zawiera warstwy prozy przypietej
+do symboli.** Cztery mechanizmy proboowaly wyliczyc to, co w CBMS jest wpisane recznie.
+
+### Zmierzone poza ablacja (eksploracja, zbior roboczy NIETKNIETY)
+
+Tabela skojarzen identyfikator <-> slowo z 50 663 par (symbol, docstring) ze stdlib
+i site-packages: `remove -> pop, clear, clean, strip` dziala swietnie, ale
+`machine -> host` NIE POWSTAJE, a `computer` nie daje nic. Przyczyna: stdlib to proza
+o strukturach danych, nie o maszynach i infrastrukturze. Mechanizm dziala, brakuje
+wlasciwego rozkladu dziedzinowego korpusu.
+
+**Held-out (14 pytan, `blake2b256:e5d8e5b4...`) pozostaje NIETKNIETY.** Nie ma sensu go
+otwierac, dopoki nie ma kandydata, ktory przeszedl na zbiorze roboczym.
