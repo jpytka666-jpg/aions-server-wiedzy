@@ -34,6 +34,7 @@ Bez tego wchodzi tlo: slowo, ktore pada obok czegokolwiek, pada tez obok pytania
 from __future__ import annotations
 
 import collections
+import math
 import re
 import subprocess
 from dataclasses import dataclass, field
