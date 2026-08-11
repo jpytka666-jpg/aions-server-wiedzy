@@ -341,6 +341,7 @@ def expand(
                 cooccurrence=count,
                 doc_freq=df[cand],
                 ratio_permille=ratio,
+                g2_milli=int(round(g2 * 1000)),
                 terms_covered=covered[cand],
                 weight_class="expansion",
                 valid_for_pack=pack_hash,
