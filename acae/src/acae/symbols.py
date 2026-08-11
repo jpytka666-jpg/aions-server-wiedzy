@@ -136,6 +136,12 @@ def outline_rows(idx: SymbolIndex) -> list[dict]:
             "line": sym.start_line,
             "lines": (sym.end_line or 0) - (sym.start_line or 0) + 1,
             "signature": sym.signature,
+            # Docstring to JEDYNE miejsce w kodzie, gdzie ludzie pisza OPISEM, a nie
+            # identyfikatorem — czyli tym samym jezykiem, ktorym zadaje sie pytania.
+            # Wyrzucenie go z outline'u kosztowalo trafienie: zapytanie „which machine
+            # performed a memory write" nie znajdowalo provenance(), ktorej docstring
+            # brzmi „Who wrote this, wearing which machine.".
+            "doc": (sym.docstring or "")[:200] or None,
             # blake2b256 zamiast sha12 z ts_symbols — patrz docstring modulu
             "body_hash": content_hash(body),
             "n_refs": len(sym.refs or ()),
