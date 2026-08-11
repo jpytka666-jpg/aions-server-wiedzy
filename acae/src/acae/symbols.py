@@ -84,16 +84,17 @@ def _parser(lang: str):
     return get_parser(lang)
 
 
-def outline_from_bytes(rel_path: str, raw: bytes) -> list[dict]:
+def index_from_bytes(rel_path: str, raw: bytes) -> SymbolIndex:
     """
-    Szkielet pliku: sygnatury bez cial.
+    Indeks symboli zlozony z BAJTOW, bez dotykania dysku.
 
+    Powtarza to, co robi `SymbolIndex.from_file`, ale na bajtach z portu Reader.
     Wejsciem sa bajty JUZ znormalizowane przez canon.normalize_source — dzieki temu
-    numery linii i offsety odnosza sie do tresci z LF, identycznie na kazdym systemie.
+    numery linii odnosza sie do tresci z LF, identycznie na kazdym systemie.
 
-    Kolejnosc wierszy: (linia poczatkowa, name_path). Sam numer linii nie wystarcza,
-    bo dwa symbole moga zaczynac sie w tej samej linii — wtedy o kolejnosci decydowalby
-    porzadek slownika, czyli kolejnosc wstawiania.
+    M1 i M2 potrzebuja tego samego indeksu w roznych celach: M1 bierze z niego szkielet,
+    M2 dociaga z niego cialo pojedynczego symbolu. Dlatego prywatnej `_walk` dotykamy
+    w JEDNYM miejscu, a nie w dwoch — sprzezenie ma miec jeden punkt pekniecia.
     """
     lang = lang_for(rel_path)
     if lang is None:
@@ -102,7 +103,30 @@ def outline_from_bytes(rel_path: str, raw: bytes) -> list[dict]:
     idx = SymbolIndex(rel_path, raw.decode("utf-8", "replace"), lang)
     tree = _parser(lang).parse(raw)
     idx._walk(tree.root_node, [], raw)  # noqa: SLF001 — patrz docstring modulu
+    return idx
 
+
+def body_of(idx: SymbolIndex, name_path: str) -> str | None:
+    """
+    Cialo symbolu albo None. To jest cale „drill" z wzorca outline-then-drill.
+
+    `idx.get()` dopasowuje najpierw doslownie, a potem po sufiksie `name_path`
+    (ts_symbols.py:225-232) — wiec „evaluate" trafi w „CRLACore/evaluate", jesli nic
+    doslowniejszego nie ma. Dla M2 to zachowanie jest pozadane: zapytanie zna nazwe,
+    rzadko zna pelna sciezke.
+    """
+    sym = idx.get(name_path)
+    return None if sym is None else (sym.body or "")
+
+
+def outline_rows(idx: SymbolIndex) -> list[dict]:
+    """
+    Szkielet pliku: sygnatury bez cial.
+
+    Kolejnosc wierszy: (linia poczatkowa, name_path). Sam numer linii nie wystarcza,
+    bo dwa symbole moga zaczynac sie w tej samej linii — wtedy o kolejnosci decydowalby
+    porzadek slownika, czyli kolejnosc wstawiania.
+    """
     rows: list[dict] = []
     for sym in sorted(idx.symbols.values(), key=lambda s: (s.start_line or 0, s.name_path or "")):
         body = (sym.body or "").encode("utf-8")
@@ -117,3 +141,8 @@ def outline_from_bytes(rel_path: str, raw: bytes) -> list[dict]:
             "n_refs": len(sym.refs or ()),
         })
     return rows
+
+
+def outline_from_bytes(rel_path: str, raw: bytes) -> list[dict]:
+    """Skrot dla M1: bajty w srodku, szkielet na wyjsciu."""
+    return outline_rows(index_from_bytes(rel_path, raw))
