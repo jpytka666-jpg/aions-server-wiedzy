@@ -221,3 +221,35 @@ urosl z 873 na 1489).
 
 Stan: `src/acae/expand.py` napisany, ale **NIEPODPIETY** — nie zmienia niczego do M4.2.
 Przyjmuje korpus i nazwe reguly jako parametry, wiec M4.2 i M4.3 dadza sie zmierzyc osobno.
+
+## 2026-08-11T11:20 — M4.1 BM25F: ZMIERZONY I ODRZUCONY
+
+Kryterium z prerejestracji: `recall@10 >= obecnego` ORAZ `MRR > obecnego`, kontrole
+negatywne bez pogorszenia. Wynik na zbiorze roboczym (30 pozytywnych, 6 negatywnych):
+
+| miara | baseline (M2) | BM25F | werdykt |
+|---|---|---|---|
+| recall@10 | 26,6% | 23,3% | gorzej |
+| recall@25 | 36,6% | 33,3% | gorzej |
+| MRR | 0,172 | 0,156 | gorzej |
+| negatywy/pozytywy | 85,2% | 97,0% | gorzej |
+
+**ODRZUCONY.** Zgodnie z prerejestracja nie stroje `k1`, `b` ani wag pol — to byloby
+strojenie pod pomiar, po ktorym uwierzylbym we wlasny wynik.
+
+Sprawdzone, ze to NIE jest blad implementacji: na zapytaniach z doslowna nazwa BM25F
+stawia cel na pierwszym miejscu tak samo jak baseline (`provenance`, `normalize_metadata`,
+`_client_identity`). Tokenizacja dziala (`CBMSMemory/get_memory_stats` ->
+`cbms|memory|get|memory|stats`), nasycenie dziala, IDF maleje z czestoscia — 12 testow.
+
+**Wniosek wazniejszy niz sam werdykt:** oba rankery daja ~25% recall@10 na pytaniach
+opisowych, mimo ze jeden jest ad-hoc, a drugi ma dwadziescia lat teorii. Czyli
+**fundament nie byl waskim gardlem**. Gdyby BM25F wygral, uwierzylbym ze problemem bylo
+wazenie — a problemem jest brak mostu slownikowego. To przesuwa ciezar dowodu na M4.2/M4.3.
+
+Konsekwencja proceduralna: M4.2 mierzony wobec **baseline (M4.0)**, nie wobec BM25F.
+Kryterium bez zmian: `recall@10` **+8 pkt proc.** ponad 26,6%, czyli **>= 34,6%**.
+
+Regresja: 96 testow zielonych, M2 nadal 10/10, `pack_hash` niezmieniony `6442322d...`.
+Modul zostaje w repo NIEPODPIETY — wynik negatywny z dzialajaca implementacja da sie
+zmierzyc ponownie, gdy zmieni sie reszta pipeline'u. Ale tylko wobec nowej prerejestracji.
