@@ -49,6 +49,16 @@ SCHEMA = "acae.m4.v1"
 TOP_K = (10, 25)
 DEPTH = 25
 
+# Skala premii z propagacji, wzgledem czolowego wyniku DANEGO zapytania.
+# 500 promili = symbol o pelnej propagacji dostaje polowe czolowego wyniku, czyli
+# propagacja moze wypchnac symbol w gore, ale nie postawi na czele czegos, czego
+# ranker leksykalny w ogole nie widzial. Wartosc wynika z projektu `rank_graph`
+# (patrz jej docstring) i jest ustalona PRZED pomiarem.
+BOOST_PERMILLE = 500
+
+# Ile paragonow na zapytanie i ile zrodel na paragon trafia do artefaktu.
+RECEIPT_LIMIT = 5
+
 SETS = {"dev": "tests/dev_questions.json", "heldout": "tests/heldout_questions.json"}
 
 
