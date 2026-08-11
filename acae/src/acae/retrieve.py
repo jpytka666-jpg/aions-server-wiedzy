@@ -198,7 +198,11 @@ def _render(
         for item in sorted(by_file[path], key=lambda i: (i["row"]["line"], i["row"]["name_path"])):
             row = item["row"]
             sig = str(row.get("signature") or "").strip()
-            lines.append(f"  {row['line']} {row['kind']} {row['name_path']} | {sig}")
+            doc = " ".join(str(row.get("doc") or "").split())[:160]
+            lines.append(
+                f"  {row['line']} {row['kind']} {row['name_path']} | {sig}"
+                + (f" :: {doc}" if doc else "")
+            )
 
     for body in bodies:
         lines.append("")
