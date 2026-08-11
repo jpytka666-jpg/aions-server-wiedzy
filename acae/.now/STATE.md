@@ -290,3 +290,36 @@ Czego NIE robie: nie podnosze `MIN_COOCCURRENCE` ani `MIN_RATIO_PERMILLE`, zeby 
 przeszlo. To byloby strojenie po zobaczeniu wyniku — dokladnie to, przed czym chronila
 prerejestracja. Ewentualna poprawka wymaga NOWEJ prerejestracji i jest DRUGIM podejsciem,
 co samo w sobie oslabia sile dowodu i musi byc odnotowane.
+
+## 2026-08-11T12:20 — PREREJESTRACJA M4.2b (PODEJSCIE #2, przed implementacja)
+
+Marcin zgodzil sie na JEDNO poprawione podejscie. Odnotowuje jawnie: **to jest druga
+proba po zobaczeniu wyniku pierwszej i to oslabia sile dowodu.** Trzeciej nie bedzie —
+jesli M4.2b przegra, most z okna w kodzie jest odrzucony definitywnie.
+
+**Zmienia sie DOKLADNIE JEDNA RZECZ:** filtr wyboru krawedzi. Wszystko inne zostaje
+bez ruchu (`MIN_TERMS_COVERED=2`, `MAX_PER_TERM=3`, `MAX_TOTAL=12`, waga rozszerzenia
+1/2, okno 12 linii, ten sam korpus, ten sam ranker bazowy). Jedna zmienna na pomiar,
+inaczej nie da sie powiedziec, co zadzialalo.
+
+**Bylo:** `stosunek = co/df >= 250 promili` — trywialnie spelnialny przy df=2.
+**Bedzie:** **log-likelihood ratio Dunninga (G^2)** na tablicy 2x2 (term x kandydat).
+To jest statystyka zaprojektowana dokladnie pod ten tryb awarii: karze rzadkie zdarzenia
+za brak wsparcia, zamiast nagradzac je za wysoki stosunek. Standard w wydobywaniu
+kolokacji od 1993 r. wlasnie dlatego, ze surowe proporcje przeuczaja sie na malej probie.
+
+**Prog: `G^2 >= 10.83`.** To NIE jest liczba dobrana, zeby cos przeszlo — to wartosc
+krytyczna chi-kwadrat dla 1 stopnia swobody przy p < 0.001. Bierze sie z rozkladu,
+nie z danych. Gdybym dobral prog patrzac na wynik, cala ta ostroznosc byla by teatrem.
+
+**KRYTERIUM PRZYJECIA M4.2b (wobec baseline, nie wobec M4.2):**
+- `recall@10` >= **34,6%** (26,6% + 8 pkt proc.), ORAZ
+- `MRR` >= **0,172** (bez pogorszenia wobec baseline), ORAZ
+- `negatywy/pozytywy` <= **85,2%** (bez pogorszenia).
+
+Wszystkie trzy naraz. M4.2 spelnil tylko trzeci i to nie wystarczylo.
+
+**Kontrargument, ktory zapisuje ZANIM zobacze wynik:** „zasada zamiast wymyslu" nie
+gwarantuje poprawy — BM25F byl dokladnie takim zabiegiem i przegral. Jesli LLR tez
+przegra, wniosek brzmi: problemem nie jest statystyka doboru krawedzi, tylko to,
+ze okno pozycyjne w kodzie nie niesie mostu miedzy opisem a nazwa.
