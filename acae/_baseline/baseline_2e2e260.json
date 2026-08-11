@@ -1,0 +1,539 @@
+{
+  "b_ceiling": {
+    "files": 169,
+    "tokens": 349766
+  },
+  "b_query": [
+    {
+      "id": "q01-memory-cbms",
+      "matched_files": 134,
+      "terms": [
+        "cbms",
+        "chunks",
+        "memory",
+        "read",
+        "store",
+        "stored"
+      ],
+      "text": "how are CBMS memory chunks stored and read back from the store",
+      "tokens": 52200,
+      "top_files": [
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py",
+          "score": 287,
+          "tokens": 25183
+        },
+        {
+          "path": "aions_core/server/cbms_memory.py",
+          "score": 148,
+          "tokens": 8496
+        },
+        {
+          "path": "aions_core/cbms_memory.py",
+          "score": 133,
+          "tokens": 5301
+        },
+        {
+          "path": "control_plane/cbms_gate.py",
+          "score": 98,
+          "tokens": 7071
+        },
+        {
+          "path": "aions_core/agi_learning.py",
+          "score": 81,
+          "tokens": 6149
+        }
+      ],
+      "topic": "pamiec / CBMS"
+    },
+    {
+      "id": "q02-mcp-tools",
+      "matched_files": 89,
+      "terms": [
+        "exposed",
+        "fastmcp",
+        "mcp",
+        "registered",
+        "server",
+        "tool"
+      ],
+      "text": "how is an MCP tool registered and exposed on the FastMCP server",
+      "tokens": 35964,
+      "top_files": [
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py",
+          "score": 385,
+          "tokens": 25183
+        },
+        {
+          "path": "aions_core/aions_agent_layer.py",
+          "score": 62,
+          "tokens": 4083
+        },
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/__main__.py",
+          "score": 37,
+          "tokens": 1066
+        },
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py",
+          "score": 30,
+          "tokens": 5228
+        },
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/test_server.py",
+          "score": 27,
+          "tokens": 404
+        }
+      ],
+      "topic": "MCP"
+    },
+    {
+      "id": "q03-tree-sitter",
+      "matched_files": 89,
+      "terms": [
+        "code",
+        "extracted",
+        "outlines",
+        "parsers",
+        "sitter",
+        "symbols",
+        "tree"
+      ],
+      "text": "how are code symbols and outlines extracted with tree-sitter parsers",
+      "tokens": 25237,
+      "top_files": [
+        {
+          "path": "control_plane/cbms_gate.py",
+          "score": 52,
+          "tokens": 7071
+        },
+        {
+          "path": "aions_core/server/ts_symbols.py",
+          "score": 42,
+          "tokens": 3920
+        },
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py",
+          "score": 30,
+          "tokens": 5228
+        },
+        {
+          "path": "aions_core/aions_reformed_integration.py",
+          "score": 27,
+          "tokens": 4404
+        },
+        {
+          "path": "aions_core/agi_neural_backprop.py",
+          "score": 23,
+          "tokens": 4614
+        }
+      ],
+      "topic": "tree-sitter"
+    },
+    {
+      "id": "q04-crla",
+      "matched_files": 55,
+      "terms": [
+        "computed",
+        "crla",
+        "evaluate",
+        "resulting",
+        "score"
+      ],
+      "text": "what does CRLA evaluate and how is the resulting score computed",
+      "tokens": 42300,
+      "top_files": [
+        {
+          "path": "aions_core/evaluator_engine.py",
+          "score": 86,
+          "tokens": 2961
+        },
+        {
+          "path": "control_plane/skills/semantic_search.py",
+          "score": 34,
+          "tokens": 8763
+        },
+        {
+          "path": "aions_core/aions_hybrid_retrieval.py",
+          "score": 30,
+          "tokens": 3460
+        },
+        {
+          "path": "aions_core/aions_crla_reformed.py",
+          "score": 27,
+          "tokens": 1933
+        },
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py",
+          "score": 27,
+          "tokens": 25183
+        }
+      ],
+      "topic": "CRLA"
+    },
+    {
+      "id": "q05-config",
+      "matched_files": 101,
+      "terms": [
+        "configuration",
+        "environment",
+        "loaded",
+        "read",
+        "variables"
+      ],
+      "text": "where is configuration loaded from and which environment variables are read",
+      "tokens": 42508,
+      "top_files": [
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py",
+          "score": 54,
+          "tokens": 25183
+        },
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py",
+          "score": 24,
+          "tokens": 5228
+        },
+        {
+          "path": "aions_core/agi_unified.py",
+          "score": 21,
+          "tokens": 4889
+        },
+        {
+          "path": "control_plane/node_agent/agent.py",
+          "score": 17,
+          "tokens": 4226
+        },
+        {
+          "path": "scripts/chatgpt_extractor.py",
+          "score": 17,
+          "tokens": 2982
+        }
+      ],
+      "topic": "konfiguracja"
+    },
+    {
+      "id": "q06-tests",
+      "matched_files": 90,
+      "terms": [
+        "assertions",
+        "cover",
+        "layer",
+        "memory",
+        "organized",
+        "tests"
+      ],
+      "text": "how are tests organized and which assertions cover the memory layer",
+      "tokens": 48198,
+      "top_files": [
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py",
+          "score": 71,
+          "tokens": 25183
+        },
+        {
+          "path": "aions_core/agi_neural_backprop.py",
+          "score": 45,
+          "tokens": 4614
+        },
+        {
+          "path": "aions_core/agi_soft_retrieval.py",
+          "score": 39,
+          "tokens": 3756
+        },
+        {
+          "path": "aions_core/agi_learning.py",
+          "score": 37,
+          "tokens": 6149
+        },
+        {
+          "path": "aions_core/server/cbms_memory.py",
+          "score": 36,
+          "tokens": 8496
+        }
+      ],
+      "topic": "testy"
+    },
+    {
+      "id": "q07-startup",
+      "matched_files": 122,
+      "terms": [
+        "environment",
+        "launcher",
+        "scripts",
+        "server",
+        "set",
+        "started"
+      ],
+      "text": "how is the server started and which launcher scripts set up the environment",
+      "tokens": 41359,
+      "top_files": [
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py",
+          "score": 138,
+          "tokens": 25183
+        },
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/__main__.py",
+          "score": 27,
+          "tokens": 1066
+        },
+        {
+          "path": "control_plane/skills/semantic_search.py",
+          "score": 24,
+          "tokens": 8763
+        },
+        {
+          "path": "control_plane/llm/server_client.py",
+          "score": 20,
+          "tokens": 1258
+        },
+        {
+          "path": "aions_core/server/cbms_direct_server.py",
+          "score": 19,
+          "tokens": 5089
+        }
+      ],
+      "topic": "skrypty startowe"
+    },
+    {
+      "id": "q08-provenance",
+      "matched_files": 113,
+      "terms": [
+        "agent",
+        "host",
+        "memory",
+        "provenance",
+        "recorded",
+        "surface",
+        "write"
+      ],
+      "text": "how is provenance recorded on every memory write with agent host and surface",
+      "tokens": 47820,
+      "top_files": [
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py",
+          "score": 106,
+          "tokens": 25183
+        },
+        {
+          "path": "aions_core/agi_neural_backprop.py",
+          "score": 47,
+          "tokens": 4614
+        },
+        {
+          "path": "aions_core/server/cbms_memory.py",
+          "score": 41,
+          "tokens": 8496
+        },
+        {
+          "path": "control_plane/node_agent/agent.py",
+          "score": 38,
+          "tokens": 4226
+        },
+        {
+          "path": "aions_core/cbms_memory.py",
+          "score": 35,
+          "tokens": 5301
+        }
+      ],
+      "topic": "provenance"
+    },
+    {
+      "id": "q09-retrieval",
+      "matched_files": 148,
+      "terms": [
+        "candidates",
+        "rank",
+        "results",
+        "return",
+        "scores",
+        "search",
+        "semantic"
+      ],
+      "text": "how does semantic search rank candidates and return results with scores",
+      "tokens": 49705,
+      "top_files": [
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py",
+          "score": 470,
+          "tokens": 25183
+        },
+        {
+          "path": "aions_core/aions_hybrid_retrieval.py",
+          "score": 159,
+          "tokens": 3460
+        },
+        {
+          "path": "control_plane/skills/semantic_search.py",
+          "score": 149,
+          "tokens": 8763
+        },
+        {
+          "path": "control_plane/cbms_gate.py",
+          "score": 73,
+          "tokens": 7071
+        },
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py",
+          "score": 73,
+          "tokens": 5228
+        }
+      ],
+      "topic": "retrieval"
+    },
+    {
+      "id": "q10-hooks",
+      "matched_files": 124,
+      "terms": [
+        "before",
+        "block",
+        "checkpoint",
+        "hooks",
+        "run",
+        "they",
+        "write"
+      ],
+      "text": "which hooks run before a write and what do they block or checkpoint",
+      "tokens": 52406,
+      "top_files": [
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py",
+          "score": 73,
+          "tokens": 25183
+        },
+        {
+          "path": "control_plane/operator/loop.py",
+          "score": 38,
+          "tokens": 7649
+        },
+        {
+          "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py",
+          "score": 32,
+          "tokens": 5228
+        },
+        {
+          "path": "aions_core/agi_neural_backprop.py",
+          "score": 30,
+          "tokens": 4614
+        },
+        {
+          "path": "control_plane/skills/goal_planner.py",
+          "score": 30,
+          "tokens": 9732
+        }
+      ],
+      "topic": "hooki"
+    }
+  ],
+  "b_query_sum": 437697,
+  "head": "2e2e260",
+  "head_committed_at": "2026-08-11T05:26:41+01:00",
+  "head_full": "2e2e26029106bf6ddb48e28f6e1b38f77f88039c",
+  "note": "Brak pola z czasem uruchomienia jest celowy: bramka M0 wymaga plikow identycznych co do bajta miedzy uruchomieniami, wiec zegar scienny nie moze trafic do artefaktu. Provenancje niesie head_committed_at.",
+  "pinned_packages": {
+    "tiktoken": "0.13.0",
+    "tree-sitter": "0.26.0",
+    "tree-sitter-language-pack": "1.14.3"
+  },
+  "ranking": {
+    "match": "literal, case-insensitive, liczone linie trafione na termin",
+    "min_term_len": 3,
+    "stopwords": [
+      "and",
+      "are",
+      "back",
+      "does",
+      "every",
+      "for",
+      "from",
+      "how",
+      "its",
+      "not",
+      "that",
+      "the",
+      "them",
+      "then",
+      "there",
+      "this",
+      "was",
+      "were",
+      "what",
+      "when",
+      "where",
+      "which",
+      "who",
+      "why",
+      "with"
+    ],
+    "tie_break": "sciezka POSIX rosnaco",
+    "top_k": 5
+  },
+  "result_hash": "blake2b256:89766585a330aa72bc57dda154ad4cc602bb03d65e23fa57bb8522d183db5641",
+  "schema": "acae.baseline.v1",
+  "scope": {
+    "extensions": [
+      ".c",
+      ".cpp",
+      ".cs",
+      ".go",
+      ".h",
+      ".hpp",
+      ".java",
+      ".js",
+      ".jsx",
+      ".kt",
+      ".lua",
+      ".php",
+      ".py",
+      ".rb",
+      ".rs",
+      ".sh",
+      ".swift",
+      ".ts",
+      ".tsx"
+    ],
+    "file_count": 169,
+    "max_file_bytes": 1048576,
+    "prune_dirs": [
+      ".git",
+      ".idea",
+      ".mypy_cache",
+      ".pytest_cache",
+      ".ruff_cache",
+      ".venv",
+      ".vscode",
+      "__pycache__",
+      "_backups",
+      "node_modules",
+      "venv"
+    ],
+    "roots": [
+      "aions_core",
+      "server",
+      "mcpServers",
+      "control_plane",
+      "tools",
+      "scripts"
+    ],
+    "skipped": {
+      "gitignored": [
+        "aions_core/memory/blends/blend_lib.py",
+        "mcpServers/VS_CODE_MCP_CODEX/src/backups/server_backup_20260128_172535.py"
+      ],
+      "missing_roots": [],
+      "submodule_file_count": 41,
+      "submodules": [
+        "tools/ChromaFlowStudio"
+      ],
+      "too_large": [],
+      "unreadable": []
+    }
+  },
+  "tokenizer": {
+    "encoding": "cl100k_base",
+    "library": "tiktoken",
+    "version": "0.13.0"
+  }
+}

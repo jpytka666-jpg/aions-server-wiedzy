@@ -192,6 +192,8 @@ def collect_files(roots: list[str], prune_dirs: set[str], max_bytes: int) -> tup
         "gitignored": sorted(ignored),
         "too_large": sorted(too_large, key=lambda d: d["path"]),
         "missing_roots": sorted(missing_roots),
+        "submodules": submodules,
+        "submodule_file_count": len(in_submodule),
     }
     return kept, report
 
