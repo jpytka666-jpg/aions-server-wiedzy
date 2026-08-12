@@ -548,6 +548,26 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             if is_hit(item, q):
                 rank_of_hit = position
                 break
+
+        # DIAGNOSTYKA WSPOLNA M9 (prerejestracja 2026-08-12T23:53).
+        # Wsrod pytan, gdzie wlasciwy symbol ma w BASELINIE wynik leksykalny ZERO —
+        # ile wchodzi do top-25 w TYM wariancie. Punkt odniesienia: M8 dal 0 z 11
+        # przy medianie rangi 200. Liczone identycznie dla kazdego wariantu, zeby
+        # cztery powtorki byly porownywalne miedzy soba i z M8.
+        rarity_bazowa = term_rarity(entries, terms)
+        cele_bazowe = [
+            (str(e["path"]), row)
+            for e in entries
+            for row in e["symbols"]
+            if is_hit({"path": str(e["path"]), "row": row, "lang": e.get("lang")}, q)
+        ]
+        if cele_bazowe and max(
+            score_symbol(p, r, terms, rarity_bazowa) for p, r in cele_bazowe
+        ) == 0:
+            diagnostyka["m9_zero_bucket"] += 1
+            if rank_of_hit:
+                diagnostyka["m9_zero_in_top25"] += 1
+
         positives.append({"id": q["id"], "rank": rank_of_hit, "top1": top1})
         per_query.append({
             "id": q["id"], "kind": "positive", "rank": rank_of_hit, "top1_score": top1,
