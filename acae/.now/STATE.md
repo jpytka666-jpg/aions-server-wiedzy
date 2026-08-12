@@ -1418,6 +1418,110 @@ nie ma sily dowodu i wymagalby wlasnego, wczesniej zapisanego kryterium.
 
 Held-out (`blake2b256:e5d8e5b4...`) **NIETKNIETY**. Nadal nie ma kandydata.
 
+## 2026-08-13T00:41 — PREREJESTRACJA M10: weryfikacja INNA REPREZENTACJA
+
+### Uczciwe pochodzenie hipotezy — zapisane, zeby nie dalo sie go przemilczec
+
+Ten pomysl powstal **PO zobaczeniu czternastu wynikow** i po przeczytaniu cudzego kodu
+(`aions_core/server/pocket_qc.py`, `crla_core.py`, `cbms_unified_server.py`). To jest
+najslabszy rodzaj hipotezy — dorobiona do danych, a nie postawiona przed nimi.
+Prerejestracja tego NIE naprawia; zapobiega wylacznie dalszemu strojeniu.
+Odnotowuje to jako oslabienie sily dowodu, tak samo jak przy M4.2b.
+
+### Skad sie bierze
+
+Czternascie mechanizmow zmienialo PUNKTACJE. Ten nie zmienia jej wcale — zmienia
+**warunek dopuszczenia** symbolu do odpowiedzi. Inna dzwignia, nie kolejny wariant tej samej.
+
+Trzy niezalezne miejsca w dzialajacym AIONS decyduja o „nie wiem" **licznikiem swiadectw**,
+nigdy progiem na podobienstwie:
+- `cbms_unified_server.py:186` — `if len(refs) < 2` (PANIC),
+- `crla_core.py:104` — `if len(chunks) < cand.min_hits` (odmowa, `min_hits` in {1,2,3}),
+- `pocket_qc.py:45` — `cbms_count > 0`, czyli „czy tekst koduje sie na jakiekolwiek pojecie".
+
+PocketQC dokłada druga zasade, ktorej ACAE nie stosuje NIGDZIE: sprawdza odpowiedz
+**inna reprezentacja** niz ta, ktora ja wyprodukowala (codebook zamiast bazy wektorowej).
+Dzis nasz ranker jest jednoczesnie sedzia wlasnej pracy — jedno przejscie, zero kontroli.
+
+Nasze wlasne liczby mowia to samo: dwa warianty z twardym warunkiem obecnosci slowa
+(M8 25,0%, `graph_desc` 24,9%) maja najlepsza kontrole negatywna w projekcie, a jedyny
+bez niego (`embed_desc` 97,7%) — najgorsza.
+
+### Konstrukcja
+
+**Ranker: `embed_desc`, BEZ ZMIAN.** Najlepsze uporzadkowanie w projekcie (`MRR` 0,243).
+Nie dotykam ani modelu, ani kwantyzacji, ani sposobu skladania tekstu symbolu.
+
+**Weryfikator: twardy warunek leksykalny.** Dla kazdego symbolu liczymy, ile ROZNYCH
+terminow zapytania wystepuje DOSLOWNIE w jego tekscie (`_haystack` + opis pliku).
+Symbol wchodzi do odpowiedzi tylko przy `>= MIN_TERMS`. Gdy zaden symbol nie przejdzie —
+**zwracamy pusto**, czyli „nie wiem".
+
+Reprezentacje sa rozne z konstrukcji: ranker liczy podobienstwo gestych wektorow,
+weryfikator sprawdza doslowna obecnosc tokenu. Weryfikator NIE jest tym, co szeregowalo,
+wiec sprawdzenie nie jest sprawdzaniem samego siebie.
+
+**Punktacja nie zmienia sie ani o promil.** Filtr moze tylko USUWAC. Nie promuje niczego,
+nie dodaje terminow, nie wprowadza nowej wagi.
+
+### `MIN_TERMS` — dwa warianty, oba zadeklarowane TERAZ
+
+Nie wybieram wartosci po zobaczeniu wyniku, wiec deklaruje obie i obie zaraportuje:
+
+- **M10a `verify1`** — `MIN_TERMS = 1`. Najslabszy mozliwy warunek: chocby jedno slowo
+  z pytania musi gdzies wystapic. Ten sam prog, ktory baseline stosuje juz dzis
+  niejawnie (symbol wchodzi do rankingu przy `score > 0`).
+- **M10b `verify2`** — `MIN_TERMS = 2`. Wartosc NIE wymyslona teraz: `MIN_TERMS_COVERED = 2`
+  stoi w `expand.py` od M4.2 (regula LCA), a `len(refs) < 2` jest progiem PANIC w AIONS.
+  Dwa niezalezne precedensy, zadnego dobierania.
+
+**Trzeciej wartosci nie bedzie.** Jesli obie przegraja, kierunek „twardy warunek
+dopuszczenia" jest zamkniety dla tej konstrukcji.
+
+### KRYTERIUM PRZYJECIA — bez zmian, pietnasty raz to samo
+
+`recall@10` >= **34,6%** ORAZ `MRR` >= **0,172** ORAZ `neg/poz` <= **85,2%**.
+Wszystkie trzy naraz. Zbior roboczy 30+/6-.
+
+### WARUNEK WARTOSCI DODANEJ — jak w M9
+
+Wariant, ktory przejdzie kryterium, musi pobic **oba** skladniki, z ktorych powstal:
+lepszy od M8 (`recall@10` > 26,6% ALBO `MRR` > 0,156) ORAZ lepszy od `embed_desc`
+(`neg/poz` < 97,7%). Inaczej nie jest polaczeniem, tylko jednym z nich w przebraniu.
+
+### REGULA OSTRZEGAWCZA
+
+Jesli przejda OBA warianty — sygnal ostrzegawczy, nie sukces. Roznia sie jednym progiem
+na tych samych 30 pytaniach, wiec nie sa niezalezne. To jest pietnasty i szesnasty pomiar
+na tym zbiorze i zapisuje ten koszt jawnie.
+
+### WARUNEK DIAGNOSTYCZNY — dwie liczby, obie obowiazkowe
+
+1. **`verify_cut`** — dla ilu pytan POZYTYWNYCH filtr USUNAL wlasciwy symbol. Odpowiednik
+   `gate_cut` z M6 i jedyna rzecz odrozniajaca „filtr za ostry" od „ranker za slaby".
+   Bez tej liczby porazka bylaby nieinterpretowalna.
+2. **`verify_empty`** — dla ilu pytan NEGATYWNYCH odpowiedz wyszla PUSTA. Wprost miara
+   „czy system nauczyl sie mowic nie wiem", niezalezna od werdyktu pass/fail.
+   Punkt odniesienia: dzis pusta odpowiedz na negatyw nie zdarza sie ANI RAZU.
+
+Plus wspolna diagnostyka M9: ile z 11 pytan grupy zerowej wchodzi do top-25.
+
+### PRZEWIDYWANIA, zapisane przed pomiarem. Bilans: 1 trafione na 14
+
+- **`neg/poz` mocno spadnie w obu wariantach.** To nie jest odwazne — filtr z definicji
+  zeruje wynik tam, gdzie nie ma trafien, a pytania spoza zakresu takich trafien nie maja.
+- **`verify1` NIE utnie grupy zerowej.** M8 pokazal, ze po dodaniu opisow wszystkie 11
+  maja wynik niezerowy, czyli maja co najmniej jedno doslowne trafienie.
+- **`verify2` utnie czesc grupy zerowej** — spodziewam sie `verify_cut` >= 3.
+- **`MRR` wzrosnie w obu**, bo filtr usuwa smieci LEZACE NAD wlasciwym symbolem,
+  a uporzadkowanie `embed_desc` zostaje nietkniete.
+- **Pierwszy raz spodziewam sie PRZEJSCIA kryterium — przez `verify1`.**
+
+Ostatnie zdanie zapisuje swiadomie, bo jest najbardziej narazone na osmieszenie.
+Moj bilans przewidywan mechanizmow to **0 na 14**; przewidywalem porazke czternascie razy
+i czternascie razy mialem racje, co nie jest umiejetnoscia. Pierwszy raz stawiam
+na sukces i pierwszy raz naprawde nie wiem.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
