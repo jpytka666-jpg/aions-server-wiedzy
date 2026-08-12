@@ -1017,3 +1017,53 @@ korpus mialby wlasciwa wielkosc I doskonale przypiecie do plikow.
 
 Wtedy jednak embedding jest zbedny: slowa z pytania trafialyby w opis **leksykalnie**,
 przez istniejace pole `doc` w rankingu bazowym. Most nie wymaga modelu, wymaga tresci.
+
+## 2026-08-12T22:40 — PREREJESTRACJA M8: opis kazdego pliku po ludzku (korpus TWORZONY, nie szukany)
+
+Decyzja Marcina: generujemy opisy Haiku, budzet do 1 mln tokenow, „zeby to repo bylo
+naprawde ogarniete". Osiem mechanizmow wyciskalo sygnal z korpusu, ktory go nie zawiera
+(pomiar sufitu 22:10: 9 z 11 pytan bez ANI JEDNEGO ludzkiego tekstu o wlasciwych plikach).
+M8 nie szuka sygnalu — **wytwarza go**.
+
+### Co powstaje
+
+Dla **wszystkich 169 plikow**, nie dla podzbioru potrzebnego pytaniom ze zbioru roboczego.
+Wersja skrocona bylaby trenowaniem na tescie i uniewaznila dziewiec pomiarow porownawczych.
+
+Wejscie generatora: **pelna tresc pliku** (348 486 tokenow lacznie, mediana 983 na plik),
+nie sam outline. Budzet na to pozwala, a im wiecej model widzi, tym mniej zmysla.
+
+Wyjscie: `acae/_desc/descriptions.json` — mapa `sciezka -> opis`, plus zapis pochodzenia
+(model, data, `pack_hash` zrodla). Tresc statyczna i zacommitowana: generowanie jest
+niedeterministyczne, ale UZYWANIE opisu juz nie. Ta sama granica co przy modelu M7 —
+`export_model.py` wolno zalezec od `torch`, warstwie zapytania nie wolno.
+
+### Regula punktowania — ustalona TERAZ, zeby nie byla pokretlem
+
+Opis pliku wchodzi do rankingu **z waga pola `path`, czyli `W_PATH = 1`** — najnizsza
+z istniejacych. Nie wprowadzam nowej wagi, bo nowa waga byloby pokretlem strojonym
+po zobaczeniu wyniku. Opis jest wspolny dla wszystkich symboli z danego pliku:
+wskazuje PLIK, nie symbol, i punktowanie ma to odzwierciedlac.
+
+### KRYTERIUM PRZYJECIA — bez zmian, dziesiaty raz to samo
+
+`recall@10` >= **34,6%** ORAZ `MRR` >= **0,172** ORAZ `neg/poz` <= **85,2%**.
+Zbior roboczy 30+/6-. Held-out NIETKNIETY.
+
+### WARUNEK DIAGNOSTYCZNY — wykrywacz halucynacji, ktory juz mamy
+
+`neg/poz` pelni tu druga role. Zmyslony opis pasuje do wszystkiego, wiec **podnosi wynik
+pytan spoza zakresu**. Dokladnie tak wysypal sie M7a (103,7%). Jesli Haiku bedzie
+konfabulowac, ta liczba to pokaze, zanim uznamy cokolwiek za dzialajace.
+
+Drugi pomiar: **ile z 11 pytan grupy zerowej przestaje miec zero** po dodaniu opisow.
+To mowi wprost, czy most zostal zbudowany, niezaleznie od werdyktu pass/fail.
+
+### PRZEWIDYWANIE, zapisane przed pomiarem
+
+Grupa zerowa: spodziewam sie, ze **>= 7 z 11** przestanie miec wynik zero — bo opis
+z definicji zawiera slowa, ktorymi czlowiek pyta. Ale spodziewam sie tez **wzrostu
+`neg/poz`**, bo opisy dodaja duzo tekstu pasujacego do wszystkiego.
+
+Moj bilans przewidywan to **0 z 9**. Zapisuje to ponownie, zeby wynik mial czym mnie
+poprawic.
