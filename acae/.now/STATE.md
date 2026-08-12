@@ -670,3 +670,75 @@ lezacych na pozycji 11+, przy medianie 16. Spodziewam sie, ze `recall@10` wzrosn
 ze `MRR` tez wzrosnie — bo w odroznieniu od siedmiu poprzednich mechanizmow ten
 **nic nie dodaje**, tylko usuwa konkurencje sponad wlasciwego symbolu. Jesli MRR mimo to
 spadnie, znaczy to, ze bramka tnie wlasciwe symbole — i pokaze to warunek diagnostyczny.
+
+## 2026-08-12T03:10 — M6 Scope Gate: ZMIERZONY I ODRZUCONY. Przewidywanie bledne.
+
+Pomiar: `acae/_baseline/m4_gate_dev_5c5426f.json`, head `5c5426f`, zbior roboczy,
+held-out NIETKNIETY.
+
+| metryka | baseline | M6 gate | kryterium | werdykt |
+|---|---|---|---|---|
+| recall@10 | 26,6% | **23,3%** | >= 34,6% | NIE |
+| recall@25 | 36,6% | 33,3% | — | spadek |
+| MRR | 0,172 | **0,138** | >= 0,172 | NIE |
+| neg/poz | 85,2% | **88,0%** | <= 85,2% | NIE |
+
+**Trzy kryteria na trzy nietrafione. Moje przewidywanie („recall@10 wzrosnie ORAZ MRR
+wzrosnie") jest falszywe.** Osmy mechanizm, osme odrzucenie.
+
+### Warunek diagnostyczny odpowiedzial — i odpowiedz jest inna, niz zakladalem
+
+| pomiar | wartosc | co znaczy |
+|---|---|---|
+| `gate_cut` | **2 z 30** | bramka prawie nigdy nie wyciela wlasciwego symbolu |
+| `gate_fallback` | 2 z 36 | routowanie po prozie prawie zawsze cos wskazuje |
+| `gate_size_median` | **140 z 169 plikow** | bramka zostawia 83% repo |
+| wybrane zakresy | callgraph 33, dir 61, **cochange 0** | wspolzmiennosc nie wybrana ANI RAZ |
+
+Zakladalem dwie mozliwosci: bramka za agresywna (wysokie `gate_cut`) albo ranking za
+slaby. Zaszla trzecia, ktorej nie przewidzialem: **bramka nie bramkuje**. Mediana 140/169
+to nie zawezenie, to no-op z szumem, ktory psuje wynik przez te nieliczne przypadki,
+w ktorych jednak cos utnie.
+
+### Dwie wady konstrukcyjne, obie moje, obie widoczne w paragonie
+
+Paragon z pierwszego pytania:
+
+```
+callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py  score 7  files_in_scope 139
+dir:aions_core/server                           score 6  files_in_scope 22
+dir:control_plane/operator                      score 1  files_in_scope 3
+```
+
+1. **Spojne skladowe grafu wywolan zlepiaja sie w jedna kluche na 139 plikow.**
+   W monolicie kazdy plik importujacy wspolne narzedzie wpada do tej samej skladowej.
+   Ryzyko bylo do przewidzenia i NIE sprawdzilem go przed pomiarem — prerejestracja mowi
+   „spojne skladowe sa deterministyczne z definicji", co jest prawda i zarazem nie ma nic
+   wspolnego z tym, czy sa uzyteczne.
+2. **Punktacja routingu nie jest normalizowana przez rozmiar zakresu.** Wynik to suma
+   trafien prozy po plikach zakresu, wiec zakres na 139 plikow zbiera wiecej trafien niz
+   zakres na 22 pliki **z definicji**, niezaleznie od trafnosci. W paragonie wyzej 139
+   plikow wygrywa 7:6 z 22 plikami — po normalizacji kolejnosc bylaby odwrotna.
+   To dlatego `cochange` (male, precyzyjne zakresy) nie zostalo wybrane ani razu.
+
+### Co ten pomiar rozstrzyga, a czego nie
+
+**Rozstrzyga:** ta konkretna konstrukcja zakresow jest odrzucona. Nie stroje `MIN_COCHANGE`
+ani `TOP_SCOPES` po zobaczeniu wyniku.
+
+**NIE rozstrzyga:** czy ograniczanie przestrzeni pomaga. Przy medianie 140/169 dzwignia
+nie zostala pociagnieta. Twierdzenie „ograniczanie nie dziala" NIE ma pokrycia w tym
+pomiarze i nie wolno go zapisac jako wniosku.
+
+### Stan bilansu
+
+Osiem mechanizmow, osiem odrzucen. Siedem pierwszych DODAWALO terminy i wszystkie
+obnizaly MRR. Osmy mial nic nie dodawac — ale nie zadzialal na tyle, zeby cokolwiek
+o tej klasie powiedziec.
+
+### Dlug do splacenia (stan na chwile zapisu)
+
+- `acae/src/acae/scope.py` lezy w repo **bez testow**. Do napisania: `test_scope.py`.
+- Regresja po M6 nieuruchomiona: `pytest`, `acae pack` (oczekiwany `pack_hash 6442322d...`),
+  `measure_m2.py` (oczekiwane 10/10).
+- Wpis do tabeli „Zmierzone i odrzucone" w `TERMS.md` — niedopisany.
