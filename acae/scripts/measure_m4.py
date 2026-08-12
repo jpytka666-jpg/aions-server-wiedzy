@@ -273,8 +273,6 @@ class EmbedIndex:
     """
 
     def __init__(self, embedder, entries):
-        import math
-
         import numpy as np
 
         self.embedder = embedder
