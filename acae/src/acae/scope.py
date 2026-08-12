@@ -231,9 +231,29 @@ class ScopeIndex:
 
     # -------------------------------------------------------------- proza
 
-    def _build_prose(self, chunks_dir: str | None):
+    def _build_prose(self, chunks_dir: str | None, descriptions: Mapping[str, str] | None = None):
         """Odwrocony indeks: termin z ludzkiej prozy -> pliki, o ktorych ta proza mowi."""
         docs: list[tuple[str, str, frozenset[str]]] = []
+
+        if descriptions is not None:
+            # M9c: routing po wygenerowanych opisach ZAMIAST po commitach i chunkach CBMS.
+            #
+            # M6 przegral m.in. dlatego, ze zrodlem routingu bylo 22 dokumenty na 169 plikow,
+            # a pokrycie CBMS to 13% repo — bramka nie miala czym rozroznic plikow i zostawiala
+            # mediane 140 ze 169. Opis jest po jednym na KAZDY plik i wskazuje dokladnie
+            # jeden plik, wiec przypiecie jest doskonale, a pokrycie pelne.
+            #
+            # Zrodla zakresow (A/B/C) oraz progi zostaja nietkniete — zmienia sie wylacznie
+            # tekst, po ktorym idzie routing. To jest warunek „mechanizm nietkniety" z M9.
+            for path, opis in sorted(descriptions.items()):
+                if opis.strip():
+                    docs.append((f"desc:{path}", opis, frozenset({path})))
+            indeks: dict[str, Counter] = defaultdict(Counter)
+            for ref, tekst, cele in docs:
+                for token in set(TOKEN_RE.findall(tekst.lower())):
+                    for plik in cele:
+                        indeks[token][plik] += 1
+            return indeks, docs
 
         for sha, message, pliki in self._commits():
             docs.append((f"commit:{sha}", message, frozenset(pliki)))
