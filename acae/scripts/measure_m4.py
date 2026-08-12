@@ -41,7 +41,7 @@ from acae.concepts import Codebook, SymbolTokens  # noqa: E402
 from acae.core import PackRequest, build_pack, collect_entries  # noqa: E402
 from acae.describe import (  # noqa: E402
     load_descriptions, rank_all as rank_desc_all, receipt as desc_receipt,
-    score_with_description,
+    score_with_description, term_rarity_with_descriptions,
 )
 from acae.expand import (  # noqa: E402
     Corpus, code_window_documents, docstring_documents, expand, prose_documents,
