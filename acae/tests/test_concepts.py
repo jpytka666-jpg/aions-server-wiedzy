@@ -41,7 +41,9 @@ def test_zwraca_pary_z_paragonem(tmp_path):
     assert [t for t, _ in pary] == ["host"]
     hit = pary[0][1]
     assert isinstance(hit, ConceptHit)
-    assert hit.concept == "m" and hit.derived_from_ok()
+    assert hit.concept == "m"
+    assert hit.query_term == "machine"
+    assert hit.code_tokens == ("host",)
 
 
 def test_paragon_niesie_pojecie_slowo_i_eo(tmp_path):
