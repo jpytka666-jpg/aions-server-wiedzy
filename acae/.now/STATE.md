@@ -1184,6 +1184,31 @@ To zamyka watpliwosc, ktora inaczej wisialaby nad calym M8: **roznica miedzy M8
 a baseline'em pochodzi z opisow, nie z implementacji.** Bez tego sprawdzenia kazda
 liczba z tego etapu byla by nieodroznialna od bledu w moim wlasnym kodzie.
 
+## 2026-08-12T23:50 — korpus opisow ZAMROZONY
+
+**Hasz zamrozony: `blake2b256:cc54efc7d4d27f1917bf46dbb966288b4c89cee1d5c5ae515d54980b4e5319aa`**
+(`_desc/descriptions.json`, 165 928 bajtow, 169 opisow, `claude-haiku-4-5-20251001`,
+pack_hash zrodla `6442322d...`)
+
+Ta sama regula co przy `heldout_questions.json` i z tego samego powodu. Opisy sa dowodem
+WYLACZNIE dlatego, ze powstaly na slepo: agenty mialy kategoryczny zakaz zagladania do
+`acae/tests/` i go dotrzymaly (zero sciezek ze zbioru testowego w artefakcie, sprawdzane
+przez `build_descriptions.py`).
+
+W chwili, gdy przegeneruje je PO zobaczeniu wyniku pomiaru, moje decyzje o tym, co
+poprawic, przeciekna do korpusu — i zbior roboczy zamieni sie w treningowy dokladnie
+tak, jak stalo by sie z held-outem. Wtedy porownanie z dziesiecioma poprzednimi pomiarami
+przestaje cokolwiek znaczyc.
+
+**Wolno:** mierzyc na tym korpusie nowe mechanizmy rankingu.
+**Nie wolno:** poprawiac opisow, zeby ktorykolwiek pomiar wyszedl lepiej.
+Zmiana korpusu wymaga nowej prerejestracji i jest DRUGIM podejsciem ze wszystkimi
+konsekwencjami, ktore to niesie (precedens M4.2b).
+
+Wersja odrzucona przed pomiarem (mediana 59 slow, jeden wpis zepsuty) lezy
+w `_desc/v1_rejected/` i NIE byla mierzona — odrzucona na podstawie samej jakosci
+korpusu, zanim istnialy jakiekolwiek liczby.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
