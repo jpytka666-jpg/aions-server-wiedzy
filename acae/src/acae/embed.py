@@ -146,17 +146,32 @@ class StaticEmbedder:
 
 def similarity_permille(a: np.ndarray, b: np.ndarray) -> int:
     """
-    Cosinus w promilach, dokladnie i calkowicie. Ujemne podobienstwo scinamy do 0:
-    ranking i tak bierze najwyzsze, a ujemne promile zasmiecalyby paragon.
+    Cosinus w promilach, calkowicie i bez przedwczesnego obcinania.
+
+    NAIWNA WERSJA BYLA BLEDNA — i wykryl to test, nie przeglad kodu. Liczenie
+    `isqrt` osobno dla kazdej normy obcina KAZDA z nich w dol, wiec mianownik wychodzi
+    za maly, a wynik potrafi przekroczyc 1000 promili. Zmierzone: wektory `[1,2,3]`
+    i `[2,1,1]` dawaly **1166** przy prawdziwej wartosci 764.
+
+    Poprawnie: podnosimy do kwadratu, zeby pierwiastek byl brany RAZ, na koncu.
+
+        cos = licznik / sqrt(|a|^2 * |b|^2)
+        promile = isqrt( 10^6 * licznik^2 // (|a|^2 * |b|^2) )
+
+    Wszystko na `int` Pythona o dowolnej precyzji, wiec kwadrat licznika nie przepelnia
+    niczego. Blad ograniczony do 1 promila z definicji `isqrt`.
+
+    Ujemne podobienstwo scinamy do 0: ranking bierze najwyzsze, a ujemne promile
+    zasmiecalyby czolowke paragonu.
     """
     licznik = int(np.dot(a, b))
     if licznik <= 0:
         return 0
-    na = math.isqrt(int(np.dot(a, a)))
-    nb = math.isqrt(int(np.dot(b, b)))
-    if na == 0 or nb == 0:
+    na2 = int(np.dot(a, a))
+    nb2 = int(np.dot(b, b))
+    if na2 == 0 or nb2 == 0:
         return 0
-    return (licznik * PERMILLE) // (na * nb)
+    return math.isqrt((PERMILLE * PERMILLE * licznik * licznik) // (na2 * nb2))
 
 
 def symbol_text(path: str, row) -> str:
