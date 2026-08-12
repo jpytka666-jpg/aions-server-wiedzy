@@ -1,0 +1,1327 @@
+{
+  "depth": 25,
+  "head": "522eea1",
+  "metrics": {
+    "counts": {
+      "negative": 6,
+      "positive": 30
+    },
+    "mean_top1_negative": 2495,
+    "mean_top1_positive": 2873,
+    "mrr_permille": 163,
+    "negative_ratio_permille": 868,
+    "recall_at_10_permille": 266,
+    "recall_at_25_permille": 333
+  },
+  "packages": {
+    "tiktoken": "0.13.0"
+  },
+  "per_query": [
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "file",
+            "doc"
+          ],
+          "concept": "file",
+          "derived_from": "file",
+          "eo": "dosiero",
+          "matched_surface": "file",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "read",
+            "load",
+            "fetch",
+            "retrieve",
+            "open"
+          ],
+          "concept": "read",
+          "derived_from": "read",
+          "eo": "legi",
+          "matched_surface": "read",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d001",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2132
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "context",
+            "scope"
+          ],
+          "concept": "context",
+          "derived_from": "surrounding",
+          "eo": null,
+          "matched_surface": "surrounding",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d002",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1673
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "dir",
+            "folder",
+            "tree"
+          ],
+          "concept": "directory",
+          "derived_from": "directory",
+          "eo": "dosierujo",
+          "matched_surface": "directory",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "tool",
+            "skill",
+            "command",
+            "util",
+            "action"
+          ],
+          "concept": "tool",
+          "derived_from": "capability",
+          "eo": "ilo",
+          "matched_surface": "capability",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d003",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2793
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "search",
+            "find",
+            "query",
+            "lookup",
+            "match"
+          ],
+          "concept": "search",
+          "derived_from": "lookup",
+          "eo": "serĉi",
+          "matched_surface": "lookup",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d004",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3840
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "error",
+            "exception",
+            "fail",
+            "fault",
+            "raise"
+          ],
+          "concept": "error",
+          "derived_from": "failure",
+          "eo": null,
+          "matched_surface": "failure",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "graph",
+            "edge",
+            "ref",
+            "link",
+            "node",
+            "depend"
+          ],
+          "concept": "graph",
+          "derived_from": "connection",
+          "eo": null,
+          "matched_surface": "connection",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "server",
+            "service",
+            "endpoint",
+            "api",
+            "http",
+            "port"
+          ],
+          "concept": "server",
+          "derived_from": "service",
+          "eo": "servilo",
+          "matched_surface": "service",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "session",
+            "conversation",
+            "chat",
+            "thread",
+            "turn"
+          ],
+          "concept": "session",
+          "derived_from": "chat",
+          "eo": null,
+          "matched_surface": "chat",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "web",
+            "http",
+            "url",
+            "browser",
+            "request",
+            "fetch",
+            "crawl"
+          ],
+          "concept": "web",
+          "derived_from": "request",
+          "eo": "retejo",
+          "matched_surface": "request",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d005",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3630
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "graph",
+            "edge",
+            "ref",
+            "link",
+            "node",
+            "depend"
+          ],
+          "concept": "graph",
+          "derived_from": "connection",
+          "eo": null,
+          "matched_surface": "connection",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "server",
+            "service",
+            "endpoint",
+            "api",
+            "http",
+            "port"
+          ],
+          "concept": "server",
+          "derived_from": "daemon",
+          "eo": "servilo",
+          "matched_surface": "daemon",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "user",
+            "client",
+            "identity",
+            "agent",
+            "author"
+          ],
+          "concept": "user",
+          "derived_from": "user",
+          "eo": "uzanto",
+          "matched_surface": "user",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d006",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2793
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "graph",
+            "edge",
+            "ref",
+            "link",
+            "node",
+            "depend"
+          ],
+          "concept": "graph",
+          "derived_from": "network",
+          "eo": null,
+          "matched_surface": "network",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "host",
+            "machine",
+            "node",
+            "device"
+          ],
+          "concept": "machine",
+          "derived_from": "machine",
+          "eo": "maŝino",
+          "matched_surface": "machine",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "status",
+            "health",
+            "state",
+            "ready",
+            "alive"
+          ],
+          "concept": "status",
+          "derived_from": "alive",
+          "eo": null,
+          "matched_surface": "alive",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d007",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 4182
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "cache",
+            "buffer",
+            "memo",
+            "tmp",
+            "temp"
+          ],
+          "concept": "cache",
+          "derived_from": "temporary",
+          "eo": null,
+          "matched_surface": "temporary",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "error",
+            "exception",
+            "fail",
+            "fault",
+            "raise"
+          ],
+          "concept": "error",
+          "derived_from": "crash",
+          "eo": null,
+          "matched_surface": "crash",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "index",
+            "registry",
+            "catalog",
+            "list"
+          ],
+          "concept": "index",
+          "derived_from": "listing",
+          "eo": null,
+          "matched_surface": "listing",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "name",
+            "label",
+            "title",
+            "id"
+          ],
+          "concept": "name",
+          "derived_from": "name",
+          "eo": "nomo",
+          "matched_surface": "name",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d008",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "chunk",
+            "block",
+            "segment",
+            "slice"
+          ],
+          "concept": "chunk",
+          "derived_from": "fragment",
+          "eo": null,
+          "matched_surface": "fragment",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "path",
+            "route",
+            "location",
+            "uri",
+            "url"
+          ],
+          "concept": "path",
+          "derived_from": "path",
+          "eo": "vojo",
+          "matched_surface": "path",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "search",
+            "find",
+            "query",
+            "lookup",
+            "match"
+          ],
+          "concept": "search",
+          "derived_from": "lookup",
+          "eo": "serĉi",
+          "matched_surface": "lookup",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d009",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3840
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "chunk",
+            "block",
+            "segment",
+            "slice"
+          ],
+          "concept": "chunk",
+          "derived_from": "block",
+          "eo": null,
+          "matched_surface": "block",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "web",
+            "http",
+            "url",
+            "browser",
+            "request",
+            "fetch",
+            "crawl"
+          ],
+          "concept": "web",
+          "derived_from": "page",
+          "eo": "retejo",
+          "matched_surface": "page",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d010",
+      "kind": "positive",
+      "rank": 4,
+      "top1_score": 2519
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "host",
+            "machine",
+            "node",
+            "device"
+          ],
+          "concept": "machine",
+          "derived_from": "host",
+          "eo": "maŝino",
+          "matched_surface": "host",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "web",
+            "http",
+            "url",
+            "browser",
+            "request",
+            "fetch",
+            "crawl"
+          ],
+          "concept": "web",
+          "derived_from": "page",
+          "eo": "retejo",
+          "matched_surface": "page",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d011",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2272
+    },
+    {
+      "expansion": [],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d012",
+      "kind": "positive",
+      "rank": 9,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "tool",
+            "skill",
+            "command",
+            "util",
+            "action"
+          ],
+          "concept": "tool",
+          "derived_from": "command",
+          "eo": "ilo",
+          "matched_surface": "command",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "write",
+            "save",
+            "dump",
+            "emit",
+            "append",
+            "persist"
+          ],
+          "concept": "write",
+          "derived_from": "record",
+          "eo": "skribi",
+          "matched_surface": "record",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d013",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2805
+    },
+    {
+      "expansion": [],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d014",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 4660
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "name",
+            "label",
+            "title",
+            "id"
+          ],
+          "concept": "name",
+          "derived_from": "name",
+          "eo": "nomo",
+          "matched_surface": "name",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "read",
+            "load",
+            "fetch",
+            "retrieve",
+            "open"
+          ],
+          "concept": "read",
+          "derived_from": "read",
+          "eo": "legi",
+          "matched_surface": "read",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "tool",
+            "skill",
+            "command",
+            "util",
+            "action"
+          ],
+          "concept": "tool",
+          "derived_from": "capability",
+          "eo": "ilo",
+          "matched_surface": "capability",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d015",
+      "kind": "positive",
+      "rank": 19,
+      "top1_score": 2233
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "file",
+            "doc"
+          ],
+          "concept": "file",
+          "derived_from": "file",
+          "eo": "dosiero",
+          "matched_surface": "file",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "server",
+            "service",
+            "endpoint",
+            "api",
+            "http",
+            "port"
+          ],
+          "concept": "server",
+          "derived_from": "service",
+          "eo": "servilo",
+          "matched_surface": "service",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "vector",
+            "embed",
+            "similar",
+            "distance",
+            "soft"
+          ],
+          "concept": "vector",
+          "derived_from": "vector",
+          "eo": null,
+          "matched_surface": "vector",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d016",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 2255
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "index",
+            "registry",
+            "catalog",
+            "list"
+          ],
+          "concept": "index",
+          "derived_from": "index",
+          "eo": null,
+          "matched_surface": "index",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "vector",
+            "embed",
+            "similar",
+            "distance",
+            "soft"
+          ],
+          "concept": "vector",
+          "derived_from": "vector",
+          "eo": null,
+          "matched_surface": "vector",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d017",
+      "kind": "positive",
+      "rank": 4,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "config",
+            "setting",
+            "option",
+            "param",
+            "env",
+            "profile"
+          ],
+          "concept": "config",
+          "derived_from": "preference",
+          "eo": "agordo",
+          "matched_surface": "preference",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d018",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 2580
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "error",
+            "exception",
+            "fail",
+            "fault",
+            "raise"
+          ],
+          "concept": "error",
+          "derived_from": "error",
+          "eo": null,
+          "matched_surface": "error",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d019",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 2326
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "desktop",
+            "screen",
+            "window",
+            "click",
+            "mouse",
+            "key"
+          ],
+          "concept": "desktop",
+          "derived_from": "window",
+          "eo": null,
+          "matched_surface": "window",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "server",
+            "service",
+            "endpoint",
+            "api",
+            "http",
+            "port"
+          ],
+          "concept": "server",
+          "derived_from": "service",
+          "eo": "servilo",
+          "matched_surface": "service",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d020",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3776
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "context",
+            "scope"
+          ],
+          "concept": "context",
+          "derived_from": "background",
+          "eo": null,
+          "matched_surface": "background",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "session",
+            "conversation",
+            "chat",
+            "thread",
+            "turn"
+          ],
+          "concept": "session",
+          "derived_from": "thread",
+          "eo": null,
+          "matched_surface": "thread",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d021",
+      "kind": "positive",
+      "rank": 5,
+      "top1_score": 2075
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "context",
+            "scope"
+          ],
+          "concept": "context",
+          "derived_from": "context",
+          "eo": null,
+          "matched_surface": "context",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "desktop",
+            "screen",
+            "window",
+            "click",
+            "mouse",
+            "key"
+          ],
+          "concept": "desktop",
+          "derived_from": "window",
+          "eo": null,
+          "matched_surface": "window",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "graph",
+            "edge",
+            "ref",
+            "link",
+            "node",
+            "depend"
+          ],
+          "concept": "graph",
+          "derived_from": "reference",
+          "eo": null,
+          "matched_surface": "reference",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "memory",
+            "memor",
+            "store",
+            "persist",
+            "knowledge",
+            "recall"
+          ],
+          "concept": "memory",
+          "derived_from": "memory",
+          "eo": "memori",
+          "matched_surface": "memory",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "name",
+            "label",
+            "title",
+            "id"
+          ],
+          "concept": "name",
+          "derived_from": "identifier",
+          "eo": "nomo",
+          "matched_surface": "identifier",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "size",
+            "count",
+            "len",
+            "capacity",
+            "total",
+            "stats"
+          ],
+          "concept": "size",
+          "derived_from": "size",
+          "eo": "grando",
+          "matched_surface": "size",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d022",
+      "kind": "positive",
+      "rank": 19,
+      "top1_score": 1713
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "file",
+            "doc"
+          ],
+          "concept": "file",
+          "derived_from": "file",
+          "eo": "dosiero",
+          "matched_surface": "file",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d023",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "graph",
+            "edge",
+            "ref",
+            "link",
+            "node",
+            "depend"
+          ],
+          "concept": "graph",
+          "derived_from": "connection",
+          "eo": null,
+          "matched_surface": "connection",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "vector",
+            "embed",
+            "similar",
+            "distance",
+            "soft"
+          ],
+          "concept": "vector",
+          "derived_from": "embedding",
+          "eo": null,
+          "matched_surface": "embedding",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d024",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1970
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "name",
+            "label",
+            "title",
+            "id"
+          ],
+          "concept": "name",
+          "derived_from": "label",
+          "eo": "nomo",
+          "matched_surface": "label",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d025",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2992
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "dir",
+            "folder",
+            "tree"
+          ],
+          "concept": "directory",
+          "derived_from": "tree",
+          "eo": "dosierujo",
+          "matched_surface": "tree",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d026",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3455
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d027",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2233
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "secret",
+            "guard",
+            "auth",
+            "token",
+            "permission",
+            "safe",
+            "protect"
+          ],
+          "concept": "security",
+          "derived_from": "credential",
+          "eo": "sekureco",
+          "matched_surface": "credential",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "server",
+            "service",
+            "endpoint",
+            "api",
+            "http",
+            "port"
+          ],
+          "concept": "server",
+          "derived_from": "service",
+          "eo": "servilo",
+          "matched_surface": "service",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "valid",
+            "check",
+            "verify",
+            "ensure",
+            "assert"
+          ],
+          "concept": "validate",
+          "derived_from": "check",
+          "eo": null,
+          "matched_surface": "check",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d028",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2561
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d029",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "host",
+            "machine",
+            "node",
+            "device"
+          ],
+          "concept": "machine",
+          "derived_from": "machine",
+          "eo": "maŝino",
+          "matched_surface": "machine",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d030",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1995
+    },
+    {
+      "expansion": [],
+      "id": "d031",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 1239
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "status",
+            "health",
+            "state",
+            "ready",
+            "alive"
+          ],
+          "concept": "status",
+          "derived_from": "status",
+          "eo": null,
+          "matched_surface": "status",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        },
+        {
+          "code_tokens": [
+            "user",
+            "client",
+            "identity",
+            "agent",
+            "author"
+          ],
+          "concept": "user",
+          "derived_from": "caller",
+          "eo": "uzanto",
+          "matched_surface": "caller",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "id": "d032",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2721
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "server",
+            "service",
+            "endpoint",
+            "api",
+            "http",
+            "port"
+          ],
+          "concept": "server",
+          "derived_from": "endpoint",
+          "eo": "servilo",
+          "matched_surface": "endpoint",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "id": "d033",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 3861
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "error",
+            "exception",
+            "fail",
+            "fault",
+            "raise"
+          ],
+          "concept": "error",
+          "derived_from": "problem",
+          "eo": null,
+          "matched_surface": "problem",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "id": "d034",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2366
+    },
+    {
+      "expansion": [
+        {
+          "code_tokens": [
+            "user",
+            "client",
+            "identity",
+            "agent",
+            "author"
+          ],
+          "concept": "user",
+          "derived_from": "user",
+          "eo": "uzanto",
+          "matched_surface": "user",
+          "rule": "semantic_codebook",
+          "weight_class": "expansion"
+        }
+      ],
+      "id": "d035",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2793
+    },
+    {
+      "expansion": [],
+      "id": "d036",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 1995
+    }
+  ],
+  "question_set": {
+    "content_hash": "blake2b256:278f2dc2b92fd4573bdbd3ae37bbc690d5a59ab0fc0d78af5ade6ad97dded4da",
+    "file": "dev_questions.json",
+    "name": "dev"
+  },
+  "result_hash": "blake2b256:3828560ac8d80366212eda97decb9786a7fa8ac4650146c4136efa006468b268",
+  "schema": "acae.m4.v1",
+  "scope": {
+    "files": 169,
+    "symbols": 1598
+  },
+  "variant": "codebook"
+}
