@@ -510,6 +510,12 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             sorted(diagnostyka["gate_sizes"])[len(diagnostyka["gate_sizes"]) // 2]
             if diagnostyka["gate_sizes"] else 0
         ),
+        "m7_zero_bucket": diagnostyka["m7_zero_bucket"],
+        "m7_zero_reached_25": diagnostyka["m7_zero_reached_25"],
+        "m7_zero_rank_median": (
+            sorted(diagnostyka["m7_zero_ranks"])[len(diagnostyka["m7_zero_ranks"]) // 2]
+            if diagnostyka["m7_zero_ranks"] else 0
+        ),
         "per_query": per_query,
     }
 
