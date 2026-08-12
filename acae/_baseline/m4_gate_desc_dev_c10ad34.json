@@ -1,0 +1,3117 @@
+{
+  "depth": 25,
+  "descriptions": {
+    "batches": [
+      "desc_0.json",
+      "desc_1.json",
+      "desc_2.json",
+      "desc_3.json",
+      "desc_4.json",
+      "desc_5.json",
+      "desc_6.json",
+      "desc_7.json",
+      "desc_8.json",
+      "desc_9.json",
+      "desc_10.json",
+      "desc_11.json"
+    ],
+    "count": 169,
+    "generated_at": "2026-08-12T22:02:08+00:00",
+    "model": "claude-haiku-4-5-20251001",
+    "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db"
+  },
+  "head": "c10ad34",
+  "metrics": {
+    "counts": {
+      "negative": 6,
+      "positive": 30
+    },
+    "desc_zero_bucket": 0,
+    "desc_zero_nonzero": 0,
+    "desc_zero_rank_median": 0,
+    "desc_zero_reached_25": 0,
+    "gate_cut": 0,
+    "gate_fallback": 0,
+    "gate_size_median": 157,
+    "m7_zero_bucket": 0,
+    "m7_zero_rank_median": 0,
+    "m7_zero_reached_25": 0,
+    "m9_zero_bucket": 11,
+    "m9_zero_in_top25": 0,
+    "mean_top1_negative": 2268,
+    "mean_top1_positive": 2661,
+    "mrr_permille": 172,
+    "negative_ratio_permille": 852,
+    "recall_at_10_permille": 266,
+    "recall_at_25_permille": 366
+  },
+  "packages": {
+    "tiktoken": "0.13.0"
+  },
+  "per_query": [
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "each",
+            "empty",
+            "file",
+            "first",
+            "hash",
+            "line",
+            "ones",
+            "plain",
+            "plus",
+            "read",
+            "row",
+            "rows",
+            "settings",
+            "sign",
+            "skipping",
+            "splitting"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 264
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "each",
+            "file",
+            "first",
+            "line",
+            "ones",
+            "plain",
+            "plus",
+            "read",
+            "row",
+            "rows",
+            "settings"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 59
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "each",
+            "file",
+            "first",
+            "hash",
+            "line",
+            "plain",
+            "plus",
+            "read",
+            "skipping"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 59
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d001",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1995
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "already",
+            "but",
+            "executable",
+            "fallback",
+            "fill",
+            "has",
+            "itself",
+            "limit",
+            "local",
+            "model",
+            "only",
+            "paths",
+            "plus",
+            "process",
+            "set",
+            "waiting",
+            "weights"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 170
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "already",
+            "but",
+            "executable",
+            "fallback",
+            "has",
+            "itself",
+            "local",
+            "model",
+            "only",
+            "paths",
+            "plus",
+            "process",
+            "set"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 48
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "already",
+            "but",
+            "fill",
+            "has",
+            "itself",
+            "limit",
+            "local",
+            "model",
+            "only",
+            "paths",
+            "plus",
+            "process",
+            "weights"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 34
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d002",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1673
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "available",
+            "capability",
+            "checks",
+            "containing",
+            "directory",
+            "fails",
+            "folder",
+            "fresh",
+            "into",
+            "known",
+            "make",
+            "manifest",
+            "new"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 198
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "available",
+            "checks",
+            "containing",
+            "directory",
+            "folder",
+            "fresh",
+            "into",
+            "make",
+            "manifest",
+            "new"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 69
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "available",
+            "checks",
+            "containing",
+            "directory",
+            "fails",
+            "folder",
+            "into",
+            "known",
+            "make",
+            "manifest",
+            "new"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 39
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d003",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2793
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "endings",
+            "form",
+            "indexed",
+            "into",
+            "letters",
+            "lookup",
+            "off",
+            "plain",
+            "polish",
+            "same",
+            "their",
+            "word"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 114
+        },
+        {
+          "evidence": [
+            "desc:aions_core/server/cbms_direct_server.py",
+            "desc:aions_core/server/cbms_doctor.py",
+            "desc:aions_core/server/cbms_memory.py"
+          ],
+          "files_in_scope": 22,
+          "kind": "dir",
+          "matched_terms": [
+            "form",
+            "into",
+            "lookup",
+            "plain",
+            "polish",
+            "same",
+            "their",
+            "word"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core/server",
+          "score": 25
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "indexed",
+            "into",
+            "lookup",
+            "plain",
+            "polish",
+            "same",
+            "their",
+            "word"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 22
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d004",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "answer",
+            "body",
+            "call",
+            "chat",
+            "code",
+            "connection",
+            "converts",
+            "deadline",
+            "dictionary",
+            "empty",
+            "exceeded",
+            "failure",
+            "instead",
+            "into",
+            "language",
+            "local",
+            "malformed",
+            "model",
+            "over",
+            "plain",
+            "possible",
+            "refused",
+            "request",
+            "rest",
+            "result",
+            "sends",
+            "service"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 315
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "answer",
+            "call",
+            "chat",
+            "code",
+            "connection",
+            "converts",
+            "dictionary",
+            "exceeded",
+            "instead",
+            "into",
+            "language",
+            "local",
+            "model",
+            "over",
+            "plain",
+            "refused",
+            "request",
+            "result",
+            "sends"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 72
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "call",
+            "code",
+            "connection",
+            "converts",
+            "deadline",
+            "failure",
+            "instead",
+            "into",
+            "language",
+            "local",
+            "malformed",
+            "model",
+            "over",
+            "plain",
+            "request",
+            "rest",
+            "result",
+            "sends",
+            "service"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 61
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d005",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3630
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "connection",
+            "daemon",
+            "deadline",
+            "expired",
+            "into",
+            "limit",
+            "local",
+            "message",
+            "model",
+            "raise",
+            "readable",
+            "refused",
+            "start",
+            "talking",
+            "user",
+            "waiting",
+            "while"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 203
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "connection",
+            "deadline",
+            "into",
+            "local",
+            "message",
+            "model",
+            "readable",
+            "start",
+            "talking",
+            "user",
+            "while"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 47
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "connection",
+            "into",
+            "limit",
+            "local",
+            "message",
+            "model",
+            "readable",
+            "refused",
+            "user",
+            "while"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 41
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d006",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2793
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "after",
+            "alive",
+            "below",
+            "between",
+            "failed",
+            "fall",
+            "five",
+            "fixed",
+            "keep",
+            "letting",
+            "machine",
+            "network",
+            "never",
+            "pause",
+            "reporting",
+            "reports",
+            "round",
+            "seconds",
+            "worker"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 111
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "after",
+            "alive",
+            "between",
+            "failed",
+            "fixed",
+            "keep",
+            "machine",
+            "network",
+            "never",
+            "reporting",
+            "reports",
+            "seconds"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 32
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "after",
+            "between",
+            "failed",
+            "fall",
+            "five",
+            "keep",
+            "machine",
+            "network",
+            "reports",
+            "round"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 22
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d007",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "cannot",
+            "disk",
+            "everything",
+            "first",
+            "into",
+            "listing",
+            "name",
+            "newly",
+            "only",
+            "place",
+            "swapped",
+            "temporary",
+            "under",
+            "written"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 160
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "disk",
+            "everything",
+            "first",
+            "into",
+            "listing",
+            "name",
+            "only",
+            "place",
+            "temporary",
+            "under",
+            "written"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 39
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "disk",
+            "everything",
+            "first",
+            "into",
+            "listing",
+            "only",
+            "under"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 35
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d008",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "deep",
+            "exact",
+            "filename",
+            "found",
+            "full",
+            "higher",
+            "local",
+            "lookup",
+            "match",
+            "much",
+            "path",
+            "results",
+            "than"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 149
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "deep",
+            "found",
+            "full",
+            "local",
+            "match",
+            "much",
+            "path",
+            "results",
+            "than"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 37
+        },
+        {
+          "evidence": [
+            "desc:aions_core/server/cbms_direct_server.py",
+            "desc:aions_core/server/cbms_doctor.py",
+            "desc:aions_core/server/cbms_memory.py"
+          ],
+          "files_in_scope": 22,
+          "kind": "dir",
+          "matched_terms": [
+            "deep",
+            "exact",
+            "found",
+            "full",
+            "lookup",
+            "match",
+            "path",
+            "results",
+            "than"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core/server",
+          "score": 27
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d009",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "block",
+            "breaks",
+            "html",
+            "level",
+            "line",
+            "out",
+            "page",
+            "readable",
+            "scripts",
+            "styling"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 81
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "block",
+            "downloaded",
+            "line",
+            "out",
+            "page",
+            "readable",
+            "scripts"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 27
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "block",
+            "breaks",
+            "level",
+            "line",
+            "out",
+            "readable",
+            "styling"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 14
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d010",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": 2240
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "allow",
+            "crawler",
+            "fixed",
+            "host",
+            "list",
+            "outside",
+            "page",
+            "prevents",
+            "sites"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 48
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "fixed",
+            "host",
+            "list",
+            "outside",
+            "page",
+            "prevents"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 16
+        },
+        {
+          "evidence": [
+            "desc:control_plane/skills/__init__.py",
+            "desc:control_plane/skills/context.py",
+            "desc:control_plane/skills/executor.py"
+          ],
+          "files_in_scope": 16,
+          "kind": "dir",
+          "matched_terms": [
+            "allow",
+            "fixed",
+            "list"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:control_plane/skills",
+          "score": 9
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d011",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1596
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "already",
+            "anything",
+            "date",
+            "drop",
+            "falls",
+            "first",
+            "horizon",
+            "inside",
+            "keep",
+            "lists",
+            "most",
+            "only",
+            "order",
+            "past",
+            "personal",
+            "plus",
+            "pressing",
+            "profile",
+            "separate",
+            "stored",
+            "time",
+            "two",
+            "work"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 197
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "already",
+            "falls",
+            "first",
+            "keep",
+            "lists",
+            "most",
+            "only",
+            "past",
+            "personal",
+            "plus",
+            "separate",
+            "stored",
+            "time",
+            "two",
+            "work"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 50
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "already",
+            "anything",
+            "date",
+            "first",
+            "horizon",
+            "inside",
+            "keep",
+            "lists",
+            "most",
+            "only",
+            "order",
+            "personal",
+            "plus",
+            "profile",
+            "separate",
+            "stored",
+            "time",
+            "two",
+            "work"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 50
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d012",
+      "kind": "positive",
+      "rank": 9,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "actually",
+            "admitting",
+            "command",
+            "declared",
+            "flag",
+            "item",
+            "lifecycle",
+            "line",
+            "move",
+            "new",
+            "one",
+            "opened",
+            "record",
+            "sentence",
+            "surface",
+            "tool",
+            "versus",
+            "whole"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 148
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "actually",
+            "command",
+            "flag",
+            "lifecycle",
+            "line",
+            "move",
+            "new",
+            "one",
+            "opened",
+            "preview",
+            "record",
+            "surface",
+            "tool"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 53
+        },
+        {
+          "evidence": [
+            "desc:aions_core/server/cbms_direct_server.py",
+            "desc:aions_core/server/cbms_doctor.py",
+            "desc:aions_core/server/cbms_memory.py"
+          ],
+          "files_in_scope": 22,
+          "kind": "dir",
+          "matched_terms": [
+            "actually",
+            "admitting",
+            "command",
+            "lifecycle",
+            "line",
+            "move",
+            "new",
+            "one",
+            "sentence",
+            "tool"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core/server",
+          "score": 22
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d013",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2805
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "any",
+            "definition",
+            "empty",
+            "fallback",
+            "instead",
+            "missing",
+            "rejected",
+            "role",
+            "value",
+            "wrong"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 59
+        },
+        {
+          "evidence": [
+            "desc:aions_core/server/cbms_direct_server.py",
+            "desc:aions_core/server/cbms_doctor.py",
+            "desc:aions_core/server/cbms_memory.py"
+          ],
+          "files_in_scope": 22,
+          "kind": "dir",
+          "matched_terms": [
+            "any",
+            "empty",
+            "fallback",
+            "instead",
+            "missing",
+            "value",
+            "wrong"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core/server",
+          "score": 11
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "any",
+            "fallback",
+            "instead",
+            "missing",
+            "rejected",
+            "value"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 10
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d014",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 4660
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "capability",
+            "carry",
+            "category",
+            "disk",
+            "field",
+            "manifest",
+            "name",
+            "object",
+            "off",
+            "older",
+            "read",
+            "still",
+            "used"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 95
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "category",
+            "disk",
+            "manifest",
+            "name",
+            "object",
+            "older",
+            "read",
+            "still",
+            "used"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 27
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "carry",
+            "category",
+            "disk",
+            "field",
+            "manifest",
+            "object",
+            "older",
+            "read",
+            "used"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 22
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d015",
+      "kind": "positive",
+      "rank": 15,
+      "top1_score": 2233
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "appending",
+            "cannot",
+            "database",
+            "dedicated",
+            "down",
+            "drop",
+            "embedded",
+            "file",
+            "instead",
+            "into",
+            "line",
+            "local",
+            "made",
+            "runtime",
+            "service",
+            "shared",
+            "silently",
+            "timestamped",
+            "vector",
+            "visible"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 294
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "database",
+            "file",
+            "instead",
+            "into",
+            "line",
+            "local",
+            "runtime",
+            "service",
+            "silently",
+            "vector"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 65
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "appending",
+            "database",
+            "down",
+            "file",
+            "instead",
+            "into",
+            "line",
+            "local",
+            "runtime",
+            "vector"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 55
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d016",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 2226
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "accounting",
+            "actually",
+            "built",
+            "collection",
+            "index",
+            "into",
+            "number",
+            "one",
+            "raw",
+            "relevance",
+            "returned",
+            "through",
+            "under",
+            "value",
+            "vector",
+            "zero"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 186
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "actually",
+            "built",
+            "collection",
+            "index",
+            "into",
+            "one",
+            "raw",
+            "through",
+            "under",
+            "value",
+            "vector"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 46
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "collection",
+            "index",
+            "into",
+            "number",
+            "one",
+            "through",
+            "under",
+            "vector",
+            "zero"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 44
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d017",
+      "kind": "positive",
+      "rank": 16,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "against",
+            "between",
+            "capabilities",
+            "choosing",
+            "compute",
+            "each",
+            "modes",
+            "number",
+            "off",
+            "often",
+            "one",
+            "preference",
+            "quickly",
+            "three",
+            "two",
+            "under",
+            "weighted"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 193
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "against",
+            "between",
+            "each",
+            "modes",
+            "number",
+            "often",
+            "one",
+            "quickly",
+            "three",
+            "two",
+            "under",
+            "weighted"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 44
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "against",
+            "between",
+            "capabilities",
+            "each",
+            "modes",
+            "one",
+            "quickly",
+            "succeeds",
+            "three",
+            "two",
+            "under"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 39
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d018",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 2580
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "against",
+            "comparing",
+            "current",
+            "decide",
+            "entries",
+            "error",
+            "few",
+            "first",
+            "genuinely",
+            "never",
+            "number",
+            "previous",
+            "raise",
+            "round",
+            "system",
+            "very"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 198
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "against",
+            "comparing",
+            "current",
+            "decide",
+            "entries",
+            "error",
+            "first",
+            "number",
+            "previous",
+            "round",
+            "system",
+            "very"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 52
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "against",
+            "comparing",
+            "current",
+            "entries",
+            "error",
+            "few",
+            "first",
+            "never",
+            "system"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 41
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d019",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 2326
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "already",
+            "has",
+            "hour",
+            "inside",
+            "once",
+            "same",
+            "service",
+            "three",
+            "times",
+            "window"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 54
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "already",
+            "attempt",
+            "has",
+            "inside",
+            "same",
+            "service",
+            "three",
+            "times"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 16
+        },
+        {
+          "evidence": [
+            "desc:control_plane/skills/__init__.py",
+            "desc:control_plane/skills/context.py",
+            "desc:control_plane/skills/executor.py"
+          ],
+          "files_in_scope": 16,
+          "kind": "dir",
+          "matched_terms": [
+            "already",
+            "has",
+            "once",
+            "same",
+            "service",
+            "three",
+            "times"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:control_plane/skills",
+          "score": 12
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d020",
+      "kind": "positive",
+      "rank": 21,
+      "top1_score": 3776
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "answer",
+            "background",
+            "comes",
+            "diagnostic",
+            "even",
+            "fixed",
+            "inside",
+            "number",
+            "queue",
+            "seconds",
+            "single",
+            "slow",
+            "thread",
+            "underlying",
+            "waiting",
+            "work"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 91
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "answer",
+            "background",
+            "comes",
+            "diagnostic",
+            "even",
+            "number",
+            "single",
+            "slow",
+            "work"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 24
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "background",
+            "comes",
+            "diagnostic",
+            "fixed",
+            "inside",
+            "seconds",
+            "single",
+            "slow",
+            "thread",
+            "work"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 18
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d021",
+      "kind": "positive",
+      "rank": 4,
+      "top1_score": 1595
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "body",
+            "context",
+            "identifier",
+            "instead",
+            "large",
+            "memory",
+            "model",
+            "only",
+            "parked",
+            "reference",
+            "reply",
+            "short",
+            "size",
+            "summary",
+            "too",
+            "whole",
+            "window",
+            "would"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 236
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "context",
+            "instead",
+            "large",
+            "memory",
+            "model",
+            "only",
+            "reference",
+            "size",
+            "summary",
+            "would"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 52
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "context",
+            "identifier",
+            "instead",
+            "large",
+            "memory",
+            "model",
+            "only",
+            "reference",
+            "short",
+            "size",
+            "too",
+            "whole",
+            "would"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 51
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d022",
+      "kind": "positive",
+      "rank": 8,
+      "top1_score": 1676
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "already",
+            "computed",
+            "disk",
+            "file",
+            "question",
+            "retrieval",
+            "stops",
+            "under",
+            "without"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 211
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "already",
+            "disk",
+            "file",
+            "question",
+            "retrieval",
+            "stops",
+            "under",
+            "without"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 59
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "already",
+            "disk",
+            "file",
+            "question",
+            "retrieval",
+            "under",
+            "without"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 43
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d023",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "connection",
+            "created",
+            "database",
+            "did",
+            "embedding",
+            "fix",
+            "just",
+            "object",
+            "once",
+            "per",
+            "process",
+            "slow"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 93
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "connection",
+            "created",
+            "database",
+            "embedding",
+            "fix",
+            "just",
+            "object",
+            "per",
+            "process",
+            "reused",
+            "slow"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 29
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "connection",
+            "created",
+            "database",
+            "embedding",
+            "object",
+            "per",
+            "process",
+            "slow"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 22
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d024",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1862
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "body",
+            "event",
+            "field",
+            "json",
+            "just",
+            "lines",
+            "object",
+            "out",
+            "plain",
+            "prefix",
+            "reply",
+            "series",
+            "still",
+            "stream",
+            "while"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 164
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "event",
+            "json",
+            "just",
+            "object",
+            "out",
+            "plain",
+            "still",
+            "while"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 35
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "field",
+            "json",
+            "label",
+            "lines",
+            "object",
+            "out",
+            "plain",
+            "series",
+            "while"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 29
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d025",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2877
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "abstract",
+            "because",
+            "built",
+            "cannot",
+            "depends",
+            "fallback",
+            "list",
+            "malformed",
+            "module",
+            "order",
+            "over",
+            "regular",
+            "source",
+            "syntax",
+            "takes",
+            "tree",
+            "walk"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 130
+        },
+        {
+          "evidence": [
+            "desc:aions_core/server/cbms_direct_server.py",
+            "desc:aions_core/server/cbms_doctor.py",
+            "desc:aions_core/server/cbms_memory.py"
+          ],
+          "files_in_scope": 22,
+          "kind": "dir",
+          "matched_terms": [
+            "abstract",
+            "built",
+            "fallback",
+            "list",
+            "module",
+            "over",
+            "regular",
+            "source",
+            "syntax",
+            "takes",
+            "tree",
+            "walk"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core/server",
+          "score": 29
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "built",
+            "depends",
+            "fallback",
+            "list",
+            "malformed",
+            "module",
+            "order",
+            "over",
+            "regular",
+            "source",
+            "takes"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 27
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d026",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3157
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "discovered",
+            "each",
+            "eight",
+            "five",
+            "hundred",
+            "into",
+            "items",
+            "paths",
+            "printed",
+            "progress",
+            "result",
+            "shared",
+            "thousands",
+            "threads",
+            "through",
+            "totals",
+            "worker"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 202
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "discovered",
+            "each",
+            "into",
+            "items",
+            "paths",
+            "printed",
+            "progress",
+            "result",
+            "threads",
+            "through",
+            "totals"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 51
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "each",
+            "eight",
+            "five",
+            "hundred",
+            "into",
+            "paths",
+            "progress",
+            "result",
+            "threads",
+            "through"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 49
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d027",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2233
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "can",
+            "check",
+            "end",
+            "entries",
+            "external",
+            "hits",
+            "itself",
+            "next",
+            "ones",
+            "plus",
+            "prints",
+            "real",
+            "service",
+            "still",
+            "stored",
+            "ten",
+            "today",
+            "upcoming",
+            "using",
+            "without"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 244
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "can",
+            "check",
+            "confirms",
+            "end",
+            "entries",
+            "hits",
+            "itself",
+            "next",
+            "plus",
+            "prints",
+            "real",
+            "service",
+            "still",
+            "stored",
+            "today",
+            "tomorrow",
+            "upcoming",
+            "using",
+            "without"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 77
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "can",
+            "check",
+            "end",
+            "entries",
+            "external",
+            "itself",
+            "ones",
+            "plus",
+            "printing",
+            "prints",
+            "real",
+            "stored",
+            "using",
+            "without"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 44
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d028",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "account",
+            "anything",
+            "before",
+            "blob",
+            "confirm",
+            "correctly",
+            "current",
+            "decrypts",
+            "encrypted",
+            "operation",
+            "otherwise",
+            "small",
+            "still",
+            "whole",
+            "windows"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 90
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "anything",
+            "before",
+            "confirm",
+            "correctly",
+            "current",
+            "encrypted",
+            "operation",
+            "otherwise",
+            "small",
+            "still",
+            "windows"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 41
+        },
+        {
+          "evidence": [
+            "desc:aions_core/server/cbms_direct_server.py",
+            "desc:aions_core/server/cbms_doctor.py",
+            "desc:aions_core/server/cbms_memory.py"
+          ],
+          "files_in_scope": 22,
+          "kind": "dir",
+          "matched_terms": [
+            "anything",
+            "before",
+            "current",
+            "small",
+            "still"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core/server",
+          "score": 11
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d029",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "after",
+            "callable",
+            "checked",
+            "code",
+            "entry",
+            "handler",
+            "imported",
+            "inside",
+            "into",
+            "library",
+            "live",
+            "machine",
+            "only",
+            "point",
+            "subprocess",
+            "written"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 191
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "after",
+            "code",
+            "compiled",
+            "entry",
+            "handler",
+            "imported",
+            "inside",
+            "into",
+            "library",
+            "live",
+            "machine",
+            "only",
+            "point",
+            "subprocess",
+            "written"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 56
+        },
+        {
+          "evidence": [
+            "desc:control_plane/skills/__init__.py",
+            "desc:control_plane/skills/context.py",
+            "desc:control_plane/skills/executor.py"
+          ],
+          "files_in_scope": 16,
+          "kind": "dir",
+          "matched_terms": [
+            "after",
+            "callable",
+            "code",
+            "entry",
+            "handler",
+            "into",
+            "library",
+            "live",
+            "machine",
+            "only",
+            "point",
+            "subprocess"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:control_plane/skills",
+          "score": 34
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d030",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1995
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "database",
+            "failed",
+            "previous",
+            "return",
+            "schema",
+            "store"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 66
+        },
+        {
+          "evidence": [
+            "desc:control_plane/skills/__init__.py",
+            "desc:control_plane/skills/context.py",
+            "desc:control_plane/skills/executor.py"
+          ],
+          "files_in_scope": 16,
+          "kind": "dir",
+          "matched_terms": [
+            "database",
+            "failed",
+            "return",
+            "schema",
+            "store"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:control_plane/skills",
+          "score": 15
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "database",
+            "failed",
+            "return",
+            "store"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 15
+        }
+      ],
+      "id": "d031",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 1239
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "answer",
+            "budget",
+            "caller",
+            "many",
+            "may",
+            "once",
+            "per",
+            "requests",
+            "single",
+            "status",
+            "too"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 112
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "many",
+            "per",
+            "requests",
+            "send",
+            "single",
+            "status"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 31
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "answer",
+            "many",
+            "per",
+            "requests",
+            "single",
+            "status",
+            "too"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 26
+        }
+      ],
+      "id": "d032",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2658
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "endpoint",
+            "exposes",
+            "measurements",
+            "monitoring",
+            "registered",
+            "system",
+            "those"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 137
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "endpoint",
+            "monitoring",
+            "registered",
+            "system",
+            "those"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 39
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "endpoint",
+            "exposes",
+            "measurements",
+            "monitoring",
+            "system",
+            "those"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 34
+        }
+      ],
+      "id": "d033",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "detected",
+            "message",
+            "problem",
+            "system"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 126
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "message",
+            "send",
+            "system"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 32
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "message",
+            "problem",
+            "system"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 31
+        }
+      ],
+      "id": "d034",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2366
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "can",
+            "different",
+            "interface",
+            "kept",
+            "language",
+            "per",
+            "shown",
+            "strings",
+            "user"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 155
+        },
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py",
+            "desc:aions_core/agi_core.py"
+          ],
+          "files_in_scope": 29,
+          "kind": "dir",
+          "matched_terms": [
+            "can",
+            "different",
+            "interface",
+            "language",
+            "per",
+            "shown",
+            "strings",
+            "user"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:aions_core",
+          "score": 40
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "can",
+            "different",
+            "interface",
+            "kept",
+            "language",
+            "per",
+            "strings",
+            "user"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 39
+        }
+      ],
+      "id": "d035",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2793
+    },
+    {
+      "expansion": [
+        {
+          "evidence": [
+            "desc:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+            "desc:aions_core/agi_core.py",
+            "desc:aions_core/agi_evolution.py"
+          ],
+          "files_in_scope": 139,
+          "kind": "callgraph",
+          "matched_terms": [
+            "new",
+            "off",
+            "only",
+            "turn",
+            "without"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "callgraph:aions_core/AIONS_ULTIMATE_UNIFIED.py",
+          "score": 71
+        },
+        {
+          "evidence": [
+            "desc:scripts/aions_healthcheck.sh",
+            "desc:scripts/aions_indexer.py",
+            "desc:scripts/aions_node_heartbeat.py"
+          ],
+          "files_in_scope": 41,
+          "kind": "dir",
+          "matched_terms": [
+            "new",
+            "only",
+            "without"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:scripts",
+          "score": 19
+        },
+        {
+          "evidence": [
+            "desc:control_plane/skills/__init__.py",
+            "desc:control_plane/skills/context.py",
+            "desc:control_plane/skills/executor.py"
+          ],
+          "files_in_scope": 16,
+          "kind": "dir",
+          "matched_terms": [
+            "new",
+            "off",
+            "only",
+            "without"
+          ],
+          "rule": "scope_gate",
+          "scope_id": "dir:control_plane/skills",
+          "score": 18
+        }
+      ],
+      "id": "d036",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 1995
+    }
+  ],
+  "question_set": {
+    "content_hash": "blake2b256:278f2dc2b92fd4573bdbd3ae37bbc690d5a59ab0fc0d78af5ade6ad97dded4da",
+    "file": "dev_questions.json",
+    "name": "dev"
+  },
+  "result_hash": "blake2b256:866ae03fd85dc6d54b74dca11a116f54ab0a37c454a137d46972e0d51d0c4d83",
+  "schema": "acae.m4.v1",
+  "scope": {
+    "files": 169,
+    "symbols": 1598
+  },
+  "variant": "gate_desc"
+}

@@ -714,7 +714,7 @@ def main() -> int:
         "metrics": {k: v for k, v in result.items() if k != "per_query"},
         "per_query": result["per_query"],
     }
-    if args.variant == "desc":
+    if args.variant in WARIANTY_Z_OPISAMI:
         # Prowieniencja opisow w wyniku pomiaru: model, data, pack_hash zrodla.
         # Bez tego po miesiacu nie da sie powiedziec, ktore opisy dały te liczby.
         payload["descriptions"] = ctx["desc_provenance"]

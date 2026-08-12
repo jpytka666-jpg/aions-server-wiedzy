@@ -1,0 +1,4465 @@
+{
+  "depth": 25,
+  "descriptions": {
+    "batches": [
+      "desc_0.json",
+      "desc_1.json",
+      "desc_2.json",
+      "desc_3.json",
+      "desc_4.json",
+      "desc_5.json",
+      "desc_6.json",
+      "desc_7.json",
+      "desc_8.json",
+      "desc_9.json",
+      "desc_10.json",
+      "desc_11.json"
+    ],
+    "count": 169,
+    "generated_at": "2026-08-12T22:02:08+00:00",
+    "model": "claude-haiku-4-5-20251001",
+    "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db"
+  },
+  "head": "c10ad34",
+  "metrics": {
+    "counts": {
+      "negative": 6,
+      "positive": 30
+    },
+    "desc_zero_bucket": 0,
+    "desc_zero_nonzero": 0,
+    "desc_zero_rank_median": 0,
+    "desc_zero_reached_25": 0,
+    "gate_cut": 0,
+    "gate_fallback": 0,
+    "gate_size_median": 0,
+    "m7_zero_bucket": 0,
+    "m7_zero_rank_median": 0,
+    "m7_zero_reached_25": 0,
+    "m9_zero_bucket": 11,
+    "m9_zero_in_top25": 0,
+    "mean_top1_negative": 245,
+    "mean_top1_positive": 982,
+    "mrr_permille": 147,
+    "negative_ratio_permille": 249,
+    "recall_at_10_permille": 200,
+    "recall_at_25_permille": 433
+  },
+  "packages": {
+    "tiktoken": "0.13.0"
+  },
+  "per_query": [
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "_browser_thread_init",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_run_browser/_task",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "resolve_drive_order",
+              "path": "scripts/full_system_scan.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "get_ready_drives",
+            "path": "scripts/full_system_scan.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "get_browser",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 333,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "web_fetch",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "BaseDesktopProvider/launch",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "LinuxDesktopProvider/launch",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "WindowsDesktopProvider/launch",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxSystemSlice/launch",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_error",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 332,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "desktop_launch",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_status_rows",
+              "path": "aions_core/server/cbms_purgatory.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "cmd_status",
+            "path": "aions_core/server/cbms_purgatory.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d001",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 542
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "CBMSCurveMachine/_load_weights_manifest",
+              "path": "aions_core/cbms_curve_machine.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "WeightManifest",
+            "path": "aions_core/cbms_curve_machine.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AGIUnified/_process_fallback",
+              "path": "aions_core/agi_unified.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AGIUnified/_synthesize_from_chunks",
+            "path": "aions_core/agi_unified.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "TaskPlanner/execute_task",
+              "path": "aions_core/aions_agent_layer.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AIONSv2/execute_task",
+            "path": "aions_core/unified_core.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "TaskPlanner",
+              "path": "aions_core/aions_agent_layer.py"
+            },
+            {
+              "name_path": "TaskPlanner/execute_task",
+              "path": "aions_core/aions_agent_layer.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 241,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "test_agent_layer",
+            "path": "aions_core/aions_agent_layer.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AGILearning/learn_from_interaction",
+              "path": "aions_core/agi_learning.py"
+            },
+            {
+              "name_path": "AGIUnified",
+              "path": "aions_core/agi_unified.py"
+            },
+            {
+              "name_path": "AGIUnified/_retrieve_chunks",
+              "path": "aions_core/agi_unified.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 214,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AGIUnified/_process_learning_queue",
+            "path": "aions_core/agi_unified.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d002",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 183
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "CBMSMemory/_save_manifest",
+              "path": "aions_core/cbms_memory.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 333,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "CBMSMemory/_build_korean_chunk_index",
+            "path": "aions_core/cbms_memory.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "CBMSMemory/_save_manifest",
+              "path": "aions_core/server/cbms_memory.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 333,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "CBMSMemory/_build_korean_chunk_index",
+            "path": "aions_core/server/cbms_memory.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "CBMSMemory",
+              "path": "aions_core/cbms_memory.py"
+            },
+            {
+              "name_path": "CBMSMemory/create_knowledge_chunk",
+              "path": "aions_core/cbms_memory.py"
+            },
+            {
+              "name_path": "CBMSMemory",
+              "path": "aions_core/server/cbms_memory.py"
+            },
+            {
+              "name_path": "CBMSMemory/create_knowledge_chunk",
+              "path": "aions_core/server/cbms_memory.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 277,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "make_hangul_code",
+            "path": "aions_core/server/hangul_addressing.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AionsLinuxIndexProvider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            },
+            {
+              "name_path": "AionsLinuxIndexProvider/_scan_root",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 275,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AionsLinuxIndexProvider/_make_entry",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AionsLinuxIndexProvider/refresh",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AionsLinuxIndexProvider/_scan_root",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d003",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 286
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "FilteredRegistry/search",
+              "path": "control_plane/agents/agent_runner.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_deterministic_plan",
+            "path": "control_plane/agents/agent_runner.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "resolve_drive_order",
+              "path": "scripts/full_system_scan.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "get_ready_drives",
+            "path": "scripts/full_system_scan.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "FilteredRegistry",
+              "path": "control_plane/agents/agent_runner.py"
+            },
+            {
+              "name_path": "FilteredRegistry/search",
+              "path": "control_plane/agents/agent_runner.py"
+            },
+            {
+              "name_path": "SkillRegistry",
+              "path": "control_plane/skills/registry.py"
+            },
+            {
+              "name_path": "SkillRegistry/search",
+              "path": "control_plane/skills/registry.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 290,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AgentObject/blob",
+            "path": "control_plane/agents/agent_schema.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "FilteredRegistry",
+              "path": "control_plane/agents/agent_runner.py"
+            },
+            {
+              "name_path": "FilteredRegistry/search",
+              "path": "control_plane/agents/agent_runner.py"
+            },
+            {
+              "name_path": "SkillRegistry",
+              "path": "control_plane/skills/registry.py"
+            },
+            {
+              "name_path": "SkillRegistry/search",
+              "path": "control_plane/skills/registry.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 290,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AObject/blob",
+            "path": "control_plane/skills/schema.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_safe_invariants/grab",
+              "path": "aions_core/server/stylist.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "impl_snapshot",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d004",
+      "kind": "positive",
+      "rank": 16,
+      "top1_score": 1309
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "_comment_incident_impl",
+              "path": "control_plane/operator/mouth.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "comment_incident",
+            "path": "control_plane/operator/mouth.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "collect_deadlines",
+              "path": "control_plane/scheduler.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_parse_date",
+            "path": "control_plane/scheduler.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "post_chat",
+              "path": "aions_core/tools/bench_runner.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 333,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "main",
+            "path": "aions_core/tools/bench_runner.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AGICore",
+              "path": "aions_core/agi_core.py"
+            },
+            {
+              "name_path": "AGICore/_learn_from_interaction",
+              "path": "aions_core/agi_core.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 256,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AGICore/_extract_successful_strategies",
+            "path": "aions_core/agi_core.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AGICore/_analyze_failure_patterns",
+              "path": "aions_core/agi_core.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AGICore/_learn_from_interaction",
+            "path": "aions_core/agi_core.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d005",
+      "kind": "positive",
+      "rank": 14,
+      "top1_score": 534
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "_resolve_aions_path",
+              "path": "scripts/operator_profile_load.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 1000,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "operator_profile_path",
+            "path": "scripts/operator_profile_load.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "VectorStore/prune_expired",
+              "path": "server/store.py"
+            },
+            {
+              "name_path": "VectorStore/prune_expired",
+              "path": "server/store_api.py"
+            },
+            {
+              "name_path": "VectorStore/prune_expired",
+              "path": "server/store_http.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 985,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "session_prune",
+            "path": "server/app.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "send_message",
+              "path": "aions_core/test_aions_capabilities.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "run_conversation_tests",
+            "path": "aions_core/test_aions_capabilities.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "collect_deadlines",
+              "path": "control_plane/scheduler.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_parse_date",
+            "path": "control_plane/scheduler.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "format_brief",
+              "path": "scripts/operator_daily_brief.py"
+            },
+            {
+              "name_path": "operator_profile_path",
+              "path": "scripts/operator_profile_load.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "load_operator_profile",
+            "path": "scripts/operator_profile_load.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d006",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 338
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "_comment_incident_impl",
+              "path": "control_plane/operator/mouth.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "comment_incident",
+            "path": "control_plane/operator/mouth.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "DifferentiableMemory/read",
+              "path": "aions_core/agi_neural_backprop.py"
+            },
+            {
+              "name_path": "send_message",
+              "path": "aions_core/test_aions_capabilities.py"
+            },
+            {
+              "name_path": "test_api",
+              "path": "aions_core/tools/test_api.py"
+            },
+            {
+              "name_path": "test_guardrail",
+              "path": "aions_core/tools/test_guardrail.py"
+            },
+            {
+              "name_path": "_call_ollama",
+              "path": "control_plane/llm_adapter.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 471,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "post",
+            "path": "scripts/proof_provenance.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "build_keys",
+              "path": "aions_core/server/korean_keys.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 333,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_trigrams",
+            "path": "aions_core/server/korean_keys.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_active_defaults",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "semantic_skill_search",
+              "path": "control_plane/skills/semantic_search.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 272,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_active_collection",
+            "path": "control_plane/skills/semantic_search.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "send_message",
+              "path": "aions_core/test_aions_capabilities.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "run_conversation_tests",
+            "path": "aions_core/test_aions_capabilities.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d007",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1158
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "plan",
+              "path": "control_plane/skills/planner.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "find_recipe",
+            "path": "control_plane/skills/recipes.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_active_collection",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_active_embedder",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_base_min",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_lex_saturation",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_sem_only_min",
+              "path": "control_plane/skills/semantic_search.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 492,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_active_defaults",
+            "path": "control_plane/skills/semantic_search.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_base_min",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_lex_saturation",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_sem_only_min",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_weight_lex",
+              "path": "control_plane/skills/semantic_search.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 469,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_env_float",
+            "path": "control_plane/skills/semantic_search.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "matches",
+              "path": "control_plane/skills/world_state.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_blocked_by_state",
+            "path": "control_plane/skills/executor.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "matches",
+              "path": "control_plane/skills/world_state.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "get",
+            "path": "control_plane/skills/world_state.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d008",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2566
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "Conversation",
+              "path": "scripts/chatgpt_extractor.py"
+            },
+            {
+              "name_path": "ExtractionResult",
+              "path": "scripts/chatgpt_extractor.py"
+            },
+            {
+              "name_path": "parse_ldb_file",
+              "path": "scripts/chatgpt_extractor.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 1000,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "extract_all",
+            "path": "scripts/chatgpt_extractor.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AionsLinuxIndexProvider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            },
+            {
+              "name_path": "AionsLinuxIndexProvider/refresh",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 275,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AionsLinuxIndexProvider/_scan_root",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AionsLinuxIndexProvider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            },
+            {
+              "name_path": "AionsLinuxIndexProvider/_load_entries",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            },
+            {
+              "name_path": "AionsLinuxIndexProvider/refresh",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 270,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "SearchProviderError",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_load_chunk_content",
+              "path": "control_plane/llm_adapter.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_aions_path",
+            "path": "control_plane/llm_adapter.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AionsLinuxIndexProvider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "create_linux_search_provider",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d009",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 260
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "crawl",
+              "path": "aions_core/tools/web_crawler_import.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 1000,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "main",
+            "path": "aions_core/tools/web_crawler_import.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "WebRAGCBMS",
+              "path": "aions_core/server/web_rag_cbms.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "create_web_rag_instance",
+            "path": "aions_core/server/web_rag_cbms.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "sha1",
+              "path": "aions_core/tools/web_crawler_import.py"
+            },
+            {
+              "name_path": "add",
+              "path": "control_plane/skills/papiery.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 278,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_pid",
+            "path": "control_plane/skills/papiery.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "TextExtractor/text",
+              "path": "aions_core/tools/web_crawler_import.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "create_icon_image",
+            "path": "scripts/aions_tray.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "WebRAGCBMS/_fetch_page",
+              "path": "aions_core/server/web_rag_cbms.py"
+            },
+            {
+              "name_path": "WebRAGTextExtractor",
+              "path": "aions_core/server/web_rag_cbms.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 235,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "WebRAGCBMS/_crawl_and_extract",
+            "path": "aions_core/server/web_rag_cbms.py"
+          }
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d010",
+      "kind": "positive",
+      "rank": 3,
+      "top1_score": 407
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "WebRAGCBMS",
+              "path": "aions_core/server/web_rag_cbms.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "create_web_rag_instance",
+            "path": "aions_core/server/web_rag_cbms.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "sha1",
+              "path": "aions_core/tools/web_crawler_import.py"
+            },
+            {
+              "name_path": "add",
+              "path": "control_plane/skills/papiery.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 278,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_pid",
+            "path": "control_plane/skills/papiery.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "TextExtractor/text",
+              "path": "aions_core/tools/web_crawler_import.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "create_icon_image",
+            "path": "scripts/aions_tray.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "crawl/normalize",
+              "path": "aions_core/tools/web_crawler_import.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 166,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AGINeuralBackprop/_knowledge_consistency_loss",
+            "path": "aions_core/agi_neural_backprop.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "build_keys",
+              "path": "aions_core/server/korean_keys.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 166,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_trigrams",
+            "path": "aions_core/server/korean_keys.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d011",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 406
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "get_scheduler_summary",
+              "path": "control_plane/api.py"
+            },
+            {
+              "name_path": "post_scheduler_tick",
+              "path": "control_plane/api.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 556,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "summary_to_dict",
+            "path": "control_plane/scheduler.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_light_health",
+              "path": "scripts/operator_daily_brief.py"
+            },
+            {
+              "name_path": "collect_deadlines",
+              "path": "control_plane/scheduler.py"
+            },
+            {
+              "name_path": "run_scheduler",
+              "path": "control_plane/scheduler.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 505,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "format_brief",
+            "path": "scripts/operator_daily_brief.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AGILearning/_merge_similar_chunks",
+              "path": "aions_core/agi_learning.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AGILearning/_chunk_similarity",
+            "path": "aions_core/agi_learning.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "SmartGuardrail/_load_combined_index",
+              "path": "aions_core/aions_smart_guardrail.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "SmartGuardrail/__init__",
+            "path": "aions_core/aions_smart_guardrail.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "collect_deadlines",
+              "path": "control_plane/scheduler.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_parse_date",
+            "path": "control_plane/scheduler.py"
+          }
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d012",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 514
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "_comment_incident_impl",
+              "path": "control_plane/operator/mouth.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "comment_incident",
+            "path": "control_plane/operator/mouth.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_client_identity",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "provenance",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_auto_dump_logs",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+            },
+            {
+              "name_path": "provenance",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "with_provenance",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AgentRegistry",
+              "path": "control_plane/agents/agent_registry.py"
+            },
+            {
+              "name_path": "AgentRegistry/discover",
+              "path": "control_plane/agents/agent_registry.py"
+            },
+            {
+              "name_path": "promote",
+              "path": "control_plane/skills/forge.py"
+            },
+            {
+              "name_path": "_check_schema",
+              "path": "control_plane/skills/forge_linux_verify.py"
+            },
+            {
+              "name_path": "SkillRegistry",
+              "path": "control_plane/skills/registry.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 407,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "validate",
+            "path": "control_plane/skills/schema.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "audit",
+              "path": "control_plane/skills/gate.py"
+            },
+            {
+              "name_path": "check",
+              "path": "control_plane/skills/gate.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 353,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "run_skill",
+            "path": "control_plane/skills/executor.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d013",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1038
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "FilteredRegistry",
+              "path": "control_plane/agents/agent_runner.py"
+            },
+            {
+              "name_path": "_plan",
+              "path": "control_plane/agents/agent_runner.py"
+            },
+            {
+              "name_path": "FilteredRegistry/get",
+              "path": "control_plane/agents/agent_runner.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 593,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "run_agent",
+            "path": "control_plane/agents/agent_runner.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "SkillRegistry",
+              "path": "control_plane/skills/registry.py"
+            },
+            {
+              "name_path": "SkillRegistry/handler",
+              "path": "control_plane/skills/registry.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "SkillRegistry/get",
+            "path": "control_plane/skills/registry.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "FilteredRegistry/handler",
+              "path": "control_plane/agents/agent_runner.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "SkillRegistry/handler",
+            "path": "control_plane/skills/registry.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_stem_set",
+              "path": "control_plane/skills/registry.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_stem_token",
+            "path": "control_plane/skills/registry.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AgentRegistry",
+              "path": "control_plane/agents/agent_registry.py"
+            },
+            {
+              "name_path": "AgentRegistry/discover",
+              "path": "control_plane/agents/agent_registry.py"
+            },
+            {
+              "name_path": "promote",
+              "path": "control_plane/skills/forge.py"
+            },
+            {
+              "name_path": "_check_schema",
+              "path": "control_plane/skills/forge_linux_verify.py"
+            },
+            {
+              "name_path": "SkillRegistry",
+              "path": "control_plane/skills/registry.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 407,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "validate",
+            "path": "control_plane/skills/schema.py"
+          }
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d014",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 1574
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "FinalReactorCRLA",
+              "path": "aions_core/aions_reactor.py"
+            },
+            {
+              "name_path": "FinalReactorCRLA/execute_goal",
+              "path": "aions_core/aions_reactor.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 444,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "main",
+            "path": "aions_core/aions_reactor.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "FinalReactorCRLA/master_distill_task",
+              "path": "aions_core/aions_reactor.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "FinalReactorCRLA/identify_skill_gaps",
+            "path": "aions_core/aions_reactor.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "MemoryGraph/expand_query_concepts",
+              "path": "aions_core/memory_graph_engine.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 166,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "MemoryGraph/find_related_concepts",
+            "path": "aions_core/memory_graph_engine.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "FinalReactorCRLA",
+              "path": "aions_core/aions_reactor.py"
+            },
+            {
+              "name_path": "FinalReactorCRLA/execute_enhanced_round",
+              "path": "aions_core/aions_reactor.py"
+            },
+            {
+              "name_path": "MemoryGraph/expand_query_concepts",
+              "path": "aions_core/memory_graph_engine.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 147,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "FinalReactorCRLA/master_generic_task",
+            "path": "aions_core/aions_reactor.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "FinalReactorCRLA",
+              "path": "aions_core/aions_reactor.py"
+            },
+            {
+              "name_path": "FinalReactorCRLA/execute_enhanced_round",
+              "path": "aions_core/aions_reactor.py"
+            },
+            {
+              "name_path": "MemoryGraph/expand_query_concepts",
+              "path": "aions_core/memory_graph_engine.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 147,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "FinalReactorCRLA/master_simulate_task",
+            "path": "aions_core/aions_reactor.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d015",
+      "kind": "positive",
+      "rank": 13,
+      "top1_score": 354
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "FilteredRegistry/search",
+              "path": "control_plane/agents/agent_runner.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 1000,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_deterministic_plan",
+            "path": "control_plane/agents/agent_runner.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "plan",
+              "path": "control_plane/skills/planner.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "find_recipe",
+            "path": "control_plane/skills/recipes.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_stem_set",
+              "path": "control_plane/skills/registry.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_stem_token",
+            "path": "control_plane/skills/registry.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_enum_visible_windows",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_process_name_from_pid",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_enum_visible_windows",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "impl_windows",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d016",
+      "kind": "positive",
+      "rank": 12,
+      "top1_score": 848
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "PerformanceEvaluator/__init__",
+              "path": "aions_core/evaluator_engine.py"
+            },
+            {
+              "name_path": "PerformanceEvaluator",
+              "path": "aions_core/evaluator_engine.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 1000,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "PerformanceEvaluator/initialize_scoreboard",
+            "path": "aions_core/evaluator_engine.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "WebRAGCBMS",
+              "path": "aions_core/server/web_rag_cbms.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "create_web_rag_instance",
+            "path": "aions_core/server/web_rag_cbms.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "gap_detect",
+              "path": "control_plane/skills/forge.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_content_token_count",
+            "path": "control_plane/skills/forge.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "gap_detect",
+              "path": "control_plane/skills/forge.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_slug",
+            "path": "control_plane/skills/forge.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "gap_detect",
+              "path": "control_plane/skills/forge.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "plan_or_request",
+            "path": "control_plane/skills/forge.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d017",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2565
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "resolve_search_provider_name",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 1000,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_search_provider",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "HybridRetriever",
+              "path": "aions_core/aions_hybrid_retrieval.py"
+            },
+            {
+              "name_path": "HybridRetriever/_keyword_search",
+              "path": "aions_core/aions_hybrid_retrieval.py"
+            },
+            {
+              "name_path": "HybridRetriever/_vector_search",
+              "path": "aions_core/aions_hybrid_retrieval.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "SearchResult",
+            "path": "aions_core/aions_hybrid_retrieval.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "rank",
+              "path": "control_plane/skills/stats.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "get",
+            "path": "control_plane/skills/stats.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "create_linux_search_provider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AionsLinuxIndexProvider",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "DisabledDesktopProvider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "LinuxDesktopProvider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "WindowsDesktopProvider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 437,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "get_desktop_provider",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+          }
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d018",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 1230
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "AGICore/_means_end_analysis",
+              "path": "aions_core/agi_core.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AGICore/_identify_differences",
+            "path": "aions_core/agi_core.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "gate_answer",
+              "path": "control_plane/cbms_gate.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "chat_cbms_first_full",
+            "path": "control_plane/cbms_gate.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_read_autolog_entries",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_today_str",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_load_manifest_entries",
+              "path": "scripts/ingest_tier1_chroma.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_is_plaster",
+            "path": "scripts/ingest_tier1_chroma.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_base_meta",
+              "path": "scripts/ingest_tier1_chroma.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_now_iso",
+            "path": "scripts/ingest_tier1_chroma.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d019",
+      "kind": "positive",
+      "rank": 12,
+      "top1_score": 1031
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "ProductionAIONSCBMS/split_to_syllables",
+              "path": "aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py"
+            },
+            {
+              "name_path": "ProductionAIONSCBMS/syllable_to_cbms_block",
+              "path": "aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py"
+            },
+            {
+              "name_path": "ProductionAIONSCBMS",
+              "path": "aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 771,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "ProductionAIONSCBMS/compress_with_cbms",
+            "path": "aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "ProductionAIONSCBMS",
+              "path": "aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "main",
+            "path": "aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_check_restart_cooldown",
+              "path": "control_plane/operator/loop.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_prune_restart_window",
+            "path": "control_plane/operator/loop.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "ingest",
+              "path": "scripts/ingest_tier1_chroma.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "main",
+            "path": "scripts/ingest_tier1_chroma.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "ingest",
+              "path": "scripts/ingest_treasures_tier2.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "main",
+            "path": "scripts/ingest_treasures_tier2.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d020",
+      "kind": "positive",
+      "rank": 12,
+      "top1_score": 2587
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "build_job_queue",
+              "path": "control_plane/scheduler.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "ScheduledJob",
+            "path": "control_plane/scheduler.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AGIUnified/_process_evolution_queue",
+              "path": "aions_core/agi_unified.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 333,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AGIUnified/_evolution_worker",
+            "path": "aions_core/agi_unified.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AGIUnified/_process_learning_queue",
+              "path": "aions_core/agi_unified.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 333,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AGIUnified/_learning_worker",
+            "path": "aions_core/agi_unified.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AGIUnified/_process_evolution_queue",
+              "path": "aions_core/agi_unified.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 333,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AGIUnified/_trigger_evolution",
+            "path": "aions_core/agi_unified.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AGIUnified/_process_learning_queue",
+              "path": "aions_core/agi_unified.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 333,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AGIUnified/_trigger_learning",
+            "path": "aions_core/agi_unified.py"
+          }
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d021",
+      "kind": "positive",
+      "rank": 10,
+      "top1_score": 228
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "_extract_json",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 1000,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_parse_understand",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_comment_incident_impl",
+              "path": "control_plane/operator/mouth.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "comment_incident",
+            "path": "control_plane/operator/mouth.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_base_min",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_lex_saturation",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_sem_only_min",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_weight_lex",
+              "path": "control_plane/skills/semantic_search.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 469,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_active_defaults",
+            "path": "control_plane/skills/semantic_search.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_base_min",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_lex_saturation",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_sem_only_min",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_weight_lex",
+              "path": "control_plane/skills/semantic_search.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 469,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_env_float",
+            "path": "control_plane/skills/semantic_search.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_chat",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            },
+            {
+              "name_path": "speak",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 326,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_is_connect_fail",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d022",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1053
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "crawl",
+              "path": "aions_core/tools/web_crawler_import.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "main",
+            "path": "aions_core/tools/web_crawler_import.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_snapshot_digest",
+              "path": "control_plane/operator/loop.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_pct_to_float",
+            "path": "control_plane/operator/loop.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "gap_detect",
+              "path": "control_plane/skills/forge.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_content_token_count",
+            "path": "control_plane/skills/forge.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "gap_detect",
+              "path": "control_plane/skills/forge.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_slug",
+            "path": "control_plane/skills/forge.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "gap_detect",
+              "path": "control_plane/skills/forge.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "plan_or_request",
+            "path": "control_plane/skills/forge.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d023",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2563
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "AgentObject",
+              "path": "control_plane/agents/agent_schema.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 1000,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "load",
+            "path": "control_plane/agents/agent_schema.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AObject",
+              "path": "control_plane/skills/schema.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 1000,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "load",
+            "path": "control_plane/skills/schema.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_normalize_folder_prefix",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 1000,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_build_everything_ext_query",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AionsLinuxIndexProvider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            },
+            {
+              "name_path": "AionsLinuxIndexProvider/search",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            },
+            {
+              "name_path": "AionsLinuxIndexProvider/search_ext",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 275,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AionsLinuxIndexProvider/_load_entries",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AionsLinuxIndexProvider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "create_linux_search_provider",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d024",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1087
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "_normalize_folder_prefix",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 1000,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_build_everything_ext_query",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "run_local",
+              "path": "control_plane/orchestrator_loop.py"
+            },
+            {
+              "name_path": "_chat",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            },
+            {
+              "name_path": "_is_connect_fail",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            },
+            {
+              "name_path": "_llamacpp_inprocess",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            },
+            {
+              "name_path": "_log",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 446,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "understand",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_priority_label_pl",
+              "path": "scripts/operator_daily_brief.py"
+            },
+            {
+              "name_path": "_status_label_pl",
+              "path": "scripts/operator_daily_brief.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 438,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "format_brief",
+            "path": "scripts/operator_daily_brief.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AionsLinuxIndexProvider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            },
+            {
+              "name_path": "AionsLinuxIndexProvider/search",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            },
+            {
+              "name_path": "AionsLinuxIndexProvider/search_ext",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 275,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AionsLinuxIndexProvider/_load_entries",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "main",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/__main__.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "patched_stdio_server",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/patched_stdio.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d025",
+      "kind": "positive",
+      "rank": 24,
+      "top1_score": 549
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "plan",
+              "path": "control_plane/skills/planner.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "find_recipe",
+            "path": "control_plane/skills/recipes.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "resolve_drive_order",
+              "path": "scripts/full_system_scan.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "get_ready_drives",
+            "path": "scripts/full_system_scan.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "Symbol",
+              "path": "aions_core/server/ts_symbols.py"
+            },
+            {
+              "name_path": "SymbolIndex",
+              "path": "aions_core/server/ts_symbols.py"
+            },
+            {
+              "name_path": "SymbolIndex/from_file",
+              "path": "aions_core/server/ts_symbols.py"
+            },
+            {
+              "name_path": "SymbolIndex/get",
+              "path": "aions_core/server/ts_symbols.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 285,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "main",
+            "path": "aions_core/server/ts_symbols.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "SymbolIndex",
+              "path": "aions_core/server/ts_symbols.py"
+            },
+            {
+              "name_path": "SymbolIndex/_collect_refs",
+              "path": "aions_core/server/ts_symbols.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 271,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "SymbolIndex/_collect_refs/rec",
+            "path": "aions_core/server/ts_symbols.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "matches",
+              "path": "control_plane/skills/world_state.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_blocked_by_state",
+            "path": "control_plane/skills/executor.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d026",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 843
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "FilteredRegistry/search",
+              "path": "control_plane/agents/agent_runner.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 1000,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_deterministic_plan",
+            "path": "control_plane/agents/agent_runner.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "is_id_like",
+              "path": "aions_core/server/cbms_outline.py"
+            },
+            {
+              "name_path": "summarize",
+              "path": "aions_core/server/cbms_outline.py"
+            },
+            {
+              "name_path": "toks",
+              "path": "aions_core/server/cbms_outline.py"
+            },
+            {
+              "name_path": "Store",
+              "path": "aions_core/server/cbms_outline.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 848,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "Store/load",
+            "path": "aions_core/server/cbms_outline.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_stem_set",
+              "path": "control_plane/skills/registry.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_stem_token",
+            "path": "control_plane/skills/registry.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_build_everything_ext_query",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_normalize_folder_prefix",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_active_collection",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_active_embedder",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_base_min",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_lex_saturation",
+              "path": "control_plane/skills/semantic_search.py"
+            },
+            {
+              "name_path": "_sem_only_min",
+              "path": "control_plane/skills/semantic_search.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 492,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_active_defaults",
+            "path": "control_plane/skills/semantic_search.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d027",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1037
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "FinalReactorCRLA",
+              "path": "aions_core/aions_reactor.py"
+            },
+            {
+              "name_path": "parse_args",
+              "path": "scripts/full_system_scan.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 338,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "main",
+            "path": "aions_core/aions_reactor.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_load",
+              "path": "aions_core/tools/symbolic_probe.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 333,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "list_recipes",
+            "path": "control_plane/skills/mcp_bridge.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "FinalReactorCRLA/master_distill_task",
+              "path": "aions_core/aions_reactor.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "FinalReactorCRLA/identify_skill_gaps",
+            "path": "aions_core/aions_reactor.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "to_esperanto",
+              "path": "aions_core/server/esperanto_bridge.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_normalize_text",
+            "path": "aions_core/server/esperanto_bridge.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "to_esperanto",
+              "path": "aions_core/server/esperanto_bridge.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_pl_to_eo_basic",
+            "path": "aions_core/server/esperanto_bridge.py"
+          }
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d028",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": 1346
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "_dpapi_protect_ctypes/DATA_BLOB",
+              "path": "scripts/vault/_core.py"
+            },
+            {
+              "name_path": "_dpapi_unprotect_ctypes/DATA_BLOB",
+              "path": "scripts/vault/_core.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 750,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_dpapi_protect_ctypes",
+            "path": "scripts/vault/_core.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_dpapi_protect_ctypes/DATA_BLOB",
+              "path": "scripts/vault/_core.py"
+            },
+            {
+              "name_path": "_dpapi_unprotect_ctypes/DATA_BLOB",
+              "path": "scripts/vault/_core.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 750,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_dpapi_unprotect_ctypes",
+            "path": "scripts/vault/_core.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "FilteredRegistry/search",
+              "path": "control_plane/agents/agent_runner.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_deterministic_plan",
+            "path": "control_plane/agents/agent_runner.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "ingest",
+              "path": "scripts/ingest_tier1_chroma.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "main",
+            "path": "scripts/ingest_tier1_chroma.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "ingest",
+              "path": "scripts/ingest_treasures_tier2.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "main",
+            "path": "scripts/ingest_treasures_tier2.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d029",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 524
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "SkillRegistry/handler",
+              "path": "control_plane/skills/registry.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "FilteredRegistry/handler",
+            "path": "control_plane/agents/agent_runner.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "SkillRegistry/handler",
+              "path": "control_plane/skills/registry.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "SkillRegistry/get",
+            "path": "control_plane/skills/registry.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "is_math_candidate",
+              "path": "aions_core/AIONS_ULTIMATE_UNIFIED.py"
+            },
+            {
+              "name_path": "math_solve",
+              "path": "aions_core/AIONS_ULTIMATE_UNIFIED.py"
+            },
+            {
+              "name_path": "DifferentiableMemory/read",
+              "path": "aions_core/agi_neural_backprop.py"
+            },
+            {
+              "name_path": "DifferentiableMemory/write",
+              "path": "aions_core/agi_neural_backprop.py"
+            },
+            {
+              "name_path": "CBMSMemory/cbms_think",
+              "path": "aions_core/cbms_memory.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 320,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "UnifiedCBMSHandler",
+            "path": "aions_core/server/cbms_direct_server.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "is_math_candidate",
+              "path": "aions_core/AIONS_ULTIMATE_UNIFIED.py"
+            },
+            {
+              "name_path": "math_solve",
+              "path": "aions_core/AIONS_ULTIMATE_UNIFIED.py"
+            },
+            {
+              "name_path": "DifferentiableMemory/read",
+              "path": "aions_core/agi_neural_backprop.py"
+            },
+            {
+              "name_path": "DifferentiableMemory/write",
+              "path": "aions_core/agi_neural_backprop.py"
+            },
+            {
+              "name_path": "CBMSMemory/cbms_think",
+              "path": "aions_core/cbms_memory.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 320,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "UnifiedCBMSHandler/do_POST",
+            "path": "aions_core/server/cbms_direct_server.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "open_vault_entry",
+              "path": "scripts/vault/_core.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "verify_operator_marker",
+            "path": "scripts/vault/_core.py"
+          }
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d030",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 529
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "_call_llm",
+              "path": "control_plane/skills/goal_planner.py"
+            },
+            {
+              "name_path": "_candidate_text",
+              "path": "control_plane/skills/goal_planner.py"
+            },
+            {
+              "name_path": "_cbms_cache_enabled",
+              "path": "control_plane/skills/goal_planner.py"
+            },
+            {
+              "name_path": "_extract_json",
+              "path": "control_plane/skills/goal_planner.py"
+            },
+            {
+              "name_path": "_looks_like_placeholder",
+              "path": "control_plane/skills/goal_planner.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 876,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "plan_goal",
+            "path": "control_plane/skills/goal_planner.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_extract_json",
+              "path": "control_plane/skills/goal_planner.py"
+            },
+            {
+              "name_path": "_looks_like_placeholder",
+              "path": "control_plane/skills/goal_planner.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 750,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_steps_from_cbms_hit",
+            "path": "control_plane/skills/goal_planner.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "StyleParameters/validate",
+              "path": "aions_core/aions_style_parameters.py"
+            },
+            {
+              "name_path": "validate",
+              "path": "control_plane/agents/agent_schema.py"
+            },
+            {
+              "name_path": "verify_linux_skill",
+              "path": "control_plane/skills/forge_linux_verify.py"
+            },
+            {
+              "name_path": "validate",
+              "path": "control_plane/skills/schema.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 337,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "promote",
+            "path": "control_plane/skills/forge.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "SymbolIndex/drift",
+              "path": "aions_core/server/ts_symbols.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 333,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "SymbolIndex/hashes",
+            "path": "aions_core/server/ts_symbols.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "find",
+              "path": "control_plane/skills/papiery.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 250,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_all",
+            "path": "control_plane/skills/papiery.py"
+          }
+        }
+      ],
+      "id": "d031",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 194
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "check",
+              "path": "control_plane/skills/gate.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_is_approved",
+            "path": "control_plane/skills/gate.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AionsLinuxIndexProvider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            },
+            {
+              "name_path": "AionsLinuxIndexProvider/ensure_fresh",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            },
+            {
+              "name_path": "AionsLinuxIndexProvider/status",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AionsLinuxIndexProvider/_is_stale",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AionsLinuxIndexProvider/status",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            },
+            {
+              "name_path": "status",
+              "path": "server/app.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 375,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "search_provider_status",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AIONSv2",
+              "path": "aions_core/unified_core.py"
+            },
+            {
+              "name_path": "AIONSv2/process",
+              "path": "aions_core/unified_core.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 312,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "interactive_demo",
+            "path": "aions_core/unified_core.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "AionsLinuxIndexProvider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            },
+            {
+              "name_path": "AionsLinuxIndexProvider/refresh",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 275,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AionsLinuxIndexProvider/_scan_root",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+          }
+        }
+      ],
+      "id": "d032",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 403
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "store_plan",
+              "path": "control_plane/executor.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "ExecutionState",
+            "path": "control_plane/models.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "run_cycle",
+              "path": "control_plane/operator/loop.py"
+            },
+            {
+              "name_path": "parse_args",
+              "path": "scripts/full_system_scan.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "main",
+            "path": "control_plane/operator/loop.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "get_node",
+              "path": "control_plane/node_registry.py"
+            },
+            {
+              "name_path": "heartbeat",
+              "path": "control_plane/node_registry.py"
+            },
+            {
+              "name_path": "list_nodes",
+              "path": "control_plane/node_registry.py"
+            },
+            {
+              "name_path": "register_node",
+              "path": "control_plane/node_registry.py"
+            },
+            {
+              "name_path": "registry_summary",
+              "path": "control_plane/node_registry.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 484,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_ensure_loaded",
+            "path": "control_plane/node_registry.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "StyleParameters/validate",
+              "path": "aions_core/aions_style_parameters.py"
+            },
+            {
+              "name_path": "_build_skill_registry",
+              "path": "control_plane/agents/agent_runner.py"
+            },
+            {
+              "name_path": "run_agent",
+              "path": "control_plane/agents/agent_runner.py"
+            },
+            {
+              "name_path": "validate",
+              "path": "control_plane/agents/agent_schema.py"
+            },
+            {
+              "name_path": "run_cycle",
+              "path": "control_plane/operator/loop.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 456,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "SkillRegistry/discover",
+            "path": "control_plane/skills/registry.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_build_skill_registry",
+              "path": "control_plane/agents/agent_runner.py"
+            },
+            {
+              "name_path": "run_agent",
+              "path": "control_plane/agents/agent_runner.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 444,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "main",
+            "path": "control_plane/agents/agent_runner.py"
+          }
+        }
+      ],
+      "id": "d033",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 160
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "_extract_json",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 1000,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_parse_understand",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_chat",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            },
+            {
+              "name_path": "_is_connect_fail",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            },
+            {
+              "name_path": "_log",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            },
+            {
+              "name_path": "mouth_backend",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 743,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "speak",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_chat",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            },
+            {
+              "name_path": "_is_connect_fail",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            },
+            {
+              "name_path": "_log",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            },
+            {
+              "name_path": "mouth_backend",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 664,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "understand",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "send_message",
+              "path": "aions_core/test_aions_capabilities.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "run_conversation_tests",
+            "path": "aions_core/test_aions_capabilities.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "send_heartbeat",
+              "path": "scripts/aions_node_heartbeat.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "heartbeat_once",
+            "path": "scripts/aions_node_heartbeat.py"
+          }
+        }
+      ],
+      "id": "d034",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 252
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "SoftRef",
+              "path": "aions_core/server/refgraph.py"
+            },
+            {
+              "name_path": "tokens",
+              "path": "aions_core/server/refgraph.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 556,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "SoftGraph/_semantic",
+            "path": "aions_core/server/refgraph.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_comment_incident_impl",
+              "path": "control_plane/operator/mouth.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 500,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "comment_incident",
+            "path": "control_plane/operator/mouth.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "is_id_like",
+              "path": "aions_core/server/refgraph.py"
+            },
+            {
+              "name_path": "SoftRef",
+              "path": "aions_core/server/refgraph.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 375,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "SoftGraph/_resolve",
+            "path": "aions_core/server/refgraph.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "is_id_like",
+              "path": "aions_core/server/refgraph.py"
+            },
+            {
+              "name_path": "SoftRef",
+              "path": "aions_core/server/refgraph.py"
+            },
+            {
+              "name_path": "SoftRef/as_dict",
+              "path": "aions_core/server/refgraph.py"
+            },
+            {
+              "name_path": "tokens",
+              "path": "aions_core/server/refgraph.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 365,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "SoftGraph",
+            "path": "aions_core/server/refgraph.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "tokens",
+              "path": "aions_core/server/refgraph.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 333,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "SoftGraph/_load_dir",
+            "path": "aions_core/server/refgraph.py"
+          }
+        }
+      ],
+      "id": "d035",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 116
+    },
+    {
+      "expansion": [
+        {
+          "from_seeds": [
+            {
+              "name_path": "_LinuxAutomationSlice",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxSystemSlice",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 625,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "LinuxDesktopProvider/__init__",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_LinuxAutomationSlice/_xdotool",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxSystemSlice/launch",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxSystemSlice",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxSystemSlice/clipboard",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxSystemSlice/windows",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 568,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "DesktopProviderError",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_LinuxSystemSlice/shell",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxSystemSlice",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxSystemSlice/clipboard",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxSystemSlice/windows",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxAutomationSlice",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 354,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "AIONSTray/run",
+            "path": "scripts/aions_tray.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "_LinuxAutomationSlice",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxSystemSlice/clipboard",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxSystemSlice/shell",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxSystemSlice/windows",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxAutomationSlice/is_ready",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 326,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "LinuxDesktopProvider",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+          }
+        },
+        {
+          "from_seeds": [
+            {
+              "name_path": "DesktopProviderError",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "LinuxDesktopProvider",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxAutomationSlice",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxAutomationSlice/_button_code",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            },
+            {
+              "name_path": "_LinuxAutomationSlice/_run_xdotool",
+              "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+            }
+          ],
+          "rule": "suade_call_graph",
+          "score_permille": 300,
+          "stats": {
+            "damp_permille": 500,
+            "hops": 2,
+            "seeds": 10
+          },
+          "target": {
+            "name_path": "_LinuxAutomationSlice/click",
+            "path": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+          }
+        }
+      ],
+      "id": "d036",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 349
+    }
+  ],
+  "question_set": {
+    "content_hash": "blake2b256:278f2dc2b92fd4573bdbd3ae37bbc690d5a59ab0fc0d78af5ade6ad97dded4da",
+    "file": "dev_questions.json",
+    "name": "dev"
+  },
+  "result_hash": "blake2b256:120cac4c75adf69a3eaa55bf78891803d633bd7658f276f49990079d57ecde27",
+  "schema": "acae.m4.v1",
+  "scope": {
+    "files": 169,
+    "symbols": 1598
+  },
+  "variant": "graph_desc"
+}

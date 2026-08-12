@@ -1,0 +1,3862 @@
+{
+  "depth": 25,
+  "descriptions": {
+    "batches": [
+      "desc_0.json",
+      "desc_1.json",
+      "desc_2.json",
+      "desc_3.json",
+      "desc_4.json",
+      "desc_5.json",
+      "desc_6.json",
+      "desc_7.json",
+      "desc_8.json",
+      "desc_9.json",
+      "desc_10.json",
+      "desc_11.json"
+    ],
+    "count": 169,
+    "generated_at": "2026-08-12T22:02:08+00:00",
+    "model": "claude-haiku-4-5-20251001",
+    "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db"
+  },
+  "head": "c10ad34",
+  "metrics": {
+    "counts": {
+      "negative": 6,
+      "positive": 30
+    },
+    "desc_zero_bucket": 0,
+    "desc_zero_nonzero": 0,
+    "desc_zero_rank_median": 0,
+    "desc_zero_reached_25": 0,
+    "gate_cut": 0,
+    "gate_fallback": 0,
+    "gate_size_median": 0,
+    "m7_zero_bucket": 0,
+    "m7_zero_rank_median": 0,
+    "m7_zero_reached_25": 0,
+    "m9_zero_bucket": 11,
+    "m9_zero_in_top25": 0,
+    "mean_top1_negative": 2268,
+    "mean_top1_positive": 2717,
+    "mrr_permille": 166,
+    "negative_ratio_permille": 834,
+    "recall_at_10_permille": 200,
+    "recall_at_25_permille": 333
+  },
+  "packages": {
+    "tiktoken": "0.13.0"
+  },
+  "per_query": [
+    {
+      "expansion": [
+        {
+          "derived_from": "hash",
+          "evidence": "This file creates searchable matching keys from text by extracting syllable-like patterns inspired by Korean writing conventions. When given a text input, it ex",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:1b2903883edd77f763254036662f75489e3785bbd20cdd646e08814720ed67a5",
+            "kind": "desc",
+            "ref": "aions_core/server/korean_keys.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 12383,
+            "ratio_permille": 666,
+            "terms_covered": 4
+          },
+          "term": "hashes",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "hash",
+          "evidence": "This file converts data into Korean Hangul characters for use as compact identifiers or addressing codes. It takes any text input, creates a SHA1 hash of it, an",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:b62f9b0acea49b3194b5532d2e25136fb43bbd6b6de26f9aa662a3d4a6825821",
+            "kind": "desc",
+            "ref": "aions_core/server/hangul_addressing.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 12383,
+            "ratio_permille": 666,
+            "terms_covered": 4
+          },
+          "term": "sha1",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d001",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2610
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "fallback",
+          "evidence": "This file builds and maintains a flexible web of connections that tracks how different pieces of knowledge reference each other across the system. Instead of re",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:d057a349b0e25b51bb97a82e3ec4e963361c54f2138db30ce60f05fd2ce74bcf",
+            "kind": "desc",
+            "ref": "aions_core/server/refgraph.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 14085,
+            "ratio_permille": 1000,
+            "terms_covered": 5
+          },
+          "term": "save_index",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "local",
+          "evidence": "This file provides a thin wrapper around a remote vector database API, presenting an HTTP interface to a FastAPI server on localhost:8765 as if it were a local ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:f65e8653c3ccbeaba811ea70f9e5c4e49d6a9e35f4c0c61b545f0ea9c298e84b",
+            "kind": "desc",
+            "ref": "server/store_api.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 3,
+            "g2_milli": 11788,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "get_connection_mode",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "executable",
+          "evidence": "This file provides remote control capabilities for a Windows computer through multiple functions: taking screenshots, clicking the mouse, typing text, pressing ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:6393cb1d40da56ab66b03ca196b3c28194b2d72859b32c0320da08b17eb059d9",
+            "kind": "desc",
+            "ref": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 7,
+            "g2_milli": 11210,
+            "ratio_permille": 428,
+            "terms_covered": 10
+          },
+          "term": "shell",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "itself",
+          "evidence": "This file acts as a thin HTTP client that talks to a long-running language model server over the network instead of starting a new model process each time a que",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:2ac5249b9e531b339e17189461f82315b502ea23e3be84d56f70753c18272291",
+            "kind": "desc",
+            "ref": "control_plane/llm/server_client.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 11210,
+            "ratio_permille": 666,
+            "terms_covered": 7
+          },
+          "term": "alive",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d002",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1673
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "capability",
+          "evidence": "This file provides a unified interface for controlling a desktop across Windows and Linux platforms, letting higher-level code take screenshots, click, type, sc",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7a8399e05da48bc017f9a0501c04ac9ae46414573e4bc8c0a4aa08c77d98e24f",
+            "kind": "desc",
+            "ref": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 21723,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "get_desktop_provider",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "directory",
+          "evidence": "This file starts a web server that listens for incoming questions and routes them to the unified AIONS core system for processing. It uses FastAPI to create HTT",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:c01cf166b4e9f9442ffcf592ae46171844d457f39a9f20c99a33035f5ecadbf4",
+            "kind": "desc",
+            "ref": "aions_core/api.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 6,
+            "g2_milli": 18025,
+            "ratio_permille": 1000,
+            "terms_covered": 6
+          },
+          "term": "root",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "folder",
+          "evidence": "This file provides a discovery and management system for autonomous agent roles in the AIONS system, similar to how skills are registered. Each agent is defined",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:3bf6a706132f36e1db7532bec0cb98487a4b3c1f1c0da37072a9b2570ce5a597",
+            "kind": "desc",
+            "ref": "control_plane/agents/agent_registry.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 3,
+            "g2_milli": 16638,
+            "ratio_permille": 1000,
+            "terms_covered": 7
+          },
+          "term": "discover",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "checks",
+          "evidence": "This file enables specialized worker roles to execute tasks safely by restricting them to only the actions their job description allows. When a goal comes in fo",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:f5af2736dae08ba0a8dbde603faec8911399ddae9eedef15051cb6ba7f5f363d",
+            "kind": "desc",
+            "ref": "control_plane/agents/agent_runner.py"
+          },
+          "stats": {
+            "cooccurrence": 5,
+            "doc_freq": 5,
+            "g2_milli": 16347,
+            "ratio_permille": 1000,
+            "terms_covered": 6
+          },
+          "term": "runner",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "capability",
+          "evidence": "This file provides a unified interface for controlling a desktop across Windows and Linux platforms, letting higher-level code take screenshots, click, type, sc",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7a8399e05da48bc017f9a0501c04ac9ae46414573e4bc8c0a4aa08c77d98e24f",
+            "kind": "desc",
+            "ref": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 10,
+            "g2_milli": 11715,
+            "ratio_permille": 200,
+            "terms_covered": 6
+          },
+          "term": "capabilities",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "manifest",
+          "evidence": "This file examines a record of a system mistake and determines what went wrong and why by running analysis routines on the stored blend data. It resolves the in",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:f4e42e498cb615bd81f9ab58ee9e017a9f26481f478aa6e05f683b5f229eb923",
+            "kind": "desc",
+            "ref": "control_plane/blends/analyze_blend.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 11715,
+            "ratio_permille": 1000,
+            "terms_covered": 5
+          },
+          "term": "resolve_input",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "checks",
+          "evidence": "This file provides a safe execution layer where an AI agent can run tool-based tasks without directly touching the computer's core systems. It defines a whiteli",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:0af8c97ca151eafcf30f990a7b7023ce645a7878548d1369dc6e6b1d7de02d17",
+            "kind": "desc",
+            "ref": "aions_core/aions_agent_layer.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 8,
+            "g2_milli": 11564,
+            "ratio_permille": 750,
+            "terms_covered": 8
+          },
+          "term": "audit",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "make",
+          "evidence": "This file assembles a complete artificial intelligence system from multiple specialized components into one unified command center. It loads memory storage (CBM",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:4cb875dc2c0be20beb39d4efd6528bb86d16a15ae60121e98a9ef7419f0db1b8",
+            "kind": "desc",
+            "ref": "aions_core/AIONS_ULTIMATE_UNIFIED.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 11210,
+            "ratio_permille": 666,
+            "terms_covered": 4
+          },
+          "term": "save_state",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d003",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2793
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "polish",
+          "evidence": "This file automatically discovers and manages a library of runnable skills (plugins) by scanning a folder for skill.json manifest files, loading them into memor",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:9bb575a2379c3a3f041bab24894167fc07f057ed6dbbceae91056a721c2d5519",
+            "kind": "desc",
+            "ref": "control_plane/skills/registry.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 10910,
+            "ratio_permille": 1000,
+            "terms_covered": 4
+          },
+          "term": "skillregistry",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d004",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "failure",
+          "evidence": "This file cleans up the formatting and whitespace in text answers without changing the actual facts or content. It normalizes spaces and newlines, fixes capital",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:c111c4fe33aacb4714b1542e8c4e6808e8f2cab6a8f885042b6940b231eacce1",
+            "kind": "desc",
+            "ref": "aions_core/server/stylist.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 18,
+            "g2_milli": 23339,
+            "ratio_permille": 333,
+            "terms_covered": 16
+          },
+          "term": "success",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "answer",
+          "evidence": "This file acts as a hub that discovers and manages language models already installed on the computer—specifically Mistral-7B, Phi-3 (modified for Korean), and B",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:5c6bee105e3d77e5aadbc37cf18e0bd7dc3f136bacc2ee94748fdd0b9c887f51",
+            "kind": "desc",
+            "ref": "aions_core/agi_existing_models.py"
+          },
+          "stats": {
+            "cooccurrence": 13,
+            "doc_freq": 33,
+            "g2_milli": 17445,
+            "ratio_permille": 393,
+            "terms_covered": 22
+          },
+          "term": "query",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "sends",
+          "evidence": "This file speeds up question answering by trying to find the answer instantly in a cached knowledge system first, and only asking a larger language model if the",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:91d43fba8c4d6a227c884844de007b68dfb4ae0bc4b2a0148b5c247fc4a07ed7",
+            "kind": "desc",
+            "ref": "aions_core/smart_cbms.py"
+          },
+          "stats": {
+            "cooccurrence": 4,
+            "doc_freq": 7,
+            "g2_milli": 12584,
+            "ratio_permille": 571,
+            "terms_covered": 14
+          },
+          "term": "post",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "chat",
+          "evidence": "This testing tool measures how fast the system responds to various types of questions by sending repeated requests and collecting timing data. It submits the sa",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7443fe709690aa453aefeee18b978abefe762ed63bde0de93ebf48642a8144a6",
+            "kind": "desc",
+            "ref": "aions_core/tools/bench_runner.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 12189,
+            "ratio_permille": 1000,
+            "terms_covered": 4
+          },
+          "term": "post_chat",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "chat",
+          "evidence": "This is a web server that listens for questions and answers them using a compressed memory system. It combines several parts: math solving for arithmetic, patte",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:944b87bc34b1fbd8b2a146b60c967ce3f8ad56a983fcf7dec6437b14c6ba29e3",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_direct_server.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 12189,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "unifiedcbmshandler",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "local",
+          "evidence": "This file provides a thin wrapper around a remote vector database API, presenting an HTTP interface to a FastAPI server on localhost:8765 as if it were a local ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:f65e8653c3ccbeaba811ea70f9e5c4e49d6a9e35f4c0c61b545f0ea9c298e84b",
+            "kind": "desc",
+            "ref": "server/store_api.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 3,
+            "g2_milli": 11788,
+            "ratio_permille": 1000,
+            "terms_covered": 7
+          },
+          "term": "get_connection_mode",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "call",
+          "evidence": "This file defines which tools an operator is permitted to call and which commands are forbidden, acting as a simple allow-list and block-list system. The allowe",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:e7e57e4fc8032a5f4f6720836a370f3105cda8cde7c489bbe298c7449c7da3af",
+            "kind": "desc",
+            "ref": "control_plane/policy.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 11292,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "aions_execute_step",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "call",
+          "evidence": "This file defines which tools an operator is permitted to call and which commands are forbidden, acting as a simple allow-list and block-list system. The allowe",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:e7e57e4fc8032a5f4f6720836a370f3105cda8cde7c489bbe298c7449c7da3af",
+            "kind": "desc",
+            "ref": "control_plane/policy.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 11292,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "aions_execution_status",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "call",
+          "evidence": "This file defines which tools an operator is permitted to call and which commands are forbidden, acting as a simple allow-list and block-list system. The allowe",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:e7e57e4fc8032a5f4f6720836a370f3105cda8cde7c489bbe298c7449c7da3af",
+            "kind": "desc",
+            "ref": "control_plane/policy.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 11292,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "aions_plan",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "instead",
+          "evidence": "This file tracks how well automated skills or tasks perform over time by recording success rates, execution speed, and calculated confidence scores. Each skill ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:17285f594dc97f65940844c0d8913bb72ab203e2dda4a8e413750a7e85a4bf1f",
+            "kind": "desc",
+            "ref": "control_plane/skills/stats.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 11292,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "rank",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d005",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3641
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "expired",
+          "evidence": "This is the main REST API server that manages a knowledge base with sessions, search, and document storage. Built with FastAPI, it listens for HTTP requests to ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:3c9b89ab9c7c483333e29ae165ac3925696a9d24b117fb0ffdde01bd6a9f2172",
+            "kind": "desc",
+            "ref": "server/app.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 6,
+            "g2_milli": 17354,
+            "ratio_permille": 500,
+            "terms_covered": 6
+          },
+          "term": "sessions",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "message",
+          "evidence": "This file starts a web server that listens for incoming questions and routes them to the unified AIONS core system for processing. It uses FastAPI to create HTT",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:c01cf166b4e9f9442ffcf592ae46171844d457f39a9f20c99a33035f5ecadbf4",
+            "kind": "desc",
+            "ref": "aions_core/api.py"
+          },
+          "stats": {
+            "cooccurrence": 7,
+            "doc_freq": 17,
+            "g2_milli": 13529,
+            "ratio_permille": 411,
+            "terms_covered": 8
+          },
+          "term": "verify",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "daemon",
+          "evidence": "This file is a lightweight daemon running on Linux worker machines that registers with central control, sends regular health updates, and accepts remote command",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:e0e36f2bd3f672cc0bbe005de9bb7df3001cf6e4a1872da13dade163c70900b8",
+            "kind": "desc",
+            "ref": "control_plane/node_agent/agent.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 7,
+            "g2_milli": 13347,
+            "ratio_permille": 285,
+            "terms_covered": 6
+          },
+          "term": "shell",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "expired",
+          "evidence": "This wraps ChromaDB (a vector database) to store documents as searchable embeddings organized into session collections—like a library where you can search for d",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7b6b197707f228ff050fc51000fa6a38495830f48135b1e54002a4f2217ba243",
+            "kind": "desc",
+            "ref": "server/store.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 12383,
+            "ratio_permille": 666,
+            "terms_covered": 4
+          },
+          "term": "add_items",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "expired",
+          "evidence": "This wraps ChromaDB (a vector database) to store documents as searchable embeddings organized into session collections—like a library where you can search for d",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7b6b197707f228ff050fc51000fa6a38495830f48135b1e54002a4f2217ba243",
+            "kind": "desc",
+            "ref": "server/store.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 12383,
+            "ratio_permille": 666,
+            "terms_covered": 4
+          },
+          "term": "dump_session",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "local",
+          "evidence": "This file provides a thin wrapper around a remote vector database API, presenting an HTTP interface to a FastAPI server on localhost:8765 as if it were a local ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:f65e8653c3ccbeaba811ea70f9e5c4e49d6a9e35f4c0c61b545f0ea9c298e84b",
+            "kind": "desc",
+            "ref": "server/store_api.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 3,
+            "g2_milli": 11788,
+            "ratio_permille": 1000,
+            "terms_covered": 4
+          },
+          "term": "get_connection_mode",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d006",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2859
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "reports",
+          "evidence": "This file reads a large comma-separated values file and categorizes what it contains, particularly looking for where data chunks are stored and tracking the loc",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:f848d9bbba4a247293754957960fe2988cbbbbc36b14a78acac6c51098389f19",
+            "kind": "desc",
+            "ref": "aions_core/tools/analyze_csv.py"
+          },
+          "stats": {
+            "cooccurrence": 5,
+            "doc_freq": 8,
+            "g2_milli": 13700,
+            "ratio_permille": 625,
+            "terms_covered": 4
+          },
+          "term": "scan",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "round",
+          "evidence": "This file implements a complete orchestration engine that executes learning goals, creates and manages micro-skills as JSON-based packages, and evaluates perfor",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7dc662da20a6f16ac7caecca2d9911f5840117de829513f554219e2c32f8c0bf",
+            "kind": "desc",
+            "ref": "aions_core/aions_reactor.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 8,
+            "g2_milli": 12726,
+            "ratio_permille": 250,
+            "terms_covered": 6
+          },
+          "term": "goal",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "never",
+          "evidence": "This file is the mouth layer that lets AIONS speak through a local language model (Ollama, Bielik, or Phi), injecting knowledge from CBMS, operator profile, and",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:72dc5a277a6d6ee941085f9285f3044dd3b8f3859603999e9491ce8d9ef53238",
+            "kind": "desc",
+            "ref": "control_plane/llm_adapter.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 12189,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "speak",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d007",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "disk",
+          "evidence": "This file implements a progressive disclosure system for retrieving information from the CBMS (Code Book Memory System) storage. The mechanism splits knowledge ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:684f2c262f7a7dbe8cf1c628577adb45aebf7208ece0fcf94ea54cd30247a6ef",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_outline.py"
+          },
+          "stats": {
+            "cooccurrence": 7,
+            "doc_freq": 11,
+            "g2_milli": 13496,
+            "ratio_permille": 636,
+            "terms_covered": 6
+          },
+          "term": "save",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "listing",
+          "evidence": "This file builds and maintains a flexible web of connections that tracks how different pieces of knowledge reference each other across the system. Instead of re",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:d057a349b0e25b51bb97a82e3ec4e963361c54f2138db30ce60f05fd2ce74bcf",
+            "kind": "desc",
+            "ref": "aions_core/server/refgraph.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 13347,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "save_index",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d008",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "path",
+          "evidence": "This file starts a web server that listens for incoming questions and routes them to the unified AIONS core system for processing. It uses FastAPI to create HTT",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:c01cf166b4e9f9442ffcf592ae46171844d457f39a9f20c99a33035f5ecadbf4",
+            "kind": "desc",
+            "ref": "aions_core/api.py"
+          },
+          "stats": {
+            "cooccurrence": 5,
+            "doc_freq": 6,
+            "g2_milli": 14467,
+            "ratio_permille": 833,
+            "terms_covered": 8
+          },
+          "term": "root",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "full",
+          "evidence": "This file implements a progressive disclosure system for retrieving information from the CBMS (Code Book Memory System) storage. The mechanism splits knowledge ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:684f2c262f7a7dbe8cf1c628577adb45aebf7208ece0fcf94ea54cd30247a6ef",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_outline.py"
+          },
+          "stats": {
+            "cooccurrence": 5,
+            "doc_freq": 12,
+            "g2_milli": 12147,
+            "ratio_permille": 416,
+            "terms_covered": 8
+          },
+          "term": "store",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d009",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "html",
+          "evidence": "A web-scraping integration that fetches current facts from the internet when the AI system doesn't have an answer stored locally, then injects those facts into ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:37f4e8be88392ca03eec7d76f2bf0d25cfd854011f7f1c6087db5b6e5805385a",
+            "kind": "desc",
+            "ref": "aions_core/server/web_rag_cbms.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 21723,
+            "ratio_permille": 1000,
+            "terms_covered": 5
+          },
+          "term": "handle_data",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "html",
+          "evidence": "A web-scraping integration that fetches current facts from the internet when the AI system doesn't have an answer stored locally, then injects those facts into ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:37f4e8be88392ca03eec7d76f2bf0d25cfd854011f7f1c6087db5b6e5805385a",
+            "kind": "desc",
+            "ref": "aions_core/server/web_rag_cbms.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 21723,
+            "ratio_permille": 1000,
+            "terms_covered": 5
+          },
+          "term": "handle_endtag",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "html",
+          "evidence": "A web-scraping integration that fetches current facts from the internet when the AI system doesn't have an answer stored locally, then injects those facts into ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:37f4e8be88392ca03eec7d76f2bf0d25cfd854011f7f1c6087db5b6e5805385a",
+            "kind": "desc",
+            "ref": "aions_core/server/web_rag_cbms.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 21723,
+            "ratio_permille": 1000,
+            "terms_covered": 5
+          },
+          "term": "handle_starttag",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d010",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": 2240
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "allow",
+          "evidence": "This file defines which tools an operator is permitted to call and which commands are forbidden, acting as a simple allow-list and block-list system. The allowe",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:e7e57e4fc8032a5f4f6720836a370f3105cda8cde7c489bbe298c7449c7da3af",
+            "kind": "desc",
+            "ref": "control_plane/policy.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 6,
+            "g2_milli": 14085,
+            "ratio_permille": 333,
+            "terms_covered": 4
+          },
+          "term": "allowed",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d011",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2527
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "profile",
+          "evidence": "This file is the mouth layer that lets AIONS speak through a local language model (Ollama, Bielik, or Phi), injecting knowledge from CBMS, operator profile, and",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:72dc5a277a6d6ee941085f9285f3044dd3b8f3859603999e9491ce8d9ef53238",
+            "kind": "desc",
+            "ref": "control_plane/llm_adapter.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 3,
+            "g2_milli": 21816,
+            "ratio_permille": 1000,
+            "terms_covered": 7
+          },
+          "term": "load_operator_profile",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "profile",
+          "evidence": "This file builds a queue of scheduled work by reading an operator's profile and pulling out deadlines with due dates, active cases, and daily recurring tasks li",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:c8a76c51a1d5738705165f36a70d61c183632b2e729e2663eb1cef24cdb80983",
+            "kind": "desc",
+            "ref": "control_plane/scheduler.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 14085,
+            "ratio_permille": 1000,
+            "terms_covered": 4
+          },
+          "term": "operator_profile_path",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "most",
+          "evidence": "This file implements differentiable retrieval with gradient flow—a machine learning technique where the system can learn and improve how it finds relevant infor",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:3cd0d0465fdde627b7a6394149cc684e67925b7552db2167519dbe0e421986a3",
+            "kind": "desc",
+            "ref": "aions_core/agi_soft_retrieval.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 13347,
+            "ratio_permille": 1000,
+            "terms_covered": 4
+          },
+          "term": "bm25",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "two",
+          "evidence": "This file prevents the AI system from making up answers by checking whether a user's question has supporting information in the knowledge base. It loads two sou",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:aad9e880452e1f645844da6f8c9cc5099f6bc765cc73ae7c0912c021c864b741",
+            "kind": "desc",
+            "ref": "aions_core/aions_smart_guardrail.py"
+          },
+          "stats": {
+            "cooccurrence": 8,
+            "doc_freq": 23,
+            "g2_milli": 13008,
+            "ratio_permille": 347,
+            "terms_covered": 17
+          },
+          "term": "find",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "stored",
+          "evidence": "This implements a memory system for AI agents based on chunking and concept mapping—treating knowledge like a collection of encyclopedia entries that can be sto",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:b4fffea28a4c3da0b06ffb8f2f9a20021088bf5b6693f6b6928f6dff7eebd826",
+            "kind": "desc",
+            "ref": "aions_core/cbms_memory.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 7,
+            "g2_milli": 12753,
+            "ratio_permille": 857,
+            "terms_covered": 6
+          },
+          "term": "codebook",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "order",
+          "evidence": "This script searches a local SQLite database index to find where specific types of files are stored across the system. It queries the database for JSON files lo",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:4ff0dee3ca57c7be2c5f59d31b47775a41f33e38a2f361b0fd2d40bcb9b3f0bb",
+            "kind": "desc",
+            "ref": "aions_core/tools/query_db.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 8,
+            "g2_milli": 12726,
+            "ratio_permille": 250,
+            "terms_covered": 10
+          },
+          "term": "scan",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "inside",
+          "evidence": "This file acts as a thin HTTP client that talks to a long-running language model server over the network instead of starting a new model process each time a que",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:2ac5249b9e531b339e17189461f82315b502ea23e3be84d56f70753c18272291",
+            "kind": "desc",
+            "ref": "control_plane/llm/server_client.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 22,
+            "g2_milli": 12609,
+            "ratio_permille": 136,
+            "terms_covered": 13
+          },
+          "term": "windows",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "most",
+          "evidence": "This file implements a neural network system that can learn from feedback by tracking how errors flow backward through its layers, allowing it to adjust its thi",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:446499063feae5e3da146adbf7f295e073c23a7d18818d7587955716782f5a36",
+            "kind": "desc",
+            "ref": "aions_core/agi_neural_backprop.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 6,
+            "g2_milli": 12403,
+            "ratio_permille": 500,
+            "terms_covered": 5
+          },
+          "term": "learn",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d012",
+      "kind": "positive",
+      "rank": 13,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "sentence",
+          "evidence": "This file breaks apart large text documents into small factual sentences, extracts searchable keywords from each sentence, and builds an indexed database for fa",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:27a2a0c903a2f34485ef719d22338f33fe83b2a52d7bbb292bcf8e0736664e84",
+            "kind": "desc",
+            "ref": "aions_core/tools/facts_builder.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 14085,
+            "ratio_permille": 1000,
+            "terms_covered": 5
+          },
+          "term": "split_sentences",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "surface",
+          "evidence": "This file builds a queue of scheduled work by reading an operator's profile and pulling out deadlines with due dates, active cases, and daily recurring tasks li",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:c8a76c51a1d5738705165f36a70d61c183632b2e729e2663eb1cef24cdb80983",
+            "kind": "desc",
+            "ref": "control_plane/scheduler.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 8,
+            "g2_milli": 12726,
+            "ratio_permille": 250,
+            "terms_covered": 8
+          },
+          "term": "audit",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "record",
+          "evidence": "This is a comprehensive MCP server that provides Claude with access to the host computer's tools and data. It integrates file searching through Windows Everythi",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:61291af5ec63bd1ccc036c9c598ab771e7717d863c09643b8c6eeb39428fe241",
+            "kind": "desc",
+            "ref": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 12189,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "memory_store",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "record",
+          "evidence": "This file is a package initializer that re-exports a set of functions from a loop module, making them available as the main public interface for the operator co",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:2442188ebcf5cf690702b30f2f392b7c8dc38699a99f4f5bdef9ffe2fbc6767f",
+            "kind": "desc",
+            "ref": "control_plane/operator/__init__.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 12189,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "observe",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "record",
+          "evidence": "This file is a package initializer that re-exports a set of functions from a loop module, making them available as the main public interface for the operator co",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:2442188ebcf5cf690702b30f2f392b7c8dc38699a99f4f5bdef9ffe2fbc6767f",
+            "kind": "desc",
+            "ref": "control_plane/operator/__init__.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 12189,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "run_cycle",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "versus",
+          "evidence": "This file is the mouth layer that lets AIONS speak through a local language model (Ollama, Bielik, or Phi), injecting knowledge from CBMS, operator profile, and",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:72dc5a277a6d6ee941085f9285f3044dd3b8f3859603999e9491ce8d9ef53238",
+            "kind": "desc",
+            "ref": "control_plane/llm_adapter.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 9,
+            "g2_milli": 12189,
+            "ratio_permille": 222,
+            "terms_covered": 8
+          },
+          "term": "semantic",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "tool",
+          "evidence": "This file reads a large comma-separated values file and categorizes what it contains, particularly looking for where data chunks are stored and tracking the loc",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:f848d9bbba4a247293754957960fe2988cbbbbc36b14a78acac6c51098389f19",
+            "kind": "desc",
+            "ref": "aions_core/tools/analyze_csv.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 8,
+            "g2_milli": 11916,
+            "ratio_permille": 750,
+            "terms_covered": 5
+          },
+          "term": "scan",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d013",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2805
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "value",
+          "evidence": "This file implements a three-stage lifecycle system for new knowledge chunks in the memory system—they start in purgatory (quarantine), get evaluated based on a",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:b53827d36bde236e62438f8e38df59a531bd35dd3b00308c7603902c81e8ea5f",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_purgatory.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 7,
+            "g2_milli": 16124,
+            "ratio_permille": 428,
+            "terms_covered": 3
+          },
+          "term": "ensure",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "fallback",
+          "evidence": "This file builds and maintains a flexible web of connections that tracks how different pieces of knowledge reference each other across the system. Instead of re",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:d057a349b0e25b51bb97a82e3ec4e963361c54f2138db30ce60f05fd2ce74bcf",
+            "kind": "desc",
+            "ref": "aions_core/server/refgraph.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 14085,
+            "ratio_permille": 1000,
+            "terms_covered": 4
+          },
+          "term": "save_index",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "value",
+          "evidence": "This file implements a three-stage lifecycle system for new knowledge chunks in the memory system—they start in purgatory (quarantine), get evaluated based on a",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:b53827d36bde236e62438f8e38df59a531bd35dd3b00308c7603902c81e8ea5f",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_purgatory.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 12383,
+            "ratio_permille": 666,
+            "terms_covered": 3
+          },
+          "term": "config",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d014",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 4660
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "capability",
+          "evidence": "This file provides a unified interface for controlling a desktop across Windows and Linux platforms, letting higher-level code take screenshots, click, type, sc",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7a8399e05da48bc017f9a0501c04ac9ae46414573e4bc8c0a4aa08c77d98e24f",
+            "kind": "desc",
+            "ref": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 21723,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "get_desktop_provider",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "used",
+          "evidence": "A search system that combines three different ways of finding information—keyword matching using BM25 scoring, vector similarity search, and intelligent reranki",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:c7316781851e87e04680777b4dfbec38e6d27ee376dc1cf2a8e44d0a66fe42cd",
+            "kind": "desc",
+            "ref": "aions_core/aions_hybrid_retrieval.py"
+          },
+          "stats": {
+            "cooccurrence": 4,
+            "doc_freq": 5,
+            "g2_milli": 14464,
+            "ratio_permille": 800,
+            "terms_covered": 2
+          },
+          "term": "get_stats",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "used",
+          "evidence": "This file is the mouth layer that lets AIONS speak through a local language model (Ollama, Bielik, or Phi), injecting knowledge from CBMS, operator profile, and",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:72dc5a277a6d6ee941085f9285f3044dd3b8f3859603999e9491ce8d9ef53238",
+            "kind": "desc",
+            "ref": "control_plane/llm_adapter.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 3,
+            "g2_milli": 14290,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "load_operator_profile",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "disk",
+          "evidence": "This file implements a progressive disclosure system for retrieving information from the CBMS (Code Book Memory System) storage. The mechanism splits knowledge ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:684f2c262f7a7dbe8cf1c628577adb45aebf7208ece0fcf94ea54cd30247a6ef",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_outline.py"
+          },
+          "stats": {
+            "cooccurrence": 7,
+            "doc_freq": 11,
+            "g2_milli": 13496,
+            "ratio_permille": 636,
+            "terms_covered": 5
+          },
+          "term": "save",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "capability",
+          "evidence": "This file provides a unified interface for controlling a desktop across Windows and Linux platforms, letting higher-level code take screenshots, click, type, sc",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7a8399e05da48bc017f9a0501c04ac9ae46414573e4bc8c0a4aa08c77d98e24f",
+            "kind": "desc",
+            "ref": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 10,
+            "g2_milli": 11715,
+            "ratio_permille": 200,
+            "terms_covered": 4
+          },
+          "term": "capabilities",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "manifest",
+          "evidence": "This file examines a record of a system mistake and determines what went wrong and why by running analysis routines on the stored blend data. It resolves the in",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:f4e42e498cb615bd81f9ab58ee9e017a9f26481f478aa6e05f683b5f229eb923",
+            "kind": "desc",
+            "ref": "control_plane/blends/analyze_blend.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 11715,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "resolve_input",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "category",
+          "evidence": "This file automatically tests whether an AIONS conversational system can talk like a human and handle sensitive topics safely. It sends the running server a ser",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:4b57c0bfd38cde36147ef2ea4c13b501fc647be96026cad2d05583818f62536d",
+            "kind": "desc",
+            "ref": "aions_core/test_aions_capabilities.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 12,
+            "g2_milli": 10910,
+            "ratio_permille": 166,
+            "terms_covered": 4
+          },
+          "term": "conversation",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d015",
+      "kind": "positive",
+      "rank": 21,
+      "top1_score": 2233
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "embedded",
+          "evidence": "This file provides a thin wrapper around a remote vector database API, presenting an HTTP interface to a FastAPI server on localhost:8765 as if it were a local ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:f65e8653c3ccbeaba811ea70f9e5c4e49d6a9e35f4c0c61b545f0ea9c298e84b",
+            "kind": "desc",
+            "ref": "server/store_api.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 3,
+            "g2_milli": 25635,
+            "ratio_permille": 1000,
+            "terms_covered": 9
+          },
+          "term": "get_connection_mode",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "vector",
+          "evidence": "This is a comprehensive MCP server that provides Claude with access to the host computer's tools and data. It integrates file searching through Windows Everythi",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:61291af5ec63bd1ccc036c9c598ab771e7717d863c09643b8c6eeb39428fe241",
+            "kind": "desc",
+            "ref": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 6,
+            "g2_milli": 24850,
+            "ratio_permille": 1000,
+            "terms_covered": 6
+          },
+          "term": "sessions",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "vector",
+          "evidence": "This file reads a catalog of important files and folders stored elsewhere on disk, converts that catalog into searchable summaries, and stores those summaries i",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:fe958a1aeb6dd11cd65c0b41484d4c62d73b8045cde1617a079fefbb2c6daff4",
+            "kind": "desc",
+            "ref": "scripts/ingest_treasures_tier2.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 6,
+            "g2_milli": 24850,
+            "ratio_permille": 1000,
+            "terms_covered": 9
+          },
+          "term": "vectorstore",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "vector",
+          "evidence": "This file demonstrates how natural language gets translated into symbolic codes for memory lookups in CBMS. It dynamically loads three helper modules (Esperanto",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:53b01721646c26630b0501c987bb0f4b1fbcd888d6e185f72312d41dc3bc24b3",
+            "kind": "desc",
+            "ref": "aions_core/tools/symbolic_probe.py"
+          },
+          "stats": {
+            "cooccurrence": 8,
+            "doc_freq": 12,
+            "g2_milli": 19442,
+            "ratio_permille": 666,
+            "terms_covered": 10
+          },
+          "term": "store",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "embedded",
+          "evidence": "This file provides a thin wrapper around a remote vector database API, presenting an HTTP interface to a FastAPI server on localhost:8765 as if it were a local ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:f65e8653c3ccbeaba811ea70f9e5c4e49d6a9e35f4c0c61b545f0ea9c298e84b",
+            "kind": "desc",
+            "ref": "server/store_api.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 16178,
+            "ratio_permille": 1000,
+            "terms_covered": 8
+          },
+          "term": "get_status",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "database",
+          "evidence": "This file adds semantic search using LanceDB, a vector database that finds information by meaning rather than exact words. It connects to an existing LanceDB in",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:177541e22855322916306a39e1b8ed5097647e602a9f65a295dabef6a669c6e0",
+            "kind": "desc",
+            "ref": "aions_core/aions_vector_enhancement.py"
+          },
+          "stats": {
+            "cooccurrence": 7,
+            "doc_freq": 9,
+            "g2_milli": 14907,
+            "ratio_permille": 777,
+            "terms_covered": 10
+          },
+          "term": "semantic",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "down",
+          "evidence": "This file breaks down complex AI operations into small, reusable pieces called kernels, each performing one specific task like searching, compressing, scoring, ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:97455570031fdfc307fa2c1080c55958990c12d414a81cef2041299285c9ca06",
+            "kind": "desc",
+            "ref": "aions_core/cbms_curve_machine.py"
+          },
+          "stats": {
+            "cooccurrence": 4,
+            "doc_freq": 9,
+            "g2_milli": 13435,
+            "ratio_permille": 444,
+            "terms_covered": 8
+          },
+          "term": "understand",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "database",
+          "evidence": "This file breaks apart large text documents into small factual sentences, extracts searchable keywords from each sentence, and builds an indexed database for fa",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:27a2a0c903a2f34485ef719d22338f33fe83b2a52d7bbb292bcf8e0736664e84",
+            "kind": "desc",
+            "ref": "aions_core/tools/facts_builder.py"
+          },
+          "stats": {
+            "cooccurrence": 4,
+            "doc_freq": 4,
+            "g2_milli": 13223,
+            "ratio_permille": 1000,
+            "terms_covered": 5
+          },
+          "term": "ingest",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "instead",
+          "evidence": "This file tracks how well automated skills or tasks perform over time by recording success rates, execution speed, and calculated confidence scores. Each skill ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:17285f594dc97f65940844c0d8913bb72ab203e2dda4a8e413750a7e85a4bf1f",
+            "kind": "desc",
+            "ref": "control_plane/skills/stats.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 11292,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "rank",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d016",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 2238
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "vector",
+          "evidence": "This is a comprehensive MCP server that provides Claude with access to the host computer's tools and data. It integrates file searching through Windows Everythi",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:61291af5ec63bd1ccc036c9c598ab771e7717d863c09643b8c6eeb39428fe241",
+            "kind": "desc",
+            "ref": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 6,
+            "g2_milli": 24850,
+            "ratio_permille": 1000,
+            "terms_covered": 10
+          },
+          "term": "sessions",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "vector",
+          "evidence": "This file reads a catalog of important files and folders stored elsewhere on disk, converts that catalog into searchable summaries, and stores those summaries i",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:fe958a1aeb6dd11cd65c0b41484d4c62d73b8045cde1617a079fefbb2c6daff4",
+            "kind": "desc",
+            "ref": "scripts/ingest_treasures_tier2.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 6,
+            "g2_milli": 24850,
+            "ratio_permille": 1000,
+            "terms_covered": 5
+          },
+          "term": "vectorstore",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "vector",
+          "evidence": "This file demonstrates how natural language gets translated into symbolic codes for memory lookups in CBMS. It dynamically loads three helper modules (Esperanto",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:53b01721646c26630b0501c987bb0f4b1fbcd888d6e185f72312d41dc3bc24b3",
+            "kind": "desc",
+            "ref": "aions_core/tools/symbolic_probe.py"
+          },
+          "stats": {
+            "cooccurrence": 8,
+            "doc_freq": 12,
+            "g2_milli": 19442,
+            "ratio_permille": 666,
+            "terms_covered": 12
+          },
+          "term": "store",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "accounting",
+          "evidence": "This wraps ChromaDB (a vector database) to store documents as searchable embeddings organized into session collections—like a library where you can search for d",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7b6b197707f228ff050fc51000fa6a38495830f48135b1e54002a4f2217ba243",
+            "kind": "desc",
+            "ref": "server/store.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 17904,
+            "ratio_permille": 666,
+            "terms_covered": 4
+          },
+          "term": "add_items",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "accounting",
+          "evidence": "This wraps ChromaDB (a vector database) to store documents as searchable embeddings organized into session collections—like a library where you can search for d",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7b6b197707f228ff050fc51000fa6a38495830f48135b1e54002a4f2217ba243",
+            "kind": "desc",
+            "ref": "server/store.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 17904,
+            "ratio_permille": 666,
+            "terms_covered": 4
+          },
+          "term": "dump_session",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "accounting",
+          "evidence": "This wraps ChromaDB (a vector database) to store documents as searchable embeddings organized into session collections—like a library where you can search for d",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7b6b197707f228ff050fc51000fa6a38495830f48135b1e54002a4f2217ba243",
+            "kind": "desc",
+            "ref": "server/store.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 17904,
+            "ratio_permille": 666,
+            "terms_covered": 4
+          },
+          "term": "list_sessions",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "value",
+          "evidence": "This file implements a three-stage lifecycle system for new knowledge chunks in the memory system—they start in purgatory (quarantine), get evaluated based on a",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:b53827d36bde236e62438f8e38df59a531bd35dd3b00308c7603902c81e8ea5f",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_purgatory.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 7,
+            "g2_milli": 16124,
+            "ratio_permille": 428,
+            "terms_covered": 6
+          },
+          "term": "ensure",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "value",
+          "evidence": "This file implements a three-stage lifecycle system for new knowledge chunks in the memory system—they start in purgatory (quarantine), get evaluated based on a",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:b53827d36bde236e62438f8e38df59a531bd35dd3b00308c7603902c81e8ea5f",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_purgatory.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 12383,
+            "ratio_permille": 666,
+            "terms_covered": 3
+          },
+          "term": "config",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d017",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "two",
+          "evidence": "This file prevents the AI system from making up answers by checking whether a user's question has supporting information in the knowledge base. It loads two sou",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:aad9e880452e1f645844da6f8c9cc5099f6bc765cc73ae7c0912c021c864b741",
+            "kind": "desc",
+            "ref": "aions_core/aions_smart_guardrail.py"
+          },
+          "stats": {
+            "cooccurrence": 8,
+            "doc_freq": 23,
+            "g2_milli": 13008,
+            "ratio_permille": 347,
+            "terms_covered": 10
+          },
+          "term": "find",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "capabilities",
+          "evidence": "This file provides a unified interface for controlling a desktop across Windows and Linux platforms, letting higher-level code take screenshots, click, type, sc",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7a8399e05da48bc017f9a0501c04ac9ae46414573e4bc8c0a4aa08c77d98e24f",
+            "kind": "desc",
+            "ref": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 11715,
+            "ratio_permille": 1000,
+            "terms_covered": 4
+          },
+          "term": "get_desktop_provider",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d018",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 2580
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "round",
+          "evidence": "This file implements a complete orchestration engine that executes learning goals, creates and manages micro-skills as JSON-based packages, and evaluates perfor",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7dc662da20a6f16ac7caecca2d9911f5840117de829513f554219e2c32f8c0bf",
+            "kind": "desc",
+            "ref": "aions_core/aions_reactor.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 8,
+            "g2_milli": 12726,
+            "ratio_permille": 250,
+            "terms_covered": 6
+          },
+          "term": "goal",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "current",
+          "evidence": "This file is a security checkpoint that decides whether to allow a skill to run based on its declared risk level and whether it has pre-approval. It classifies ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:e2ffa0cdc5444a1d5a1d6f8c2c9be47a268ffce190f72dfaa5eefd163aa7b25e",
+            "kind": "desc",
+            "ref": "control_plane/skills/gate.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 16,
+            "g2_milli": 12590,
+            "ratio_permille": 375,
+            "terms_covered": 8
+          },
+          "term": "read",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "never",
+          "evidence": "This file is the mouth layer that lets AIONS speak through a local language model (Ollama, Bielik, or Phi), injecting knowledge from CBMS, operator profile, and",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:72dc5a277a6d6ee941085f9285f3044dd3b8f3859603999e9491ce8d9ef53238",
+            "kind": "desc",
+            "ref": "control_plane/llm_adapter.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 12189,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "speak",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "error",
+          "evidence": "This file starts a web server that listens for incoming questions and routes them to the unified AIONS core system for processing. It uses FastAPI to create HTT",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:c01cf166b4e9f9442ffcf592ae46171844d457f39a9f20c99a33035f5ecadbf4",
+            "kind": "desc",
+            "ref": "aions_core/api.py"
+          },
+          "stats": {
+            "cooccurrence": 11,
+            "doc_freq": 34,
+            "g2_milli": 11666,
+            "ratio_permille": 323,
+            "terms_covered": 9
+          },
+          "term": "status",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d019",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 2366
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "inside",
+          "evidence": "This file acts as a thin HTTP client that talks to a long-running language model server over the network instead of starting a new model process each time a que",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:2ac5249b9e531b339e17189461f82315b502ea23e3be84d56f70753c18272291",
+            "kind": "desc",
+            "ref": "control_plane/llm/server_client.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 22,
+            "g2_milli": 12609,
+            "ratio_permille": 136,
+            "terms_covered": 7
+          },
+          "term": "windows",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d020",
+      "kind": "positive",
+      "rank": 21,
+      "top1_score": 3776
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "answer",
+          "evidence": "This file acts as a hub that discovers and manages language models already installed on the computer—specifically Mistral-7B, Phi-3 (modified for Korean), and B",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:5c6bee105e3d77e5aadbc37cf18e0bd7dc3f136bacc2ee94748fdd0b9c887f51",
+            "kind": "desc",
+            "ref": "aions_core/agi_existing_models.py"
+          },
+          "stats": {
+            "cooccurrence": 13,
+            "doc_freq": 33,
+            "g2_milli": 17445,
+            "ratio_permille": 393,
+            "terms_covered": 9
+          },
+          "term": "query",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "inside",
+          "evidence": "This file acts as a thin HTTP client that talks to a long-running language model server over the network instead of starting a new model process each time a que",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:2ac5249b9e531b339e17189461f82315b502ea23e3be84d56f70753c18272291",
+            "kind": "desc",
+            "ref": "control_plane/llm/server_client.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 22,
+            "g2_milli": 12609,
+            "ratio_permille": 136,
+            "terms_covered": 10
+          },
+          "term": "windows",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "underlying",
+          "evidence": "This defines the REST API routes for a control plane—a command center that orchestrates work across distributed nodes. The endpoints handle planning (converting",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:1518096462e028f0ca062649ed3324b1a54f9a4cf96ec7a4fac1f10c5e164366",
+            "kind": "desc",
+            "ref": "control_plane/api.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 10,
+            "g2_milli": 11715,
+            "ratio_permille": 200,
+            "terms_covered": 6
+          },
+          "term": "capabilities",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d021",
+      "kind": "positive",
+      "rank": 4,
+      "top1_score": 1595
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "parked",
+          "evidence": "This file implements a progressive disclosure system for retrieving information from the CBMS (Code Book Memory System) storage. The mechanism splits knowledge ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:684f2c262f7a7dbe8cf1c628577adb45aebf7208ece0fcf94ea54cd30247a6ef",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_outline.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 17904,
+            "ratio_permille": 1000,
+            "terms_covered": 7
+          },
+          "term": "drill",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "parked",
+          "evidence": "This file implements a progressive disclosure system for retrieving information from the CBMS (Code Book Memory System) storage. The mechanism splits knowledge ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:684f2c262f7a7dbe8cf1c628577adb45aebf7208ece0fcf94ea54cd30247a6ef",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_outline.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 17904,
+            "ratio_permille": 1000,
+            "terms_covered": 9
+          },
+          "term": "is_id_like",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "memory",
+          "evidence": "This file assembles a complete artificial intelligence system from multiple specialized components into one unified command center. It loads memory storage (CBM",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:4cb875dc2c0be20beb39d4efd6528bb86d16a15ae60121e98a9ef7419f0db1b8",
+            "kind": "desc",
+            "ref": "aions_core/AIONS_ULTIMATE_UNIFIED.py"
+          },
+          "stats": {
+            "cooccurrence": 11,
+            "doc_freq": 15,
+            "g2_milli": 16909,
+            "ratio_permille": 733,
+            "terms_covered": 10
+          },
+          "term": "facts",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "summary",
+          "evidence": "This wraps ChromaDB (a vector database) to store documents as searchable embeddings organized into session collections—like a library where you can search for d",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7b6b197707f228ff050fc51000fa6a38495830f48135b1e54002a4f2217ba243",
+            "kind": "desc",
+            "ref": "server/store.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 3,
+            "g2_milli": 15586,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "add_items",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "summary",
+          "evidence": "This wraps ChromaDB (a vector database) to store documents as searchable embeddings organized into session collections—like a library where you can search for d",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7b6b197707f228ff050fc51000fa6a38495830f48135b1e54002a4f2217ba243",
+            "kind": "desc",
+            "ref": "server/store.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 3,
+            "g2_milli": 15586,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "dump_session",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "summary",
+          "evidence": "This wraps ChromaDB (a vector database) to store documents as searchable embeddings organized into session collections—like a library where you can search for d",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:7b6b197707f228ff050fc51000fa6a38495830f48135b1e54002a4f2217ba243",
+            "kind": "desc",
+            "ref": "server/store.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 3,
+            "g2_milli": 15586,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "list_sessions",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "parked",
+          "evidence": "This file implements a three-stage lifecycle system for new knowledge chunks in the memory system—they start in purgatory (quarantine), get evaluated based on a",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:b53827d36bde236e62438f8e38df59a531bd35dd3b00308c7603902c81e8ea5f",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_purgatory.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 4,
+            "g2_milli": 12383,
+            "ratio_permille": 500,
+            "terms_covered": 7
+          },
+          "term": "as_dict",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "memory",
+          "evidence": "This file prevents the AI system from making up answers by checking whether a user's question has supporting information in the knowledge base. It loads two sou",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:aad9e880452e1f645844da6f8c9cc5099f6bc765cc73ae7c0912c021c864b741",
+            "kind": "desc",
+            "ref": "aions_core/aions_smart_guardrail.py"
+          },
+          "stats": {
+            "cooccurrence": 7,
+            "doc_freq": 9,
+            "g2_milli": 11552,
+            "ratio_permille": 777,
+            "terms_covered": 7
+          },
+          "term": "retrieve",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "instead",
+          "evidence": "This file tracks how well automated skills or tasks perform over time by recording success rates, execution speed, and calculated confidence scores. Each skill ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:17285f594dc97f65940844c0d8913bb72ab203e2dda4a8e413750a7e85a4bf1f",
+            "kind": "desc",
+            "ref": "control_plane/skills/stats.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 11292,
+            "ratio_permille": 1000,
+            "terms_covered": 4
+          },
+          "term": "rank",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d022",
+      "kind": "positive",
+      "rank": 12,
+      "top1_score": 1676
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "disk",
+          "evidence": "This file implements a progressive disclosure system for retrieving information from the CBMS (Code Book Memory System) storage. The mechanism splits knowledge ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:684f2c262f7a7dbe8cf1c628577adb45aebf7208ece0fcf94ea54cd30247a6ef",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_outline.py"
+          },
+          "stats": {
+            "cooccurrence": 7,
+            "doc_freq": 11,
+            "g2_milli": 13496,
+            "ratio_permille": 636,
+            "terms_covered": 6
+          },
+          "term": "save",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d023",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "database",
+          "evidence": "This file adds semantic search using LanceDB, a vector database that finds information by meaning rather than exact words. It connects to an existing LanceDB in",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:177541e22855322916306a39e1b8ed5097647e602a9f65a295dabef6a669c6e0",
+            "kind": "desc",
+            "ref": "aions_core/aions_vector_enhancement.py"
+          },
+          "stats": {
+            "cooccurrence": 7,
+            "doc_freq": 9,
+            "g2_milli": 14907,
+            "ratio_permille": 777,
+            "terms_covered": 5
+          },
+          "term": "semantic",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "database",
+          "evidence": "This file breaks apart large text documents into small factual sentences, extracts searchable keywords from each sentence, and builds an indexed database for fa",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:27a2a0c903a2f34485ef719d22338f33fe83b2a52d7bbb292bcf8e0736664e84",
+            "kind": "desc",
+            "ref": "aions_core/tools/facts_builder.py"
+          },
+          "stats": {
+            "cooccurrence": 4,
+            "doc_freq": 4,
+            "g2_milli": 13223,
+            "ratio_permille": 1000,
+            "terms_covered": 4
+          },
+          "term": "ingest",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "fix",
+          "evidence": "This file is a package initializer that re-exports a set of functions from a loop module, making them available as the main public interface for the operator co",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:2442188ebcf5cf690702b30f2f392b7c8dc38699a99f4f5bdef9ffe2fbc6767f",
+            "kind": "desc",
+            "ref": "control_plane/operator/__init__.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 4,
+            "g2_milli": 12383,
+            "ratio_permille": 500,
+            "terms_covered": 3
+          },
+          "term": "diagnose",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "database",
+          "evidence": "This is a comprehensive MCP server that provides Claude with access to the host computer's tools and data. It integrates file searching through Windows Everythi",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:61291af5ec63bd1ccc036c9c598ab771e7717d863c09643b8c6eeb39428fe241",
+            "kind": "desc",
+            "ref": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          },
+          "stats": {
+            "cooccurrence": 5,
+            "doc_freq": 6,
+            "g2_milli": 11644,
+            "ratio_permille": 833,
+            "terms_covered": 6
+          },
+          "term": "sessions",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d024",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1862
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "lines",
+          "evidence": "This file implements a progressive disclosure system for retrieving information from the CBMS (Code Book Memory System) storage. The mechanism splits knowledge ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:684f2c262f7a7dbe8cf1c628577adb45aebf7208ece0fcf94ea54cd30247a6ef",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_outline.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 16178,
+            "ratio_permille": 1000,
+            "terms_covered": 4
+          },
+          "term": "compare",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d025",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2877
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "source",
+          "evidence": "This file creates searchable matching keys from text by extracting syllable-like patterns inspired by Korean writing conventions. When given a text input, it ex",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:1b2903883edd77f763254036662f75489e3785bbd20cdd646e08814720ed67a5",
+            "kind": "desc",
+            "ref": "aions_core/server/korean_keys.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 3,
+            "g2_milli": 14692,
+            "ratio_permille": 1000,
+            "terms_covered": 6
+          },
+          "term": "hashes",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "fallback",
+          "evidence": "This file builds and maintains a flexible web of connections that tracks how different pieces of knowledge reference each other across the system. Instead of re",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:d057a349b0e25b51bb97a82e3ec4e963361c54f2138db30ce60f05fd2ce74bcf",
+            "kind": "desc",
+            "ref": "aions_core/server/refgraph.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 14085,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "save_index",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "order",
+          "evidence": "This script searches a local SQLite database index to find where specific types of files are stored across the system. It queries the database for JSON files lo",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:4ff0dee3ca57c7be2c5f59d31b47775a41f33e38a2f361b0fd2d40bcb9b3f0bb",
+            "kind": "desc",
+            "ref": "aions_core/tools/query_db.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 8,
+            "g2_milli": 12726,
+            "ratio_permille": 250,
+            "terms_covered": 7
+          },
+          "term": "scan",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "over",
+          "evidence": "This file manages automatic self-improvement for an artificial intelligence system by tracking what it does well and what it struggles with, then proposing and ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:e8ab0fc3b01d5e28ccafd210d56d7afcfa7124cc021d6796c970aa025063c61b",
+            "kind": "desc",
+            "ref": "aions_core/agi_evolution.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 18,
+            "g2_milli": 11062,
+            "ratio_permille": 333,
+            "terms_covered": 6
+          },
+          "term": "success",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d026",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3157
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d027",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2233
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "check",
+          "evidence": "This file is a production-ready monitoring system that watches over an AIONS installation and makes sure everything works. It runs a comprehensive test suite ac",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:1b43c06d03a11fc8a9b553f7cb38947cc7b97a60229246ee2805b277016e411f",
+            "kind": "desc",
+            "ref": "aions_core/aions_monitoring_dashboard.py"
+          },
+          "stats": {
+            "cooccurrence": 9,
+            "doc_freq": 22,
+            "g2_milli": 15999,
+            "ratio_permille": 409,
+            "terms_covered": 15
+          },
+          "term": "health",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "stored",
+          "evidence": "This implements a memory system for AI agents based on chunking and concept mapping—treating knowledge like a collection of encyclopedia entries that can be sto",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:b4fffea28a4c3da0b06ffb8f2f9a20021088bf5b6693f6b6928f6dff7eebd826",
+            "kind": "desc",
+            "ref": "aions_core/cbms_memory.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 7,
+            "g2_milli": 12753,
+            "ratio_permille": 857,
+            "terms_covered": 11
+          },
+          "term": "codebook",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "hits",
+          "evidence": "This file is the mouth layer that lets AIONS speak through a local language model (Ollama, Bielik, or Phi), injecting knowledge from CBMS, operator profile, and",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:72dc5a277a6d6ee941085f9285f3044dd3b8f3859603999e9491ce8d9ef53238",
+            "kind": "desc",
+            "ref": "control_plane/llm_adapter.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 9,
+            "g2_milli": 12095,
+            "ratio_permille": 333,
+            "terms_covered": 9
+          },
+          "term": "semantic",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "external",
+          "evidence": "This is a comprehensive MCP server that provides Claude with access to the host computer's tools and data. It integrates file searching through Windows Everythi",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:61291af5ec63bd1ccc036c9c598ab771e7717d863c09643b8c6eeb39428fe241",
+            "kind": "desc",
+            "ref": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 11292,
+            "ratio_permille": 1000,
+            "terms_covered": 4
+          },
+          "term": "ping",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "external",
+          "evidence": "This file builds and maintains a flexible web of connections that tracks how different pieces of knowledge reference each other across the system. Instead of re",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:d057a349b0e25b51bb97a82e3ec4e963361c54f2138db30ce60f05fd2ce74bcf",
+            "kind": "desc",
+            "ref": "aions_core/server/refgraph.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 11292,
+            "ratio_permille": 1000,
+            "terms_covered": 7
+          },
+          "term": "save_index",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "itself",
+          "evidence": "This file acts as a thin HTTP client that talks to a long-running language model server over the network instead of starting a new model process each time a que",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:2ac5249b9e531b339e17189461f82315b502ea23e3be84d56f70753c18272291",
+            "kind": "desc",
+            "ref": "control_plane/llm/server_client.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 11210,
+            "ratio_permille": 666,
+            "terms_covered": 8
+          },
+          "term": "alive",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d028",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "correctly",
+          "evidence": "This file starts a web server that listens for incoming questions and routes them to the unified AIONS core system for processing. It uses FastAPI to create HTT",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:c01cf166b4e9f9442ffcf592ae46171844d457f39a9f20c99a33035f5ecadbf4",
+            "kind": "desc",
+            "ref": "aions_core/api.py"
+          },
+          "stats": {
+            "cooccurrence": 7,
+            "doc_freq": 17,
+            "g2_milli": 14498,
+            "ratio_permille": 411,
+            "terms_covered": 10
+          },
+          "term": "verify",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "blob",
+          "evidence": "This file defines the structure and validation rules for agent configuration files, ensuring they follow a strict format so agents can run correctly in the syst",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:c6bebf488ef24b13e3adfa695ab5acfe3219e2a8f7bcc127ad132230c7d32892",
+            "kind": "desc",
+            "ref": "control_plane/agents/agent_schema.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 14097,
+            "ratio_permille": 666,
+            "terms_covered": 4
+          },
+          "term": "validate",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "confirm",
+          "evidence": "This file is a package initializer that re-exports a set of functions from a loop module, making them available as the main public interface for the operator co",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:2442188ebcf5cf690702b30f2f392b7c8dc38699a99f4f5bdef9ffe2fbc6767f",
+            "kind": "desc",
+            "ref": "control_plane/operator/__init__.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 14085,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "observe",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "confirm",
+          "evidence": "This file is a package initializer that re-exports a set of functions from a loop module, making them available as the main public interface for the operator co",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:2442188ebcf5cf690702b30f2f392b7c8dc38699a99f4f5bdef9ffe2fbc6767f",
+            "kind": "desc",
+            "ref": "control_plane/operator/__init__.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 14085,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "run_cycle",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "correctly",
+          "evidence": "This file is a production-ready monitoring system that watches over an AIONS installation and makes sure everything works. It runs a comprehensive test suite ac",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:1b43c06d03a11fc8a9b553f7cb38947cc7b97a60229246ee2805b277016e411f",
+            "kind": "desc",
+            "ref": "aions_core/aions_monitoring_dashboard.py"
+          },
+          "stats": {
+            "cooccurrence": 7,
+            "doc_freq": 18,
+            "g2_milli": 13598,
+            "ratio_permille": 388,
+            "terms_covered": 8
+          },
+          "term": "success",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "windows",
+          "evidence": "This file provides remote control capabilities for a Windows computer through multiple functions: taking screenshots, clicking the mouse, typing text, pressing ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:6393cb1d40da56ab66b03ca196b3c28194b2d72859b32c0320da08b17eb059d9",
+            "kind": "desc",
+            "ref": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 3,
+            "g2_milli": 12609,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "clipboard",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "current",
+          "evidence": "This file is a security checkpoint that decides whether to allow a skill to run based on its declared risk level and whether it has pre-approval. It classifies ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:e2ffa0cdc5444a1d5a1d6f8c2c9be47a268ffce190f72dfaa5eefd163aa7b25e",
+            "kind": "desc",
+            "ref": "control_plane/skills/gate.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 16,
+            "g2_milli": 12590,
+            "ratio_permille": 375,
+            "terms_covered": 12
+          },
+          "term": "read",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d029",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "inside",
+          "evidence": "This file acts as a thin HTTP client that talks to a long-running language model server over the network instead of starting a new model process each time a que",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:2ac5249b9e531b339e17189461f82315b502ea23e3be84d56f70753c18272291",
+            "kind": "desc",
+            "ref": "control_plane/llm/server_client.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 22,
+            "g2_milli": 12609,
+            "ratio_permille": 136,
+            "terms_covered": 12
+          },
+          "term": "windows",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d030",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1995
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "store",
+          "evidence": "This is a comprehensive MCP server that provides Claude with access to the host computer's tools and data. It integrates file searching through Windows Everythi",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:61291af5ec63bd1ccc036c9c598ab771e7717d863c09643b8c6eeb39428fe241",
+            "kind": "desc",
+            "ref": "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+          },
+          "stats": {
+            "cooccurrence": 4,
+            "doc_freq": 6,
+            "g2_milli": 15139,
+            "ratio_permille": 666,
+            "terms_covered": 3
+          },
+          "term": "sessions",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "database",
+          "evidence": "This file adds semantic search using LanceDB, a vector database that finds information by meaning rather than exact words. It connects to an existing LanceDB in",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:177541e22855322916306a39e1b8ed5097647e602a9f65a295dabef6a669c6e0",
+            "kind": "desc",
+            "ref": "aions_core/aions_vector_enhancement.py"
+          },
+          "stats": {
+            "cooccurrence": 7,
+            "doc_freq": 9,
+            "g2_milli": 14907,
+            "ratio_permille": 777,
+            "terms_covered": 4
+          },
+          "term": "semantic",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "database",
+          "evidence": "This file breaks apart large text documents into small factual sentences, extracts searchable keywords from each sentence, and builds an indexed database for fa",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:27a2a0c903a2f34485ef719d22338f33fe83b2a52d7bbb292bcf8e0736664e84",
+            "kind": "desc",
+            "ref": "aions_core/tools/facts_builder.py"
+          },
+          "stats": {
+            "cooccurrence": 4,
+            "doc_freq": 4,
+            "g2_milli": 13223,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "ingest",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "store",
+          "evidence": "This file implements a progressive disclosure system for retrieving information from the CBMS (Code Book Memory System) storage. The mechanism splits knowledge ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:684f2c262f7a7dbe8cf1c628577adb45aebf7208ece0fcf94ea54cd30247a6ef",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_outline.py"
+          },
+          "stats": {
+            "cooccurrence": 5,
+            "doc_freq": 14,
+            "g2_milli": 11313,
+            "ratio_permille": 357,
+            "terms_covered": 4
+          },
+          "term": "summary",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "store",
+          "evidence": "This file implements a progressive disclosure system for retrieving information from the CBMS (Code Book Memory System) storage. The mechanism splits knowledge ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:684f2c262f7a7dbe8cf1c628577adb45aebf7208ece0fcf94ea54cd30247a6ef",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_outline.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 10910,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "drill",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "id": "d031",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 1239
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "status",
+          "evidence": "This file brings together all the thinking, learning, and evolution components into one complete system, routing queries to the right processor depending on the",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:6fa08fc49baeabbf6ede7f6d9d48c72b7795f76cdb0db72e7f88d91d1b2d2f74",
+            "kind": "desc",
+            "ref": "aions_core/agi_unified.py"
+          },
+          "stats": {
+            "cooccurrence": 13,
+            "doc_freq": 22,
+            "g2_milli": 19348,
+            "ratio_permille": 590,
+            "terms_covered": 7
+          },
+          "term": "health",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "many",
+          "evidence": "This file reads a large comma-separated values file and categorizes what it contains, particularly looking for where data chunks are stored and tracking the loc",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:f848d9bbba4a247293754957960fe2988cbbbbc36b14a78acac6c51098389f19",
+            "kind": "desc",
+            "ref": "aions_core/tools/analyze_csv.py"
+          },
+          "stats": {
+            "cooccurrence": 6,
+            "doc_freq": 8,
+            "g2_milli": 17479,
+            "ratio_permille": 750,
+            "terms_covered": 4
+          },
+          "term": "scan",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "answer",
+          "evidence": "This file acts as a hub that discovers and manages language models already installed on the computer—specifically Mistral-7B, Phi-3 (modified for Korean), and B",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:5c6bee105e3d77e5aadbc37cf18e0bd7dc3f136bacc2ee94748fdd0b9c887f51",
+            "kind": "desc",
+            "ref": "aions_core/agi_existing_models.py"
+          },
+          "stats": {
+            "cooccurrence": 13,
+            "doc_freq": 33,
+            "g2_milli": 17445,
+            "ratio_permille": 393,
+            "terms_covered": 9
+          },
+          "term": "query",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "status",
+          "evidence": "This file enables specialized worker roles to execute tasks safely by restricting them to only the actions their job description allows. When a goal comes in fo",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:f5af2736dae08ba0a8dbde603faec8911399ddae9eedef15051cb6ba7f5f363d",
+            "kind": "desc",
+            "ref": "control_plane/agents/agent_runner.py"
+          },
+          "stats": {
+            "cooccurrence": 5,
+            "doc_freq": 5,
+            "g2_milli": 16660,
+            "ratio_permille": 1000,
+            "terms_covered": 3
+          },
+          "term": "runner",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "requests",
+          "evidence": "This file speeds up question answering by trying to find the answer instantly in a cached knowledge system first, and only asking a larger language model if the",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:91d43fba8c4d6a227c884844de007b68dfb4ae0bc4b2a0148b5c247fc4a07ed7",
+            "kind": "desc",
+            "ref": "aions_core/smart_cbms.py"
+          },
+          "stats": {
+            "cooccurrence": 5,
+            "doc_freq": 7,
+            "g2_milli": 15742,
+            "ratio_permille": 714,
+            "terms_covered": 3
+          },
+          "term": "post",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "send",
+          "evidence": "This file documents an optional acceleration channel allowing the control plane to send requests to a fast running language model server (Bielik-4.5B via HTTP) ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:d70eb6d5c6c073a59765d4b5e8404e45e7cc1b27ada554c0584db4cb4c11b488",
+            "kind": "desc",
+            "ref": "control_plane/llm/__init__.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 6,
+            "g2_milli": 14085,
+            "ratio_permille": 333,
+            "terms_covered": 5
+          },
+          "term": "usage",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "status",
+          "evidence": "This file starts a web server that listens for incoming questions and routes them to the unified AIONS core system for processing. It uses FastAPI to create HTT",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:c01cf166b4e9f9442ffcf592ae46171844d457f39a9f20c99a33035f5ecadbf4",
+            "kind": "desc",
+            "ref": "aions_core/api.py"
+          },
+          "stats": {
+            "cooccurrence": 11,
+            "doc_freq": 22,
+            "g2_milli": 11666,
+            "ratio_permille": 500,
+            "terms_covered": 5
+          },
+          "term": "error",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "budget",
+          "evidence": "This file implements a progressive disclosure system for retrieving information from the CBMS (Code Book Memory System) storage. The mechanism splits knowledge ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:684f2c262f7a7dbe8cf1c628577adb45aebf7208ece0fcf94ea54cd30247a6ef",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_outline.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 11,
+            "g2_milli": 11292,
+            "ratio_permille": 181,
+            "terms_covered": 7
+          },
+          "term": "save",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "budget",
+          "evidence": "This file implements a progressive disclosure system for retrieving information from the CBMS (Code Book Memory System) storage. The mechanism splits knowledge ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:684f2c262f7a7dbe8cf1c628577adb45aebf7208ece0fcf94ea54cd30247a6ef",
+            "kind": "desc",
+            "ref": "aions_core/server/cbms_outline.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 12,
+            "g2_milli": 10910,
+            "ratio_permille": 166,
+            "terms_covered": 5
+          },
+          "term": "store",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "id": "d032",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2658
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "registered",
+          "evidence": "This file registers a catalog of data storage locations into the knowledge system so the AI can find important datasets when searching for information. The main",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:11513e11579adb82ddc7bc4e53b7c123478b46ab53a2453e9e6c85f68386a707",
+            "kind": "desc",
+            "ref": "scripts/register_treasure_chunk.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 4,
+            "g2_milli": 12383,
+            "ratio_permille": 500,
+            "terms_covered": 2
+          },
+          "term": "register",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "monitoring",
+          "evidence": "This file is a production-ready monitoring system that watches over an AIONS installation and makes sure everything works. It runs a comprehensive test suite ac",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:1b43c06d03a11fc8a9b553f7cb38947cc7b97a60229246ee2805b277016e411f",
+            "kind": "desc",
+            "ref": "aions_core/aions_monitoring_dashboard.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 12189,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "health_check",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "endpoint",
+          "evidence": "This script acts as a smoke test to verify that every piece of information stored in memory carries audit metadata (where it came from, who stored it, which mac",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:c260eebdf53607e0a9f33d1fe590088e1798c8788bfe18bf888886ee90a9a076",
+            "kind": "desc",
+            "ref": "scripts/proof_provenance.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 2,
+            "g2_milli": 11715,
+            "ratio_permille": 1000,
+            "terms_covered": 2
+          },
+          "term": "parse_sse",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "id": "d033",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "problem",
+          "evidence": "This file breaks down complex AI operations into small, reusable pieces called kernels, each performing one specific task like searching, compressing, scoring, ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:97455570031fdfc307fa2c1080c55958990c12d414a81cef2041299285c9ca06",
+            "kind": "desc",
+            "ref": "aions_core/cbms_curve_machine.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 4,
+            "g2_milli": 17354,
+            "ratio_permille": 750,
+            "terms_covered": 2
+          },
+          "term": "solve",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "send",
+          "evidence": "This file documents an optional acceleration channel allowing the control plane to send requests to a fast running language model server (Bielik-4.5B via HTTP) ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:d70eb6d5c6c073a59765d4b5e8404e45e7cc1b27ada554c0584db4cb4c11b488",
+            "kind": "desc",
+            "ref": "control_plane/llm/__init__.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 6,
+            "g2_milli": 14085,
+            "ratio_permille": 333,
+            "terms_covered": 2
+          },
+          "term": "usage",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "message",
+          "evidence": "This file starts a web server that listens for incoming questions and routes them to the unified AIONS core system for processing. It uses FastAPI to create HTT",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:c01cf166b4e9f9442ffcf592ae46171844d457f39a9f20c99a33035f5ecadbf4",
+            "kind": "desc",
+            "ref": "aions_core/api.py"
+          },
+          "stats": {
+            "cooccurrence": 7,
+            "doc_freq": 17,
+            "g2_milli": 13529,
+            "ratio_permille": 411,
+            "terms_covered": 2
+          },
+          "term": "verify",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "id": "d034",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2366
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "kept",
+          "evidence": "This file builds and maintains a flexible web of connections that tracks how different pieces of knowledge reference each other across the system. Instead of re",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:d057a349b0e25b51bb97a82e3ec4e963361c54f2138db30ce60f05fd2ce74bcf",
+            "kind": "desc",
+            "ref": "aions_core/server/refgraph.py"
+          },
+          "stats": {
+            "cooccurrence": 3,
+            "doc_freq": 7,
+            "g2_milli": 20573,
+            "ratio_permille": 428,
+            "terms_covered": 5
+          },
+          "term": "tokens",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        },
+        {
+          "derived_from": "kept",
+          "evidence": "This file builds and maintains a flexible web of connections that tracks how different pieces of knowledge reference each other across the system. Instead of re",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:d057a349b0e25b51bb97a82e3ec4e963361c54f2138db30ce60f05fd2ce74bcf",
+            "kind": "desc",
+            "ref": "aions_core/server/refgraph.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 3,
+            "g2_milli": 14097,
+            "ratio_permille": 666,
+            "terms_covered": 5
+          },
+          "term": "alive",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "id": "d035",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2793
+    },
+    {
+      "expansion": [
+        {
+          "derived_from": "turn",
+          "evidence": "This file builds structured answers by combining knowledge base chunks with question context. When someone asks a question, it retrieves relevant text passages ",
+          "rule": "description_cooccurrence",
+          "source": {
+            "content_hash": "blake2b256:2a5ff8599c3f4a049843cc55a1922437b698cd25c1f1458d337d6aeda1ccd16c",
+            "kind": "desc",
+            "ref": "aions_core/server/generator_cbms.py"
+          },
+          "stats": {
+            "cooccurrence": 2,
+            "doc_freq": 12,
+            "g2_milli": 10910,
+            "ratio_permille": 166,
+            "terms_covered": 2
+          },
+          "term": "conversation",
+          "valid_for": {
+            "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db",
+            "target_symbol_exists": true
+          },
+          "weight_class": "expansion"
+        }
+      ],
+      "id": "d036",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 1995
+    }
+  ],
+  "question_set": {
+    "content_hash": "blake2b256:278f2dc2b92fd4573bdbd3ae37bbc690d5a59ab0fc0d78af5ade6ad97dded4da",
+    "file": "dev_questions.json",
+    "name": "dev"
+  },
+  "result_hash": "blake2b256:e643919aaf96d98966af8efdcdca78644963a57d2bfd302fd6a26aaa8f4e698c",
+  "schema": "acae.m4.v1",
+  "scope": {
+    "files": 169,
+    "symbols": 1598
+  },
+  "variant": "prf_desc"
+}
