@@ -682,13 +682,17 @@ def main() -> int:
             documents = code_window_documents(entries, reader)
         elif args.variant == "prf_prose":
             documents = prose_documents(str(repo_root))
+        elif args.variant == "prf_desc":
+            documents = description_documents(ctx["descriptions"], entries)
         else:
             documents = docstring_documents()
         ctx["corpus"] = Corpus(documents)
         ctx["vocabulary"] = symbol_vocabulary(entries)
         # pack_hash trafia do kazdego paragonu jako warunek waznosci — krawedz
         # wyprowadzona dla jednego stanu repo nie moze cicho przezyc jego zmiany.
-        ctx["pack_hash"] = build_pack(PackRequest(root=repo_root.name), locator, reader).pack_hash
+        # Dla `prf_desc` jest juz policzony przy weryfikacji artefaktu opisow.
+        if not ctx["pack_hash"]:
+            ctx["pack_hash"] = build_pack(PackRequest(root=repo_root.name), locator, reader).pack_hash
 
     result = evaluate(entries, ctx, queries, args.variant)
 
