@@ -67,11 +67,18 @@ def test_wynik_jest_intem_pythona_nie_floatem():
     assert type(wynik) is int
 
 
-def test_skala_nie_zmienia_podobienstwa():
-    """Cosinus skraca staly czynnik — dlatego wolno sumowac wektory zamiast usredniac."""
+def test_skala_prawie_nie_zmienia_podobienstwa():
+    """
+    Cosinus skraca staly czynnik — dlatego wolno sumowac wektory zamiast usredniac.
+
+    ALE nie co do jednego promila: `math.isqrt` i dzielenie calkowite obcinaja, a
+    `isqrt(49*x) != 7*isqrt(x)`, gdy `x` nie jest kwadratem. Pierwsza wersja tego testu
+    zadala rownosci scislej i slusznie padla. Wlasnosc, ktora naprawde zachodzi, to
+    zgodnosc z dokladnoscia obciec — i tylko ona jest tu sprawdzana.
+    """
     a = np.array([1, 2, 3], dtype=np.int64)
     b = np.array([2, 1, 1], dtype=np.int64)
-    assert similarity_permille(a, b) == similarity_permille(a * 7, b * 13)
+    assert abs(similarity_permille(a, b) - similarity_permille(a * 7, b * 13)) <= 2
 
 
 def test_powtarzalnosc_arytmetyki():
