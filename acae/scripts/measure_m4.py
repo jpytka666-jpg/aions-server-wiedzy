@@ -37,6 +37,7 @@ ACAE_DIR = Path(__file__).resolve().parent.parent
 
 from acae.bm25f import Bm25fIndex  # noqa: E402
 from acae.canon import canonical_json, content_hash  # noqa: E402
+from acae.concepts import Codebook, SymbolTokens  # noqa: E402
 from acae.core import PackRequest, build_pack, collect_entries  # noqa: E402
 from acae.expand import (  # noqa: E402
     Corpus, code_window_documents, docstring_documents, expand, prose_documents,
