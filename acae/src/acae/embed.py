@@ -196,12 +196,15 @@ def receipt(
     D = embedder.matrix[np.fromiter((i for _, i in d_rows), dtype=np.int64, count=len(d_rows))]
     wklady = Q.astype(np.int64) @ D.astype(np.int64).T   # dokladnie, w int64
 
+    # Pary o ujemnym wkladzie NIE sa pomijane. Pominiecie ich sprawialoby, ze suma
+    # czolowki przekracza wynik calkowity — wykryl to `test_paragon_rozklada_sie_dokladnie`
+    # (535 wobec 440). Rozklad jest dokladny tylko wtedy, gdy zawiera wszystkie skladniki;
+    # sortowanie malejaco i tak stawia dodatnie na gorze, wiec czolowka paragonu sie
+    # nie zmienia, a suma calosci przestaje klamac.
     pary: list[Pair] = []
     for j, (q_tok, _) in enumerate(q_rows):
         for i, (d_tok, _) in enumerate(d_rows):
             wartosc = int(wklady[j, i])
-            if wartosc <= 0:
-                continue
             pary.append(Pair(q_tok, d_tok, (wartosc * PERMILLE) // mianownik))
 
     pary.sort(key=lambda p: (-p.permille, p.query_token, p.doc_token))
