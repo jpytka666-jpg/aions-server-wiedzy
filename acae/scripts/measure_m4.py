@@ -642,29 +642,42 @@ def main() -> int:
     entries, _ = collect_entries(locator, reader)
 
     ctx: dict = {"index": None, "corpus": None, "vocabulary": None, "pack_hash": ""}
+
+    # Warianty siegajace po korpus opisow: M8 (`desc`) i cztery powtorki M9.
+    WARIANTY_Z_OPISAMI = (
+        "desc", "prf_desc", "embed_desc", "embed_desc_tie", "embed_desc_borda",
+        "gate_desc", "graph_desc",
+    )
+    if args.variant in WARIANTY_Z_OPISAMI:
+        # pack_hash liczony TERAZ i porownywany z tym, dla ktorego powstaly opisy.
+        # Rozjazd przerywa pomiar: opisy nieaktualnego kodu daja liczby, ktore wygladaja
+        # sensownie i nie znacza nic. Ta sama regula co weryfikacja hashy modelu w M7.
+        ctx["pack_hash"] = build_pack(PackRequest(root=repo_root.name), locator, reader).pack_hash
+        ctx["descriptions"], ctx["desc_provenance"] = load_descriptions(
+            ACAE_DIR / "_desc" / "descriptions.json", expected_pack_hash=ctx["pack_hash"],
+        )
+
     if args.variant == "bm25f":
         ctx["index"] = Bm25fIndex(entries)
-    elif args.variant == "graph":
+    elif args.variant in ("graph", "graph_desc"):
         ctx["graph"] = build_graph(entries, reader)
     elif args.variant == "codebook":
         ctx["codebook"] = Codebook()
         ctx["symtok"] = SymbolTokens(entries)
-    elif args.variant == "gate":
-        ctx["scope"] = ScopeIndex(entries, reader, str(repo_root))
-    elif args.variant in ("embed", "embed_tie", "embed_borda"):
+    elif args.variant in ("gate", "gate_desc"):
+        ctx["scope"] = ScopeIndex(
+            entries, reader, str(repo_root),
+            descriptions=ctx["descriptions"] if args.variant == "gate_desc" else None,
+        )
+    elif args.variant in ("embed", "embed_tie", "embed_borda",
+                          "embed_desc", "embed_desc_tie", "embed_desc_borda"):
         # Weryfikacja hashy jest wlaczona: podmieniony artefakt ma zatrzymac pomiar,
         # a nie po cichu wyprodukowac liczby, ktore wygladaja sensownie.
-        ctx["embed"] = EmbedIndex(StaticEmbedder(ACAE_DIR / "_model"), entries)
-    elif args.variant == "desc":
-        # pack_hash liczony TERAZ i porownywany z tym, dla ktorego powstaly opisy.
-        # Rozjazd przerywa pomiar: opisy nieaktualnego kodu daja liczby, ktore wygladaja
-        # sensownie i nie znacza nic. Ta sama regula co weryfikacja hashy modelu w M7.
-        pack_hash = build_pack(PackRequest(root=repo_root.name), locator, reader).pack_hash
-        ctx["descriptions"], ctx["desc_provenance"] = load_descriptions(
-            ACAE_DIR / "_desc" / "descriptions.json", expected_pack_hash=pack_hash,
+        ctx["embed"] = EmbedIndex(
+            StaticEmbedder(ACAE_DIR / "_model"), entries,
+            descriptions=(ctx["descriptions"] if args.variant.startswith("embed_desc") else None),
         )
-        ctx["pack_hash"] = pack_hash
-    elif args.variant in ("prf_code", "prf_prose", "assoc"):
+    elif args.variant in ("prf_code", "prf_prose", "assoc", "prf_desc"):
         if args.variant == "prf_code":
             documents = code_window_documents(entries, reader)
         elif args.variant == "prf_prose":
