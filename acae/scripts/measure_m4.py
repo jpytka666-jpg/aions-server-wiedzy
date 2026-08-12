@@ -452,8 +452,11 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             ranked, receipts = rank_with_expansion(
                 entries, terms, depth, ctx["corpus"], ctx["vocabulary"], ctx["pack_hash"], rule,
             )
-        elif variant == "graph":
-            ranked, receipts = rank_graph(entries, terms, depth, ctx["graph"])
+        elif variant in ("graph", "graph_desc"):
+            ranked, receipts = rank_graph(
+                entries, terms, depth, ctx["graph"],
+                descriptions=ctx["descriptions"] if variant == "graph_desc" else None,
+            )
         elif variant == "codebook":
             ranked, receipts = rank_codebook(
                 entries, terms, depth, ctx["codebook"], ctx["symtok"],
