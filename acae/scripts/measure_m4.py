@@ -139,13 +139,18 @@ def rank_graph(entries, terms, depth, graph, seed_k=SEED_K, boost_permille=BOOST
     Zwraca (ranking, paragony). Paragony ida do artefaktu: dla kazdego wypromowanego
     symbolu zapisujemy, z ktorych symbolow zasiewu przyszedl wklad.
     """
-    rarity = term_rarity(entries, terms)
+    # M9d: ziarnem propagacji jest ranking Z OPISAMI zamiast golego baseline'u.
+    # Propagacja wzmacnia to, w co ranker juz wierzy — a M4.4 przegral m.in. dlatego,
+    # ze ranker wierzyl w niewiele. Sam mechanizm propagacji zostaje nietkniety.
+    opisy = descriptions or {}
+    rarity = (term_rarity_with_descriptions(entries, terms, opisy) if opisy
+              else term_rarity(entries, terms))
     scored = []
     for entry in entries:
         path = str(entry["path"])
         for row in entry["symbols"]:
             scored.append({
-                "score": score_symbol(path, row, terms, rarity),
+                "score": score_with_description(path, row, terms, rarity, opisy.get(path, "")),
                 "path": path, "lang": entry.get("lang"), "row": row,
             })
     scored.sort(key=lambda d: (-d["score"], d["path"], d["row"]["line"], d["row"]["name_path"]))
