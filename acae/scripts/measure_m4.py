@@ -250,6 +250,10 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             )
         elif variant == "graph":
             ranked, receipts = rank_graph(entries, terms, depth, ctx["graph"])
+        elif variant == "codebook":
+            ranked, receipts = rank_codebook(
+                entries, terms, depth, ctx["codebook"], ctx["symtok"],
+            )
         else:
             raise SystemExit(f"nieznany wariant: {variant}")
 
