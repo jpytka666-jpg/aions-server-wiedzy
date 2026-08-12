@@ -560,3 +560,56 @@ Ale nie mam pewnosci co do `MRR` — wszystkie szesc poprzednich mechanizmow go 
 albo zostawilo bez zmian, a rozszerzanie zapytania rozciencza sygnal terminow oryginalnych.
 Jesli `recall@10` przekroczy prog, a `MRR` spadnie — to jest PORAZKA wg kryterium
 i tak ja zaraportuje, bez tlumaczenia, ze „prawie sie udalo".
+
+## 2026-08-12T01:15 — M5: ZMIERZONY I ODRZUCONY. Siedem mechanizmow, siedem odrzucen.
+
+| miara | baseline | M5 | wymagane | werdykt |
+|---|---|---|---|---|
+| recall@10 | 26,6% | 26,6% | >= 34,6% | NIE |
+| recall@25 | 36,6% | **33,3%** | — | gorzej |
+| MRR | 0,172 | **0,163** | >= 0,172 | NIE |
+| negatywy/pozytywy | 85,2% | **86,8%** | <= 85,2% | NIE |
+
+**Moje przewidywanie zapisane przed pomiarem bylo BLEDNE.** Napisalem, ze spodziewam sie
+poprawy recall. Nie nastapila. Odnotowuje to, bo prerejestracja dziala w obie strony —
+nie sluzy tylko do chwalenia sie trafnymi przeczuciami.
+
+**Diagnoza z paragonow, mocniejsza niz sam werdykt:** codebook dopasowal pojecie
+w **26 z 30 pytan**, srednio 2 pojecia na pytanie. Odpalaly sie `server`, `graph`, `error`,
+`name`, `file`, `context`, `tool`, `web`, `user`, `machine`. To NIE jest problem pokrycia
+slownictwa — mechanizm mial swoja szanse na 87% pytan i jej nie wykorzystal.
+Trafienia@10: z dopasowaniem 6/26, bez dopasowania 2/4.
+
+### BILANS: siedem mechanizmow, siedem odrzucen
+
+| wariant | rodzaj | recall@10 | recall@25 | MRR | neg/poz |
+|---|---|---|---|---|---|
+| baseline (M2) | leksykalny | 26,6% | 36,6% | **0,172** | 85,2% |
+| M4.1 BM25F | model wazenia | 23,3% | 33,3% | 0,156 | 97,0% |
+| M4.2 PRF stosunek | statystyka z kodu | 30,0% | 40,0% | 0,139 | 80,7% |
+| M4.2b PRF + LLR | statystyka z kodu | **33,3%** | 36,6% | 0,153 | **80,4%** |
+| M4.3 proza repo | statystyka z prozy | 26,6% | 36,6% | 0,172 | 84,9% |
+| M4.4 graf Suade | struktura | 26,6% | **40,0%** | 0,172 | 85,2% |
+| M4.6 docstringi zewn. | korpus zewnetrzny | 20,0% | 36,6% | 0,169 | 86,7% |
+| M5 codebook | **wiedza jawna** | 26,6% | 33,3% | 0,163 | 86,8% |
+
+### Wniosek, na ktory pozwala osiem pomiarow
+
+**`MRR` nie przekroczyl 0,172 ANI RAZU.** Ani statystyka, ani struktura, ani cudzy korpus,
+ani recznie wpisana wiedza. Siedem mechanizmow z czterech roznych rodzin — i zaden nie
+postawil poprawnego symbolu wyzej, niz stawial go goły ranker leksykalny.
+
+Wspolna cecha wszystkich siedmiu: **DODAJA terminy do zapytania.** I to jest jedyna rzecz,
+ktora je laczy ponad podzialem na statystyke i wiedze. Dodanie terminu rozciencza sygnal
+terminow oryginalnych: symbol trafiony przez slowo z pytania konkuruje teraz z symbolami
+trafionymi przez tokeny dodane — a te dodane sa z natury czestsze i liczniejsze.
+
+M5 obala hipoteze, ktora wydawala sie najmocniejsza: **„wystarczy to zapisac recznie".**
+Nie wystarczy. Zapisane recznie dziala tak samo zle jak wyliczone.
+
+To NIE znaczy, ze wiedza jawna jest bezuzyteczna. Znaczy, ze **rozszerzanie zapytania jest
+zlym dzwignia**, niezaleznie od zrodla rozszerzenia. Inne dzwignie (ograniczanie zakresu
+zamiast dodawania terminow, routowanie pytania do podzbioru plikow) NIE BYLY testowane
+i nie twierdze nic o nich.
+
+Held-out (`blake2b256:e5d8e5b4...`) **NIETKNIETY**. Nadal nie ma kandydata.
