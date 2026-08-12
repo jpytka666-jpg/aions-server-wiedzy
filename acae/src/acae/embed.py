@@ -188,6 +188,22 @@ def symbol_text(path: str, row) -> str:
     return " ".join(czesci)
 
 
+def symbol_text_with_description(path: str, row, description: str) -> str:
+    """
+    M9b: tekst symbolu wg reguly M7 PLUS opis pliku, w ktorym ten symbol lezy.
+
+    Regula M7 zostaje nietknieta — opis jest DOKLADANY, nie podmieniany. Przechodzi przez
+    ten sam `split_identifier`, zeby zdanie po ludzku i identyfikator trafialy do wektora
+    tak samo potraktowane; inaczej opis wnosilby tokeny w innej postaci niz reszta tekstu.
+
+    Opis jest wspolny dla wszystkich symboli z danego pliku — wskazuje PLIK, nie symbol.
+    """
+    base = symbol_text(path, row)
+    if not description:
+        return base
+    return " ".join([base, *split_identifier(description)])
+
+
 def receipt(
     embedder: StaticEmbedder,
     query: str,
