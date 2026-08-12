@@ -206,11 +206,15 @@ def receipt(
 
     qv = embedder.vector(query)
     dv = embedder.vector(doc_text)
-    na = math.isqrt(int(np.dot(qv, qv)))
-    nb = math.isqrt(int(np.dot(dv, dv)))
-    if na == 0 or nb == 0:
+    na2 = int(np.dot(qv, qv))
+    nb2 = int(np.dot(dv, dv))
+    if na2 == 0 or nb2 == 0:
         return []
-    mianownik = na * nb
+    # Jeden pierwiastek na koncu, nie dwa po drodze — ten sam blad, ktory psul
+    # `similarity_permille`, psulby tu skale calego paragonu.
+    mianownik = math.isqrt(na2 * nb2)
+    if mianownik == 0:
+        return []
 
     Q = embedder.matrix[np.fromiter((i for _, i in q_rows), dtype=np.int64, count=len(q_rows))]
     D = embedder.matrix[np.fromiter((i for _, i in d_rows), dtype=np.int64, count=len(d_rows))]
