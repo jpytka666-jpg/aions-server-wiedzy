@@ -1170,6 +1170,20 @@ Chybione: `neg/poz` wzrosnie (spadl o 60 punktow).
 - `src/acae/describe.py` lezy w repo **bez testow**. Do napisania: `test_describe.py`.
   Ten sam dlug co po M6 przy `scope.py` — odnotowany, zeby nie zniknal.
 
+**SPLACONY 2026-08-12T23:48:** `tests/test_describe.py` — 25 testow, pelny pakiet
+**215 zielonych**. Tym razem testy NIE znalazly bledu, w odroznieniu od `embed.py`,
+gdzie wywrocily cosinus. Odnotowuje to jako slabszy wynik niz tam: brak znalezionego
+bledu nie jest dowodem poprawnosci.
+
+Mocniejszy od testow jednostkowych okazal sie pomiar neutralnosci toru na PRAWDZIWYCH
+danych: `rank_all` z PUSTA mapa opisow, na wszystkich 30 pytaniach pozytywnych zbioru
+roboczego, dal **zero rozjazdow** z `retrieve.select` — identyczne wyniki, identyczna
+kolejnosc, identyczne recall@10 26,6% / recall@25 36,6% / MRR 0,172.
+
+To zamyka watpliwosc, ktora inaczej wisialaby nad calym M8: **roznica miedzy M8
+a baseline'em pochodzi z opisow, nie z implementacji.** Bez tego sprawdzenia kazda
+liczba z tego etapu byla by nieodroznialna od bledu w moim wlasnym kodzie.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
