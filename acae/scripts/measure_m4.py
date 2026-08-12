@@ -326,6 +326,9 @@ def main() -> int:
         ctx["index"] = Bm25fIndex(entries)
     elif args.variant == "graph":
         ctx["graph"] = build_graph(entries, reader)
+    elif args.variant == "codebook":
+        ctx["codebook"] = Codebook()
+        ctx["symtok"] = SymbolTokens(entries)
     elif args.variant in ("prf_code", "prf_prose", "assoc"):
         if args.variant == "prf_code":
             documents = code_window_documents(entries, reader)
