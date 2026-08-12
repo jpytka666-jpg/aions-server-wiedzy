@@ -929,3 +929,44 @@ Przewidywalem: M7a **pogorszy** wynik (poprawil, mocno), diagnostyka da **>= 4 z
 (dala 1). **0 z 9.** Zapisuje to z ta sama waga co liczby: mechanizm, ktory dziewiaty raz
 z rzedu zaprzecza mojej intuicji, jest wazniejszym ustaleniem niz ktorykolwiek pojedynczy
 wariant.
+
+## 2026-08-12T21:40 — BLAD w `similarity_permille`, znaleziony przez test, pomiary przeliczone
+
+Pisanie testow do `embed.py` wywrocilo dwie rzeczy, obie moje.
+
+**1. Cosinus potrafil przekroczyc 1000 promili.** Liczylem `math.isqrt` osobno dla kazdej
+normy i mnozyl je przez siebie. Kazde `isqrt` obcina w dol, wiec mianownik wychodzil za
+maly. Zmierzone: `[1,2,3]` wobec `[2,1,1]` dawalo **1166** przy prawdziwej wartosci **764**.
+Poprawka — pierwiastek brany RAZ, na koncu, na kwadratach:
+
+    promile = isqrt( 10^6 * licznik^2 // (|a|^2 * |b|^2) )
+
+Blad ograniczony do 1 promila z definicji `isqrt`. Ten sam blad byl w `receipt`
+i w `EmbedIndex.scores` w mierniku — poprawiony w trzech miejscach.
+
+**2. Paragon nie sumowal sie do wyniku.** Pomijalem pary o ujemnym wkladzie, wiec suma
+czolowki przekraczala calosc (zmierzone: 535 wobec 440). Rozklad jest dokladny **tylko
+ze wszystkimi skladnikami**. `receipt` zwraca teraz wszystkie pary; sortowanie malejaco
+i tak stawia dodatnie na gorze, wiec czolowka wyglada tak samo, a suma przestala klamac.
+
+To bylo twierdzenie, ktore zdazylem powiedziec Marcinowi jako „rozklad dokladny".
+Bylo nieprawdziwe w tej wersji kodu.
+
+### Pomiary przeliczone od nowa — wynik BEZ ZMIAN
+
+Nie zalozylem, ze blad byl nieistotny — uruchomilem wszystkie trzy warianty ponownie
+na poprawionym kodzie (`head f4ab3b6`):
+
+| wariant | recall@10 | recall@25 | MRR | neg/poz | wobec pomiaru na wadliwym kodzie |
+|---|---|---|---|---|---|
+| `embed` | 33,3% | 40,0% | 0,222 | 103,7% | identycznie |
+| `embed_tie` | 26,6% | 40,0% | 0,173 | 85,2% | identycznie |
+| `embed_borda` | 33,3% | 40,0% | 0,249 | niemierzalne | identycznie |
+
+Powod, dla ktorego nie drgnelo: przy prawdziwych danych normy sa rzedu `1e5`-`1e6`,
+wiec wzgledny blad obciecia jest rzedu `1e-6` i nie przestawia rankingu. Blad ujawnial sie
+tylko na malych wektorach — czyli **wylacznie w tescie jednostkowym**. Gdyby nie test
+na malych liczbach, siedzialby w kodzie do momentu, w ktorym zaczalby szkodzic.
+
+Straznik dopisany: `test_podobienstwo_nigdy_nie_przekracza_tysiaca` na 25 ziarnach malych
+wektorow plus `test_znany_przypadek_z_regresji` na dokladnie tej parze, ktora to wywrocila.
