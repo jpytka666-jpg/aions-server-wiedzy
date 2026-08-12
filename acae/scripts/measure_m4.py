@@ -113,7 +113,8 @@ def rank_with_expansion(entries, terms, depth, corpus, vocabulary, pack_hash, ru
     return ranked[:depth], [receipt.as_dict() for _, receipt in pairs]
 
 
-def rank_graph(entries, terms, depth, graph, seed_k=SEED_K, boost_permille=BOOST_PERMILLE):
+def rank_graph(entries, terms, depth, graph, seed_k=SEED_K, boost_permille=BOOST_PERMILLE,
+               descriptions=None):
     """
     Baseline ranker + propagacja Suade po grafie wywolan (M4.4).
 
