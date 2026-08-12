@@ -138,6 +138,7 @@ class ScopeIndex:
         reader,
         repo_root: str,
         chunks_dir: str | None = None,
+        descriptions: Mapping[str, str] | None = None,
     ) -> None:
         self.repo_root = Path(repo_root)
         self.files: list[str] = sorted(str(e["path"]) for e in entries)
@@ -148,7 +149,7 @@ class ScopeIndex:
         self._build_cochange()
         self._build_callgraph(entries, reader)
         self._build_directories()
-        self.prose_index, self.prose_docs = self._build_prose(chunks_dir)
+        self.prose_index, self.prose_docs = self._build_prose(chunks_dir, descriptions)
 
     # ------------------------------------------------------------ zakresy
 
