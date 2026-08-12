@@ -415,6 +415,8 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
     diagnostyka = {
         "gate_cut": 0, "gate_fallback": 0, "gate_sizes": [],
         "m7_zero_bucket": 0, "m7_zero_reached_25": 0, "m7_zero_ranks": [],
+        "desc_zero_bucket": 0, "desc_zero_nonzero": 0,
+        "desc_zero_reached_25": 0, "desc_zero_ranks": [],
     }
     for q in queries:
         terms = query_terms(q["question"])
