@@ -448,6 +448,38 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             elif q["kind"] == "positive" and not (set(q["answer_files"]) & pliki):
                 # Warunek diagnostyczny (propozycja GPT): bramka wyciela wlasciwy plik.
                 diagnostyka["gate_cut"] += 1
+        elif variant == "desc":
+            opisy = ctx["descriptions"]
+            pelny, rarity_desc = rank_desc_all(entries, terms, opisy)
+            ranked = pelny[:depth]
+            receipts = desc_receipt(pelny, terms, opisy, rarity_desc, RECEIPT_LIMIT)
+
+            # WARUNEK DIAGNOSTYCZNY M8 — czy most w ogole zostal zbudowany.
+            # Wsrod pytan, gdzie wlasciwy symbol ma leksykalne ZERO: ilu z nich opis
+            # daje wynik niezerowy? Zadna metoda przeliczajaca nie ruszy zera (0*x=0),
+            # wiec to jest jedyna liczba mowiaca wprost, czy opisy niosa slowa, ktorymi
+            # pyta czlowiek. Niezaleznie od werdyktu pass/fail.
+            if q["kind"] == "positive":
+                rarity_bazowa = term_rarity(entries, terms)
+                cele = [
+                    (str(e["path"]), row)
+                    for e in entries
+                    for row in e["symbols"]
+                    if is_hit({"path": str(e["path"]), "row": row, "lang": e.get("lang")}, q)
+                ]
+                if cele and max(score_symbol(p, r, terms, rarity_bazowa) for p, r in cele) == 0:
+                    diagnostyka["desc_zero_bucket"] += 1
+                    najlepszy = max(
+                        score_with_description(p, r, terms, rarity_desc, opisy.get(p, ""))
+                        for p, r in cele
+                    )
+                    if najlepszy > 0:
+                        diagnostyka["desc_zero_nonzero"] += 1
+                        pozycja = next((i for i, it in enumerate(pelny, 1) if is_hit(it, q)), 0)
+                        if pozycja:
+                            diagnostyka["desc_zero_ranks"].append(pozycja)
+                            if pozycja <= 25:
+                                diagnostyka["desc_zero_reached_25"] += 1
         elif variant in ("embed", "embed_tie", "embed_borda"):
             index = ctx["embed"]
             if variant == "embed":
