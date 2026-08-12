@@ -19,6 +19,11 @@ Kazda para (slowo z pytania, token symbolu) ma policzalny, dokladny wklad, i te 
 sumuja sie do wyniku. Paragon nie jest wyjasnieniem dorobionym po fakcie — to jest ta sama
 arytmetyka, ktora dala wynik. Transformer tego nie potrafi.
 
+Zastrzezenie, ktore kosztowalo jeden czerwony test: rozklad jest dokladny **tylko z parami
+o ujemnym wkladzie**. Pokazywanie samych dodatnich daje sume WIEKSZA od wyniku (zmierzone:
+535 wobec 440), bo odejmowane skladniki znikaja. Dlatego `receipt` zwraca wszystkie pary,
+a nie tylko te, ktore ladnie wygladaja.
+
 DLACZEGO NIE MA TU ANI JEDNEGO FLOATA
 -------------------------------------
 Zmiennoprzecinkowy iloczyn skalarny nie jest deterministyczny miedzy maszynami: BLAS
