@@ -179,6 +179,41 @@ def rank_graph(entries, terms, depth, graph, seed_k=SEED_K, boost_permille=BOOST
     return ranked[:depth], receipts
 
 
+def rank_codebook(entries, terms, depth, codebook, symtok):
+    """
+    Ranker bazowy + tokeny z semantycznego codebooka, wazone o polowe slabiej.
+
+    Rozszerzenie jest tu WIEDZA, nie hipoteza — ktos wpisal, ze „machine" oznacza `host`.
+    Ale wazymy je i tak slabiej niz terminy oryginalne, bo pytanie zadal czlowiek,
+    a rozszerzenie tylko domysla sie, o ktore pojecie mu chodzilo.
+
+    Dopasowanie tokenow idzie przez `SymbolTokens` — cale tokeny, nie podciagi.
+    """
+    pairs = codebook.lookup(terms)
+    tokens = [t for t, _ in pairs]
+    rarity = term_rarity(entries, terms)
+
+    ranked = []
+    index = 0
+    for entry in entries:
+        path = str(entry["path"])
+        for row in entry["symbols"]:
+            score = score_symbol(path, row, terms, rarity)
+            if tokens:
+                score += symtok.score(index, tokens) // 2
+            if score > 0:
+                ranked.append({"score": score, "path": path, "lang": entry.get("lang"), "row": row})
+            index += 1
+    ranked.sort(key=lambda d: (-d["score"], d["path"], d["row"]["line"], d["row"]["name_path"]))
+
+    widziane, receipts = set(), []
+    for _, hit in pairs:
+        if hit.concept not in widziane:
+            widziane.add(hit.concept)
+            receipts.append(hit.as_dict())
+    return ranked[:depth], receipts
+
+
 def is_hit(item, question) -> bool:
     """
     Trafienie: dokladny `name_path` albo sama nazwa liscia przy zgodnym pliku.
