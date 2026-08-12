@@ -1,0 +1,21 @@
+{
+  "dtype": "int16",
+  "files": {
+    "tokenizer.json": "blake2b256:e547a42b34a0280a3c214e62d3c93844aabda4afa8ad9a5885558eee1918b638",
+    "vectors_int16.npy": "blake2b256:10dab0112529dac220bb8649a396ad9e75df281c91be7cdb5ee39439659fe063"
+  },
+  "quantization": {
+    "int16_max": 32767,
+    "max_abs_error": "0.0008004909868946086",
+    "max_abs_source": "52.459381103515625",
+    "rule": "global_scale_round_half_even",
+    "scale": "624.6165949869371"
+  },
+  "runtime_note": "Warstwa zapytania nie importuje model2vec ani torch. Iloczyn skalarny w int64, normalizacja przez math.isqrt, wynik w promilach.",
+  "schema": "acae.model_card.v1",
+  "shape": [
+    29528,
+    256
+  ],
+  "source_model": "minishlab/potion-base-8M"
+}

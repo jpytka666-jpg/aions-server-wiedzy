@@ -9,3 +9,9 @@ __pycache__/
 
 # Wyjscie packa — artefakt, nie zrodlo. Do repo trafia tylko baseline z _baseline/.
 _out/
+
+# Artefakt modelu M7 (macierz int16, 15 MB). Do repo trafia WYLACZNIE karta z hashami.
+# Macierz odtwarza sie przez `scripts/export_model.py` i porownuje 64 znaki blake2b256 —
+# determinizm jest przypiety hashem, nie obecnoscia binarki w historii.
+_model/*
+!_model/model_card.json
