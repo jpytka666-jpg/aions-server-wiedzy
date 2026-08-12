@@ -555,6 +555,10 @@ def main() -> int:
         ctx["symtok"] = SymbolTokens(entries)
     elif args.variant == "gate":
         ctx["scope"] = ScopeIndex(entries, reader, str(repo_root))
+    elif args.variant in ("embed", "embed_tie", "embed_borda"):
+        # Weryfikacja hashy jest wlaczona: podmieniony artefakt ma zatrzymac pomiar,
+        # a nie po cichu wyprodukowac liczby, ktore wygladaja sensownie.
+        ctx["embed"] = EmbedIndex(StaticEmbedder(ACAE_DIR / "_model"), entries)
     elif args.variant in ("prf_code", "prf_prose", "assoc"):
         if args.variant == "prf_code":
             documents = code_window_documents(entries, reader)

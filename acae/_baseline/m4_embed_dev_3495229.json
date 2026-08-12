@@ -1,0 +1,3843 @@
+{
+  "depth": 25,
+  "head": "3495229",
+  "metrics": {
+    "counts": {
+      "negative": 6,
+      "positive": 30
+    },
+    "gate_cut": 0,
+    "gate_fallback": 0,
+    "gate_size_median": 0,
+    "m7_zero_bucket": 11,
+    "m7_zero_rank_median": 336,
+    "m7_zero_reached_25": 1,
+    "mean_top1_negative": 469,
+    "mean_top1_positive": 452,
+    "mrr_permille": 222,
+    "negative_ratio_permille": 1037,
+    "recall_at_10_permille": 333,
+    "recall_at_25_permille": 400
+  },
+  "packages": {
+    "tiktoken": "0.13.0"
+  },
+  "per_query": [
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "file",
+              "permille": 23,
+              "query_token": "file"
+            },
+            {
+              "doc_token": "lines",
+              "permille": 16,
+              "query_token": "line"
+            },
+            {
+              "doc_token": "lines",
+              "permille": 16,
+              "query_token": "line"
+            },
+            {
+              "doc_token": "lines",
+              "permille": 16,
+              "query_token": "line"
+            },
+            {
+              "doc_token": "lines",
+              "permille": 16,
+              "query_token": "line"
+            }
+          ],
+          "permille": 437,
+          "rule": "embed_similarity",
+          "symbol": "scripts/project_scanner.py:count_lines"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "split",
+              "permille": 31,
+              "query_token": "splitting"
+            },
+            {
+              "doc_token": "split",
+              "permille": 31,
+              "query_token": "splitting"
+            },
+            {
+              "doc_token": "sentences",
+              "permille": 8,
+              "query_token": "equals"
+            },
+            {
+              "doc_token": "sentences",
+              "permille": 8,
+              "query_token": "equals"
+            },
+            {
+              "doc_token": "sentences",
+              "permille": 8,
+              "query_token": "rows"
+            }
+          ],
+          "permille": 420,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/tools/web_crawler_import.py:split_sentences"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "simple",
+              "permille": 13,
+              "query_token": "plain"
+            },
+            {
+              "doc_token": "simple",
+              "permille": 13,
+              "query_token": "plain"
+            },
+            {
+              "doc_token": "math",
+              "permille": 12,
+              "query_token": "equals"
+            },
+            {
+              "doc_token": "solve",
+              "permille": 12,
+              "query_token": "equals"
+            },
+            {
+              "doc_token": "optional",
+              "permille": 11,
+              "query_token": "plain"
+            }
+          ],
+          "permille": 411,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/server/math_solver.py:_per_each_simple"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d001",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 437
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "##back",
+              "permille": 28,
+              "query_token": "##back"
+            },
+            {
+              "doc_token": "fall",
+              "permille": 24,
+              "query_token": "fall"
+            },
+            {
+              "doc_token": "fall",
+              "permille": 24,
+              "query_token": "fall"
+            },
+            {
+              "doc_token": "process",
+              "permille": 14,
+              "query_token": "process"
+            },
+            {
+              "doc_token": "back",
+              "permille": 11,
+              "query_token": "##back"
+            }
+          ],
+          "permille": 431,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/semantic_search.py:_get_vs"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "limit",
+              "permille": 28,
+              "query_token": "limit"
+            },
+            {
+              "doc_token": "limit",
+              "permille": 28,
+              "query_token": "limit"
+            },
+            {
+              "doc_token": "limit",
+              "permille": 28,
+              "query_token": "limit"
+            },
+            {
+              "doc_token": "execution",
+              "permille": 8,
+              "query_token": "##utable"
+            },
+            {
+              "doc_token": "execution",
+              "permille": 8,
+              "query_token": "##utable"
+            }
+          ],
+          "permille": 414,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/aions_agent_layer.py:ToolCatalog/check_execution_limit"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "min",
+              "permille": 10,
+              "query_token": "shorter"
+            },
+            {
+              "doc_token": "min",
+              "permille": 10,
+              "query_token": "shorter"
+            },
+            {
+              "doc_token": "se",
+              "permille": 7,
+              "query_token": "##ec"
+            },
+            {
+              "doc_token": "priority",
+              "permille": 7,
+              "query_token": "waiting"
+            },
+            {
+              "doc_token": "opt",
+              "permille": 6,
+              "query_token": "##utable"
+            }
+          ],
+          "permille": 374,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/semantic_search.py:_active_defaults"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d002",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 431
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "manifest",
+              "permille": 62,
+              "query_token": "manifest"
+            },
+            {
+              "doc_token": "manifest",
+              "permille": 62,
+              "query_token": "manifest"
+            },
+            {
+              "doc_token": "manifest",
+              "permille": 62,
+              "query_token": "manifest"
+            },
+            {
+              "doc_token": "manifest",
+              "permille": 62,
+              "query_token": "manifest"
+            },
+            {
+              "doc_token": "catalog",
+              "permille": 21,
+              "query_token": "directory"
+            }
+          ],
+          "permille": 462,
+          "rule": "embed_similarity",
+          "symbol": "scripts/catalog_e_treasures.py:_manifest_stats"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "fail",
+              "permille": 26,
+              "query_token": "fails"
+            },
+            {
+              "doc_token": "drops",
+              "permille": 19,
+              "query_token": "dropping"
+            },
+            {
+              "doc_token": "rejects",
+              "permille": 14,
+              "query_token": "fails"
+            },
+            {
+              "doc_token": "validation",
+              "permille": 10,
+              "query_token": "checks"
+            },
+            {
+              "doc_token": "wrong",
+              "permille": 10,
+              "query_token": "fails"
+            }
+          ],
+          "permille": 436,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/agents/agent_schema.py:validate"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "manifest",
+              "permille": 46,
+              "query_token": "manifest"
+            },
+            {
+              "doc_token": "manifest",
+              "permille": 46,
+              "query_token": "manifest"
+            },
+            {
+              "doc_token": "manifest",
+              "permille": 46,
+              "query_token": "manifest"
+            },
+            {
+              "doc_token": "manifest",
+              "permille": 46,
+              "query_token": "manifest"
+            },
+            {
+              "doc_token": "manifest",
+              "permille": 46,
+              "query_token": "manifest"
+            }
+          ],
+          "permille": 413,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/tools/rebuild_manifest_force.py:rebuild_manifest"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d003",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 462
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "folded",
+              "permille": 21,
+              "query_token": "folded"
+            },
+            {
+              "doc_token": "fold",
+              "permille": 19,
+              "query_token": "folded"
+            },
+            {
+              "doc_token": "index",
+              "permille": 16,
+              "query_token": "indexed"
+            },
+            {
+              "doc_token": "letters",
+              "permille": 15,
+              "query_token": "letters"
+            },
+            {
+              "doc_token": "identical",
+              "permille": 9,
+              "query_token": "same"
+            }
+          ],
+          "permille": 427,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/semantic_search.py:_normalize_text"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "raw",
+              "permille": 17,
+              "query_token": "chopped"
+            },
+            {
+              "doc_token": "##ons",
+              "permille": 11,
+              "query_token": "letters"
+            },
+            {
+              "doc_token": "##ons",
+              "permille": 11,
+              "query_token": "plural"
+            },
+            {
+              "doc_token": "raw",
+              "permille": 10,
+              "query_token": "plain"
+            },
+            {
+              "doc_token": "ok",
+              "permille": 8,
+              "query_token": "##up"
+            }
+          ],
+          "permille": 318,
+          "rule": "embed_similarity",
+          "symbol": "scripts/validate_aions_tools.py:ok"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "simple",
+              "permille": 9,
+              "query_token": "plain"
+            },
+            {
+              "doc_token": "simple",
+              "permille": 9,
+              "query_token": "plain"
+            },
+            {
+              "doc_token": "simple",
+              "permille": 9,
+              "query_token": "plain"
+            },
+            {
+              "doc_token": "expressions",
+              "permille": 8,
+              "query_token": "endings"
+            },
+            {
+              "doc_token": "optional",
+              "permille": 8,
+              "query_token": "plain"
+            }
+          ],
+          "permille": 299,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/server/math_solver.py:_simple_arithmetic"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d004",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 427
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "fail",
+              "permille": 17,
+              "query_token": "failure"
+            },
+            {
+              "doc_token": "empty",
+              "permille": 15,
+              "query_token": "empty"
+            },
+            {
+              "doc_token": "rejects",
+              "permille": 11,
+              "query_token": "refused"
+            },
+            {
+              "doc_token": "caller",
+              "permille": 10,
+              "query_token": "call"
+            },
+            {
+              "doc_token": "fail",
+              "permille": 7,
+              "query_token": "refused"
+            }
+          ],
+          "permille": 478,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/agents/agent_schema.py:validate"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "send",
+              "permille": 13,
+              "query_token": "sends"
+            },
+            {
+              "doc_token": "send",
+              "permille": 13,
+              "query_token": "sends"
+            },
+            {
+              "doc_token": "send",
+              "permille": 13,
+              "query_token": "sends"
+            },
+            {
+              "doc_token": "message",
+              "permille": 7,
+              "query_token": "chat"
+            },
+            {
+              "doc_token": "message",
+              "permille": 7,
+              "query_token": "chat"
+            }
+          ],
+          "permille": 448,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/test_aions_capabilities.py:send_message"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "conversation",
+              "permille": 11,
+              "query_token": "chat"
+            },
+            {
+              "doc_token": "conversation",
+              "permille": 11,
+              "query_token": "chat"
+            },
+            {
+              "doc_token": "conversation",
+              "permille": 11,
+              "query_token": "chat"
+            },
+            {
+              "doc_token": "response",
+              "permille": 6,
+              "query_token": "answer"
+            },
+            {
+              "doc_token": "response",
+              "permille": 6,
+              "query_token": "answer"
+            }
+          ],
+          "permille": 447,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/server/cbms_direct_server.py:UnifiedCBMSHandler/_try_conversational_response"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d005",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 478
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "message",
+              "permille": 14,
+              "query_token": "message"
+            },
+            {
+              "doc_token": "conversation",
+              "permille": 14,
+              "query_token": "talking"
+            },
+            {
+              "doc_token": "conversation",
+              "permille": 14,
+              "query_token": "talking"
+            },
+            {
+              "doc_token": "conversation",
+              "permille": 14,
+              "query_token": "talking"
+            },
+            {
+              "doc_token": "user",
+              "permille": 13,
+              "query_token": "user"
+            }
+          ],
+          "permille": 414,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/server/cbms_direct_server.py:UnifiedCBMSHandler/_try_conversational_response"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "##vable",
+              "permille": 6,
+              "query_token": "##able"
+            },
+            {
+              "doc_token": "degraded",
+              "permille": 6,
+              "query_token": "expired"
+            },
+            {
+              "doc_token": "degraded",
+              "permille": 6,
+              "query_token": "expired"
+            },
+            {
+              "doc_token": "none",
+              "permille": 6,
+              "query_token": "refused"
+            },
+            {
+              "doc_token": "##time",
+              "permille": 5,
+              "query_token": "deadline"
+            }
+          ],
+          "permille": 411,
+          "rule": "embed_similarity",
+          "symbol": "server/store_http.py:_log_degraded"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "message",
+              "permille": 14,
+              "query_token": "message"
+            },
+            {
+              "doc_token": "conversation",
+              "permille": 14,
+              "query_token": "talking"
+            },
+            {
+              "doc_token": "conversation",
+              "permille": 14,
+              "query_token": "talking"
+            },
+            {
+              "doc_token": "conversation",
+              "permille": 14,
+              "query_token": "talking"
+            },
+            {
+              "doc_token": "user",
+              "permille": 13,
+              "query_token": "user"
+            }
+          ],
+          "permille": 405,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/server/cbms_unified_server.py:UnifiedCBMSHandler/_try_conversational_response"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d006",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 414
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "keeps",
+              "permille": 11,
+              "query_token": "keep"
+            },
+            {
+              "doc_token": "network",
+              "permille": 11,
+              "query_token": "network"
+            },
+            {
+              "doc_token": "stop",
+              "permille": 11,
+              "query_token": "pause"
+            },
+            {
+              "doc_token": "node",
+              "permille": 6,
+              "query_token": "network"
+            },
+            {
+              "doc_token": "none",
+              "permille": 5,
+              "query_token": "never"
+            }
+          ],
+          "permille": 464,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/node_agent/agent.py:registration_and_heartbeat_loop"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "restart",
+              "permille": 11,
+              "query_token": "pause"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 11,
+              "query_token": "pause"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 11,
+              "query_token": "pause"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 10,
+              "query_token": "failed"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 10,
+              "query_token": "failed"
+            }
+          ],
+          "permille": 443,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/operator/loop.py:_check_restart_cooldown"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "keeps",
+              "permille": 12,
+              "query_token": "keep"
+            },
+            {
+              "doc_token": "persist",
+              "permille": 9,
+              "query_token": "alive"
+            },
+            {
+              "doc_token": "persist",
+              "permille": 9,
+              "query_token": "keep"
+            },
+            {
+              "doc_token": "persist",
+              "permille": 7,
+              "query_token": "pause"
+            },
+            {
+              "doc_token": "none",
+              "permille": 6,
+              "query_token": "never"
+            }
+          ],
+          "permille": 428,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/operator/loop.py:_record_baseline"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d007",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 464
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "restarted",
+              "permille": 9,
+              "query_token": "rebuilt"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 8,
+              "query_token": "rebuilt"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 8,
+              "query_token": "rebuilt"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 8,
+              "query_token": "rebuilt"
+            },
+            {
+              "doc_token": "failed",
+              "permille": 7,
+              "query_token": "cannot"
+            }
+          ],
+          "permille": 310,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/operator/loop.py:act"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "drives",
+              "permille": 20,
+              "query_token": "disk"
+            },
+            {
+              "doc_token": "unavailable",
+              "permille": 16,
+              "query_token": "cannot"
+            },
+            {
+              "doc_token": "drive",
+              "permille": 12,
+              "query_token": "disk"
+            },
+            {
+              "doc_token": "drive",
+              "permille": 12,
+              "query_token": "disk"
+            },
+            {
+              "doc_token": "list",
+              "permille": 7,
+              "query_token": "listing"
+            }
+          ],
+          "permille": 304,
+          "rule": "embed_similarity",
+          "symbol": "scripts/full_system_scan.py:resolve_drive_order"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "catalog",
+              "permille": 39,
+              "query_token": "catalogue"
+            },
+            {
+              "doc_token": "catalog",
+              "permille": 39,
+              "query_token": "catalogue"
+            },
+            {
+              "doc_token": "catalog",
+              "permille": 39,
+              "query_token": "catalogue"
+            },
+            {
+              "doc_token": "catalog",
+              "permille": 15,
+              "query_token": "listing"
+            },
+            {
+              "doc_token": "catalog",
+              "permille": 15,
+              "query_token": "listing"
+            }
+          ],
+          "permille": 303,
+          "rule": "embed_similarity",
+          "symbol": "scripts/catalog_e_treasures.py:build_catalog"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d008",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 310
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "files",
+              "permille": 33,
+              "query_token": "file"
+            },
+            {
+              "doc_token": "files",
+              "permille": 33,
+              "query_token": "file"
+            },
+            {
+              "doc_token": "results",
+              "permille": 29,
+              "query_token": "results"
+            },
+            {
+              "doc_token": "folder",
+              "permille": 22,
+              "query_token": "file"
+            },
+            {
+              "doc_token": "folder",
+              "permille": 13,
+              "query_token": "path"
+            }
+          ],
+          "permille": 386,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/context.py:_find_files"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "matching",
+              "permille": 14,
+              "query_token": "match"
+            },
+            {
+              "doc_token": "matching",
+              "permille": 14,
+              "query_token": "match"
+            },
+            {
+              "doc_token": "matching",
+              "permille": 10,
+              "query_token": "exact"
+            },
+            {
+              "doc_token": "matching",
+              "permille": 10,
+              "query_token": "exact"
+            },
+            {
+              "doc_token": "find",
+              "permille": 6,
+              "query_token": "found"
+            }
+          ],
+          "permille": 332,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/memory_graph_engine.py:MemoryGraph/find_closest_concept"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "scores",
+              "permille": 10,
+              "query_token": "results"
+            },
+            {
+              "doc_token": "score",
+              "permille": 6,
+              "query_token": "results"
+            },
+            {
+              "doc_token": "score",
+              "permille": 6,
+              "query_token": "results"
+            },
+            {
+              "doc_token": "raw",
+              "permille": 5,
+              "query_token": "deep"
+            },
+            {
+              "doc_token": "registry",
+              "permille": 4,
+              "query_token": "##name"
+            }
+          ],
+          "permille": 325,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/forge.py:gap_detect"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d009",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 386
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "scripts",
+              "permille": 26,
+              "query_token": "scripts"
+            },
+            {
+              "doc_token": "mark",
+              "permille": 17,
+              "query_token": "mark"
+            },
+            {
+              "doc_token": "mark",
+              "permille": 17,
+              "query_token": "mark"
+            },
+            {
+              "doc_token": "mark",
+              "permille": 17,
+              "query_token": "mark"
+            },
+            {
+              "doc_token": "##able",
+              "permille": 10,
+              "query_token": "##able"
+            }
+          ],
+          "permille": 472,
+          "rule": "embed_similarity",
+          "symbol": "scripts/project_scanner.py:ProjectScanner/_generate_markdown_report"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "html",
+              "permille": 25,
+              "query_token": "html"
+            },
+            {
+              "doc_token": "html",
+              "permille": 25,
+              "query_token": "html"
+            },
+            {
+              "doc_token": "web",
+              "permille": 10,
+              "query_token": "html"
+            },
+            {
+              "doc_token": "web",
+              "permille": 10,
+              "query_token": "html"
+            },
+            {
+              "doc_token": "web",
+              "permille": 10,
+              "query_token": "html"
+            }
+          ],
+          "permille": 452,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/server/web_rag_cbms.py:WebRAGTextExtractor"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "scripts",
+              "permille": 33,
+              "query_token": "scripts"
+            },
+            {
+              "doc_token": "extract",
+              "permille": 10,
+              "query_token": "pull"
+            },
+            {
+              "doc_token": "extract",
+              "permille": 10,
+              "query_token": "pull"
+            },
+            {
+              "doc_token": "extract",
+              "permille": 10,
+              "query_token": "pull"
+            },
+            {
+              "doc_token": "extract",
+              "permille": 8,
+              "query_token": "downloaded"
+            }
+          ],
+          "permille": 445,
+          "rule": "embed_similarity",
+          "symbol": "scripts/chatgpt_ultimate.py:extract_spaced_titles"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d010",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": 472
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "crawl",
+              "permille": 70,
+              "query_token": "crawl"
+            },
+            {
+              "doc_token": "crawl",
+              "permille": 70,
+              "query_token": "crawl"
+            },
+            {
+              "doc_token": "allowed",
+              "permille": 21,
+              "query_token": "allow"
+            },
+            {
+              "doc_token": "allowed",
+              "permille": 21,
+              "query_token": "allow"
+            },
+            {
+              "doc_token": "def",
+              "permille": 16,
+              "query_token": "prevents"
+            }
+          ],
+          "permille": 466,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/tools/web_crawler_import.py:crawl/allowed"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "page",
+              "permille": 14,
+              "query_token": "page"
+            },
+            {
+              "doc_token": "page",
+              "permille": 14,
+              "query_token": "page"
+            },
+            {
+              "doc_token": "page",
+              "permille": 14,
+              "query_token": "page"
+            },
+            {
+              "doc_token": "safely",
+              "permille": 14,
+              "query_token": "prevents"
+            },
+            {
+              "doc_token": "fetch",
+              "permille": 13,
+              "query_token": "download"
+            }
+          ],
+          "permille": 416,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/server/web_rag_cbms.py:WebRAGCBMS/_fetch_page"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "def",
+              "permille": 11,
+              "query_token": "prevents"
+            },
+            {
+              "doc_token": "server",
+              "permille": 9,
+              "query_token": "host"
+            },
+            {
+              "doc_token": "server",
+              "permille": 9,
+              "query_token": "host"
+            },
+            {
+              "doc_token": "server",
+              "permille": 9,
+              "query_token": "host"
+            },
+            {
+              "doc_token": "control",
+              "permille": 8,
+              "query_token": "prevents"
+            }
+          ],
+          "permille": 411,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/node_agent/agent.py:run_http_server"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d011",
+      "kind": "positive",
+      "rank": 11,
+      "top1_score": 466
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "horizon",
+              "permille": 26,
+              "query_token": "horizon"
+            },
+            {
+              "doc_token": "merge",
+              "permille": 26,
+              "query_token": "merge"
+            },
+            {
+              "doc_token": "profile",
+              "permille": 17,
+              "query_token": "profile"
+            },
+            {
+              "doc_token": "date",
+              "permille": 13,
+              "query_token": "date"
+            },
+            {
+              "doc_token": "list",
+              "permille": 10,
+              "query_token": "lists"
+            }
+          ],
+          "permille": 506,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/scheduler.py:collect_deadlines"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "list",
+              "permille": 11,
+              "query_token": "lists"
+            },
+            {
+              "doc_token": "list",
+              "permille": 11,
+              "query_token": "lists"
+            },
+            {
+              "doc_token": "order",
+              "permille": 11,
+              "query_token": "order"
+            },
+            {
+              "doc_token": "order",
+              "permille": 11,
+              "query_token": "order"
+            },
+            {
+              "doc_token": "order",
+              "permille": 11,
+              "query_token": "order"
+            }
+          ],
+          "permille": 396,
+          "rule": "embed_similarity",
+          "symbol": "scripts/full_system_scan.py:resolve_drive_order"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "horizon",
+              "permille": 26,
+              "query_token": "horizon"
+            },
+            {
+              "doc_token": "profile",
+              "permille": 17,
+              "query_token": "profile"
+            },
+            {
+              "doc_token": "deadline",
+              "permille": 7,
+              "query_token": "date"
+            },
+            {
+              "doc_token": "deadline",
+              "permille": 5,
+              "query_token": "already"
+            },
+            {
+              "doc_token": "schedule",
+              "permille": 5,
+              "query_token": "date"
+            }
+          ],
+          "permille": 384,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/api.py:get_scheduler_summary"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d012",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 506
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "truth",
+              "permille": 9,
+              "query_token": "admitting"
+            },
+            {
+              "doc_token": "boo",
+              "permille": 7,
+              "query_token": "flag"
+            },
+            {
+              "doc_token": "control",
+              "permille": 6,
+              "query_token": "command"
+            },
+            {
+              "doc_token": "evaluate",
+              "permille": 6,
+              "query_token": "tool"
+            },
+            {
+              "doc_token": "evaluate",
+              "permille": 6,
+              "query_token": "versus"
+            }
+          ],
+          "permille": 397,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/world_state.py:matches"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "audit",
+              "permille": 5,
+              "query_token": "record"
+            },
+            {
+              "doc_token": "decide",
+              "permille": 5,
+              "query_token": "switch"
+            },
+            {
+              "doc_token": "approval",
+              "permille": 4,
+              "query_token": "admitting"
+            },
+            {
+              "doc_token": "control",
+              "permille": 4,
+              "query_token": "command"
+            },
+            {
+              "doc_token": "##tate",
+              "permille": 4,
+              "query_token": "declared"
+            }
+          ],
+          "permille": 383,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/gate.py:check"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "intent",
+              "permille": 11,
+              "query_token": "admitting"
+            },
+            {
+              "doc_token": "intent",
+              "permille": 11,
+              "query_token": "admitting"
+            },
+            {
+              "doc_token": "intent",
+              "permille": 11,
+              "query_token": "admitting"
+            },
+            {
+              "doc_token": "control",
+              "permille": 9,
+              "query_token": "command"
+            },
+            {
+              "doc_token": "boo",
+              "permille": 9,
+              "query_token": "flag"
+            }
+          ],
+          "permille": 382,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/policy.py:check_intent"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d013",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 397
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "empty",
+              "permille": 20,
+              "query_token": "empty"
+            },
+            {
+              "doc_token": "rejects",
+              "permille": 20,
+              "query_token": "rejected"
+            },
+            {
+              "doc_token": "missing",
+              "permille": 17,
+              "query_token": "missing"
+            },
+            {
+              "doc_token": "shape",
+              "permille": 16,
+              "query_token": "shape"
+            },
+            {
+              "doc_token": "wrong",
+              "permille": 15,
+              "query_token": "wrong"
+            }
+          ],
+          "permille": 550,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/agents/agent_schema.py:validate"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "silently",
+              "permille": 21,
+              "query_token": "quietly"
+            },
+            {
+              "doc_token": "falls",
+              "permille": 14,
+              "query_token": "fall"
+            },
+            {
+              "doc_token": "value",
+              "permille": 14,
+              "query_token": "value"
+            },
+            {
+              "doc_token": "back",
+              "permille": 8,
+              "query_token": "##back"
+            },
+            {
+              "doc_token": "ai",
+              "permille": 7,
+              "query_token": "attribute"
+            }
+          ],
+          "permille": 421,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/semantic_search.py:_active_embedder"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "absent",
+              "permille": 15,
+              "query_token": "missing"
+            },
+            {
+              "doc_token": "value",
+              "permille": 14,
+              "query_token": "value"
+            },
+            {
+              "doc_token": "verb",
+              "permille": 10,
+              "query_token": "definition"
+            },
+            {
+              "doc_token": "##hema",
+              "permille": 9,
+              "query_token": "attribute"
+            },
+            {
+              "doc_token": "absent",
+              "permille": 9,
+              "query_token": "empty"
+            }
+          ],
+          "permille": 414,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/agents/agent_schema.py:load"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d014",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 550
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "object",
+              "permille": 26,
+              "query_token": "object"
+            },
+            {
+              "doc_token": "reads",
+              "permille": 22,
+              "query_token": "read"
+            },
+            {
+              "doc_token": "field",
+              "permille": 19,
+              "query_token": "field"
+            },
+            {
+              "doc_token": "field",
+              "permille": 19,
+              "query_token": "field"
+            },
+            {
+              "doc_token": "valid",
+              "permille": 13,
+              "query_token": "accept"
+            }
+          ],
+          "permille": 460,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/agents/agent_schema.py:load"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "disk",
+              "permille": 83,
+              "query_token": "disk"
+            },
+            {
+              "doc_token": "disk",
+              "permille": 83,
+              "query_token": "disk"
+            },
+            {
+              "doc_token": "disk",
+              "permille": 15,
+              "query_token": "object"
+            },
+            {
+              "doc_token": "disk",
+              "permille": 15,
+              "query_token": "object"
+            },
+            {
+              "doc_token": "load",
+              "permille": 14,
+              "query_token": "carry"
+            }
+          ],
+          "permille": 369,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/node_registry.py:_load_from_disk"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "object",
+              "permille": 24,
+              "query_token": "object"
+            },
+            {
+              "doc_token": "field",
+              "permille": 18,
+              "query_token": "field"
+            },
+            {
+              "doc_token": "rejects",
+              "permille": 15,
+              "query_token": "accept"
+            },
+            {
+              "doc_token": "valid",
+              "permille": 12,
+              "query_token": "accept"
+            },
+            {
+              "doc_token": "valid",
+              "permille": 12,
+              "query_token": "accept"
+            }
+          ],
+          "permille": 362,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/agents/agent_schema.py:validate"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d015",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 460
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "##time",
+              "permille": 17,
+              "query_token": "##time"
+            },
+            {
+              "doc_token": "##time",
+              "permille": 17,
+              "query_token": "##time"
+            },
+            {
+              "doc_token": "embedded",
+              "permille": 17,
+              "query_token": "embedded"
+            },
+            {
+              "doc_token": "silent",
+              "permille": 17,
+              "query_token": "silently"
+            },
+            {
+              "doc_token": "visible",
+              "permille": 15,
+              "query_token": "visible"
+            }
+          ],
+          "permille": 643,
+          "rule": "embed_similarity",
+          "symbol": "server/store_http.py:_log_degraded"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "app",
+              "permille": 31,
+              "query_token": "app"
+            },
+            {
+              "doc_token": "server",
+              "permille": 10,
+              "query_token": "database"
+            },
+            {
+              "doc_token": "info",
+              "permille": 9,
+              "query_token": "database"
+            },
+            {
+              "doc_token": "status",
+              "permille": 9,
+              "query_token": "silently"
+            },
+            {
+              "doc_token": "status",
+              "permille": 9,
+              "query_token": "silently"
+            }
+          ],
+          "permille": 460,
+          "rule": "embed_similarity",
+          "symbol": "server/app.py:status"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "silently",
+              "permille": 24,
+              "query_token": "silently"
+            },
+            {
+              "doc_token": "falls",
+              "permille": 9,
+              "query_token": "drop"
+            },
+            {
+              "doc_token": "never",
+              "permille": 5,
+              "query_token": "cannot"
+            },
+            {
+              "doc_token": "unless",
+              "permille": 5,
+              "query_token": "cannot"
+            },
+            {
+              "doc_token": "##bed",
+              "permille": 5,
+              "query_token": "embedded"
+            }
+          ],
+          "permille": 458,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/semantic_search.py:_active_embedder"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d016",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 643
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "returns",
+              "permille": 11,
+              "query_token": "returned"
+            },
+            {
+              "doc_token": "return",
+              "permille": 10,
+              "query_token": "returned"
+            },
+            {
+              "doc_token": "return",
+              "permille": 10,
+              "query_token": "returned"
+            },
+            {
+              "doc_token": "retrieval",
+              "permille": 8,
+              "query_token": "relevance"
+            },
+            {
+              "doc_token": "retrieval",
+              "permille": 8,
+              "query_token": "relevance"
+            }
+          ],
+          "permille": 497,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/agi_soft_retrieval.py:SoftRetriever/forward"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "vector",
+              "permille": 19,
+              "query_token": "vector"
+            },
+            {
+              "doc_token": "vector",
+              "permille": 19,
+              "query_token": "vector"
+            },
+            {
+              "doc_token": "return",
+              "permille": 9,
+              "query_token": "returned"
+            },
+            {
+              "doc_token": "retrieval",
+              "permille": 7,
+              "query_token": "relevance"
+            },
+            {
+              "doc_token": "retrieval",
+              "permille": 7,
+              "query_token": "relevance"
+            }
+          ],
+          "permille": 489,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/aions_hybrid_retrieval.py:HybridRetriever/retrieve"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "return",
+              "permille": 16,
+              "query_token": "returned"
+            },
+            {
+              "doc_token": "retrieval",
+              "permille": 12,
+              "query_token": "relevance"
+            },
+            {
+              "doc_token": "retrieve",
+              "permille": 10,
+              "query_token": "returned"
+            },
+            {
+              "doc_token": "retrieval",
+              "permille": 8,
+              "query_token": "index"
+            },
+            {
+              "doc_token": "retrieval",
+              "permille": 7,
+              "query_token": "collection"
+            }
+          ],
+          "permille": 483,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/aions_hybrid_retrieval.py:HybridRetriever/process"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d017",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 497
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "weighted",
+              "permille": 33,
+              "query_token": "weighted"
+            },
+            {
+              "doc_token": "competing",
+              "permille": 23,
+              "query_token": "competing"
+            },
+            {
+              "doc_token": "prefer",
+              "permille": 18,
+              "query_token": "preference"
+            },
+            {
+              "doc_token": "prefer",
+              "permille": 18,
+              "query_token": "preference"
+            },
+            {
+              "doc_token": "choose",
+              "permille": 15,
+              "query_token": "choosing"
+            }
+          ],
+          "permille": 650,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/stats.py:rank"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "against",
+              "permille": 11,
+              "query_token": "against"
+            },
+            {
+              "doc_token": "evaluate",
+              "permille": 9,
+              "query_token": "succeeds"
+            },
+            {
+              "doc_token": "skills",
+              "permille": 8,
+              "query_token": "capabilities"
+            },
+            {
+              "doc_token": "supports",
+              "permille": 8,
+              "query_token": "capabilities"
+            },
+            {
+              "doc_token": "evaluate",
+              "permille": 8,
+              "query_token": "compute"
+            }
+          ],
+          "permille": 424,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/world_state.py:matches"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "calculate",
+              "permille": 13,
+              "query_token": "compute"
+            },
+            {
+              "doc_token": "calculate",
+              "permille": 13,
+              "query_token": "compute"
+            },
+            {
+              "doc_token": "calculate",
+              "permille": 13,
+              "query_token": "compute"
+            },
+            {
+              "doc_token": "float",
+              "permille": 12,
+              "query_token": "weighted"
+            },
+            {
+              "doc_token": "float",
+              "permille": 7,
+              "query_token": "trading"
+            }
+          ],
+          "permille": 407,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/agi_core.py:AGICore/_calculate_confidence"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d018",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 650
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "evaluate",
+              "permille": 13,
+              "query_token": "comparing"
+            },
+            {
+              "doc_token": "current",
+              "permille": 13,
+              "query_token": "current"
+            },
+            {
+              "doc_token": "against",
+              "permille": 12,
+              "query_token": "against"
+            },
+            {
+              "doc_token": "evaluate",
+              "permille": 11,
+              "query_token": "decide"
+            },
+            {
+              "doc_token": "matches",
+              "permille": 10,
+              "query_token": "rounds"
+            }
+          ],
+          "permille": 377,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/world_state.py:matches"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "comparable",
+              "permille": 14,
+              "query_token": "comparing"
+            },
+            {
+              "doc_token": "normal",
+              "permille": 11,
+              "query_token": "abnormal"
+            },
+            {
+              "doc_token": "number",
+              "permille": 8,
+              "query_token": "number"
+            },
+            {
+              "doc_token": "detect",
+              "permille": 7,
+              "query_token": "alarm"
+            },
+            {
+              "doc_token": "detect",
+              "permille": 7,
+              "query_token": "alarm"
+            }
+          ],
+          "permille": 364,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/forge.py:gap_detect"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "evaluate",
+              "permille": 15,
+              "query_token": "comparing"
+            },
+            {
+              "doc_token": "evaluate",
+              "permille": 15,
+              "query_token": "comparing"
+            },
+            {
+              "doc_token": "evaluate",
+              "permille": 12,
+              "query_token": "decide"
+            },
+            {
+              "doc_token": "evaluate",
+              "permille": 12,
+              "query_token": "decide"
+            },
+            {
+              "doc_token": "none",
+              "permille": 11,
+              "query_token": "never"
+            }
+          ],
+          "permille": 324,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/cbms_gate.py:evaluate"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d019",
+      "kind": "positive",
+      "rank": 8,
+      "top1_score": 377
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "window",
+              "permille": 27,
+              "query_token": "window"
+            },
+            {
+              "doc_token": "window",
+              "permille": 27,
+              "query_token": "window"
+            },
+            {
+              "doc_token": "times",
+              "permille": 18,
+              "query_token": "times"
+            },
+            {
+              "doc_token": "##time",
+              "permille": 17,
+              "query_token": "hour"
+            },
+            {
+              "doc_token": "##time",
+              "permille": 17,
+              "query_token": "hour"
+            }
+          ],
+          "permille": 336,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/operator/loop.py:_prune_restart_window"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "times",
+              "permille": 13,
+              "query_token": "times"
+            },
+            {
+              "doc_token": "stale",
+              "permille": 10,
+              "query_token": "refuse"
+            },
+            {
+              "doc_token": "times",
+              "permille": 7,
+              "query_token": "hour"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 5,
+              "query_token": "attempt"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 5,
+              "query_token": "attempt"
+            }
+          ],
+          "permille": 310,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/operator/loop.py:_check_restart_cooldown"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "load",
+              "permille": 16,
+              "query_token": "bounced"
+            },
+            {
+              "doc_token": "load",
+              "permille": 16,
+              "query_token": "bounced"
+            },
+            {
+              "doc_token": "load",
+              "permille": 12,
+              "query_token": "bouncing"
+            },
+            {
+              "doc_token": "load",
+              "permille": 12,
+              "query_token": "bouncing"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 9,
+              "query_token": "attempt"
+            }
+          ],
+          "permille": 283,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/operator/loop.py:_load_restarts"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d020",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": 336
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "thread",
+              "permille": 16,
+              "query_token": "thread"
+            },
+            {
+              "doc_token": "keeps",
+              "permille": 6,
+              "query_token": "hangs"
+            },
+            {
+              "doc_token": "startup",
+              "permille": 6,
+              "query_token": "initial"
+            },
+            {
+              "doc_token": "thread",
+              "permille": 5,
+              "query_token": "hangs"
+            },
+            {
+              "doc_token": "##off",
+              "permille": 4,
+              "query_token": "##away"
+            }
+          ],
+          "permille": 455,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/node_agent/agent.py:registration_and_heartbeat_loop"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "diagnostic",
+              "permille": 35,
+              "query_token": "diagnostic"
+            },
+            {
+              "doc_token": "server",
+              "permille": 10,
+              "query_token": "queue"
+            },
+            {
+              "doc_token": "backing",
+              "permille": 8,
+              "query_token": "back"
+            },
+            {
+              "doc_token": "return",
+              "permille": 8,
+              "query_token": "back"
+            },
+            {
+              "doc_token": "backing",
+              "permille": 7,
+              "query_token": "background"
+            }
+          ],
+          "permille": 447,
+          "rule": "embed_similarity",
+          "symbol": "server/store_api.py:get_connection_mode"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "verify",
+              "permille": 11,
+              "query_token": "guarantee"
+            },
+            {
+              "doc_token": "loop",
+              "permille": 9,
+              "query_token": "hangs"
+            },
+            {
+              "doc_token": "verify",
+              "permille": 7,
+              "query_token": "diagnostic"
+            },
+            {
+              "doc_token": "loop",
+              "permille": 6,
+              "query_token": "thread"
+            },
+            {
+              "doc_token": "loop",
+              "permille": 5,
+              "query_token": "queue"
+            }
+          ],
+          "permille": 409,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/operator/loop.py:_issue_key"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d021",
+      "kind": "positive",
+      "rank": 7,
+      "top1_score": 455
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "size",
+              "permille": 15,
+              "query_token": "size"
+            },
+            {
+              "doc_token": "int",
+              "permille": 12,
+              "query_token": "id"
+            },
+            {
+              "doc_token": "int",
+              "permille": 12,
+              "query_token": "id"
+            },
+            {
+              "doc_token": "int",
+              "permille": 12,
+              "query_token": "id"
+            },
+            {
+              "doc_token": "retrieval",
+              "permille": 9,
+              "query_token": "memory"
+            }
+          ],
+          "permille": 436,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/agi_soft_retrieval.py:ChunkEmbedder/__init__"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "memory",
+              "permille": 34,
+              "query_token": "memory"
+            },
+            {
+              "doc_token": "memory",
+              "permille": 34,
+              "query_token": "memory"
+            },
+            {
+              "doc_token": "memory",
+              "permille": 34,
+              "query_token": "memory"
+            },
+            {
+              "doc_token": "context",
+              "permille": 33,
+              "query_token": "context"
+            },
+            {
+              "doc_token": "short",
+              "permille": 20,
+              "query_token": "short"
+            }
+          ],
+          "permille": 426,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/agi_core.py:WorkingMemory"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "memory",
+              "permille": 23,
+              "query_token": "memory"
+            },
+            {
+              "doc_token": "memory",
+              "permille": 23,
+              "query_token": "memory"
+            },
+            {
+              "doc_token": "memory",
+              "permille": 23,
+              "query_token": "memory"
+            },
+            {
+              "doc_token": "dashboard",
+              "permille": 8,
+              "query_token": "id"
+            },
+            {
+              "doc_token": "monitoring",
+              "permille": 7,
+              "query_token": "##ifier"
+            }
+          ],
+          "permille": 425,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/aions_monitoring_dashboard.py:AIONSMonitor/_get_memory_usage"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d022",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 436
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "disk",
+              "permille": 71,
+              "query_token": "disk"
+            },
+            {
+              "doc_token": "disk",
+              "permille": 71,
+              "query_token": "disk"
+            },
+            {
+              "doc_token": "disk",
+              "permille": 23,
+              "query_token": "file"
+            },
+            {
+              "doc_token": "disk",
+              "permille": 23,
+              "query_token": "file"
+            },
+            {
+              "doc_token": "registry",
+              "permille": 19,
+              "query_token": "retrieval"
+            }
+          ],
+          "permille": 508,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/node_registry.py:_save_to_disk"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "disk",
+              "permille": 67,
+              "query_token": "disk"
+            },
+            {
+              "doc_token": "disk",
+              "permille": 67,
+              "query_token": "disk"
+            },
+            {
+              "doc_token": "disk",
+              "permille": 22,
+              "query_token": "file"
+            },
+            {
+              "doc_token": "disk",
+              "permille": 22,
+              "query_token": "file"
+            },
+            {
+              "doc_token": "registry",
+              "permille": 18,
+              "query_token": "retrieval"
+            }
+          ],
+          "permille": 503,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/node_registry.py:_load_from_disk"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "disk",
+              "permille": 46,
+              "query_token": "disk"
+            },
+            {
+              "doc_token": "disk",
+              "permille": 46,
+              "query_token": "disk"
+            },
+            {
+              "doc_token": "st",
+              "permille": 17,
+              "query_token": "st"
+            },
+            {
+              "doc_token": "st",
+              "permille": 17,
+              "query_token": "st"
+            },
+            {
+              "doc_token": "disk",
+              "permille": 15,
+              "query_token": "file"
+            }
+          ],
+          "permille": 467,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/cbms_gate.py:_save_disk_cache"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d023",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 508
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "process",
+              "permille": 10,
+              "query_token": "process"
+            },
+            {
+              "doc_token": "ob",
+              "permille": 7,
+              "query_token": "object"
+            },
+            {
+              "doc_token": "embedded",
+              "permille": 6,
+              "query_token": "##bed"
+            },
+            {
+              "doc_token": "degraded",
+              "permille": 6,
+              "query_token": "fix"
+            },
+            {
+              "doc_token": "degraded",
+              "permille": 6,
+              "query_token": "fix"
+            }
+          ],
+          "permille": 431,
+          "rule": "embed_similarity",
+          "symbol": "server/store_http.py:_log_degraded"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "restart",
+              "permille": 10,
+              "query_token": "fix"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 10,
+              "query_token": "fix"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 10,
+              "query_token": "fix"
+            },
+            {
+              "doc_token": "restarted",
+              "permille": 9,
+              "query_token": "fix"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 7,
+              "query_token": "reused"
+            }
+          ],
+          "permille": 404,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/operator/loop.py:act"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "##bed",
+              "permille": 21,
+              "query_token": "##bed"
+            },
+            {
+              "doc_token": "##bed",
+              "permille": 21,
+              "query_token": "##bed"
+            },
+            {
+              "doc_token": "##bed",
+              "permille": 21,
+              "query_token": "##bed"
+            },
+            {
+              "doc_token": "em",
+              "permille": 20,
+              "query_token": "em"
+            },
+            {
+              "doc_token": "em",
+              "permille": 20,
+              "query_token": "em"
+            }
+          ],
+          "permille": 404,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/semantic_search.py:_active_embedder"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d024",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 431
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "##son",
+              "permille": 17,
+              "query_token": "##son"
+            },
+            {
+              "doc_token": "##son",
+              "permille": 17,
+              "query_token": "##son"
+            },
+            {
+              "doc_token": "##son",
+              "permille": 17,
+              "query_token": "##son"
+            },
+            {
+              "doc_token": "##son",
+              "permille": 17,
+              "query_token": "##son"
+            },
+            {
+              "doc_token": "##son",
+              "permille": 17,
+              "query_token": "##son"
+            }
+          ],
+          "permille": 442,
+          "rule": "embed_similarity",
+          "symbol": "scripts/chatgpt_extractor.py:extract_json_objects"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "object",
+              "permille": 16,
+              "query_token": "object"
+            },
+            {
+              "doc_token": "##son",
+              "permille": 15,
+              "query_token": "##son"
+            },
+            {
+              "doc_token": "##son",
+              "permille": 15,
+              "query_token": "##son"
+            },
+            {
+              "doc_token": "##son",
+              "permille": 15,
+              "query_token": "##son"
+            },
+            {
+              "doc_token": "##son",
+              "permille": 15,
+              "query_token": "##son"
+            }
+          ],
+          "permille": 427,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/agents/agent_schema.py:load"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "object",
+              "permille": 13,
+              "query_token": "object"
+            },
+            {
+              "doc_token": "##son",
+              "permille": 12,
+              "query_token": "##son"
+            },
+            {
+              "doc_token": "##son",
+              "permille": 12,
+              "query_token": "##son"
+            },
+            {
+              "doc_token": "##son",
+              "permille": 12,
+              "query_token": "##son"
+            },
+            {
+              "doc_token": "##son",
+              "permille": 12,
+              "query_token": "##son"
+            }
+          ],
+          "permille": 405,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/gate.py:audit"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d025",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 442
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "##back",
+              "permille": 25,
+              "query_token": "##back"
+            },
+            {
+              "doc_token": "fall",
+              "permille": 21,
+              "query_token": "fall"
+            },
+            {
+              "doc_token": "fall",
+              "permille": 21,
+              "query_token": "fall"
+            },
+            {
+              "doc_token": "unavailable",
+              "permille": 15,
+              "query_token": "cannot"
+            },
+            {
+              "doc_token": "semantic",
+              "permille": 10,
+              "query_token": "syntax"
+            }
+          ],
+          "permille": 421,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/semantic_search.py:_get_vs"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "returns",
+              "permille": 8,
+              "query_token": "##back"
+            },
+            {
+              "doc_token": "ai",
+              "permille": 8,
+              "query_token": "abstract"
+            },
+            {
+              "doc_token": "stylistic",
+              "permille": 8,
+              "query_token": "syntax"
+            },
+            {
+              "doc_token": "text",
+              "permille": 8,
+              "query_token": "syntax"
+            },
+            {
+              "doc_token": "must",
+              "permille": 7,
+              "query_token": "depends"
+            }
+          ],
+          "permille": 409,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/server/stylist.py:style_pass"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "##back",
+              "permille": 19,
+              "query_token": "##back"
+            },
+            {
+              "doc_token": "fall",
+              "permille": 16,
+              "query_token": "fall"
+            },
+            {
+              "doc_token": "mode",
+              "permille": 5,
+              "query_token": "module"
+            },
+            {
+              "doc_token": "logs",
+              "permille": 5,
+              "query_token": "tree"
+            },
+            {
+              "doc_token": "logs",
+              "permille": 5,
+              "query_token": "tree"
+            }
+          ],
+          "permille": 409,
+          "rule": "embed_similarity",
+          "symbol": "server/store_http.py:_log_degraded"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d026",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 421
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "path",
+              "permille": 24,
+              "query_token": "paths"
+            },
+            {
+              "doc_token": "path",
+              "permille": 24,
+              "query_token": "paths"
+            },
+            {
+              "doc_token": "count",
+              "permille": 13,
+              "query_token": "totals"
+            },
+            {
+              "doc_token": "count",
+              "permille": 13,
+              "query_token": "totals"
+            },
+            {
+              "doc_token": "count",
+              "permille": 13,
+              "query_token": "totals"
+            }
+          ],
+          "permille": 378,
+          "rule": "embed_similarity",
+          "symbol": "scripts/project_scanner.py:count_lines"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "facts",
+              "permille": 11,
+              "query_token": "totals"
+            },
+            {
+              "doc_token": "facts",
+              "permille": 9,
+              "query_token": "discovered"
+            },
+            {
+              "doc_token": "split",
+              "permille": 7,
+              "query_token": "shared"
+            },
+            {
+              "doc_token": "split",
+              "permille": 7,
+              "query_token": "shared"
+            },
+            {
+              "doc_token": "builder",
+              "permille": 7,
+              "query_token": "worker"
+            }
+          ],
+          "permille": 264,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/tools/facts_builder.py:split_sentences"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "count",
+              "permille": 19,
+              "query_token": "totals"
+            },
+            {
+              "doc_token": "count",
+              "permille": 19,
+              "query_token": "totals"
+            },
+            {
+              "doc_token": "count",
+              "permille": 11,
+              "query_token": "eight"
+            },
+            {
+              "doc_token": "count",
+              "permille": 11,
+              "query_token": "eight"
+            },
+            {
+              "doc_token": "sessions",
+              "permille": 11,
+              "query_token": "pool"
+            }
+          ],
+          "permille": 257,
+          "rule": "embed_similarity",
+          "symbol": "server/store.py:VectorStore/sessions_count"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d027",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 378
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "verify",
+              "permille": 30,
+              "query_token": "confirms"
+            },
+            {
+              "doc_token": "verify",
+              "permille": 30,
+              "query_token": "confirms"
+            },
+            {
+              "doc_token": "verify",
+              "permille": 17,
+              "query_token": "check"
+            },
+            {
+              "doc_token": "verify",
+              "permille": 17,
+              "query_token": "check"
+            },
+            {
+              "doc_token": "verify",
+              "permille": 16,
+              "query_token": "##ntial"
+            }
+          ],
+          "permille": 370,
+          "rule": "embed_similarity",
+          "symbol": "scripts/demo_windows_session.py:verify"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "schedule",
+              "permille": 6,
+              "query_token": "appointment"
+            },
+            {
+              "doc_token": "collect",
+              "permille": 6,
+              "query_token": "stored"
+            },
+            {
+              "doc_token": "collect",
+              "permille": 6,
+              "query_token": "stored"
+            },
+            {
+              "doc_token": "deadline",
+              "permille": 6,
+              "query_token": "tomorrow"
+            },
+            {
+              "doc_token": "deadline",
+              "permille": 6,
+              "query_token": "tomorrow"
+            }
+          ],
+          "permille": 361,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/scheduler.py:collect_deadlines"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "save",
+              "permille": 9,
+              "query_token": "stored"
+            },
+            {
+              "doc_token": "save",
+              "permille": 9,
+              "query_token": "stored"
+            },
+            {
+              "doc_token": "save",
+              "permille": 9,
+              "query_token": "stored"
+            },
+            {
+              "doc_token": "self",
+              "permille": 8,
+              "query_token": "itself"
+            },
+            {
+              "doc_token": "scanner",
+              "permille": 7,
+              "query_token": "printing"
+            }
+          ],
+          "permille": 346,
+          "rule": "embed_similarity",
+          "symbol": "scripts/turbo_scanner.py:TurboScanner/_save_results"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d028",
+      "kind": "positive",
+      "rank": 18,
+      "top1_score": 370
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "windows",
+              "permille": 15,
+              "query_token": "windows"
+            },
+            {
+              "doc_token": "approval",
+              "permille": 9,
+              "query_token": "confirm"
+            },
+            {
+              "doc_token": "still",
+              "permille": 8,
+              "query_token": "still"
+            },
+            {
+              "doc_token": "check",
+              "permille": 5,
+              "query_token": "confirm"
+            },
+            {
+              "doc_token": "check",
+              "permille": 5,
+              "query_token": "confirm"
+            }
+          ],
+          "permille": 499,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/gate.py:check"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "##ry",
+              "permille": 6,
+              "query_token": "##ry"
+            },
+            {
+              "doc_token": "guard",
+              "permille": 5,
+              "query_token": "sentinel"
+            },
+            {
+              "doc_token": "ch",
+              "permille": 4,
+              "query_token": "##cr"
+            },
+            {
+              "doc_token": "##sl",
+              "permille": 4,
+              "query_token": "##lo"
+            },
+            {
+              "doc_token": "false",
+              "permille": 4,
+              "query_token": "confirm"
+            }
+          ],
+          "permille": 466,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/goal_planner.py:_step_explicit_ok_false"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "verify",
+              "permille": 14,
+              "query_token": "confirm"
+            },
+            {
+              "doc_token": "verify",
+              "permille": 14,
+              "query_token": "confirm"
+            },
+            {
+              "doc_token": "operator",
+              "permille": 9,
+              "query_token": "operation"
+            },
+            {
+              "doc_token": "verify",
+              "permille": 8,
+              "query_token": "correctly"
+            },
+            {
+              "doc_token": "verify",
+              "permille": 8,
+              "query_token": "correctly"
+            }
+          ],
+          "permille": 461,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/operator/loop.py:verify"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d029",
+      "kind": "positive",
+      "rank": 4,
+      "top1_score": 499
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "code",
+              "permille": 24,
+              "query_token": "code"
+            },
+            {
+              "doc_token": "code",
+              "permille": 24,
+              "query_token": "code"
+            },
+            {
+              "doc_token": "code",
+              "permille": 24,
+              "query_token": "code"
+            },
+            {
+              "doc_token": "##book",
+              "permille": 12,
+              "query_token": "library"
+            },
+            {
+              "doc_token": "##book",
+              "permille": 12,
+              "query_token": "library"
+            }
+          ],
+          "permille": 482,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/server/codebook_engine.py:Codebook"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "code",
+              "permille": 20,
+              "query_token": "code"
+            },
+            {
+              "doc_token": "code",
+              "permille": 20,
+              "query_token": "code"
+            },
+            {
+              "doc_token": "code",
+              "permille": 20,
+              "query_token": "code"
+            },
+            {
+              "doc_token": "##book",
+              "permille": 10,
+              "query_token": "library"
+            },
+            {
+              "doc_token": "##book",
+              "permille": 10,
+              "query_token": "library"
+            }
+          ],
+          "permille": 471,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/server/codebook_engine.py:Codebook/load"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "code",
+              "permille": 29,
+              "query_token": "code"
+            },
+            {
+              "doc_token": "code",
+              "permille": 29,
+              "query_token": "code"
+            },
+            {
+              "doc_token": "code",
+              "permille": 14,
+              "query_token": "byte"
+            },
+            {
+              "doc_token": "code",
+              "permille": 14,
+              "query_token": "byte"
+            },
+            {
+              "doc_token": "##book",
+              "permille": 14,
+              "query_token": "library"
+            }
+          ],
+          "permille": 451,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/cbms_gate.py:_get_codebook"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d030",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 482
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "##hema",
+              "permille": 67,
+              "query_token": "##hema"
+            },
+            {
+              "doc_token": "##hema",
+              "permille": 67,
+              "query_token": "##hema"
+            },
+            {
+              "doc_token": "##hema",
+              "permille": 67,
+              "query_token": "##hema"
+            },
+            {
+              "doc_token": "sc",
+              "permille": 42,
+              "query_token": "sc"
+            },
+            {
+              "doc_token": "sc",
+              "permille": 42,
+              "query_token": "sc"
+            }
+          ],
+          "permille": 428,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/tools/check_schema.py:check_schema"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "fails",
+              "permille": 24,
+              "query_token": "failed"
+            },
+            {
+              "doc_token": "db",
+              "permille": 14,
+              "query_token": "database"
+            },
+            {
+              "doc_token": "incompatible",
+              "permille": 12,
+              "query_token": "failed"
+            },
+            {
+              "doc_token": "error",
+              "permille": 11,
+              "query_token": "failed"
+            },
+            {
+              "doc_token": "refuse",
+              "permille": 9,
+              "query_token": "failed"
+            }
+          ],
+          "permille": 422,
+          "rule": "embed_similarity",
+          "symbol": "scripts/ingest_treasures_tier2.py:_assert_chroma_version"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "fails",
+              "permille": 22,
+              "query_token": "failed"
+            },
+            {
+              "doc_token": "db",
+              "permille": 12,
+              "query_token": "database"
+            },
+            {
+              "doc_token": "incompatible",
+              "permille": 11,
+              "query_token": "failed"
+            },
+            {
+              "doc_token": "error",
+              "permille": 10,
+              "query_token": "failed"
+            },
+            {
+              "doc_token": "refuse",
+              "permille": 8,
+              "query_token": "failed"
+            }
+          ],
+          "permille": 412,
+          "rule": "embed_similarity",
+          "symbol": "scripts/ingest_tier1_chroma.py:_assert_chroma_version"
+        }
+      ],
+      "id": "d031",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 428
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "requests",
+              "permille": 52,
+              "query_token": "requests"
+            },
+            {
+              "doc_token": "requests",
+              "permille": 52,
+              "query_token": "requests"
+            },
+            {
+              "doc_token": "requests",
+              "permille": 52,
+              "query_token": "requests"
+            },
+            {
+              "doc_token": "requests",
+              "permille": 52,
+              "query_token": "requests"
+            },
+            {
+              "doc_token": "requested",
+              "permille": 36,
+              "query_token": "requests"
+            }
+          ],
+          "permille": 501,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/forge.py:list_requests"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "request",
+              "permille": 43,
+              "query_token": "requests"
+            },
+            {
+              "doc_token": "request",
+              "permille": 43,
+              "query_token": "requests"
+            },
+            {
+              "doc_token": "request",
+              "permille": 43,
+              "query_token": "requests"
+            },
+            {
+              "doc_token": "request",
+              "permille": 43,
+              "query_token": "requests"
+            },
+            {
+              "doc_token": "api",
+              "permille": 26,
+              "query_token": "requests"
+            }
+          ],
+          "permille": 441,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/api.py:PlanRequest"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "request",
+              "permille": 38,
+              "query_token": "requests"
+            },
+            {
+              "doc_token": "request",
+              "permille": 38,
+              "query_token": "requests"
+            },
+            {
+              "doc_token": "request",
+              "permille": 38,
+              "query_token": "requests"
+            },
+            {
+              "doc_token": "request",
+              "permille": 38,
+              "query_token": "requests"
+            },
+            {
+              "doc_token": "min",
+              "permille": 25,
+              "query_token": "minute"
+            }
+          ],
+          "permille": 441,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/forge.py:plan_or_request"
+        }
+      ],
+      "id": "d032",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 501
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "monitoring",
+              "permille": 42,
+              "query_token": "monitoring"
+            },
+            {
+              "doc_token": "monitoring",
+              "permille": 42,
+              "query_token": "monitoring"
+            },
+            {
+              "doc_token": "monitoring",
+              "permille": 42,
+              "query_token": "monitoring"
+            },
+            {
+              "doc_token": "monitoring",
+              "permille": 42,
+              "query_token": "monitoring"
+            },
+            {
+              "doc_token": "dashboard",
+              "permille": 14,
+              "query_token": "monitoring"
+            }
+          ],
+          "permille": 474,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/aions_monitoring_dashboard.py:main_monitoring"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "registry",
+              "permille": 15,
+              "query_token": "registered"
+            },
+            {
+              "doc_token": "registry",
+              "permille": 15,
+              "query_token": "registered"
+            },
+            {
+              "doc_token": "registry",
+              "permille": 15,
+              "query_token": "registered"
+            },
+            {
+              "doc_token": "count",
+              "permille": 13,
+              "query_token": "counters"
+            },
+            {
+              "doc_token": "count",
+              "permille": 13,
+              "query_token": "counters"
+            }
+          ],
+          "permille": 441,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/skills/forge.py:_content_token_count"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "scan",
+              "permille": 10,
+              "query_token": "monitoring"
+            },
+            {
+              "doc_token": "scan",
+              "permille": 10,
+              "query_token": "monitoring"
+            },
+            {
+              "doc_token": "scan",
+              "permille": 10,
+              "query_token": "monitoring"
+            },
+            {
+              "doc_token": "scan",
+              "permille": 10,
+              "query_token": "monitoring"
+            },
+            {
+              "doc_token": "scanner",
+              "permille": 8,
+              "query_token": "##gram"
+            }
+          ],
+          "permille": 438,
+          "rule": "embed_similarity",
+          "symbol": "scripts/project_scanner.py:ProjectScanner/scan"
+        }
+      ],
+      "id": "d033",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 474
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "message",
+              "permille": 26,
+              "query_token": "message"
+            },
+            {
+              "doc_token": "message",
+              "permille": 26,
+              "query_token": "message"
+            },
+            {
+              "doc_token": "message",
+              "permille": 26,
+              "query_token": "message"
+            },
+            {
+              "doc_token": "message",
+              "permille": 26,
+              "query_token": "message"
+            },
+            {
+              "doc_token": "send",
+              "permille": 26,
+              "query_token": "send"
+            }
+          ],
+          "permille": 618,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/test_aions_capabilities.py:send_message"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "message",
+              "permille": 25,
+              "query_token": "message"
+            },
+            {
+              "doc_token": "message",
+              "permille": 11,
+              "query_token": "send"
+            },
+            {
+              "doc_token": "user",
+              "permille": 11,
+              "query_token": "somebody"
+            },
+            {
+              "doc_token": "conversation",
+              "permille": 10,
+              "query_token": "message"
+            },
+            {
+              "doc_token": "conversation",
+              "permille": 10,
+              "query_token": "message"
+            }
+          ],
+          "permille": 462,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/server/cbms_direct_server.py:UnifiedCBMSHandler/_try_conversational_response"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "message",
+              "permille": 24,
+              "query_token": "message"
+            },
+            {
+              "doc_token": "message",
+              "permille": 11,
+              "query_token": "send"
+            },
+            {
+              "doc_token": "user",
+              "permille": 11,
+              "query_token": "somebody"
+            },
+            {
+              "doc_token": "conversation",
+              "permille": 10,
+              "query_token": "message"
+            },
+            {
+              "doc_token": "conversation",
+              "permille": 10,
+              "query_token": "message"
+            }
+          ],
+          "permille": 454,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/server/cbms_unified_server.py:UnifiedCBMSHandler/_try_conversational_response"
+        }
+      ],
+      "id": "d034",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 618
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "user",
+              "permille": 18,
+              "query_token": "user"
+            },
+            {
+              "doc_token": "user",
+              "permille": 18,
+              "query_token": "user"
+            },
+            {
+              "doc_token": "user",
+              "permille": 18,
+              "query_token": "user"
+            },
+            {
+              "doc_token": "user",
+              "permille": 18,
+              "query_token": "user"
+            },
+            {
+              "doc_token": "user",
+              "permille": 18,
+              "query_token": "user"
+            }
+          ],
+          "permille": 389,
+          "rule": "embed_similarity",
+          "symbol": "scripts/chatgpt_parser_v2.py:main"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "int",
+              "permille": 21,
+              "query_token": "interface"
+            },
+            {
+              "doc_token": "ai",
+              "permille": 11,
+              "query_token": "interface"
+            },
+            {
+              "doc_token": "text",
+              "permille": 9,
+              "query_token": "language"
+            },
+            {
+              "doc_token": "text",
+              "permille": 9,
+              "query_token": "language"
+            },
+            {
+              "doc_token": "text",
+              "permille": 9,
+              "query_token": "language"
+            }
+          ],
+          "permille": 353,
+          "rule": "embed_similarity",
+          "symbol": "aions_core/server/pocket_qc.py:_codebook_symbols_for_text"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "strings",
+              "permille": 36,
+              "query_token": "strings"
+            },
+            {
+              "doc_token": "strings",
+              "permille": 36,
+              "query_token": "strings"
+            },
+            {
+              "doc_token": "strings",
+              "permille": 36,
+              "query_token": "strings"
+            },
+            {
+              "doc_token": "int",
+              "permille": 16,
+              "query_token": "interface"
+            },
+            {
+              "doc_token": "chat",
+              "permille": 9,
+              "query_token": "language"
+            }
+          ],
+          "permille": 329,
+          "rule": "embed_similarity",
+          "symbol": "scripts/chatgpt_extractor.py:extract_readable_strings"
+        }
+      ],
+      "id": "d035",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 389
+    },
+    {
+      "expansion": [
+        {
+          "pairs": [
+            {
+              "doc_token": "##lip",
+              "permille": 8,
+              "query_token": "##ep"
+            },
+            {
+              "doc_token": "##rea",
+              "permille": 8,
+              "query_token": "##ep"
+            },
+            {
+              "doc_token": "back",
+              "permille": 7,
+              "query_token": "back"
+            },
+            {
+              "doc_token": "##off",
+              "permille": 6,
+              "query_token": "off"
+            },
+            {
+              "doc_token": "##lip",
+              "permille": 6,
+              "query_token": "slice"
+            }
+          ],
+          "permille": 405,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/node_agent/agent.py:registration_and_heartbeat_loop"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "restart",
+              "permille": 14,
+              "query_token": "switch"
+            },
+            {
+              "doc_token": "restart",
+              "permille": 14,
+              "query_token": "switch"
+            },
+            {
+              "doc_token": "loop",
+              "permille": 11,
+              "query_token": "slice"
+            },
+            {
+              "doc_token": "loop",
+              "permille": 10,
+              "query_token": "##lo"
+            },
+            {
+              "doc_token": "control",
+              "permille": 10,
+              "query_token": "switch"
+            }
+          ],
+          "permille": 398,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/operator/loop.py:_save_restarts"
+        },
+        {
+          "pairs": [
+            {
+              "doc_token": "stop",
+              "permille": 15,
+              "query_token": "off"
+            },
+            {
+              "doc_token": "stop",
+              "permille": 15,
+              "query_token": "off"
+            },
+            {
+              "doc_token": "stop",
+              "permille": 14,
+              "query_token": "turn"
+            },
+            {
+              "doc_token": "stop",
+              "permille": 14,
+              "query_token": "turn"
+            },
+            {
+              "doc_token": "loop",
+              "permille": 12,
+              "query_token": "##lo"
+            }
+          ],
+          "permille": 392,
+          "rule": "embed_similarity",
+          "symbol": "control_plane/operator/loop.py:_request_stop"
+        }
+      ],
+      "id": "d036",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 405
+    }
+  ],
+  "question_set": {
+    "content_hash": "blake2b256:278f2dc2b92fd4573bdbd3ae37bbc690d5a59ab0fc0d78af5ade6ad97dded4da",
+    "file": "dev_questions.json",
+    "name": "dev"
+  },
+  "result_hash": "blake2b256:e6b94a39a67d973e5e8c453e868e5f56410f07d4b48d8844fca7c313d8e3792c",
+  "schema": "acae.m4.v1",
+  "scope": {
+    "files": 169,
+    "symbols": 1598
+  },
+  "variant": "embed"
+}

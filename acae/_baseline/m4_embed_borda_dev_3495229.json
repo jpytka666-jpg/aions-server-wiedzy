@@ -1,0 +1,1143 @@
+{
+  "depth": 25,
+  "head": "3495229",
+  "metrics": {
+    "counts": {
+      "negative": 6,
+      "positive": 30
+    },
+    "gate_cut": 0,
+    "gate_fallback": 0,
+    "gate_size_median": 0,
+    "m7_zero_bucket": 11,
+    "m7_zero_rank_median": 336,
+    "m7_zero_reached_25": 1,
+    "mean_top1_negative": -4,
+    "mean_top1_positive": -13,
+    "mrr_permille": 249,
+    "negative_ratio_permille": -4000,
+    "recall_at_10_permille": 333,
+    "recall_at_25_permille": 400
+  },
+  "packages": {
+    "tiktoken": "0.13.0"
+  },
+  "per_query": [
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 3,
+              "rank_lexical": 5,
+              "symbol": "aions_core/server/math_solver.py:_per_each_simple"
+            },
+            {
+              "rank_embed": 7,
+              "rank_lexical": 2,
+              "symbol": "scripts/project_scanner.py:hash_file"
+            },
+            {
+              "rank_embed": 17,
+              "rank_lexical": 3,
+              "symbol": "scripts/turbo_scanner.py:hash_file_fast"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d001",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -8
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 4,
+              "rank_lexical": 1,
+              "symbol": "aions_core/agi_unified.py:AGIUnified/_process_fallback"
+            },
+            {
+              "rank_embed": 2,
+              "rank_lexical": 5,
+              "symbol": "aions_core/aions_agent_layer.py:ToolCatalog/check_execution_limit"
+            },
+            {
+              "rank_embed": 13,
+              "rank_lexical": 7,
+              "symbol": "control_plane/agents/agent_schema.py:load"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d002",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -5
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 6,
+              "rank_lexical": 10,
+              "symbol": "aions_core/agi_learning.py:AGILearning/_update_manifest"
+            },
+            {
+              "rank_embed": 9,
+              "rank_lexical": 18,
+              "symbol": "aions_core/cbms_memory.py:CBMSMemory/_load_manifest"
+            },
+            {
+              "rank_embed": 8,
+              "rank_lexical": 21,
+              "symbol": "aions_core/server/cbms_memory.py:CBMSMemory/_load_manifest"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d003",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -16
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 1,
+              "rank_lexical": 3,
+              "symbol": "control_plane/skills/semantic_search.py:_normalize_text"
+            },
+            {
+              "rank_embed": 9,
+              "rank_lexical": 13,
+              "symbol": "control_plane/skills/forge.py:_content_token_count"
+            },
+            {
+              "rank_embed": 13,
+              "rank_lexical": 16,
+              "symbol": "scripts/vault/_core.py:seal_file"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d004",
+      "kind": "positive",
+      "rank": 11,
+      "top1_score": -4
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 1,
+              "rank_lexical": 8,
+              "symbol": "control_plane/agents/agent_schema.py:validate"
+            },
+            {
+              "rank_embed": 6,
+              "rank_lexical": 11,
+              "symbol": "aions_core/server/cbms_direct_server.py:UnifiedCBMSHandler/_create_soft_refusal"
+            },
+            {
+              "rank_embed": 11,
+              "rank_lexical": 12,
+              "symbol": "aions_core/server/cbms_unified_server.py:UnifiedCBMSHandler/_create_soft_refusal"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d005",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -9
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 6,
+              "rank_lexical": 6,
+              "symbol": "server/store_api.py:VectorStore/prune_expired"
+            },
+            {
+              "rank_embed": 5,
+              "rank_lexical": 7,
+              "symbol": "server/store_http.py:VectorStore/prune_expired"
+            },
+            {
+              "rank_embed": 10,
+              "rank_lexical": 3,
+              "symbol": "server/store_http.py:get_connection_mode"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d006",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -12
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 1,
+              "rank_lexical": 7,
+              "symbol": "control_plane/node_agent/agent.py:registration_and_heartbeat_loop"
+            },
+            {
+              "rank_embed": 5,
+              "rank_lexical": 12,
+              "symbol": "control_plane/operator/loop.py:act"
+            },
+            {
+              "rank_embed": 3,
+              "rank_lexical": 20,
+              "symbol": "control_plane/operator/loop.py:_record_baseline"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d007",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -8
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 16,
+              "rank_lexical": 6,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:_build_everything_ext_query"
+            },
+            {
+              "rank_embed": 15,
+              "rank_lexical": 22,
+              "symbol": "control_plane/cbms_gate.py:_save_disk_cache"
+            },
+            {
+              "rank_embed": 5,
+              "rank_lexical": 32,
+              "symbol": "control_plane/operator/loop.py:_check_restart_cooldown"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d008",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -22
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 21,
+              "rank_lexical": 14,
+              "symbol": "control_plane/skills/world_state.py:matches"
+            },
+            {
+              "rank_embed": 2,
+              "rank_lexical": 38,
+              "symbol": "aions_core/memory_graph_engine.py:MemoryGraph/find_closest_concept"
+            },
+            {
+              "rank_embed": 20,
+              "rank_lexical": 20,
+              "symbol": "control_plane/skills/semantic_search.py:semantic_skill_search"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d009",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -35
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 2,
+              "rank_lexical": 2,
+              "symbol": "aions_core/server/web_rag_cbms.py:WebRAGTextExtractor"
+            },
+            {
+              "rank_embed": 6,
+              "rank_lexical": 3,
+              "symbol": "scripts/chatgpt_parser_v2.py:extract_all_readable_titles"
+            },
+            {
+              "rank_embed": 1,
+              "rank_lexical": 12,
+              "symbol": "scripts/project_scanner.py:ProjectScanner/_generate_markdown_report"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d010",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": -4
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 1,
+              "rank_lexical": 2,
+              "symbol": "aions_core/tools/web_crawler_import.py:crawl/allowed"
+            },
+            {
+              "rank_embed": 2,
+              "rank_lexical": 7,
+              "symbol": "aions_core/server/web_rag_cbms.py:WebRAGCBMS/_fetch_page"
+            },
+            {
+              "rank_embed": 13,
+              "rank_lexical": 8,
+              "symbol": "control_plane/node_agent/agent.py:get_local_ip"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d011",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -3
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 2,
+              "rank_lexical": 2,
+              "symbol": "scripts/full_system_scan.py:resolve_drive_order"
+            },
+            {
+              "rank_embed": 1,
+              "rank_lexical": 9,
+              "symbol": "control_plane/scheduler.py:collect_deadlines"
+            },
+            {
+              "rank_embed": 13,
+              "rank_lexical": 7,
+              "symbol": "control_plane/node_agent/agent.py:registration_and_heartbeat_loop"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d012",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": -4
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 5,
+              "rank_lexical": 17,
+              "symbol": "control_plane/operator/loop.py:_record_baseline"
+            },
+            {
+              "rank_embed": 25,
+              "rank_lexical": 2,
+              "symbol": "control_plane/skills/forge.py:_move_request"
+            },
+            {
+              "rank_embed": 22,
+              "rank_lexical": 8,
+              "symbol": "control_plane/agents/agent_schema.py:validate"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d013",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -22
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 1,
+              "rank_lexical": 1,
+              "symbol": "control_plane/agents/agent_schema.py:validate"
+            },
+            {
+              "rank_embed": 7,
+              "rank_lexical": 2,
+              "symbol": "aions_core/agi_unified.py:AGIUnified/_process_fallback"
+            },
+            {
+              "rank_embed": 5,
+              "rank_lexical": 8,
+              "symbol": "control_plane/skills/gate.py:classify"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d014",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": -2
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 7,
+              "rank_lexical": 6,
+              "symbol": "control_plane/operator/loop.py:_load_disk_overrides"
+            },
+            {
+              "rank_embed": 2,
+              "rank_lexical": 12,
+              "symbol": "control_plane/node_registry.py:_load_from_disk"
+            },
+            {
+              "rank_embed": 1,
+              "rank_lexical": 15,
+              "symbol": "control_plane/agents/agent_schema.py:load"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d015",
+      "kind": "positive",
+      "rank": 3,
+      "top1_score": -13
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 1,
+              "rank_lexical": 1,
+              "symbol": "server/store_http.py:_log_degraded"
+            },
+            {
+              "rank_embed": 7,
+              "rank_lexical": 5,
+              "symbol": "control_plane/operator/loop.py:act"
+            },
+            {
+              "rank_embed": 6,
+              "rank_lexical": 10,
+              "symbol": "control_plane/operator/loop.py:_check_restart_cooldown"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d016",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": -2
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 11,
+              "rank_lexical": 4,
+              "symbol": "control_plane/skills/forge.py:gap_detect"
+            },
+            {
+              "rank_embed": 2,
+              "rank_lexical": 22,
+              "symbol": "aions_core/aions_hybrid_retrieval.py:HybridRetriever/retrieve"
+            },
+            {
+              "rank_embed": 16,
+              "rank_lexical": 9,
+              "symbol": "control_plane/skills/semantic_search.py:_active_collection"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d017",
+      "kind": "positive",
+      "rank": 7,
+      "top1_score": -15
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 1,
+              "rank_lexical": 1,
+              "symbol": "control_plane/skills/stats.py:rank"
+            },
+            {
+              "rank_embed": 5,
+              "rank_lexical": 6,
+              "symbol": "aions_core/server/math_solver.py:_per_each_simple"
+            },
+            {
+              "rank_embed": 8,
+              "rank_lexical": 15,
+              "symbol": "control_plane/skills/semantic_search.py:_v3_semantic_scores"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d018",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": -2
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 8,
+              "rank_lexical": 1,
+              "symbol": "control_plane/operator/loop.py:_log_spike_baseline"
+            },
+            {
+              "rank_embed": 7,
+              "rank_lexical": 3,
+              "symbol": "aions_core/evaluator_engine.py:PerformanceEvaluator/evaluate_round"
+            },
+            {
+              "rank_embed": 5,
+              "rank_lexical": 19,
+              "symbol": "control_plane/operator/loop.py:_record_baseline"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d019",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": -9
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 12,
+              "rank_lexical": 1,
+              "symbol": "control_plane/operator/loop.py:act"
+            },
+            {
+              "rank_embed": 1,
+              "rank_lexical": 19,
+              "symbol": "control_plane/operator/loop.py:_prune_restart_window"
+            },
+            {
+              "rank_embed": 2,
+              "rank_lexical": 21,
+              "symbol": "control_plane/operator/loop.py:_check_restart_cooldown"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d020",
+      "kind": "positive",
+      "rank": 3,
+      "top1_score": -13
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 7,
+              "rank_lexical": 4,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:_run_with_wall_timeout"
+            },
+            {
+              "rank_embed": 2,
+              "rank_lexical": 14,
+              "symbol": "server/store_api.py:get_connection_mode"
+            },
+            {
+              "rank_embed": 1,
+              "rank_lexical": 22,
+              "symbol": "control_plane/node_agent/agent.py:registration_and_heartbeat_loop"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d021",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": -11
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 2,
+              "rank_lexical": 25,
+              "symbol": "aions_core/agi_core.py:WorkingMemory"
+            },
+            {
+              "rank_embed": 21,
+              "rank_lexical": 17,
+              "symbol": "control_plane/skills/semantic_search.py:semantic_skill_search"
+            },
+            {
+              "rank_embed": 6,
+              "rank_lexical": 44,
+              "symbol": "aions_core/agi_neural_backprop.py:DifferentiableMemory/__init__"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d022",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -27
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 5,
+              "rank_lexical": 8,
+              "symbol": "aions_core/agi_soft_retrieval.py:SoftRetriever/forward"
+            },
+            {
+              "rank_embed": 3,
+              "rank_lexical": 13,
+              "symbol": "control_plane/cbms_gate.py:_save_disk_cache"
+            },
+            {
+              "rank_embed": 2,
+              "rank_lexical": 15,
+              "symbol": "control_plane/node_registry.py:_load_from_disk"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d023",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -13
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 5,
+              "rank_lexical": 1,
+              "symbol": "server/store_http.py:get_connection_mode"
+            },
+            {
+              "rank_embed": 10,
+              "rank_lexical": 2,
+              "symbol": "server/store_api.py:get_connection_mode"
+            },
+            {
+              "rank_embed": 26,
+              "rank_lexical": 4,
+              "symbol": "aions_core/agi_learning.py:AGILearning/_init_database"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d024",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -6
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 2,
+              "rank_lexical": 20,
+              "symbol": "control_plane/agents/agent_schema.py:load"
+            },
+            {
+              "rank_embed": 1,
+              "rank_lexical": 23,
+              "symbol": "scripts/chatgpt_extractor.py:extract_json_objects"
+            },
+            {
+              "rank_embed": 18,
+              "rank_lexical": 21,
+              "symbol": "control_plane/agents/agent_schema.py:validate"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d025",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -22
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 7,
+              "rank_lexical": 10,
+              "symbol": "control_plane/skills/semantic_search.py:_active_defaults"
+            },
+            {
+              "rank_embed": 10,
+              "rank_lexical": 13,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:_build_everything_ext_query"
+            },
+            {
+              "rank_embed": 30,
+              "rank_lexical": 4,
+              "symbol": "aions_core/agi_unified.py:AGIUnified/_process_fallback"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d026",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -17
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 23,
+              "rank_lexical": 11,
+              "symbol": "aions_core/agi_unified.py:AGIUnified/stop_parallel_processing"
+            },
+            {
+              "rank_embed": 16,
+              "rank_lexical": 20,
+              "symbol": "control_plane/orchestrator_loop.py:_ensure_paths"
+            },
+            {
+              "rank_embed": 32,
+              "rank_lexical": 8,
+              "symbol": "aions_core/server/math_solver.py:_per_each_simple"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d027",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -34
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 21,
+              "rank_lexical": 2,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:_read_autolog_entries"
+            },
+            {
+              "rank_embed": 10,
+              "rank_lexical": 14,
+              "symbol": "control_plane/skills/gate.py:check"
+            },
+            {
+              "rank_embed": 16,
+              "rank_lexical": 12,
+              "symbol": "control_plane/operator/loop.py:act"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d028",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -23
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 1,
+              "rank_lexical": 9,
+              "symbol": "control_plane/skills/gate.py:check"
+            },
+            {
+              "rank_embed": 3,
+              "rank_lexical": 15,
+              "symbol": "control_plane/operator/loop.py:verify"
+            },
+            {
+              "rank_embed": 13,
+              "rank_lexical": 8,
+              "symbol": "control_plane/skills/semantic_search.py:_active_embedder"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d029",
+      "kind": "positive",
+      "rank": 13,
+      "top1_score": -10
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 4,
+              "rank_lexical": 4,
+              "symbol": "scripts/vault/_core.py:open_vault_entry"
+            },
+            {
+              "rank_embed": 20,
+              "rank_lexical": 6,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py:_LinuxAutomationSlice/_run_xdotool"
+            },
+            {
+              "rank_embed": 23,
+              "rank_lexical": 17,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:auto_logged"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d030",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -8
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 1,
+              "rank_lexical": 5,
+              "symbol": "aions_core/tools/check_schema.py:check_schema"
+            },
+            {
+              "rank_embed": 7,
+              "rank_lexical": 4,
+              "symbol": "control_plane/operator/loop.py:act"
+            },
+            {
+              "rank_embed": 4,
+              "rank_lexical": 7,
+              "symbol": "control_plane/skills/forge_linux_verify.py:_check_schema"
+            }
+          ]
+        }
+      ],
+      "id": "d031",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": -6
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 1,
+              "rank_lexical": 1,
+              "symbol": "control_plane/skills/forge.py:list_requests"
+            },
+            {
+              "rank_embed": 34,
+              "rank_lexical": 4,
+              "symbol": "control_plane/node_agent/agent.py:Handler/_send_json"
+            },
+            {
+              "rank_embed": 16,
+              "rank_lexical": 26,
+              "symbol": "server/store_http.py:VectorStore/get_status"
+            }
+          ]
+        }
+      ],
+      "id": "d032",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": -2
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 1,
+              "rank_lexical": 3,
+              "symbol": "aions_core/aions_monitoring_dashboard.py:main_monitoring"
+            },
+            {
+              "rank_embed": 8,
+              "rank_lexical": 8,
+              "symbol": "aions_core/aions_monitoring_dashboard.py:AIONSMonitor/benchmark_performance"
+            },
+            {
+              "rank_embed": 11,
+              "rank_lexical": 7,
+              "symbol": "aions_core/aions_monitoring_dashboard.py:PerformanceMetrics"
+            }
+          ]
+        }
+      ],
+      "id": "d033",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": -4
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 1,
+              "rank_lexical": 1,
+              "symbol": "aions_core/test_aions_capabilities.py:send_message"
+            },
+            {
+              "rank_embed": 4,
+              "rank_lexical": 2,
+              "symbol": "control_plane/node_agent/agent.py:Handler/_send_json"
+            },
+            {
+              "rank_embed": 10,
+              "rank_lexical": 3,
+              "symbol": "scripts/aions_node_heartbeat.py:send_heartbeat"
+            }
+          ]
+        }
+      ],
+      "id": "d034",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": -2
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 3,
+              "rank_lexical": 1,
+              "symbol": "scripts/chatgpt_extractor.py:extract_readable_strings"
+            },
+            {
+              "rank_embed": 10,
+              "rank_lexical": 12,
+              "symbol": "scripts/chatgpt_parser_v2.py:extract_user_info"
+            },
+            {
+              "rank_embed": 5,
+              "rank_lexical": 19,
+              "symbol": "aions_core/server/conversation_memory.py:update_user_profile"
+            }
+          ]
+        }
+      ],
+      "id": "d035",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": -4
+    },
+    {
+      "expansion": [
+        {
+          "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+          "rule": "embed_borda",
+          "top": [
+            {
+              "rank_embed": 1,
+              "rank_lexical": 5,
+              "symbol": "control_plane/node_agent/agent.py:registration_and_heartbeat_loop"
+            },
+            {
+              "rank_embed": 7,
+              "rank_lexical": 17,
+              "symbol": "control_plane/operator/loop.py:_check_restart_cooldown"
+            },
+            {
+              "rank_embed": 8,
+              "rank_lexical": 54,
+              "symbol": "control_plane/skills/gate.py:check"
+            }
+          ]
+        }
+      ],
+      "id": "d036",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": -6
+    }
+  ],
+  "question_set": {
+    "content_hash": "blake2b256:278f2dc2b92fd4573bdbd3ae37bbc690d5a59ab0fc0d78af5ade6ad97dded4da",
+    "file": "dev_questions.json",
+    "name": "dev"
+  },
+  "result_hash": "blake2b256:1265adddb301aa8c20b62905bef330b68c869d45c9017f18b1f3677de22c6ba1",
+  "schema": "acae.m4.v1",
+  "scope": {
+    "files": 169,
+    "symbols": 1598
+  },
+  "variant": "embed_borda"
+}
