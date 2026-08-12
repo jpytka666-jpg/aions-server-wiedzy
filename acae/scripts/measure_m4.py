@@ -646,6 +646,11 @@ def main() -> int:
         "metrics": {k: v for k, v in result.items() if k != "per_query"},
         "per_query": result["per_query"],
     }
+    if args.variant == "desc":
+        # Prowieniencja opisow w wyniku pomiaru: model, data, pack_hash zrodla.
+        # Bez tego po miesiacu nie da sie powiedziec, ktore opisy dały te liczby.
+        payload["descriptions"] = ctx["desc_provenance"]
+
     payload["result_hash"] = content_hash(canonical_json(payload))
 
     out_rel = args.out or f"_baseline/m4_{args.variant}_{args.qset}_{payload['head']}.json"

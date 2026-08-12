@@ -1,0 +1,2461 @@
+{
+  "depth": 25,
+  "descriptions": {
+    "batches": [
+      "desc_0.json",
+      "desc_1.json",
+      "desc_2.json",
+      "desc_3.json",
+      "desc_4.json",
+      "desc_5.json",
+      "desc_6.json",
+      "desc_7.json",
+      "desc_8.json",
+      "desc_9.json",
+      "desc_10.json",
+      "desc_11.json"
+    ],
+    "count": 169,
+    "generated_at": "2026-08-12T22:02:08+00:00",
+    "model": "claude-haiku-4-5-20251001",
+    "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db"
+  },
+  "head": "9e6c082",
+  "metrics": {
+    "counts": {
+      "negative": 6,
+      "positive": 30
+    },
+    "desc_zero_bucket": 11,
+    "desc_zero_nonzero": 11,
+    "desc_zero_rank_median": 200,
+    "desc_zero_reached_25": 0,
+    "gate_cut": 0,
+    "gate_fallback": 0,
+    "gate_size_median": 0,
+    "m7_zero_bucket": 0,
+    "m7_zero_rank_median": 0,
+    "m7_zero_reached_25": 0,
+    "mean_top1_negative": 245,
+    "mean_top1_positive": 980,
+    "mrr_permille": 156,
+    "negative_ratio_permille": 250,
+    "recall_at_10_permille": 266,
+    "recall_at_25_permille": 466
+  },
+  "packages": {
+    "tiktoken": "0.13.0"
+  },
+  "per_query": [
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 3,
+              "score": 542,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:get_browser",
+              "terms_in_description": [
+                "each",
+                "file",
+                "read"
+              ]
+            },
+            {
+              "from_description": 7,
+              "score": 539,
+              "symbol": "scripts/full_system_scan.py:resolve_drive_order",
+              "terms_in_description": [
+                "file",
+                "first"
+              ]
+            },
+            {
+              "from_description": 424,
+              "score": 424,
+              "symbol": "aions_core/tools/facts_builder.py:split_sentences",
+              "terms_in_description": [
+                "each",
+                "file",
+                "hash",
+                "line",
+                "read",
+                "splitting"
+              ]
+            },
+            {
+              "from_description": 424,
+              "score": 424,
+              "symbol": "aions_core/tools/facts_builder.py:make_id",
+              "terms_in_description": [
+                "each",
+                "file",
+                "hash",
+                "line",
+                "read",
+                "splitting"
+              ]
+            },
+            {
+              "from_description": 424,
+              "score": 424,
+              "symbol": "aions_core/tools/facts_builder.py:main",
+              "terms_in_description": [
+                "each",
+                "file",
+                "hash",
+                "line",
+                "read",
+                "splitting"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d001",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 542
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 85,
+              "score": 183,
+              "symbol": "aions_core/agi_learning.py:AGILearning/_generate_learning_queries",
+              "terms_in_description": [
+                "fill",
+                "itself",
+                "process"
+              ]
+            },
+            {
+              "from_description": 134,
+              "score": 179,
+              "symbol": "aions_core/server/cbms_direct_server.py:UnifiedCBMSHandler/_set_cors",
+              "terms_in_description": [
+                "fallback",
+                "process",
+                "waiting"
+              ]
+            },
+            {
+              "from_description": 24,
+              "score": 172,
+              "symbol": "aions_core/aions_agent_layer.py:ToolCatalog/check_execution_limit",
+              "terms_in_description": [
+                "has",
+                "limit"
+              ]
+            },
+            {
+              "from_description": 39,
+              "score": 166,
+              "symbol": "aions_core/cbms_curve_machine.py:CBMSCurveMachine/_load_weights_manifest",
+              "terms_in_description": [
+                "local",
+                "model",
+                "paths",
+                "weights"
+              ]
+            },
+            {
+              "from_description": 4,
+              "score": 144,
+              "symbol": "aions_core/agi_unified.py:AGIUnified/_process_fallback",
+              "terms_in_description": [
+                "process"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d002",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 183
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 55,
+              "score": 286,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py:AionsLinuxIndexProvider/ensure_fresh",
+              "terms_in_description": [
+                "containing",
+                "directory",
+                "folder",
+                "fresh"
+              ]
+            },
+            {
+              "from_description": 55,
+              "score": 220,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py:AionsLinuxIndexProvider/refresh",
+              "terms_in_description": [
+                "containing",
+                "directory",
+                "folder",
+                "fresh"
+              ]
+            },
+            {
+              "from_description": 23,
+              "score": 128,
+              "symbol": "aions_core/server/cbms_memory.py:CBMSMemory/_load_manifest",
+              "terms_in_description": [
+                "into",
+                "manifest",
+                "new"
+              ]
+            },
+            {
+              "from_description": 23,
+              "score": 128,
+              "symbol": "aions_core/server/cbms_memory.py:CBMSMemory/_save_manifest",
+              "terms_in_description": [
+                "into",
+                "manifest",
+                "new"
+              ]
+            },
+            {
+              "from_description": 21,
+              "score": 126,
+              "symbol": "aions_core/cbms_curve_machine.py:WeightManifest",
+              "terms_in_description": [
+                "directory",
+                "into",
+                "manifest"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d003",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 286
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 41,
+              "score": 1309,
+              "symbol": "control_plane/skills/semantic_search.py:_normalize_text",
+              "terms_in_description": [
+                "form",
+                "indexed",
+                "into",
+                "polish",
+                "word"
+              ]
+            },
+            {
+              "from_description": 126,
+              "score": 370,
+              "symbol": "scripts/full_system_scan.py:resolve_drive_order",
+              "terms_in_description": [
+                "letters",
+                "their"
+              ]
+            },
+            {
+              "from_description": 367,
+              "score": 367,
+              "symbol": "aions_core/server/stylist.py:_normalize_ws",
+              "terms_in_description": [
+                "collapse",
+                "form",
+                "plain",
+                "same",
+                "word"
+              ]
+            },
+            {
+              "from_description": 367,
+              "score": 367,
+              "symbol": "aions_core/server/stylist.py:_safe_invariants",
+              "terms_in_description": [
+                "collapse",
+                "form",
+                "plain",
+                "same",
+                "word"
+              ]
+            },
+            {
+              "from_description": 367,
+              "score": 367,
+              "symbol": "aions_core/server/stylist.py:_safe_invariants/grab",
+              "terms_in_description": [
+                "collapse",
+                "form",
+                "plain",
+                "same",
+                "word"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d004",
+      "kind": "positive",
+      "rank": 9,
+      "top1_score": 1309
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 2,
+              "score": 534,
+              "symbol": "control_plane/skills/gate.py:classify",
+              "terms_in_description": [
+                "into"
+              ]
+            },
+            {
+              "from_description": 300,
+              "score": 378,
+              "symbol": "scripts/chatgpt_ultimate.py:main",
+              "terms_in_description": [
+                "chat",
+                "local",
+                "malformed",
+                "model"
+              ]
+            },
+            {
+              "from_description": 300,
+              "score": 324,
+              "symbol": "scripts/chatgpt_ultimate.py:clean_text",
+              "terms_in_description": [
+                "chat",
+                "local",
+                "malformed",
+                "model"
+              ]
+            },
+            {
+              "from_description": 300,
+              "score": 324,
+              "symbol": "scripts/chatgpt_ultimate.py:extract_all_data",
+              "terms_in_description": [
+                "chat",
+                "local",
+                "malformed",
+                "model"
+              ]
+            },
+            {
+              "from_description": 300,
+              "score": 324,
+              "symbol": "scripts/chatgpt_ultimate.py:extract_spaced_titles",
+              "terms_in_description": [
+                "chat",
+                "local",
+                "malformed",
+                "model"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d005",
+      "kind": "positive",
+      "rank": 14,
+      "top1_score": 534
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 34,
+              "score": 272,
+              "symbol": "control_plane/scheduler.py:collect_deadlines",
+              "terms_in_description": [
+                "deadline"
+              ]
+            },
+            {
+              "from_description": 45,
+              "score": 240,
+              "symbol": "server/store_api.py:VectorStore/prune_expired",
+              "terms_in_description": [
+                "expired",
+                "into",
+                "local"
+              ]
+            },
+            {
+              "from_description": 41,
+              "score": 236,
+              "symbol": "server/store.py:VectorStore/prune_expired",
+              "terms_in_description": [
+                "expired",
+                "into"
+              ]
+            },
+            {
+              "from_description": 133,
+              "score": 224,
+              "symbol": "aions_core/test_aions_capabilities.py:send_message",
+              "terms_in_description": [
+                "refused"
+              ]
+            },
+            {
+              "from_description": 210,
+              "score": 210,
+              "symbol": "aions_core/server/esperanto_bridge.py:_normalize_text",
+              "terms_in_description": [
+                "into",
+                "talking",
+                "user",
+                "while"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d006",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 272
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 18,
+              "score": 1158,
+              "symbol": "aions_core/server/refgraph.py:SoftRef/alive",
+              "terms_in_description": [
+                "fall",
+                "reports"
+              ]
+            },
+            {
+              "from_description": 418,
+              "score": 458,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/patched_stdio.py:patched_stdio_server/stdout_writer",
+              "terms_in_description": [
+                "between",
+                "pause",
+                "round"
+              ]
+            },
+            {
+              "from_description": 418,
+              "score": 434,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/patched_stdio.py:patched_stdio_server",
+              "terms_in_description": [
+                "between",
+                "pause",
+                "round"
+              ]
+            },
+            {
+              "from_description": 418,
+              "score": 418,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/patched_stdio.py:patched_stdio_server/stdin_reader",
+              "terms_in_description": [
+                "between",
+                "pause",
+                "round"
+              ]
+            },
+            {
+              "from_description": 270,
+              "score": 270,
+              "symbol": "control_plane/llm/server_client.py:generate_http",
+              "terms_in_description": [
+                "alive",
+                "network",
+                "never",
+                "seconds"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d007",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1158
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 6,
+              "score": 2566,
+              "symbol": "aions_core/server/math_solver.py:_bolts_half",
+              "terms_in_description": [
+                "first"
+              ]
+            },
+            {
+              "from_description": 13,
+              "score": 1049,
+              "symbol": "control_plane/skills/semantic_search.py:build_skill_index",
+              "terms_in_description": [
+                "into",
+                "only",
+                "under"
+              ]
+            },
+            {
+              "from_description": 13,
+              "score": 1037,
+              "symbol": "control_plane/skills/semantic_search.py:semantic_skill_search",
+              "terms_in_description": [
+                "into",
+                "only",
+                "under"
+              ]
+            },
+            {
+              "from_description": 7,
+              "score": 805,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py:SearchProviderError",
+              "terms_in_description": [
+                "disk",
+                "name"
+              ]
+            },
+            {
+              "from_description": 5,
+              "score": 803,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py:DesktopProviderError",
+              "terms_in_description": [
+                "under"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d008",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2566
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 120,
+              "score": 260,
+              "symbol": "scripts/chatgpt_extractor.py:extract_deep_content",
+              "terms_in_description": [
+                "deep",
+                "fragment",
+                "match",
+                "results"
+              ]
+            },
+            {
+              "from_description": 12,
+              "score": 200,
+              "symbol": "control_plane/llm_adapter.py:cbms_context",
+              "terms_in_description": [
+                "full",
+                "local",
+                "path"
+              ]
+            },
+            {
+              "from_description": 109,
+              "score": 149,
+              "symbol": "scripts/chatgpt_parser_v2.py:main",
+              "terms_in_description": [
+                "found",
+                "fragment",
+                "match"
+              ]
+            },
+            {
+              "from_description": 120,
+              "score": 148,
+              "symbol": "scripts/chatgpt_extractor.py:save_results",
+              "terms_in_description": [
+                "deep",
+                "fragment",
+                "match",
+                "results"
+              ]
+            },
+            {
+              "from_description": 14,
+              "score": 138,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:browser_screenshot",
+              "terms_in_description": [
+                "full",
+                "local",
+                "match",
+                "path"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d009",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 260
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 50,
+              "score": 407,
+              "symbol": "aions_core/server/web_rag_cbms.py:WebRAGCBMS/_fetch_page",
+              "terms_in_description": [
+                "html",
+                "out"
+              ]
+            },
+            {
+              "from_description": 50,
+              "score": 246,
+              "symbol": "aions_core/server/web_rag_cbms.py:WebRAGTextExtractor",
+              "terms_in_description": [
+                "html",
+                "out"
+              ]
+            },
+            {
+              "from_description": 122,
+              "score": 226,
+              "symbol": "aions_core/tools/web_crawler_import.py:crawl",
+              "terms_in_description": [
+                "html",
+                "line",
+                "out",
+                "page",
+                "readable",
+                "scripts"
+              ]
+            },
+            {
+              "from_description": 122,
+              "score": 220,
+              "symbol": "aions_core/tools/web_crawler_import.py:TextExtractor",
+              "terms_in_description": [
+                "html",
+                "line",
+                "out",
+                "page",
+                "readable",
+                "scripts"
+              ]
+            },
+            {
+              "from_description": 50,
+              "score": 152,
+              "symbol": "aions_core/server/web_rag_cbms.py:WebRAGCBMS/__init__",
+              "terms_in_description": [
+                "html",
+                "out"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d010",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": 407
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 49,
+              "score": 406,
+              "symbol": "aions_core/server/web_rag_cbms.py:WebRAGCBMS/_fetch_page",
+              "terms_in_description": [
+                "sites"
+              ]
+            },
+            {
+              "from_description": 173,
+              "score": 360,
+              "symbol": "aions_core/tools/web_crawler_import.py:crawl",
+              "terms_in_description": [
+                "allow",
+                "crawler",
+                "list",
+                "page",
+                "sites"
+              ]
+            },
+            {
+              "from_description": 173,
+              "score": 284,
+              "symbol": "aions_core/tools/web_crawler_import.py:crawl/allowed",
+              "terms_in_description": [
+                "allow",
+                "crawler",
+                "list",
+                "page",
+                "sites"
+              ]
+            },
+            {
+              "from_description": 173,
+              "score": 238,
+              "symbol": "aions_core/tools/web_crawler_import.py:split_sentences",
+              "terms_in_description": [
+                "allow",
+                "crawler",
+                "list",
+                "page",
+                "sites"
+              ]
+            },
+            {
+              "from_description": 173,
+              "score": 238,
+              "symbol": "aions_core/tools/web_crawler_import.py:main",
+              "terms_in_description": [
+                "allow",
+                "crawler",
+                "list",
+                "page",
+                "sites"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d011",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 406
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 56,
+              "score": 514,
+              "symbol": "control_plane/scheduler.py:collect_deadlines",
+              "terms_in_description": [
+                "date",
+                "lists",
+                "profile",
+                "separate",
+                "work"
+              ]
+            },
+            {
+              "from_description": 103,
+              "score": 474,
+              "symbol": "aions_core/aions_hybrid_retrieval.py:HybridRetriever/_merge_results",
+              "terms_in_description": [
+                "first",
+                "lists",
+                "merge",
+                "most"
+              ]
+            },
+            {
+              "from_description": 63,
+              "score": 462,
+              "symbol": "scripts/full_system_scan.py:resolve_drive_order",
+              "terms_in_description": [
+                "first",
+                "order"
+              ]
+            },
+            {
+              "from_description": 68,
+              "score": 439,
+              "symbol": "aions_core/agi_learning.py:AGILearning/_merge_similar_chunks",
+              "terms_in_description": [
+                "date",
+                "past",
+                "separate",
+                "work"
+              ]
+            },
+            {
+              "from_description": 52,
+              "score": 423,
+              "symbol": "aions_core/agi_evolution.py:AGIEvolution/identify_emergent_capabilities",
+              "terms_in_description": [
+                "already",
+                "date",
+                "drop",
+                "keep",
+                "time"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d012",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 514
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 10,
+              "score": 1038,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:_auto_log_entry",
+              "terms_in_description": [
+                "command",
+                "one",
+                "record",
+                "tool"
+              ]
+            },
+            {
+              "from_description": 546,
+              "score": 546,
+              "symbol": "scripts/sync_dev_mirror.sh:usage",
+              "terms_in_description": [
+                "command",
+                "flag",
+                "line",
+                "one",
+                "preview"
+              ]
+            },
+            {
+              "from_description": 10,
+              "score": 542,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:_client_identity",
+              "terms_in_description": [
+                "command",
+                "one",
+                "record",
+                "tool"
+              ]
+            },
+            {
+              "from_description": 271,
+              "score": 281,
+              "symbol": "control_plane/skills/gate.py:audit",
+              "terms_in_description": [
+                "declared",
+                "one",
+                "record"
+              ]
+            },
+            {
+              "from_description": 271,
+              "score": 271,
+              "symbol": "control_plane/skills/gate.py:classify",
+              "terms_in_description": [
+                "declared",
+                "one",
+                "record"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d013",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1038
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 152,
+              "score": 1574,
+              "symbol": "control_plane/agents/agent_schema.py:validate",
+              "terms_in_description": [
+                "any",
+                "missing",
+                "role",
+                "wrong"
+              ]
+            },
+            {
+              "from_description": 176,
+              "score": 208,
+              "symbol": "control_plane/agents/agent_runner.py:_deterministic_plan",
+              "terms_in_description": [
+                "any",
+                "fallback",
+                "rejected",
+                "role"
+              ]
+            },
+            {
+              "from_description": 176,
+              "score": 176,
+              "symbol": "control_plane/agents/agent_runner.py:FilteredRegistry",
+              "terms_in_description": [
+                "any",
+                "fallback",
+                "rejected",
+                "role"
+              ]
+            },
+            {
+              "from_description": 176,
+              "score": 176,
+              "symbol": "control_plane/agents/agent_runner.py:FilteredRegistry/__init__",
+              "terms_in_description": [
+                "any",
+                "fallback",
+                "rejected",
+                "role"
+              ]
+            },
+            {
+              "from_description": 176,
+              "score": 176,
+              "symbol": "control_plane/agents/agent_runner.py:FilteredRegistry/_matches",
+              "terms_in_description": [
+                "any",
+                "fallback",
+                "rejected",
+                "role"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d014",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 1574
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 0,
+              "score": 354,
+              "symbol": "aions_core/agi_learning.py:AGILearning/_classify_concept",
+              "terms_in_description": []
+            },
+            {
+              "from_description": 182,
+              "score": 252,
+              "symbol": "scripts/chatgpt_ultimate.py:main",
+              "terms_in_description": [
+                "category",
+                "name",
+                "read"
+              ]
+            },
+            {
+              "from_description": 31,
+              "score": 220,
+              "symbol": "aions_core/aions_reactor.py:FinalReactorCRLA/master_distill_task",
+              "terms_in_description": [
+                "disk",
+                "read",
+                "still"
+              ]
+            },
+            {
+              "from_description": 184,
+              "score": 184,
+              "symbol": "aions_core/test_aions_capabilities.py:test_server_health",
+              "terms_in_description": [
+                "category",
+                "used"
+              ]
+            },
+            {
+              "from_description": 184,
+              "score": 184,
+              "symbol": "aions_core/test_aions_capabilities.py:send_message",
+              "terms_in_description": [
+                "category",
+                "used"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d015",
+      "kind": "positive",
+      "rank": 13,
+      "top1_score": 354
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 15,
+              "score": 848,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py:SearchProviderError",
+              "terms_in_description": [
+                "file",
+                "instead"
+              ]
+            },
+            {
+              "from_description": 1,
+              "score": 833,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py:DesktopProviderError",
+              "terms_in_description": [
+                "file"
+              ]
+            },
+            {
+              "from_description": 119,
+              "score": 424,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py:_enum_visible_windows",
+              "terms_in_description": [
+                "dedicated",
+                "file",
+                "visible"
+              ]
+            },
+            {
+              "from_description": 402,
+              "score": 402,
+              "symbol": "control_plane/skills/planner.py:plan",
+              "terms_in_description": [
+                "cannot",
+                "file",
+                "into"
+              ]
+            },
+            {
+              "from_description": 4,
+              "score": 358,
+              "symbol": "control_plane/agents/agent_runner.py:FilteredRegistry/search",
+              "terms_in_description": [
+                "file",
+                "line"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d016",
+      "kind": "positive",
+      "rank": 10,
+      "top1_score": 848
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 5,
+              "score": 2565,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py:_LinuxAutomationSlice/_active_window_geometry",
+              "terms_in_description": [
+                "under"
+              ]
+            },
+            {
+              "from_description": 68,
+              "score": 1160,
+              "symbol": "control_plane/skills/forge.py:gap_detect",
+              "terms_in_description": [
+                "built",
+                "into",
+                "one",
+                "through"
+              ]
+            },
+            {
+              "from_description": 53,
+              "score": 410,
+              "symbol": "aions_core/server/web_rag_cbms.py:WebRAGCBMS/_score_relevance",
+              "terms_in_description": [
+                "into",
+                "relevance"
+              ]
+            },
+            {
+              "from_description": 18,
+              "score": 216,
+              "symbol": "control_plane/skills/semantic_search.py:build_skill_index",
+              "terms_in_description": [
+                "index",
+                "into",
+                "one",
+                "through",
+                "under",
+                "vector"
+              ]
+            },
+            {
+              "from_description": 71,
+              "score": 197,
+              "symbol": "control_plane/skills/forge_linux_verify.py:verify_linux_skill",
+              "terms_in_description": [
+                "returned",
+                "through"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d017",
+      "kind": "positive",
+      "rank": 23,
+      "top1_score": 2565
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 58,
+              "score": 1230,
+              "symbol": "control_plane/skills/stats.py:rank",
+              "terms_in_description": [
+                "against",
+                "between",
+                "each",
+                "one",
+                "preference",
+                "under"
+              ]
+            },
+            {
+              "from_description": 289,
+              "score": 364,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py:desktop_provider_capabilities",
+              "terms_in_description": [
+                "between",
+                "capabilities",
+                "choosing"
+              ]
+            },
+            {
+              "from_description": 289,
+              "score": 289,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py:resolve_search_provider_name",
+              "terms_in_description": [
+                "between",
+                "capabilities",
+                "choosing"
+              ]
+            },
+            {
+              "from_description": 289,
+              "score": 289,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py:create_linux_search_provider",
+              "terms_in_description": [
+                "between",
+                "capabilities",
+                "choosing"
+              ]
+            },
+            {
+              "from_description": 289,
+              "score": 289,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py:get_desktop_provider",
+              "terms_in_description": [
+                "between",
+                "capabilities",
+                "choosing"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d018",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 1230
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 7,
+              "score": 1031,
+              "symbol": "control_plane/operator/loop.py:_load_disk_overrides",
+              "terms_in_description": [
+                "error",
+                "system"
+              ]
+            },
+            {
+              "from_description": 534,
+              "score": 534,
+              "symbol": "scripts/verify_tier1_chroma.py:main",
+              "terms_in_description": [
+                "few",
+                "number",
+                "very"
+              ]
+            },
+            {
+              "from_description": 23,
+              "score": 145,
+              "symbol": "aions_core/server/ts_symbols.py:SymbolIndex/drift",
+              "terms_in_description": [
+                "number",
+                "system",
+                "very"
+              ]
+            },
+            {
+              "from_description": 64,
+              "score": 139,
+              "symbol": "control_plane/cbms_gate.py:gate_decide",
+              "terms_in_description": [
+                "decide",
+                "genuinely"
+              ]
+            },
+            {
+              "from_description": 19,
+              "score": 135,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py:AionsLinuxIndexProvider/_load_entries",
+              "terms_in_description": [
+                "against",
+                "system",
+                "very"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d019",
+      "kind": "positive",
+      "rank": 12,
+      "top1_score": 1031
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 27,
+              "score": 2587,
+              "symbol": "aions_core/server/math_solver.py:_bolts_half",
+              "terms_in_description": [
+                "attempt",
+                "service"
+              ]
+            },
+            {
+              "from_description": 17,
+              "score": 339,
+              "symbol": "control_plane/operator/loop.py:act",
+              "terms_in_description": [
+                "has",
+                "service"
+              ]
+            },
+            {
+              "from_description": 9,
+              "score": 197,
+              "symbol": "scripts/ingest_treasures_tier2.py:_assert_chroma_version",
+              "terms_in_description": [
+                "times"
+              ]
+            },
+            {
+              "from_description": 7,
+              "score": 195,
+              "symbol": "scripts/ingest_tier1_chroma.py:_assert_chroma_version",
+              "terms_in_description": [
+                "once"
+              ]
+            },
+            {
+              "from_description": 144,
+              "score": 144,
+              "symbol": "aions_core/tools/check_status.py:check_status",
+              "terms_in_description": [
+                "been",
+                "same"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d020",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2587
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 76,
+              "score": 228,
+              "symbol": "aions_core/server/korean_keys.py:build_keys",
+              "terms_in_description": [
+                "fixed"
+              ]
+            },
+            {
+              "from_description": 90,
+              "score": 226,
+              "symbol": "control_plane/skills/semantic_search.py:_get_registry",
+              "terms_in_description": [
+                "comes",
+                "fixed"
+              ]
+            },
+            {
+              "from_description": 118,
+              "score": 206,
+              "symbol": "scripts/aions_tray.py:AIONSTray/status_monitor",
+              "terms_in_description": [
+                "background",
+                "inside",
+                "seconds",
+                "thread"
+              ]
+            },
+            {
+              "from_description": 46,
+              "score": 196,
+              "symbol": "aions_core/agi_unified.py:AGIUnified/_process_learning_queue",
+              "terms_in_description": [
+                "background",
+                "thread",
+                "work"
+              ]
+            },
+            {
+              "from_description": 46,
+              "score": 196,
+              "symbol": "aions_core/agi_unified.py:AGIUnified/_process_evolution_queue",
+              "terms_in_description": [
+                "background",
+                "thread",
+                "work"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d021",
+      "kind": "positive",
+      "rank": 9,
+      "top1_score": 228
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 17,
+              "score": 1053,
+              "symbol": "control_plane/agents/agent_runner.py:FilteredRegistry",
+              "terms_in_description": [
+                "context",
+                "model",
+                "only",
+                "would"
+              ]
+            },
+            {
+              "from_description": 8,
+              "score": 1032,
+              "symbol": "control_plane/skills/semantic_search.py:semantic_skill_search",
+              "terms_in_description": [
+                "only",
+                "would"
+              ]
+            },
+            {
+              "from_description": 160,
+              "score": 460,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py:speak",
+              "terms_in_description": [
+                "memory",
+                "model",
+                "only",
+                "reply",
+                "short",
+                "would"
+              ]
+            },
+            {
+              "from_description": 12,
+              "score": 278,
+              "symbol": "control_plane/agents/agent_schema.py:validate",
+              "terms_in_description": [
+                "model",
+                "only"
+              ]
+            },
+            {
+              "from_description": 57,
+              "score": 247,
+              "symbol": "control_plane/operator/mouth.py:_short_incident_desc",
+              "terms_in_description": [
+                "context",
+                "model",
+                "only",
+                "short",
+                "too",
+                "would"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d022",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1053
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 3,
+              "score": 2563,
+              "symbol": "control_plane/operator/loop.py:_snapshot_digest",
+              "terms_in_description": [
+                "disk"
+              ]
+            },
+            {
+              "from_description": 21,
+              "score": 233,
+              "symbol": "control_plane/skills/forge.py:gap_detect",
+              "terms_in_description": [
+                "already",
+                "disk",
+                "file",
+                "without"
+              ]
+            },
+            {
+              "from_description": 7,
+              "score": 227,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:_client_identity",
+              "terms_in_description": [
+                "disk",
+                "file",
+                "retrieval"
+              ]
+            },
+            {
+              "from_description": 4,
+              "score": 225,
+              "symbol": "aions_core/agi_soft_retrieval.py:SoftRetriever/forward",
+              "terms_in_description": [
+                "file",
+                "retrieval"
+              ]
+            },
+            {
+              "from_description": 4,
+              "score": 216,
+              "symbol": "control_plane/node_agent/agent.py:get_local_ip",
+              "terms_in_description": [
+                "disk",
+                "file"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d023",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2563
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 63,
+              "score": 1087,
+              "symbol": "control_plane/skills/semantic_search.py:_get_registry",
+              "terms_in_description": [
+                "database",
+                "did",
+                "embedding",
+                "fix",
+                "just",
+                "once"
+              ]
+            },
+            {
+              "from_description": 526,
+              "score": 526,
+              "symbol": "scripts/test_skill_engine_foundation.py:verify",
+              "terms_in_description": [
+                "change",
+                "per",
+                "reused"
+              ]
+            },
+            {
+              "from_description": 4,
+              "score": 144,
+              "symbol": "scripts/chatgpt_extractor.py:extract_json_objects",
+              "terms_in_description": [
+                "database",
+                "per"
+              ]
+            },
+            {
+              "from_description": 4,
+              "score": 137,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:_normalize_folder_prefix",
+              "terms_in_description": [
+                "database",
+                "per"
+              ]
+            },
+            {
+              "from_description": 45,
+              "score": 122,
+              "symbol": "server/store_http.py:get_connection_mode",
+              "terms_in_description": [
+                "connection",
+                "created",
+                "per"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d024",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1087
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 109,
+              "score": 549,
+              "symbol": "scripts/operator_daily_brief.py:_status_label_pl",
+              "terms_in_description": [
+                "event",
+                "json",
+                "label",
+                "lines",
+                "out"
+              ]
+            },
+            {
+              "from_description": 109,
+              "score": 549,
+              "symbol": "scripts/operator_daily_brief.py:_priority_label_pl",
+              "terms_in_description": [
+                "event",
+                "json",
+                "label",
+                "lines",
+                "out"
+              ]
+            },
+            {
+              "from_description": 7,
+              "score": 392,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:_normalize_folder_prefix",
+              "terms_in_description": [
+                "event",
+                "json",
+                "out"
+              ]
+            },
+            {
+              "from_description": 57,
+              "score": 332,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py:AionsLinuxIndexProvider/_normalize_folder_prefix",
+              "terms_in_description": [
+                "json",
+                "out",
+                "prefix"
+              ]
+            },
+            {
+              "from_description": 108,
+              "score": 321,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py:speak",
+              "terms_in_description": [
+                "json",
+                "out",
+                "reply"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d025",
+      "kind": "positive",
+      "rank": 21,
+      "top1_score": 549
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 45,
+              "score": 843,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py:SearchProviderError",
+              "terms_in_description": [
+                "list",
+                "module",
+                "tree",
+                "walk"
+              ]
+            },
+            {
+              "from_description": 20,
+              "score": 818,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py:DesktopProviderError",
+              "terms_in_description": [
+                "abstract",
+                "module"
+              ]
+            },
+            {
+              "from_description": 0,
+              "score": 532,
+              "symbol": "control_plane/skills/gate.py:classify",
+              "terms_in_description": []
+            },
+            {
+              "from_description": 61,
+              "score": 464,
+              "symbol": "scripts/full_system_scan.py:resolve_drive_order",
+              "terms_in_description": [
+                "list",
+                "order",
+                "over"
+              ]
+            },
+            {
+              "from_description": 401,
+              "score": 401,
+              "symbol": "control_plane/skills/planner.py:plan",
+              "terms_in_description": [
+                "cannot",
+                "list"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d026",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 843
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 13,
+              "score": 1037,
+              "symbol": "control_plane/skills/semantic_search.py:_normalize_text",
+              "terms_in_description": [
+                "each",
+                "eight",
+                "into",
+                "through"
+              ]
+            },
+            {
+              "from_description": 13,
+              "score": 1037,
+              "symbol": "control_plane/skills/semantic_search.py:_v3_semantic_scores",
+              "terms_in_description": [
+                "each",
+                "eight",
+                "into",
+                "through"
+              ]
+            },
+            {
+              "from_description": 13,
+              "score": 1037,
+              "symbol": "control_plane/skills/semantic_search.py:semantic_skill_search",
+              "terms_in_description": [
+                "each",
+                "eight",
+                "into",
+                "through"
+              ]
+            },
+            {
+              "from_description": 513,
+              "score": 513,
+              "symbol": "scripts/validate_aions_tools.py:ok",
+              "terms_in_description": [
+                "each",
+                "totals"
+              ]
+            },
+            {
+              "from_description": 513,
+              "score": 513,
+              "symbol": "scripts/validate_aions_tools.py:main",
+              "terms_in_description": [
+                "each",
+                "totals"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d027",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1037
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 1344,
+              "score": 1346,
+              "symbol": "scripts/calendar_e2e_smoke.py:_section",
+              "terms_in_description": [
+                "can",
+                "check",
+                "credential",
+                "end",
+                "ever",
+                "next",
+                "today",
+                "tomorrow",
+                "upcoming"
+              ]
+            },
+            {
+              "from_description": 1344,
+              "score": 1346,
+              "symbol": "scripts/calendar_e2e_smoke.py:main",
+              "terms_in_description": [
+                "can",
+                "check",
+                "credential",
+                "end",
+                "ever",
+                "next",
+                "today",
+                "tomorrow",
+                "upcoming"
+              ]
+            },
+            {
+              "from_description": 13,
+              "score": 1153,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:_today_str",
+              "terms_in_description": [
+                "can",
+                "check",
+                "end",
+                "ever",
+                "external"
+              ]
+            },
+            {
+              "from_description": 841,
+              "score": 841,
+              "symbol": "scripts/test_google_integration.py:main",
+              "terms_in_description": [
+                "check",
+                "confirms",
+                "credential",
+                "end",
+                "using",
+                "without"
+              ]
+            },
+            {
+              "from_description": 13,
+              "score": 584,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/server.py:_read_autolog_entries",
+              "terms_in_description": [
+                "can",
+                "check",
+                "end",
+                "ever",
+                "external"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d028",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": 1346
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 524,
+              "score": 524,
+              "symbol": "scripts/vault/open_secret.py:main",
+              "terms_in_description": [
+                "current",
+                "decrypts",
+                "windows"
+              ]
+            },
+            {
+              "from_description": 151,
+              "score": 396,
+              "symbol": "scripts/vault/_core.py:blob_path",
+              "terms_in_description": [
+                "account",
+                "before",
+                "blob",
+                "current",
+                "encrypted",
+                "operation",
+                "windows"
+              ]
+            },
+            {
+              "from_description": 151,
+              "score": 396,
+              "symbol": "scripts/vault/_core.py:_dpapi_protect_ctypes/DATA_BLOB",
+              "terms_in_description": [
+                "account",
+                "before",
+                "blob",
+                "current",
+                "encrypted",
+                "operation",
+                "windows"
+              ]
+            },
+            {
+              "from_description": 151,
+              "score": 396,
+              "symbol": "scripts/vault/_core.py:_dpapi_unprotect_ctypes/DATA_BLOB",
+              "terms_in_description": [
+                "account",
+                "before",
+                "blob",
+                "current",
+                "encrypted",
+                "operation",
+                "windows"
+              ]
+            },
+            {
+              "from_description": 100,
+              "score": 366,
+              "symbol": "control_plane/agents/agent_schema.py:validate",
+              "terms_in_description": [
+                "anything",
+                "before",
+                "correctly"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d029",
+      "kind": "positive",
+      "rank": 22,
+      "top1_score": 524
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 529,
+              "score": 529,
+              "symbol": "scripts/sync_dev_mirror.sh:usage",
+              "terms_in_description": [
+                "compiled",
+                "live",
+                "only"
+              ]
+            },
+            {
+              "from_description": 17,
+              "score": 480,
+              "symbol": "scripts/vault/_core.py:open_vault_entry",
+              "terms_in_description": [
+                "live",
+                "only"
+              ]
+            },
+            {
+              "from_description": 130,
+              "score": 260,
+              "symbol": "aions_core/server/cbms_unified_server.py:UnifiedCBMSHandler",
+              "terms_in_description": [
+                "handler",
+                "live",
+                "point",
+                "written"
+              ]
+            },
+            {
+              "from_description": 124,
+              "score": 254,
+              "symbol": "control_plane/skills/registry.py:SkillRegistry/_load_handler",
+              "terms_in_description": [
+                "callable",
+                "code",
+                "handler",
+                "into",
+                "library"
+              ]
+            },
+            {
+              "from_description": 124,
+              "score": 254,
+              "symbol": "control_plane/skills/registry.py:SkillRegistry/handler",
+              "terms_in_description": [
+                "callable",
+                "code",
+                "handler",
+                "into",
+                "library"
+              ]
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d030",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 529
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 32,
+              "score": 194,
+              "symbol": "aions_core/tools/check_schema.py:check_schema",
+              "terms_in_description": [
+                "database",
+                "schema",
+                "store"
+              ]
+            },
+            {
+              "from_description": 42,
+              "score": 177,
+              "symbol": "control_plane/skills/forge_linux_verify.py:_check_schema",
+              "terms_in_description": [
+                "failed",
+                "return",
+                "schema",
+                "store"
+              ]
+            },
+            {
+              "from_description": 104,
+              "score": 158,
+              "symbol": "control_plane/skills/goal_planner.py:_candidate_text",
+              "terms_in_description": [
+                "database",
+                "failed",
+                "previous",
+                "return",
+                "schema"
+              ]
+            },
+            {
+              "from_description": 2,
+              "score": 124,
+              "symbol": "aions_core/server/ts_symbols.py:SymbolIndex/drift",
+              "terms_in_description": [
+                "store"
+              ]
+            },
+            {
+              "from_description": 104,
+              "score": 104,
+              "symbol": "control_plane/skills/goal_planner.py:_ensure_env_defaults",
+              "terms_in_description": [
+                "database",
+                "failed",
+                "previous",
+                "return",
+                "schema"
+              ]
+            }
+          ]
+        }
+      ],
+      "id": "d031",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 194
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 1,
+              "score": 403,
+              "symbol": "control_plane/skills/gate.py:check",
+              "terms_in_description": [
+                "per"
+              ]
+            },
+            {
+              "from_description": 403,
+              "score": 403,
+              "symbol": "scripts/aions_indexer.py:_split_roots",
+              "terms_in_description": [
+                "minute",
+                "status"
+              ]
+            },
+            {
+              "from_description": 403,
+              "score": 403,
+              "symbol": "scripts/aions_indexer.py:build_provider",
+              "terms_in_description": [
+                "minute",
+                "status"
+              ]
+            },
+            {
+              "from_description": 403,
+              "score": 403,
+              "symbol": "scripts/aions_indexer.py:main",
+              "terms_in_description": [
+                "minute",
+                "status"
+              ]
+            },
+            {
+              "from_description": 184,
+              "score": 194,
+              "symbol": "control_plane/policy.py:evaluate_tool",
+              "terms_in_description": [
+                "may",
+                "per",
+                "status",
+                "too"
+              ]
+            }
+          ]
+        }
+      ],
+      "id": "d032",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 403
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 160,
+              "score": 160,
+              "symbol": "control_plane/agents/agent_registry.py:AgentRegistry",
+              "terms_in_description": [
+                "registered",
+                "system"
+              ]
+            },
+            {
+              "from_description": 160,
+              "score": 160,
+              "symbol": "control_plane/agents/agent_registry.py:AgentRegistry/__init__",
+              "terms_in_description": [
+                "registered",
+                "system"
+              ]
+            },
+            {
+              "from_description": 160,
+              "score": 160,
+              "symbol": "control_plane/agents/agent_registry.py:AgentRegistry/discover",
+              "terms_in_description": [
+                "registered",
+                "system"
+              ]
+            },
+            {
+              "from_description": 160,
+              "score": 160,
+              "symbol": "control_plane/agents/agent_registry.py:AgentRegistry/get",
+              "terms_in_description": [
+                "registered",
+                "system"
+              ]
+            },
+            {
+              "from_description": 160,
+              "score": 160,
+              "symbol": "control_plane/agents/agent_registry.py:AgentRegistry/list_ids",
+              "terms_in_description": [
+                "registered",
+                "system"
+              ]
+            }
+          ]
+        }
+      ],
+      "id": "d033",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 160
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 21,
+              "score": 252,
+              "symbol": "aions_core/test_aions_capabilities.py:send_message",
+              "terms_in_description": [
+                "send",
+                "system"
+              ]
+            },
+            {
+              "from_description": 1,
+              "score": 213,
+              "symbol": "aions_core/aions_style_parameters.py:StyleController/analyze_style",
+              "terms_in_description": [
+                "system"
+              ]
+            },
+            {
+              "from_description": 33,
+              "score": 133,
+              "symbol": "scripts/aions_node_heartbeat.py:send_heartbeat",
+              "terms_in_description": [
+                "message",
+                "send"
+              ]
+            },
+            {
+              "from_description": 21,
+              "score": 121,
+              "symbol": "control_plane/node_agent/agent.py:Handler/_send_json",
+              "terms_in_description": [
+                "send",
+                "system"
+              ]
+            },
+            {
+              "from_description": 107,
+              "score": 109,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py:_chat",
+              "terms_in_description": [
+                "detected",
+                "system"
+              ]
+            }
+          ]
+        }
+      ],
+      "id": "d034",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 252
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 18,
+              "score": 116,
+              "symbol": "scripts/chatgpt_extractor.py:extract_readable_strings",
+              "terms_in_description": [
+                "per",
+                "strings",
+                "user"
+              ]
+            },
+            {
+              "from_description": 5,
+              "score": 109,
+              "symbol": "control_plane/skills/semantic_search.py:build_skill_index",
+              "terms_in_description": [
+                "can",
+                "language"
+              ]
+            },
+            {
+              "from_description": 59,
+              "score": 59,
+              "symbol": "control_plane/llm/server_client.py:generate_http",
+              "terms_in_description": [
+                "kept",
+                "language",
+                "per",
+                "user"
+              ]
+            },
+            {
+              "from_description": 59,
+              "score": 59,
+              "symbol": "control_plane/llm/server_client.py:health",
+              "terms_in_description": [
+                "kept",
+                "language",
+                "per",
+                "user"
+              ]
+            },
+            {
+              "from_description": 58,
+              "score": 58,
+              "symbol": "aions_core/server/refgraph.py:tokens",
+              "terms_in_description": [
+                "can",
+                "different",
+                "kept",
+                "per"
+              ]
+            }
+          ]
+        }
+      ],
+      "id": "d035",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 116
+    },
+    {
+      "expansion": [
+        {
+          "note": "opis pliku z waga W_PATH=1",
+          "rule": "file_description",
+          "top": [
+            {
+              "from_description": 4,
+              "score": 349,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py:_LinuxSystemSlice",
+              "terms_in_description": [
+                "without"
+              ]
+            },
+            {
+              "from_description": 4,
+              "score": 349,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py:_LinuxAutomationSlice",
+              "terms_in_description": [
+                "without"
+              ]
+            },
+            {
+              "from_description": 4,
+              "score": 211,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py:_LinuxSystemSlice/is_ready",
+              "terms_in_description": [
+                "without"
+              ]
+            },
+            {
+              "from_description": 4,
+              "score": 211,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py:_LinuxSystemSlice/windows",
+              "terms_in_description": [
+                "without"
+              ]
+            },
+            {
+              "from_description": 4,
+              "score": 211,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py:_LinuxSystemSlice/launch",
+              "terms_in_description": [
+                "without"
+              ]
+            }
+          ]
+        }
+      ],
+      "id": "d036",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 349
+    }
+  ],
+  "question_set": {
+    "content_hash": "blake2b256:278f2dc2b92fd4573bdbd3ae37bbc690d5a59ab0fc0d78af5ade6ad97dded4da",
+    "file": "dev_questions.json",
+    "name": "dev"
+  },
+  "result_hash": "blake2b256:b65a9d05834f62f889743687de976bb50116a56ed81f97098114500d386de296",
+  "schema": "acae.m4.v1",
+  "scope": {
+    "files": 169,
+    "symbols": 1598
+  },
+  "variant": "desc"
+}
