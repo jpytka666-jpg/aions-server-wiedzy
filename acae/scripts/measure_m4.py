@@ -436,6 +436,32 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             elif q["kind"] == "positive" and not (set(q["answer_files"]) & pliki):
                 # Warunek diagnostyczny (propozycja GPT): bramka wyciela wlasciwy plik.
                 diagnostyka["gate_cut"] += 1
+        elif variant in ("embed", "embed_tie", "embed_borda"):
+            index = ctx["embed"]
+            if variant == "embed":
+                ranked, receipts = rank_embed(index, q["question"], depth)
+            elif variant == "embed_tie":
+                ranked, receipts = rank_embed_tie(index, entries, q["question"], terms, depth)
+            else:
+                ranked, receipts = rank_embed_borda(index, entries, q["question"], terms, depth)
+
+            # WARUNEK DIAGNOSTYCZNY M7 — najwazniejsza liczba tego etapu.
+            # Wsrod pytan, gdzie wlasciwy symbol ma leksykalne ZERO: ile embedding
+            # wciaga do top-25? Zadna metoda leksykalna ich nie tknie, bo 0*x = 0.
+            if q["kind"] == "positive":
+                lex = _lexical_scores(index, entries, terms)
+                cele = [
+                    i for i, (path, row, lang) in enumerate(index.items)
+                    if is_hit({"path": path, "row": row, "lang": lang}, q)
+                ]
+                if cele and max(lex[i] for i in cele) == 0:
+                    diagnostyka["m7_zero_bucket"] += 1
+                    sims = index.scores(q["question"])
+                    numery, pozycje = _order(index, sims)
+                    najlepsza = min(pozycje[i] for i in cele)
+                    diagnostyka["m7_zero_ranks"].append(najlepsza)
+                    if najlepsza <= 25:
+                        diagnostyka["m7_zero_reached_25"] += 1
         else:
             raise SystemExit(f"nieznany wariant: {variant}")
 
