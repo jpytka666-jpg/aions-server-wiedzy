@@ -610,6 +610,8 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             sorted(diagnostyka["desc_zero_ranks"])[len(diagnostyka["desc_zero_ranks"]) // 2]
             if diagnostyka["desc_zero_ranks"] else 0
         ),
+        "m9_zero_bucket": diagnostyka["m9_zero_bucket"],
+        "m9_zero_in_top25": diagnostyka["m9_zero_in_top25"],
         "per_query": per_query,
     }
 
