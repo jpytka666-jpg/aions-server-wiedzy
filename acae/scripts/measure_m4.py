@@ -557,6 +557,13 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             sorted(diagnostyka["m7_zero_ranks"])[len(diagnostyka["m7_zero_ranks"]) // 2]
             if diagnostyka["m7_zero_ranks"] else 0
         ),
+        "desc_zero_bucket": diagnostyka["desc_zero_bucket"],
+        "desc_zero_nonzero": diagnostyka["desc_zero_nonzero"],
+        "desc_zero_reached_25": diagnostyka["desc_zero_reached_25"],
+        "desc_zero_rank_median": (
+            sorted(diagnostyka["desc_zero_ranks"])[len(diagnostyka["desc_zero_ranks"]) // 2]
+            if diagnostyka["desc_zero_ranks"] else 0
+        ),
         "per_query": per_query,
     }
 
