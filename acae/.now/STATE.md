@@ -732,9 +732,13 @@ pomiarze i nie wolno go zapisac jako wniosku.
 
 ### Stan bilansu
 
-Osiem mechanizmow, osiem odrzucen. Siedem pierwszych DODAWALO terminy i wszystkie
-obnizaly MRR. Osmy mial nic nie dodawac — ale nie zadzialal na tyle, zeby cokolwiek
-o tej klasie powiedziec.
+Osiem mechanizmow, osiem odrzucen. Siedem pierwszych DODAWALO terminy: piec obnizylo MRR,
+dwa (M4.3, M4.4) zostawily je dokladnie na 0,172 i polegly na recall@10. Zadne nie
+podnioslo MRR ani o promil. Osmy mial nic nie dodawac — ale nie zadzialal na tyle, zeby
+cokolwiek o tej klasie powiedziec.
+
+Sprostowanie do pierwszej wersji tego akapitu: napisalem „wszystkie obnizaly MRR", co jest
+nieprawda dla M4.3 i M4.4. Pelna tabela liczb w `TERMS.md`.
 
 ### Dlug do splacenia (stan na chwile zapisu)
 
