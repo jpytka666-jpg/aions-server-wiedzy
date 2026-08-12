@@ -263,6 +263,146 @@ def is_hit(item, question) -> bool:
     return False
 
 
+class EmbedIndex:
+    """
+    Wektory wszystkich symboli policzone RAZ. Kolejnosc `items` jest kolejnoscia
+    wierszy macierzy — na niej opieraja sie wszystkie trzy warianty M7.
+
+    Wszystko w `int64`: mnozenie macierzowe liczb calkowitych jest dokladne i niezalezne
+    od kolejnosci sumowania, wiec liczba watkow BLAS nie zmienia wyniku.
+    """
+
+    def __init__(self, embedder, entries):
+        import math
+
+        import numpy as np
+
+        self.embedder = embedder
+        self.items = []
+        wektory = []
+        for entry in entries:
+            path = str(entry["path"])
+            for row in entry["symbols"]:
+                self.items.append((path, row, entry.get("lang")))
+                wektory.append(embedder.vector(symbol_text(path, row)))
+        self.M = (np.vstack(wektory) if wektory
+                  else np.zeros((0, embedder.dim), dtype=np.int64))
+        self.norms = [math.isqrt(int(np.dot(v, v))) for v in self.M]
+
+    def scores(self, question):
+        import math
+
+        import numpy as np
+
+        qv = self.embedder.vector(question)
+        nq = math.isqrt(int(np.dot(qv, qv)))
+        if nq == 0:
+            return [0] * len(self.items)
+        iloczyny = self.M @ qv
+        out = []
+        for d, nd in zip(iloczyny, self.norms):
+            d = int(d)
+            out.append((d * 1000) // (nq * nd) if d > 0 and nd else 0)
+        return out
+
+
+def _lexical_scores(index, entries, terms):
+    """Wynik leksykalny w TEJ SAMEJ kolejnosci co `index.items`."""
+    rarity = term_rarity(entries, terms)
+    return [score_symbol(path, row, terms, rarity) for path, row, _ in index.items]
+
+
+def _order(index, klucze):
+    """
+    Pozycje symboli wg podanych kluczy, malejaco, z tym samym rozstrzyganiem remisow
+    co ranking bazowy: wynik, sciezka, linia, nazwa.
+    """
+    numery = sorted(
+        range(len(index.items)),
+        key=lambda i: (-klucze[i], index.items[i][0], index.items[i][1]["line"],
+                       index.items[i][1]["name_path"]),
+    )
+    pozycje = [0] * len(index.items)
+    for miejsce, i in enumerate(numery, 1):
+        pozycje[i] = miejsce
+    return numery, pozycje
+
+
+def _pack(index, numery, wyniki, depth):
+    out = []
+    for i in numery[:depth]:
+        path, row, lang = index.items[i]
+        out.append({"score": int(wyniki[i]), "path": path, "lang": lang, "row": row})
+    return out
+
+
+def rank_embed(index, question, depth):
+    """M7a: ranking wylacznie po podobienstwie semantycznym."""
+    sims = index.scores(question)
+    numery, _ = _order(index, sims)
+    ranked = _pack(index, numery, sims, depth)
+    paragony = []
+    for pozycja in numery[:3]:
+        path, row, _ = index.items[pozycja]
+        pary = embed_receipt(index.embedder, question, symbol_text(path, row))
+        if pary:
+            paragony.append({
+                "rule": "embed_similarity",
+                "symbol": f"{path}:{row['name_path']}",
+                "permille": int(sims[pozycja]),
+                "pairs": [p.as_dict() for p in pary],
+            })
+    return ranked, paragony
+
+
+def rank_embed_tie(index, entries, question, terms, depth):
+    """
+    M7b: leksyka glowna, embedding WYLACZNIE jako rozstrzygniecie remisow.
+
+    Z konstrukcji nie moze zmienic kolejnosci miedzy roznymi wynikami leksykalnymi,
+    wiec nie moze zepsuc tych pytan, ktore juz dzialaja. Dziala tylko tam, gdzie leksyka
+    milczy — a tam wlasnie lezy 36% przypadkow z pomiaru diagnostycznego.
+    """
+    lex = _lexical_scores(index, entries, terms)
+    sims = index.scores(question)
+    numery = sorted(
+        range(len(index.items)),
+        key=lambda i: (-lex[i], -sims[i], index.items[i][0], index.items[i][1]["line"],
+                       index.items[i][1]["name_path"]),
+    )
+    ranked = _pack(index, numery, lex, depth)
+    paragony = [{
+        "rule": "embed_tiebreak",
+        "note": "embedding rozstrzyga wylacznie remisy leksykalne",
+        "lexical_zero_in_top": sum(1 for i in numery[:depth] if lex[i] == 0),
+    }]
+    return ranked, paragony
+
+
+def rank_embed_borda(index, entries, question, terms, depth):
+    """M7c: suma rang z obu list. Fuzja bez ani jednego pokretla."""
+    lex = _lexical_scores(index, entries, terms)
+    sims = index.scores(question)
+    _, poz_lex = _order(index, lex)
+    _, poz_emb = _order(index, sims)
+    borda = [-(poz_lex[i] + poz_emb[i]) for i in range(len(index.items))]
+    numery, _ = _order(index, borda)
+    ranked = _pack(index, numery, borda, depth)
+    paragony = [{
+        "rule": "embed_borda",
+        "note": "wynik = -(pozycja leksykalna + pozycja semantyczna)",
+        "top": [
+            {
+                "symbol": f"{index.items[i][0]}:{index.items[i][1]['name_path']}",
+                "rank_lexical": poz_lex[i],
+                "rank_embed": poz_emb[i],
+            }
+            for i in numery[:3]
+        ],
+    }]
+    return ranked, paragony
+
+
 def evaluate(entries, ctx, queries, variant, depth=DEPTH):
     positives, negatives, per_query = [], [], []
     diagnostyka = {"gate_cut": 0, "gate_fallback": 0, "gate_sizes": []}
