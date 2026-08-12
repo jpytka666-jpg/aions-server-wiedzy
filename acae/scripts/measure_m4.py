@@ -503,11 +503,13 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
                             diagnostyka["desc_zero_ranks"].append(pozycja)
                             if pozycja <= 25:
                                 diagnostyka["desc_zero_reached_25"] += 1
-        elif variant in ("embed", "embed_tie", "embed_borda"):
+        elif variant in ("embed", "embed_tie", "embed_borda",
+                         "embed_desc", "embed_desc_tie", "embed_desc_borda"):
+            # `ctx["embed"]` zbudowany z opisami albo bez — sam sposob laczenia identyczny.
             index = ctx["embed"]
-            if variant == "embed":
+            if variant in ("embed", "embed_desc"):
                 ranked, receipts = rank_embed(index, q["question"], depth)
-            elif variant == "embed_tie":
+            elif variant in ("embed_tie", "embed_desc_tie"):
                 ranked, receipts = rank_embed_tie(index, entries, q["question"], terms, depth)
             else:
                 ranked, receipts = rank_embed_borda(index, entries, q["question"], terms, depth)
