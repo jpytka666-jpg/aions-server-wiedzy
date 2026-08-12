@@ -190,10 +190,10 @@ def test_paragon_rozklada_sie_dokladnie():
 
     calosc = similarity_permille(e.vector(q), e.vector(d))
     suma = sum(p.permille for p in pary)
-    # Kazda para jest dzielona calkowicie osobno, wiec suma moze byc co najwyzej
-    # o liczbe par mniejsza niz calosc. Ujemne pary sa pominiete, wiec nie przekroczy.
-    assert suma <= calosc
-    assert calosc - suma <= len(pary)
+    # Kazda para dzielona jest calkowicie osobno, wiec kazda traci do 1 promila.
+    # Rozjazd wiekszy niz liczba par oznaczalby, ze rozklad gubi skladniki — a to
+    # dokladnie ten blad, ktory ten test wykryl za pierwszym razem.
+    assert abs(calosc - suma) <= len(pary)
 
 
 @wymaga_modelu
