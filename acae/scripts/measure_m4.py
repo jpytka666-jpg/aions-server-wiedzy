@@ -607,6 +607,15 @@ def main() -> int:
         # Weryfikacja hashy jest wlaczona: podmieniony artefakt ma zatrzymac pomiar,
         # a nie po cichu wyprodukowac liczby, ktore wygladaja sensownie.
         ctx["embed"] = EmbedIndex(StaticEmbedder(ACAE_DIR / "_model"), entries)
+    elif args.variant == "desc":
+        # pack_hash liczony TERAZ i porownywany z tym, dla ktorego powstaly opisy.
+        # Rozjazd przerywa pomiar: opisy nieaktualnego kodu daja liczby, ktore wygladaja
+        # sensownie i nie znacza nic. Ta sama regula co weryfikacja hashy modelu w M7.
+        pack_hash = build_pack(PackRequest(root=repo_root.name), locator, reader).pack_hash
+        ctx["descriptions"], ctx["desc_provenance"] = load_descriptions(
+            ACAE_DIR / "_desc" / "descriptions.json", expected_pack_hash=pack_hash,
+        )
+        ctx["pack_hash"] = pack_hash
     elif args.variant in ("prf_code", "prf_prose", "assoc"):
         if args.variant == "prf_code":
             documents = code_window_documents(entries, reader)
