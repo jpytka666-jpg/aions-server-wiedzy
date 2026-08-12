@@ -204,6 +204,43 @@ def prose_documents(repo_root: str) -> list[Document]:
     return docs
 
 
+def description_documents(
+    descriptions: Mapping[str, str],
+    entries: Sequence[Mapping[str, object]],
+) -> list[Document]:
+    """
+    M9a: korpusem sa wygenerowane opisy plikow (M8) zamiast commitow i `.md`.
+
+    KSZTALT DOKUMENTU — decyzja z prerejestracji M9, zapisana PRZED pomiarem.
+    Dokument to opis pliku PLUS identyfikatory tego pliku, a nie sam opis.
+
+    Powod: `expand()` szuka wspolwystapien miedzy terminem z pytania a slownikiem
+    identyfikatorow WEWNATRZ jednego dokumentu. Opisy z zalozenia identyfikatorow
+    unikaja — instrukcja generatora kazala tlumaczyc `host_id` na „ktora maszyna" —
+    wiec dokument zlozony z samego opisu nie zawieralby drugiej strony mostu
+    i nie mialby z czego zbudowac ani jednej krawedzi.
+
+    „Opis z doczepionymi nazwami" to dokladnie ten ksztalt, ktory STATE z 2026-08-11T20:30
+    wskazal jako powod, dla ktorego `cbms_search` w ogole dziala: blok CBMS jest opisem
+    z doczepionymi sciezkami, a kod wisi obok jako `references`.
+    """
+    nazwy_pliku: dict[str, list[str]] = {}
+    for entry in entries:
+        path = str(entry["path"])
+        czesci: list[str] = []
+        for row in entry["symbols"]:  # type: ignore[index]
+            czesci.extend(str(row.get("name_path") or "").split("/"))
+        nazwy_pliku[path] = czesci
+
+    docs: list[Document] = []
+    for path, opis in sorted(descriptions.items()):
+        if not opis.strip():
+            continue
+        identyfikatory = " ".join(nazwy_pliku.get(path, []))
+        docs.append(Document("desc", path, f"{opis} {identyfikatory}"))
+    return docs
+
+
 def docstring_documents(cap_per_root: int = 4000) -> list[Document]:
     """
     Korpus ZEWNETRZNY: pary (nazwa symbolu, docstring) z biblioteki standardowej
