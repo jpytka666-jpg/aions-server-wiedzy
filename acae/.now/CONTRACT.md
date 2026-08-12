@@ -27,7 +27,19 @@ pack, ktory te liczbe bije o rzad wielkosci.
 - [ ] M1-F: dwa narzedzia MCP (`acae_pack`, `acae_pack_status`) — NIE ROZPOCZETE
 - [x] M3: `python -m pytest tests/test_store.py` exits 0 — 16 testow, niezmienniki I2/I5/I6/I7/I8/I9 i test C4
 - [x] M3: `store.py` nie importuje `aions_core`, `cbms` ani `chroma` — sprawdzane przez AST, nie przez grep po tekscie
-- [ ] M4: semantic layer — zbior testowy 14 pytan opisowych NIE ISTNIEJE (agent padl na limicie sesji)
+- [x] M4: zbior testowy ISTNIEJE i jest zamrozony — `tests/heldout_questions.json`, 14 pytan,
+      `blake2b256:e5d8e5b4...`, NIETKNIETY. Zbior roboczy osobno: `tests/dev_questions.json` (30+/6-)
+- [x] M4-M7: dziewiec mechanizmow zmierzonych i ODRZUCONYCH, kazdy wobec kryterium zapisanego
+      przed jego pomiarem — BM25F, PRF stosunek, PRF+LLR, proza repo, graf Suade, docstringi
+      zewnetrzne, codebook, scope gate, embedding statyczny (3 warianty). Tabela w STATE.md i TERMS.md
+- [x] M8: `_desc/descriptions.json` — 169 opisow po ludzku, pelne pokrycie packa,
+      `blake2b256:cc54efc7d4d27f1917bf46dbb966288b4c89cee1d5c5ae515d54980b4e5319aa`, ZAMROZONY
+- [x] M8: `python scripts/measure_m4.py --variant desc` exits 0 — recall@10 26,6% · recall@25 46,6%
+      · MRR 0,156 · neg/poz 25,0%. **ODRZUCONY** wobec kryterium (2 z 3 warunkow niespelnione)
+- [x] M8: warunek diagnostyczny — **11 z 11** pytan grupy zerowej ma teraz wynik NIEZEROWY
+      (przewidywane >= 7). Zero z nich nie siega top-25, mediana rangi 200 z ~1372
+- [x] M8: `python -m pytest` exits 0 — **215 testow**; `rank_all` z pusta mapa opisow odtwarza
+      `retrieve.select` bit w bit na 30 pytaniach roboczych (zero rozjazdow)
 
 ## Constraints
 Root: E:\server wiedzy (istniejace repo, rozszerzane a nie forkowane)
