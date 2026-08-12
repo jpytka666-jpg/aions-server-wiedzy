@@ -287,7 +287,6 @@ class EmbedIndex:
                   else np.zeros((0, embedder.dim), dtype=np.int64))
         # Kwadraty norm, NIE normy. Pierwiastek brany raz, na koncu — dwa obciecia
         # `isqrt` po drodze potrafily dac wynik powyzej 1000 promili (patrz embed.py).
-        del math
         self.norms2 = [int(np.dot(v, v)) for v in self.M]
 
     def scores(self, question):
