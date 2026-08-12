@@ -1,0 +1,146 @@
+{
+  "schema": "acae.codebook.v1",
+  "note": "Semantyczny codebook: pojecie -> slowa, ktorymi czlowiek o nim pyta -> tokeny w identyfikatorach kodu. To jest WIEDZA ZAPISANA, nie wyliczona. Szesc mechanizmow statystycznych (M4.1-M4.6) probowalo te krawedzie wyprowadzic z danych i wszystkie zostaly odrzucone pomiarem — bo tej informacji w repo po prostu nie ma. Tutaj jest wpisana wprost.",
+  "provenance": {
+    "eo_source": "CODEBOOK_CBMS_ES.jsonl — 457 hasel esperanto, kolumna `eo` pochodzi stamtad",
+    "surface_author": "napisane recznie ze slownictwa dziedziny, BEZ ogladania zbioru testowego",
+    "code_source": "tokeny zweryfikowane jako wystepujace w identyfikatorach packa"
+  },
+  "concepts": [
+    {"id": "memory", "eo": "memori",
+     "surface": ["memory", "remember", "recall", "retention", "persistence", "knowledge"],
+     "code": ["memory", "memor", "store", "persist", "knowledge", "recall"]},
+
+    {"id": "machine", "eo": "maŝino",
+     "surface": ["machine", "computer", "host", "hostname", "node", "box", "device", "workstation"],
+     "code": ["host", "machine", "node", "device"]},
+
+    {"id": "file", "eo": "dosiero",
+     "surface": ["file", "document", "attachment"],
+     "code": ["file", "doc"]},
+
+    {"id": "directory", "eo": "dosierujo",
+     "surface": ["directory", "folder", "tree"],
+     "code": ["dir", "folder", "tree"]},
+
+    {"id": "user", "eo": "uzanto",
+     "surface": ["user", "person", "caller", "identity", "who", "author", "agent"],
+     "code": ["user", "client", "identity", "agent", "author"]},
+
+    {"id": "config", "eo": "agordo",
+     "surface": ["configuration", "config", "setting", "option", "parameter", "preference", "environment"],
+     "code": ["config", "setting", "option", "param", "env", "profile"]},
+
+    {"id": "read", "eo": "legi",
+     "surface": ["read", "load", "fetch", "retrieve", "open", "obtain"],
+     "code": ["read", "load", "fetch", "retrieve", "open"]},
+
+    {"id": "write", "eo": "skribi",
+     "surface": ["write", "save", "persist", "record", "dump", "emit", "append", "commit"],
+     "code": ["write", "save", "dump", "emit", "append", "persist"]},
+
+    {"id": "search", "eo": "serĉi",
+     "surface": ["search", "find", "lookup", "locate", "query", "match"],
+     "code": ["search", "find", "query", "lookup", "match"]},
+
+    {"id": "index", "eo": null,
+     "surface": ["index", "catalog", "registry", "listing"],
+     "code": ["index", "registry", "catalog", "list"]},
+
+    {"id": "graph", "eo": null,
+     "surface": ["graph", "network", "relation", "link", "edge", "dependency", "reference", "connection"],
+     "code": ["graph", "edge", "ref", "link", "node", "depend"]},
+
+    {"id": "vector", "eo": null,
+     "surface": ["vector", "embedding", "similarity", "distance", "semantic"],
+     "code": ["vector", "embed", "similar", "distance", "soft"]},
+
+    {"id": "chunk", "eo": null,
+     "surface": ["chunk", "fragment", "piece", "block", "segment", "portion"],
+     "code": ["chunk", "block", "segment", "slice"]},
+
+    {"id": "session", "eo": null,
+     "surface": ["session", "conversation", "dialogue", "chat", "thread", "exchange"],
+     "code": ["session", "conversation", "chat", "thread", "turn"]},
+
+    {"id": "context", "eo": null,
+     "surface": ["context", "background", "surrounding", "scope"],
+     "code": ["context", "scope"]},
+
+    {"id": "log", "eo": null,
+     "surface": ["log", "journal", "history", "audit", "trace", "diary"],
+     "code": ["log", "journal", "audit", "trace", "history"]},
+
+    {"id": "status", "eo": null,
+     "surface": ["status", "health", "condition", "alive", "ready", "state"],
+     "code": ["status", "health", "state", "ready", "alive"]},
+
+    {"id": "error", "eo": null,
+     "surface": ["error", "failure", "exception", "crash", "fault", "problem", "broken"],
+     "code": ["error", "exception", "fail", "fault", "raise"]},
+
+    {"id": "server", "eo": "servilo",
+     "surface": ["server", "service", "daemon", "endpoint", "backend", "api"],
+     "code": ["server", "service", "endpoint", "api", "http", "port"]},
+
+    {"id": "web", "eo": "retejo",
+     "surface": ["web", "website", "http", "url", "page", "browser", "request", "download", "internet"],
+     "code": ["web", "http", "url", "browser", "request", "fetch", "crawl"]},
+
+    {"id": "tool", "eo": "ilo",
+     "surface": ["tool", "utility", "command", "capability", "action"],
+     "code": ["tool", "skill", "command", "util", "action"]},
+
+    {"id": "schedule", "eo": null,
+     "surface": ["schedule", "timer", "cron", "periodic", "interval", "recurring", "when", "calendar"],
+     "code": ["schedule", "timer", "cron", "interval", "calendar", "time"]},
+
+    {"id": "security", "eo": "sekureco",
+     "surface": ["security", "secret", "credential", "password", "permission", "authorisation", "authorization", "guard", "safe", "protect"],
+     "code": ["secret", "guard", "auth", "token", "permission", "safe", "protect"]},
+
+    {"id": "parse", "eo": null,
+     "surface": ["parse", "interpret", "decode", "analyse", "analyze", "extract", "tokenize"],
+     "code": ["parse", "decode", "extract", "analy", "token"]},
+
+    {"id": "validate", "eo": null,
+     "surface": ["validate", "check", "verify", "ensure", "correct", "sanity"],
+     "code": ["valid", "check", "verify", "ensure", "assert"]},
+
+    {"id": "cache", "eo": null,
+     "surface": ["cache", "buffer", "temporary", "reuse", "memoise", "memoize"],
+     "code": ["cache", "buffer", "memo", "tmp", "temp"]},
+
+    {"id": "size", "eo": "grando",
+     "surface": ["size", "length", "count", "amount", "capacity", "quantity", "how many", "total"],
+     "code": ["size", "count", "len", "capacity", "total", "stats"]},
+
+    {"id": "name", "eo": "nomo",
+     "surface": ["name", "label", "title", "identifier", "called", "naming"],
+     "code": ["name", "label", "title", "id"]},
+
+    {"id": "path", "eo": "vojo",
+     "surface": ["path", "route", "location", "address", "where"],
+     "code": ["path", "route", "location", "uri", "url"]},
+
+    {"id": "plan", "eo": null,
+     "surface": ["plan", "strategy", "step", "task", "workflow", "pipeline", "sequence"],
+     "code": ["plan", "task", "step", "workflow", "pipeline"]},
+
+    {"id": "provider", "eo": null,
+     "surface": ["provider", "backend", "adapter", "driver", "integration", "connector"],
+     "code": ["provider", "adapter", "backend", "driver", "bridge"]},
+
+    {"id": "project", "eo": "projekto",
+     "surface": ["project", "repository", "codebase", "workspace", "repo"],
+     "code": ["project", "repo", "workspace", "scan"]},
+
+    {"id": "desktop", "eo": null,
+     "surface": ["desktop", "screen", "window", "gui", "click", "mouse", "keyboard", "typing"],
+     "code": ["desktop", "screen", "window", "click", "mouse", "key"]},
+
+    {"id": "learning", "eo": null,
+     "surface": ["learning", "training", "adapt", "improve", "evolve", "neural"],
+     "code": ["learn", "train", "evolv", "neural", "backprop"]}
+  ]
+}
