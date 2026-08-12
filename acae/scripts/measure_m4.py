@@ -334,6 +334,12 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
         "mean_top1_positive": mean_pos_top1,
         "mean_top1_negative": mean_neg_top1,
         "negative_ratio_permille": neg_ratio,
+        "gate_cut": diagnostyka["gate_cut"],
+        "gate_fallback": diagnostyka["gate_fallback"],
+        "gate_size_median": (
+            sorted(diagnostyka["gate_sizes"])[len(diagnostyka["gate_sizes"]) // 2]
+            if diagnostyka["gate_sizes"] else 0
+        ),
         "per_query": per_query,
     }
 
