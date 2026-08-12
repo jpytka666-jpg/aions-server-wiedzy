@@ -434,6 +434,7 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
         "m7_zero_bucket": 0, "m7_zero_reached_25": 0, "m7_zero_ranks": [],
         "desc_zero_bucket": 0, "desc_zero_nonzero": 0,
         "desc_zero_reached_25": 0, "desc_zero_ranks": [],
+        "m9_zero_bucket": 0, "m9_zero_in_top25": 0,
     }
     for q in queries:
         terms = query_terms(q["question"])
