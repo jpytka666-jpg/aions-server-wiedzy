@@ -613,3 +613,60 @@ zamiast dodawania terminow, routowanie pytania do podzbioru plikow) NIE BYLY tes
 i nie twierdze nic o nich.
 
 Held-out (`blake2b256:e5d8e5b4...`) **NIETKNIETY**. Nadal nie ma kandydata.
+
+## 2026-08-12T02:00 — POMIAR DIAGNOSTYCZNY: gdzie naprawde umiera system
+
+Zanim zaprojektowalem M6, zmierzylem warunek konieczny dla calej rodziny „ograniczania":
+czy wlasciwy symbol w ogole dostaje niezerowy wynik leksykalny? Bo bramka moze tylko
+USUWAC konkurencje — nie wciagnie symbolu, ktorego w rankingu nie ma.
+
+| gdzie lezy wlasciwy symbol (pelny ranking, 30 pytan) | ile |
+|---|---|
+| pozycja 1-10 | 8 (26%) |
+| **pozycja 11-100+** | **11 (37%)** — osiagalne przez zawezanie |
+| **wynik 0, poza rankingiem** | **11 (36%)** — NIEosiagalne przez zawezanie |
+
+Mediana pozycji wsrod obecnych: **16**.
+
+**Problem rozpada sie na dwa, mniej wiecej rowne.** 37% to zla KOLEJNOSC, 36% to brak
+KANDYDATA. Optymalizowalismy je dotad jako jedno i dlatego kazdy mechanizm poprawial
+jedno psujac drugie. Sufit dla samego ograniczania: **63,3%**.
+
+## 2026-08-12T02:05 — PREREJESTRACJA M6: Scope Gate (zawezanie zamiast rozszerzania)
+
+Szesc niezaleznych propozycji (GPT, Gemini, Copilot, Meta, Grok, DeepSeek) zbieglo sie
+do tej samej dzwigni. Buduje **minimalna wersje Groka z pojeciami Mety** — najczystsze
+sformulowanie plus zrodla zakresow pokrywajace 100% plikow.
+
+**Konstrukcja — trzy warstwy zakresu, liczone offline, przypiete do `pack_hash`:**
+- **A. Wspolzmiennosc commitow** — pary plikow `.py` w >= 3 wspolnych commitach, spojne
+  skladowe grafu. Pokrywa pliki, ktorych CBMS nie dotyka (pokrycie CBMS to tylko 13%).
+- **B. Spojne skladowe grafu wywolan** — nieskierowany graf `refs` z tree-sittera.
+  Bez detekcji spolecznosci z ziarnem — spojne skladowe sa deterministyczne z definicji.
+- **C. Katalogi** — kazdy katalog to zakres.
+
+**Routowanie (czas zapytania):** odwrocony indeks LUDZKIEJ PROZY (chunki CBMS + komunikaty
+commitow) -> pliki, ktore wskazuje. Pytanie dopasowywane **wylacznie po stronie prozy**,
+nigdy do kodu. Top-3 zakresy. Kandydaci = symbole z plikow tych zakresow.
+
+**Fallback:** zaden zakres nie trafil -> pelna przestrzen. Chroni recall.
+
+**Ranking:** NIEZMIENIONY baseline, wylacznie wewnatrz bramki. **Zero dodanych terminow.**
+
+**Pokretla — tylko dwa, ustalone przed pomiarem:** `MIN_COCHANGE=3`, `TOP_SCOPES=3`.
+Odrzucam wersje Copilota mimo poprawnosci: kilkanascie wag na 30 pytaniach to zaproszenie
+do przeuczenia, nie do pomiaru.
+
+**KRYTERIUM PRZYJECIA — bez zmian, dla porownywalnosci z siedmioma poprzednimi:**
+- `recall@10` >= **34,6%**, ORAZ `MRR` >= **0,172**, ORAZ `neg/poz` <= **85,2%**.
+
+**WARUNEK DIAGNOSTYCZNY (pomiar, NIE kryterium)** — propozycja GPT, punkt 9:
+ile razy bramka **wycieła** wlasciwy symbol, ktory mial niezerowy wynik. To rozdziela
+„bramka za agresywna" od „ranking za slaby".
+
+**PRZEWIDYWANIE zapisane przed pomiarem, tym razem oparte na liczbie:** zeby przekroczyc
+34,6%, bramka musi wypchnac do pierwszej dziesiatki **2-3 symbole z tych jedenastu**
+lezacych na pozycji 11+, przy medianie 16. Spodziewam sie, ze `recall@10` wzrosnie ORAZ
+ze `MRR` tez wzrosnie — bo w odroznieniu od siedmiu poprzednich mechanizmow ten
+**nic nie dodaje**, tylko usuwa konkurencje sponad wlasciwego symbolu. Jesli MRR mimo to
+spadnie, znaczy to, ze bramka tnie wlasciwe symbole — i pokaze to warunek diagnostyczny.
