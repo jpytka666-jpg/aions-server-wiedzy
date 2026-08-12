@@ -1209,6 +1209,113 @@ Wersja odrzucona przed pomiarem (mediana 59 slow, jeden wpis zepsuty) lezy
 w `_desc/v1_rejected/` i NIE byla mierzona — odrzucona na podstawie samej jakosci
 korpusu, zanim istnialy jakiekolwiek liczby.
 
+## 2026-08-12T23:53 — PREREJESTRACJA M9: cztery odrzucone mechanizmy, powtorzone na korpusie opisow
+
+### Dlaczego to NIE jest druga proba w sensie M4.2b
+
+M4.2b bylo: **ten sam korpus, zmieniony mechanizm po zobaczeniu wyniku**. Dlatego oslabialo
+dowod i dlatego zapisalem wtedy, ze trzeciej proby nie bedzie.
+
+M9 jest: **ten sam mechanizm, nietkniety, na innym wejsciu**. Zaden prog, zadna waga,
+zaden limit nie zmienia sie wobec pierwotnego pomiaru. Zmienia sie WYLACZNIE zrodlo
+tekstu pisanego po ludzku — bo pomiar sufitu z 22:10 wykazal, ze tego tekstu w repo
+NIE BYLO (9 z 11 pytan bez ani jednego zdania o wlasciwych plikach), a M8 go wytworzyl.
+
+Regula, na ktora sie powoluje, zostala zapisana przeze mnie przy odrzuceniu BM25F,
+zanim ta sytuacja zaistniala:
+
+> *„Modul zostaje w repo NIEPODPIETY — wynik negatywny z dzialajaca implementacja da sie
+> zmierzyc ponownie, gdy zmieni sie reszta pipeline'u. Ale tylko wobec nowej prerejestracji."*
+
+To jest ta nowa prerejestracja.
+
+### Dobor: tylko te, ktorych DIAGNOZA wskazywala pusty korpus
+
+Powtarzam cztery z osmiu. Pozostale cztery odpadaja, bo opisy ich nie dotykaja i powtorka
+zmierzylaby to samo drugi raz, placac za to zuzyciem zbioru roboczego:
+
+| pominiety | dlaczego powtorka nic nie da |
+|---|---|
+| M4.1 BM25F | wejscie te samo; wpuszczenie opisu jako nowego pola wymaga NOWEJ WAGI, czyli pokretla |
+| M4.2 / M4.2b PRF | okna w kodzie — opisy nie zmieniaja zrodel |
+| M4.6 docstringi zewnetrzne | korpus stdlib — nasze opisy go nie ruszaja |
+| M5 codebook | reczna mapa slowo -> identyfikator; opisy robia to samo i lepiej. Zbedny |
+
+### Cztery warianty — WSZYSTKIE zadeklarowane teraz, wszystkie beda zaraportowane
+
+**M9a `prf_desc`** — most z prozy, korpusem opisy zamiast commitow i `.md`.
+Dokument = **opis pliku PLUS identyfikatory tego pliku**. Uzasadnienie ksztaltu, zapisane
+przed pomiarem: `expand()` szuka wspolwystapien miedzy slowem z pytania a slownikiem
+identyfikatorow WEWNATRZ dokumentu. Sam opis z zalozenia identyfikatorow unika (instrukcja
+generatora kazala tlumaczyc `host_id` na „ktora maszyna"), wiec dokument z samego opisu
+nie zawieralby po prostu drugiej strony mostu i mierzylby nic. Ksztalt „opis z doczepionymi
+nazwami" jest dokladnie tym, co STATE z 20:30 zdiagnozowal jako powod, dla ktorego
+`cbms_search` w ogole dziala: *„blok CBMS to opis z doczepionymi sciezkami"*.
+Bez ruchu: `G^2 >= 10.83`, pokrycie >= 2, maks 3 na termin, maks 12 razem, waga 1/2.
+
+**M9b `embed_desc`, `embed_desc_tie`, `embed_desc_borda`** — embedding, w ktorym tekst
+symbolu to `symbol_text()` PLUS opis jego pliku. Bez ruchu: ten sam artefakt modelu, ta sama
+kwantyzacja, ta sama arytmetyka calkowita, te same trzy sposoby laczenia.
+**`embed_desc_borda` NIE JEST uprawniony do zaliczenia** — kontrola negatywow jest dla fuzji
+rang strukturalnie niedefiniowalna (wada mojej prerejestracji M7, wykryta pomiarem).
+Mierze go jako diagnostyke i tak raportuje.
+
+**M9c `gate_desc`** — bramka zakresu, w ktorej routing idzie po opisach zamiast po commitach
+i chunkach CBMS. Bez ruchu: zrodla zakresow A/B/C, `MIN_COCHANGE=3`, `TOP_SCOPES=3`,
+fallback na pelna przestrzen. **Dwie wady konstrukcyjne wykryte w M6** (zlepiony graf wywolan
+na 139 plikow, brak normalizacji punktacji przez rozmiar zakresu) **NIE sa naprawiane** —
+ich naprawa uczynilaby z tego nowy mechanizm, a nie powtorke.
+
+**M9d `graph_desc`** — propagacja po grafie, ziarnem ranking z opisami zamiast golego
+baseline'u. Bez ruchu: `SEED_K`, `HOPS`, `DAMP_PERMILLE`, `BOOST_PERMILLE=500`.
+
+### KRYTERIUM PRZYJECIA — bez zmian, jedenasty raz to samo
+
+`recall@10` >= **34,6%** ORAZ `MRR` >= **0,172** ORAZ `neg/poz` <= **85,2%**.
+Wszystkie trzy naraz. Zbior roboczy 30+/6-.
+
+### WARUNEK WARTOSCI DODANEJ — nowy, zapisany teraz
+
+Wariant, ktory przejdzie kryterium glowne, musi **dodatkowo pobic sam M8**:
+`recall@10` > 26,6% ALBO `MRR` > 0,156. Bez tego zasluga nalezy do opisow, nie do
+mechanizmu — a caly sens tego etapu to rozdzielenie tych dwoch rzeczy.
+
+### REGULA OSTRZEGAWCZA — zapisana, zeby nie dalo sie jej pozniej przemilczec
+
+Jesli kryterium przejdzie **wiecej niz jeden** wariant, traktuje to jako **sygnal
+ostrzegawczy, nie sukces**. Cztery warianty nie sa niezalezne — wszystkie mierza te same
+169 opisow na tych samych 30 pytaniach. `recall@10` skacze tu co 3,3 punktu, wiec przy
+dostatecznej liczbie spojrzen cos przekroczy prog przypadkiem. To jest jedenasty do
+czternastego pomiar na tym zbiorze i zapisuje ten koszt jawnie.
+
+**Held-out (`blake2b256:e5d8e5b4...`) pozostaje NIETKNIETY.** Otwierany DOKLADNIE RAZ
+i tylko wtedy, gdy ktorys wariant spelni oba warunki naraz.
+
+### DIAGNOSTYKA WSPOLNA dla wszystkich czterech
+
+Ile z **11 pytan grupy zerowej** wchodzi do top-25. Punkt odniesienia: M8 dal **0 z 11**
+przy medianie rangi 200 z ~1372. Ta liczba mowi, czy mechanizm potrafi wylowic to,
+co opisy juz uwidocznily — niezaleznie od werdyktu pass/fail.
+
+Dla `gate_desc` dodatkowo, jak w M6: `gate_cut`, `gate_fallback`, `gate_size_median`.
+Punkt odniesienia: mediana **140 ze 169 plikow**, czyli bramka, ktora nie bramkowala.
+
+### PRZEWIDYWANIA, zapisane przed pomiarem. Bilans dotychczas: 1 z 10
+
+- **`prf_desc` — PORAZKA.** Rodzina „dodaje terminy do zapytania" obnizyla `MRR`
+  osiem razy na osiem, wliczajac sam M8. Spodziewam sie wzrostu recall i spadku MRR.
+- **`embed_desc` — najmocniejszy kandydat.** Jedyna rzecz, ktora zabila M7a, to `neg/poz`
+  103,7%, a M8 pokazal, ze opisy zbijaja te kontrole z 85,2% na 25,0%. Spodziewam sie,
+  ze `embed_desc` po raz pierwszy spelni warunek negatywny. Co do `recall@10` nie mam
+  pewnosci. `embed_desc_tie` z konstrukcji nie moze zaszkodzic.
+- **`gate_desc` — PORAZKA wobec kryterium, ale mediana bramki spadnie ponizej 140/169**,
+  bo routing wreszcie ma po czym rozrozniac pliki. Zlepiony graf wywolan zostaje i to on
+  bedzie ograniczeniem.
+- **`graph_desc` — recall@25 w gore, MRR bez zmian**, czyli ten sam profil co M4.4.
+
+Zapisuje te przewidywania z ta sama waga co liczby. Dziewiec razy na dziesiec mylilem sie
+co do wlasnego projektu i to jest ustalenie mocniejsze niz ktorykolwiek pojedynczy wynik.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
