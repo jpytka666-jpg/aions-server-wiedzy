@@ -264,6 +264,7 @@ def is_hit(item, question) -> bool:
 
 def evaluate(entries, ctx, queries, variant, depth=DEPTH):
     positives, negatives, per_query = [], [], []
+    diagnostyka = {"gate_cut": 0, "gate_fallback": 0, "gate_sizes": []}
     for q in queries:
         terms = query_terms(q["question"])
         receipts: list[dict] = []
