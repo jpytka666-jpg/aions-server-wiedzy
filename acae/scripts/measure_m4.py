@@ -358,7 +358,9 @@ def rank_embed(index, question, depth):
     paragony = []
     for pozycja in numery[:3]:
         path, row, _ = index.items[pozycja]
-        pary = embed_receipt(index.embedder, question, symbol_text(path, row))
+        # Paragon MUSI liczyc na tym samym tekscie, z ktorego powstal wektor — inaczej
+        # rozklad nie sumuje sie do wyniku. Przy M7 `texts` to doslownie `symbol_text`.
+        pary = embed_receipt(index.embedder, question, index.texts[pozycja])
         if pary:
             paragony.append({
                 "rule": "embed_similarity",
