@@ -573,7 +573,7 @@ def main() -> int:
     parser.add_argument(
         "--variant", required=True,
         choices=("baseline", "bm25f", "prf_code", "prf_prose", "graph", "assoc", "codebook",
-                 "gate", "embed", "embed_tie", "embed_borda"),
+                 "gate", "embed", "embed_tie", "embed_borda", "desc"),
     )
     parser.add_argument("--set", dest="qset", default="dev", choices=tuple(SETS))
     parser.add_argument("--out", default=None)
