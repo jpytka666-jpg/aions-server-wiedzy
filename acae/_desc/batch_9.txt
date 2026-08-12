@@ -1,0 +1,15 @@
+aions_core/agi_soft_retrieval.py
+aions_core/cbms_memory.py
+aions_core/server/cbms_doctor.py
+aions_core/server/pocket_qc.py
+aions_core/tools/test_api.py
+control_plane/api.py
+mcpServers/VS_CODE_MCP_CODEX/run_server.py
+mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py
+scripts/ingest_tier1_chroma.py
+scripts/project_scanner.py
+scripts/test_google_integration.py
+scripts/test_skill_engine_foundation.py
+scripts/test_skill_open_apps.py
+scripts/verify_python_env.py
+server/store.py
