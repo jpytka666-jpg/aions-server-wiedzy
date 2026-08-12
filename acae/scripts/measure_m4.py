@@ -215,6 +215,37 @@ def rank_codebook(entries, terms, depth, codebook, symtok):
     return ranked[:depth], receipts
 
 
+def rank_gate(entries, terms, depth, scope_index):
+    """
+    M6: bramka zakresu, potem NIEZMIENIONY ranking bazowy wylacznie w jej wnetrzu.
+
+    Do zapytania nie trafia ani jedno dodatkowe slowo. Jedyna zmiana wobec baseline
+    to zbior, po ktorym ranking chodzi — a to jest dokladnie ta dzwignia, ktorej
+    siedem poprzednich mechanizmow nie ruszalo.
+
+    Zwraca (ranking, paragony, pliki w bramce, czy fallback).
+    """
+    pliki, hits, fallback = scope_index.gate(terms)
+    rarity = term_rarity(entries, terms)
+
+    ranked = []
+    for entry in entries:
+        path = str(entry["path"])
+        if path not in pliki:
+            continue
+        for row in entry["symbols"]:
+            score = score_symbol(path, row, terms, rarity)
+            if score > 0:
+                ranked.append({"score": score, "path": path, "lang": entry.get("lang"), "row": row})
+    ranked.sort(key=lambda d: (-d["score"], d["path"], d["row"]["line"], d["row"]["name_path"]))
+
+    receipts = [hit.as_dict() for hit in hits]
+    if fallback:
+        receipts.append({"rule": "scope_gate", "fallback": True,
+                         "reason": "zaden zakres nie trafil — przeszukano cala przestrzen"})
+    return ranked[:depth], receipts, pliki, fallback
+
+
 def is_hit(item, question) -> bool:
     """
     Trafienie: dokladny `name_path` albo sama nazwa liscia przy zgodnym pliku.
