@@ -746,3 +746,106 @@ nieprawda dla M4.3 i M4.4. Pelna tabela liczb w `TERMS.md`.
 - Regresja po M6 nieuruchomiona: `pytest`, `acae pack` (oczekiwany `pack_hash 6442322d...`),
   `measure_m2.py` (oczekiwane 10/10).
 - Wpis do tabeli „Zmierzone i odrzucone" w `TERMS.md` — niedopisany.
+
+**SPLACONY 2026-08-12T19:50:** testy napisane (145 zielonych), regresja czysta
+(`pack_hash` bez zmian, brama M2 10/10), tabela w `TERMS.md` uzupelniona o wszystkie osiem.
+
+## 2026-08-12T20:10 — ZMIANA REGULY: zakaz LLM/embeddingow COFNIETY przez Marcina
+
+Prerejestracja M4.1-M4.5 zawierala jego wlasna regule: **„Nie uzywac LLM"**. Marcin ja dzis
+cofnal, z warunkiem doslownym: *„trzymaj sie tego zeby to bylo maximum determistyczne
+i auditowalne zeby tam nie bylo chalucynacji kod bite w bite"*.
+
+Zakaz strojenia pod held-out **pozostaje w mocy**. Zbior held-out pozostaje nietkniety.
+
+## 2026-08-12T20:15 — PREREJESTRACJA M7: statyczny embedding (most slownikowy)
+
+**DLACZEGO TO NIE JEST DZIEWIATY WARIANT TEGO SAMEGO.** Pomiar diagnostyczny rozbil problem
+na dwa: 37% to zla KOLEJNOSC (symbol obecny, nisko), 36% to brak KANDYDATA (symbol ma wynik
+leksykalny **zero**). Osiem mechanizmow atakowalo kolejnosc. Zadne przeliczanie nie ruszy
+zera — `0 * cokolwiek = 0`. Embedding daje kazdemu symbolowi wynik niezerowy, wiec jako
+pierwszy w ogole **moze dotknac tych 36%**.
+
+### Artefakt — przypiety, nie pobierany przy zapytaniu
+
+`minishlab/potion-base-8M` (Model2Vec/POTION): **statyczna tablica token -> wektor**,
+29 528 x 256, bez sieci neuronowej przy wnioskowaniu. Zdanie = **srednia wektorow tokenow**.
+
+Eksport jednorazowy do `acae/_model/`: macierz int16, tokenizer BPE, karta modelu
+z `blake2b256` obu plikow. Przy zapytaniu **nie ma `model2vec`, nie ma `torch`** — tylko
+`numpy` i `tokenizers`. Model nie jest pobierany ani aktualizowany w locie.
+
+### Determinizm — warunek Marcina „bit w bit", rozwiazany arytmetyka calkowita
+
+Zmiennoprzecinkowy iloczyn skalarny NIE jest deterministyczny miedzy maszynami: BLAS
+zmienia kolejnosc sumowania zaleznie od liczby watkow, a dodawanie floatow nie jest
+laczne. Dlatego **przy zapytaniu nie ma ani jednego floata**:
+
+1. **Kwantyzacja raz, przy eksporcie.** Jedna globalna skala `32767 / max|E|`,
+   zaokraglenie do parzystego. Globalna, nie per-wiersz — per-wiersz zniszczylby
+   proporcje miedzy wektorami.
+2. **Iloczyn skalarny w `int64`.** Dodawanie liczb calkowitych JEST laczne i dokladne,
+   wiec kolejnosc sumowania nie ma znaczenia. Zakres: 256 * 32767^2 = 2,7e11, miesci sie
+   w int64 z zapasem czterech rzedow wielkosci.
+3. **Normalizacja przez `math.isqrt`** — dokladny pierwiastek calkowity. Wynik podawany
+   jako **promile w `int`**, zgodnie z kanonicznym JSON, ktory zabrania floatow.
+
+Ten sam wynik na kazdej maszynie, przy kazdej liczbie watkow, w kazdej wersji BLAS.
+
+### Audytowalnosc — dokladny rozklad, nie przyblizenie
+
+Wektor dokumentu jest **srednia** wektorow tokenow, wiec podobienstwo rozklada sie
+liniowo i **dokladnie**:
+
+```
+sim(q, d) = <q, mean_i(t_i)> = mean_i( <q, t_i> )
+```
+
+Kazdy token dokumentu wnosi policzalny udzial. Paragon poda pary token-token o najwiekszym
+wkladzie, np. `machine <-> host: 340 z 610 promili`. To nie jest heurystyka wyjasniajaca
+po fakcie — to jest ta sama arytmetyka, ktora dala wynik. **Transformer tego nie potrafi**;
+wybieram model statyczny wlasnie dlatego, a nie dla rozmiaru.
+
+### Tekst dokumentu i zapytania — regula ustalona teraz
+
+- **Dokument (symbol):** `split_identifier` (z `bm25f.py`, jako narzedzie tokenizujace —
+  precedens z `concepts.py`) na sciezce bez rozszerzenia, na `name_path`, plus slowa
+  z `signature` i `doc`. Male litery, zlaczone spacja.
+- **Zapytanie:** surowe pytanie, bez zmian. **Zero dodanych terminow.**
+
+### Trzy warianty — WSZYSTKIE zadeklarowane teraz, wszystkie beda zaraportowane
+
+- **M7a `embed`** — ranking wylacznie po podobienstwie.
+- **M7b `embed_tie`** — leksyka glowna, embedding **tylko jako rozstrzygniecie remisow**
+  przy rownym wyniku leksykalnym. Z konstrukcji nie moze zaszkodzic tym 8 pytaniom,
+  ktore juz dzialaja, bo nie zmienia kolejnosci miedzy roznymi wynikami leksykalnymi.
+- **M7c `embed_borda`** — suma rang z obu list. Fuzja **bez ani jednego pokretla**;
+  odrzucam wazenie `a*leksyka + b*embedding`, bo `a` i `b` byly by strojeniem.
+
+Skale nie sa porownywalne (`score_symbol` to nieograniczona suma wag pol, podobienstwo
+to promile), dlatego fuzja idzie po RANGACH, nie po wartosciach.
+
+### KRYTERIUM PRZYJECIA — bez zmian, dla porownywalnosci z osmioma poprzednimi
+
+`recall@10` >= **34,6%** ORAZ `MRR` >= **0,172** ORAZ `neg/poz` <= **85,2%**.
+Wariant „przechodzi" tylko przy spelnieniu wszystkich trzech. Zbior roboczy 30+/6-.
+
+### WARUNEK DIAGNOSTYCZNY (pomiar, NIE kryterium) — najwazniejsza liczba tego etapu
+
+**Z tych 11 pytan, gdzie wlasciwy symbol ma leksykalne ZERO — ile trafia do top-25
+po samym embeddingu?** To odpowiada na pytanie, na ktore osiem pomiarow nie odpowiedzialo:
+czy most slownikowy w ogole istnieje. Niezaleznie od werdyktu pass/fail.
+
+### PRZEWIDYWANIE, zapisane przed pomiarem
+
+- **M7b nie moze pogorszyc** `recall@10` ponizej 26,6% — to wynika z konstrukcji, nie
+  z nadziei. Ale spodziewam sie malego zysku i **nie sadze, ze dobije do 34,6%**.
+- **M7a pogorszy** wynik. Czysty embedding zgubi te 8 pytan, gdzie doslowna nazwa
+  z kodu wystepuje w pytaniu — a tam leksyka jest nie do pobicia.
+- **Diagnostyka: spodziewam sie, ze >= 4 z 11 zerowych trafi do top-25.** Jesli trafi
+  0-1, to znaczy, ze mostu nie ma nawet przy semantyce, i **caly kierunek jest zamkniety**,
+  niezaleznie od tego, co pokaza trzy warianty.
+
+Po osmiu bledych przewidywaniach zaznaczam: moja skutecznosc w przewidywaniu tych
+pomiarow wynosi **0 z 8**. Ten zapis istnieje po to, zeby wynik mnie mogl skorygowac,
+a nie zebym ja tlumaczyl wynik po fakcie.
