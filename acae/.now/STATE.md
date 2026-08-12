@@ -970,3 +970,50 @@ na malych liczbach, siedzialby w kodzie do momentu, w ktorym zaczalby szkodzic.
 
 Straznik dopisany: `test_podobienstwo_nigdy_nie_przekracza_tysiaca` na 25 ziarnach malych
 wektorow plus `test_znany_przypadek_z_regresji` na dokladnie tej parze, ktora to wywrocila.
+
+## 2026-08-12T22:10 — POMIAR SUFITU: czy da sie wytrenowac WLASNE embeddingi na naszym korpusie
+
+Pytanie Marcina: zbudowac wlasny zbior „slowo ludzkie -> nazwa funkcji", zeby ACAE nie
+potrzebowalo obcego modelu. Zamiast dyskutowac — pomiar sufitu.
+Skrypt: `scripts/measure_prose_ceiling.py`. Nic nie buduje, tylko liczy.
+
+### Rozmiar calego korpusu ludzkiej prozy w tym repo
+
+| | |
+|---|---|
+| dokumentow (komunikaty commitow + chunki CBMS) | **22** |
+| znakow | **26 298** |
+| unikalnych slow | **1 484** |
+| ile potrzebuje sensowny word2vec / fastText | rzad **1e8** znakow |
+
+Mamy **0,026%** tego, co potrzebne. To nie jest „malo danych do dostrojenia" — to jest
+brak danych.
+
+### Gorsza liczba: informacji nie ma nawet w formie surowej
+
+Dla 11 pytan z grupy zerowej:
+
+| sufit | ile z 11 |
+|---|---|
+| A — slowo z pytania wspolwystepuje w prozie wskazujacej wlasciwy plik | **1** |
+| B — jakakolwiek proza w ogole opisuje wlasciwy plik | **2** |
+| **zero prozy o tych plikach — nie ma czego uczyc** | **9** |
+
+Nieosiagalne: `d001 d002 d003 d007 d008 d009 d023 d024 d030`.
+
+**Wniosek, ktory zamyka kierunek:** nie da sie nauczyc odwzorowania z danych, ktorych nie
+ma. Dla 9 z 11 pytan nie istnieje w repo ANI JEDEN ludzki tekst opisujacy wlasciwe pliki.
+Zaden algorytm — embedding, wspolwystepowanie, siec — tego nie wyciagnie.
+
+To rowniez tlumaczy wstecz M4.3 i M5: nie przegraly przez slaby algorytm, tylko przez
+pusty korpus. Osiem pomiarow probowalo wycisnac sygnal ze zbioru, ktory go nie zawiera.
+
+### Co ten pomiar NIE zamyka
+
+Sufit dotyczy uczenia sie z tego, co JEST. Nie dotyczy sytuacji, w ktorej opis zostanie
+**napisany**. 26 KB to malo, bo repo prawie nie ma dokumentacji przypietej do plikow —
+pokrycie CBMS to 23 ze 169 plikow (13%). Gdyby kazdy plik mial akapit opisu po ludzku,
+korpus mialby wlasciwa wielkosc I doskonale przypiecie do plikow.
+
+Wtedy jednak embedding jest zbedny: slowa z pytania trafialyby w opis **leksykalnie**,
+przez istniejace pole `doc` w rankingu bazowym. Most nie wymaga modelu, wymaga tresci.
