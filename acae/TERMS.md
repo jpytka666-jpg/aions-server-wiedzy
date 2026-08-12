@@ -77,13 +77,41 @@ implementacja da sie zmierzyc ponownie; wynik negatywny bez implementacji jest o
 Tabela istnieje po to, zeby nikt — lacznie ze mna za miesiac — nie podpial ich ponownie,
 nie wiedzac, ze juz przegraly.
 
-| Modul | Kiedy | Wynik | Warunek ponownego rozpatrzenia |
-|---|---|---|---|
-| `src/acae/bm25f.py` (M4.1) | zbior roboczy 30+/6- | recall@10 26,6% -> **23,3%**, MRR 0,172 -> **0,156**, negatywy/pozytywy 85,2% -> **97,0%**. Implementacja poprawna (zapytania z doslowna nazwa trafiaja #1), wiec to prawdziwy wynik, nie blad | tylko wobec NOWEJ prerejestracji i tylko jesli zmieni sie reszta pipeline'u — np. gdyby nasycenie zaczelo miec znaczenie po wprowadzeniu rozszerzania zapytan |
+Kryterium przyjecia bylo to samo dla wszystkich osmiu, ustalone przed pierwszym pomiarem:
+`recall@10` >= **34,6%** ORAZ `MRR` >= **0,172** ORAZ `neg/poz` <= **85,2%**.
+Baseline: recall@10 **26,6%**, recall@25 **36,6%**, MRR **0,172**, neg/poz **85,2%**.
+Wszystkie liczby ze zbioru roboczego 30+/6-; held-out **nietkniety**.
 
-Wniosek architektoniczny z M4.1, wazniejszy niz sam werdykt: oba rankery daja ~25%
-`recall@10` na pytaniach opisowych, mimo ze jeden jest ad-hoc, a drugi ma dwadziescia lat
-teorii. **Fundament nie byl waskim gardlem** — jest nim brak mostu slownikowego.
+| Modul (etap) | recall@10 | recall@25 | MRR | neg/poz | Na czym poleglo |
+|---|---|---|---|---|---|
+| `bm25f.py` (M4.1) | 23,3% | 33,3% | 0,156 | **97,0%** | wszystko naraz; implementacja poprawna (zapytanie z doslowna nazwa trafia #1), wiec to wynik, nie blad |
+| `expand.py` (M4.2, PRF okno w kodzie) | **30,0%** | 40,0% | **0,139** | 80,7% | recall w gore, MRR w dol |
+| `expand.py` (M4.2b, LLR Dunninga) | **33,3%** | 36,6% | **0,153** | 80,4% | najlepszy recall@10 z osmiu, wciaz ponizej progu, MRR nadal zbity |
+| `expand.py` (M4.3, most z prozy) | 26,6% | 36,6% | 0,172 | 84,9% | zero ruchu — proza nie wnosi terminow, ktorych ranking uzyje |
+| `graph.py` (M4.4, propagacja po grafie) | 26,6% | **40,0%** | 0,172 | 85,2% | najlepszy recall@25 z osmiu, ale top-10 bez zmian |
+| (M4.6, korpus zewnetrzny) | 20,0% | 36,6% | 0,169 | 86,7% | najgorszy recall@10; obcy slownik szkodzi |
+| `concepts.py` (M5, codebook reczny) | 26,6% | 33,3% | 0,163 | 86,8% | wiedza jawna nie pomogla bardziej niz statystyka |
+| `scope.py` (M6, bramka zakresowa) | 23,3% | 33,3% | **0,138** | 88,0% | bramka **nie bramkowala** — mediana 140 ze 169 plikow; patrz STATE.md 2026-08-12T03:10 |
+
+**Warunek ponownego rozpatrzenia — wspolny:** tylko wobec NOWEJ prerejestracji i tylko
+jesli zmieni sie inna czesc pipeline'u. Sam fakt, ze „tym razem lepiej dostroje", nie jest
+warunkiem — to jest definicja przeuczenia na 30 pytaniach.
+
+**Wyjatek — `scope.py` (M6).** Jako jedyny nie zostal falsyfikowany merytorycznie: pomiar
+pokazal wade konstrukcyjna (punktacja routingu nie normalizowana przez rozmiar zakresu,
+spojne skladowe grafu zlepione w jedna kluche na 139 plikow), przez ktora dzwignia nie
+zostala pociagnieta. Zdanie „ograniczanie przestrzeni nie dziala" **nie ma pokrycia
+w zadnym pomiarze**. Wady sa przypiete testami `test_wada_*` w `tests/test_scope.py`.
+
+### Dwa wnioski, ktore te osiem pomiarow uprawnia
+
+1. **Fundament nie byl waskim gardlem** (M4.1). Ranker ad-hoc i BM25F z dwudziestoma laty
+   teorii za soba daja ~25% `recall@10` na pytaniach opisowych. Waskim gardlem jest brak
+   mostu slownikowego.
+2. **Kazdy mechanizm, ktory DODAJE terminy, kupuje recall za cene MRR.** Dwa najlepsze
+   `recall@10` (30,0% i 33,3%) to oba warianty PRF — i oba maja najgorsze MRR (0,139
+   i 0,153). Dodany termin sciaga symbole pasujace tylko do niego i te wypychaja wlasciwa
+   odpowiedz w dol. To nie jest wada implementacji, to powtorzylo sie siedem razy.
 
 ## Znane luki
 
