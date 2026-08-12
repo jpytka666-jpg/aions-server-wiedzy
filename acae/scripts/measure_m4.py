@@ -276,17 +276,24 @@ class EmbedIndex:
     od kolejnosci sumowania, wiec liczba watkow BLAS nie zmienia wyniku.
     """
 
-    def __init__(self, embedder, entries):
+    def __init__(self, embedder, entries, descriptions=None):
         import numpy as np
 
+        opisy = descriptions or {}
         self.embedder = embedder
         self.items = []
+        self.texts = []
         wektory = []
         for entry in entries:
             path = str(entry["path"])
             for row in entry["symbols"]:
+                # M9b: gdy podano opisy, tekst symbolu to regula M7 PLUS opis jego pliku.
+                # Bez opisow wynik jest identyczny z M7 — `symbol_text_with_description`
+                # z pustym opisem zwraca doslownie `symbol_text`.
+                tekst = symbol_text_with_description(path, row, opisy.get(path, ""))
                 self.items.append((path, row, entry.get("lang")))
-                wektory.append(embedder.vector(symbol_text(path, row)))
+                self.texts.append(tekst)
+                wektory.append(embedder.vector(tekst))
         self.M = (np.vstack(wektory) if wektory
                   else np.zeros((0, embedder.dim), dtype=np.int64))
         # Kwadraty norm, NIE normy. Pierwiastek brany raz, na koncu — dwa obciecia
