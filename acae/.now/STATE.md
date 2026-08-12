@@ -527,3 +527,36 @@ korpus by pomogl — pomiar mowi, ze ten mechanizm na tym zadaniu szkodzi.
 Zaden wariant nie spelnil kryterium, ktore bylo zapisane przed jego pomiarem.
 
 Held-out (`blake2b256:e5d8e5b4...`) **NIETKNIETY** — nie ma kandydata do sprawdzenia.
+
+## 2026-08-12T00:40 — PREREJESTRACJA M5: semantyczny codebook (WIEDZA JAWNA, nie statystyka)
+
+**To NIE jest siodmy sposob liczenia podobienstwa.** Szesc poprzednich mechanizmow probowalo
+WYLICZYC zwiazek „slowo z pytania -> identyfikator w kodzie" z danych. M5 go **ZAPISUJE**.
+Roznica jest zasadnicza: tam gdzie tamte szacowaly, ten stwierdza.
+
+**Skad sie bierze:** `CODEBOOK_CBMS_ES.jsonl` Marcina (457 hasel esperanto -> znak, kompresja).
+Lewa kolumna to gotowa lista pojec. Dopisujemy dwie: **formy powierzchniowe** (slowa, ktorymi
+czlowiek moze o tym zapytac) i **rdzenie kodu** (tokeny do szukania w identyfikatorach).
+Trzecia kolumna — konkretne symbole — liczy sie sama z packa przy kazdym uruchomieniu.
+
+**Uczciwosc konstrukcji:** codebook pisze ze slownictwa KODU i z wiedzy o dziedzinie.
+**NIE zagladam do `dev_questions.json`.** Napisanie go pod pytania byloby napisaniem sobie
+odpowiedzi. Kolejnosc widoczna w historii gita: prerejestracja, potem codebook, potem pomiar.
+
+**Poprawka jakosci pomiaru** (zgloszona wczesniej jako wada): dopasowanie idzie po TOKENACH
+identyfikatora, nie po podciagu. Inaczej `form` trafia w `Performance` i 31 „trafien" jest
+zmyslonych. Uzywam `split_identifier` z `bm25f.py` — to narzedzie tokenizujace, NIE ranker
+BM25F, ktory zostal odrzucony i pozostaje odrzucony.
+
+**KRYTERIUM PRZYJECIA — identyczne jak M4.2b, M4.3, M4.6, zeby wyniki byly porownywalne:**
+- `recall@10` >= **34,6%**, ORAZ
+- `MRR` >= **0,172**, ORAZ
+- `negatywy/pozytywy` <= **85,2%**.
+Wszystkie trzy naraz. **Jedno podejscie.**
+
+**Przewidywanie zapisane przed pomiarem:** tym razem spodziewam sie POPRAWY recall,
+bo demonstracja pokazala, ze `maŝino -> host -> _default_host` powstaje natychmiast.
+Ale nie mam pewnosci co do `MRR` — wszystkie szesc poprzednich mechanizmow go obnizylo
+albo zostawilo bez zmian, a rozszerzanie zapytania rozciencza sygnal terminow oryginalnych.
+Jesli `recall@10` przekroczy prog, a `MRR` spadnie — to jest PORAZKA wg kryterium
+i tak ja zaraportuje, bez tlumaczenia, ze „prawie sie udalo".
