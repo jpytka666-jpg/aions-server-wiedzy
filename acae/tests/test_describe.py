@@ -242,9 +242,7 @@ def test_paragon_sumuje_sie_dokladnie_do_wkladu_opisu(entries):
     terms = ["alpha", "maszyna"]
     opisy = {str(e["path"]): "maszyna oraz alpha" for e in entries}
     ranked, rarity = rank_all(entries, terms, opisy)
-    pozycje = receipt(ranked, terms, opisy, rarity, limit=len(ranked))["top"] \
-        if isinstance(receipt(ranked, terms, opisy, rarity), dict) \
-        else receipt(ranked, terms, opisy, rarity, limit=len(ranked))[0]["top"]
+    pozycje = receipt(ranked, terms, opisy, rarity, limit=len(ranked))[0]["top"]
 
     for item, wpis in zip(ranked, pozycje):
         bez_opisu = score_symbol(str(item["path"]), item["row"], terms, rarity)
