@@ -50,6 +50,27 @@ def test_przeciwne_scinane_do_zera():
     assert similarity_permille(a, -a) == 0
 
 
+@pytest.mark.parametrize("ziarno", range(25))
+def test_podobienstwo_nigdy_nie_przekracza_tysiaca(ziarno):
+    """
+    Straznik bledu, ktory naprawde wystapil: liczenie `isqrt` osobno dla kazdej normy
+    obcinalo mianownik i dawalo 1166 promili dla `[1,2,3]` i `[2,1,1]`. Cosinus nie moze
+    przekroczyc 1. Male wektory sa tu celowo — na duzych blad znikal i nikt by go nie
+    zobaczyl.
+    """
+    rng = np.random.default_rng(ziarno)
+    a = rng.integers(-5, 6, size=3, dtype=np.int64)
+    b = rng.integers(-5, 6, size=3, dtype=np.int64)
+    assert 0 <= similarity_permille(a, b) <= 1000
+
+
+def test_znany_przypadek_z_regresji():
+    """Dokladnie ta para, ktora wywrocila pierwsza wersje. Prawdziwy cosinus: 0,7638."""
+    a = np.array([1, 2, 3], dtype=np.int64)
+    b = np.array([2, 1, 1], dtype=np.int64)
+    assert abs(similarity_permille(a, b) - 764) <= 1
+
+
 def test_wektor_zerowy_nie_wywala():
     a = np.array([1, 2, 3], dtype=np.int64)
     zero = np.zeros(3, dtype=np.int64)
