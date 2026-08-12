@@ -849,3 +849,83 @@ czy most slownikowy w ogole istnieje. Niezaleznie od werdyktu pass/fail.
 Po osmiu bledych przewidywaniach zaznaczam: moja skutecznosc w przewidywaniu tych
 pomiarow wynosi **0 z 8**. Ten zapis istnieje po to, zeby wynik mnie mogl skorygowac,
 a nie zebym ja tlumaczyl wynik po fakcie.
+
+## 2026-08-12T21:05 — M7: ODRZUCONY wobec kryterium. Ale wynik jest inny niz osiem poprzednich.
+
+Pomiary: `_baseline/m4_embed_dev_3495229.json`, `m4_embed_tie_dev_3495229.json`,
+`m4_embed_borda_dev_3495229.json`. Head `3495229`. Zbior roboczy. Held-out NIETKNIETY.
+
+| wariant | recall@10 | recall@25 | MRR | neg/poz | werdykt |
+|---|---|---|---|---|---|
+| baseline | 26,6% | 36,6% | 0,172 | 85,2% | — |
+| **M7a `embed`** | **33,3%** | **40,0%** | **0,222** | **103,7%** | ODRZUCONY |
+| **M7b `embed_tie`** | 26,6% | **40,0%** | 0,173 | 85,2% | ODRZUCONY |
+| **M7c `embed_borda`** | **33,3%** | **40,0%** | **0,249** | niemierzalne | ODRZUCONY |
+
+Kryterium (`recall@10` >= 34,6% ORAZ `MRR` >= 0,172 ORAZ `neg/poz` <= 85,2%) nie spelnia
+zaden. **Dziewiec mechanizmow, dziewiec odrzucen.**
+
+### Co jest tu NOWE i czego osiem poprzednich nie pokazalo
+
+**Pierwszy raz MRR przekroczylo baseline.** Osiem poprzednich mechanizmow nie podnioslo
+`MRR` ani o promil — piec obnizylo, dwa wyrownaly, jeden obnizyl mocno. M7c daje
+**0,249 wobec 0,172, czyli +45%**. To nie jest szum na 30 pytaniach tej samej skali,
+w ktorej wszystkie poprzednie stały w miejscu albo spadaly.
+
+`recall@10` 33,3% wyrownuje najlepszy wynik w calej ablacji (M4.2b), a `recall@25` 40,0%
+wyrownuje najlepszy (M4.4).
+
+### WARUNEK DIAGNOSTYCZNY — obalil hipoteze, dla ktorej ten etap powstal
+
+| pomiar | wartosc |
+|---|---|
+| pytan, gdzie wlasciwy symbol ma leksykalne ZERO | **11** (zgodne z pomiarem z 02:00) |
+| z tego embedding wciaga do top-25 | **1** |
+| mediana rangi w tej grupie | **336** |
+
+Prerejestracja mowila: *„spodziewam sie, ze >= 4 z 11 trafi do top-25. Jesli trafi 0-1,
+to znaczy, ze mostu nie ma nawet przy semantyce, i caly kierunek jest zamkniety"*.
+
+Trafil **dokladnie 1**. Zgodnie z wlasnym zapisem: **most slownikowy dla grupy zerowej
+NIE ISTNIEJE i ten kierunek jest zamkniety.** Mediana 336 nie jest „blisko" — to jest
+poza jakimkolwiek realnym oknem.
+
+### Wniosek, ktorego prerejestracja nie przewidziala
+
+Skoro grupa zerowa nie drgnela, a `recall@10` i `MRR` wyraznie wzrosly, poprawa moze
+pochodzic wylacznie z **przestawienia kolejnosci w grupie „obecny, ale nisko"** (37%
+z pomiaru diagnostycznego). Czyli embedding pomaga **tam, gdzie leksyka juz cos widzi**,
+i nie pomaga tam, gdzie leksyka milczy.
+
+To jest **odwrotnosc powodu, dla ktorego go wybralem**. Zapisuje to jako obserwacje
+POHOC, nie jako wynik: nie byla przewidziana, wiec nie ma sily dowodu. Gdyby miala byc
+scigana, wymaga wlasnej prerejestracji i wlasnego pomiaru.
+
+### Sciana: embedding nie umie powiedziec „nie wiem"
+
+`mean_top1` dla M7a: **pozytywy 452, negatywy 469**. Negatywy dostaja wynik WYZSZY.
+Cosinus zawsze znajdzie „cos podobnego" — pytanie spoza zakresu dostaje pelnowartosciowy
+wynik. To nie jest do wyregulowania progiem, bo prog bylby pokretlem strojonym na 6
+negatywach.
+
+M7b to potwierdza od drugiej strony: leksyka jako glowna trzyma `neg/poz` dokladnie
+na 85,2% i `recall@10` dokladnie na 26,6% — **konstrukcja obiecywala, ze nie zaszkodzi,
+i nie zaszkodzila**. Zysk: `recall@25` 36,6% -> 40,0%, przy `MRR` praktycznie bez zmian.
+
+### Wada mojej prerejestracji, ktora ten pomiar ujawnil
+
+Zadeklarowalem **jedno kryterium dla trzech wariantow, nie sprawdzajac, czy skala wyniku
+kazdego z nich to kryterium udzwignie.** M7c punktuje ujemna suma rang, wiec kontrola
+`neg/poz` liczy `(-4 * 1000) // max(1, -13)` i daje bezsens (-400%). To **nie jest wynik
+wariantu** — to dziura w moim planie pomiaru.
+
+Glebsza wersja tej samej obserwacji: fuzja rang **z konstrukcji nie potrafi wyrazic
+„nic nie pasuje"**, bo kazdy symbol ma range zawsze. Kontrola negatywow jest dla niej
+strukturalnie niedefiniowalna, nie tylko zle policzona.
+
+### Bilans przewidywan
+
+Przewidywalem: M7a **pogorszy** wynik (poprawil, mocno), diagnostyka da **>= 4 z 11**
+(dala 1). **0 z 9.** Zapisuje to z ta sama waga co liczby: mechanizm, ktory dziewiaty raz
+z rzedu zaprzecza mojej intuicji, jest wazniejszym ustaleniem niz ktorykolwiek pojedynczy
+wariant.
