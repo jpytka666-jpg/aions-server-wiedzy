@@ -287,7 +287,10 @@ class EmbedIndex:
                 wektory.append(embedder.vector(symbol_text(path, row)))
         self.M = (np.vstack(wektory) if wektory
                   else np.zeros((0, embedder.dim), dtype=np.int64))
-        self.norms = [math.isqrt(int(np.dot(v, v))) for v in self.M]
+        # Kwadraty norm, NIE normy. Pierwiastek brany raz, na koncu — dwa obciecia
+        # `isqrt` po drodze potrafily dac wynik powyzej 1000 promili (patrz embed.py).
+        del math
+        self.norms2 = [int(np.dot(v, v)) for v in self.M]
 
     def scores(self, question):
         import math
@@ -295,14 +298,17 @@ class EmbedIndex:
         import numpy as np
 
         qv = self.embedder.vector(question)
-        nq = math.isqrt(int(np.dot(qv, qv)))
-        if nq == 0:
+        nq2 = int(np.dot(qv, qv))
+        if nq2 == 0:
             return [0] * len(self.items)
         iloczyny = self.M @ qv
         out = []
-        for d, nd in zip(iloczyny, self.norms):
+        for d, nd2 in zip(iloczyny, self.norms2):
             d = int(d)
-            out.append((d * 1000) // (nq * nd) if d > 0 and nd else 0)
+            if d <= 0 or nd2 == 0:
+                out.append(0)
+            else:
+                out.append(math.isqrt((1000 * 1000 * d * d) // (nq2 * nd2)))
         return out
 
 
