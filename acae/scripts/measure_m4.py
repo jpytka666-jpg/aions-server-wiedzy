@@ -621,7 +621,10 @@ def main() -> int:
     parser.add_argument(
         "--variant", required=True,
         choices=("baseline", "bm25f", "prf_code", "prf_prose", "graph", "assoc", "codebook",
-                 "gate", "embed", "embed_tie", "embed_borda", "desc"),
+                 "gate", "embed", "embed_tie", "embed_borda", "desc",
+                 # M9: cztery odrzucone mechanizmy powtorzone na korpusie opisow
+                 "prf_desc", "embed_desc", "embed_desc_tie", "embed_desc_borda",
+                 "gate_desc", "graph_desc"),
     )
     parser.add_argument("--set", dest="qset", default="dev", choices=tuple(SETS))
     parser.add_argument("--out", default=None)
