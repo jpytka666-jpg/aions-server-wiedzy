@@ -43,6 +43,7 @@ from acae.expand import (  # noqa: E402
     Corpus, code_window_documents, docstring_documents, expand, prose_documents,
     symbol_vocabulary,
 )
+from acae.embed import StaticEmbedder, receipt as embed_receipt, symbol_text  # noqa: E402
 from acae.graph import DAMP_PERMILLE, HOPS, SEED_K, build_graph  # noqa: E402
 from acae.pack import FsLocator, FsReader  # noqa: E402
 from acae.scope import ScopeIndex  # noqa: E402
