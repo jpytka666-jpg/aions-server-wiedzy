@@ -405,7 +405,10 @@ def rank_embed_borda(index, entries, question, terms, depth):
 
 def evaluate(entries, ctx, queries, variant, depth=DEPTH):
     positives, negatives, per_query = [], [], []
-    diagnostyka = {"gate_cut": 0, "gate_fallback": 0, "gate_sizes": []}
+    diagnostyka = {
+        "gate_cut": 0, "gate_fallback": 0, "gate_sizes": [],
+        "m7_zero_bucket": 0, "m7_zero_reached_25": 0, "m7_zero_ranks": [],
+    }
     for q in queries:
         terms = query_terms(q["question"])
         receipts: list[dict] = []
