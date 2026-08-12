@@ -1316,6 +1316,108 @@ Punkt odniesienia: mediana **140 ze 169 plikow**, czyli bramka, ktora nie bramko
 Zapisuje te przewidywania z ta sama waga co liczby. Dziewiec razy na dziesiec mylilem sie
 co do wlasnego projektu i to jest ustalenie mocniejsze niz ktorykolwiek pojedynczy wynik.
 
+## 2026-08-13T00:09 — M9: SZESC PRZEBIEGOW, ZERO PRZEJSC. Ale dwie rzeczy sa nowe.
+
+Pomiary: `_baseline/m4_*_dev_c10ad34.json`, head `c10ad34`, zbior roboczy 30+/6-,
+held-out NIETKNIETY. Korpus opisow `blake2b256:cc54efc7...`, niezmieniony.
+
+### Regresja PRZED pomiarem — stare warianty nietkniete
+
+`baseline` 26,6/36,6/0,172/85,2 · `graph` 26,6/40,0/0,172/85,2 · `embed_tie` 26,6/40,0/0,173/85,2
+— co do cyfry zgodne z tabela ablacji sprzed M8. `pytest` 215 zielonych. Powtorka porownuje
+sie z tymi samymi liczbami co pierwotne pomiary, a nie z ich przybizeniem.
+
+### Wyniki
+
+| wariant | recall@10 | recall@25 | MRR | neg/poz | zero->top25 | werdykt |
+|---|---|---|---|---|---|---|
+| baseline (M2) | 26,6% | 36,6% | 0,172 | 85,2% | 0/11 | — |
+| M8 `desc` | 26,6% | **46,6%** | 0,156 | **25,0%** | 0/11 | ODRZUCONY |
+| M9a `prf_desc` | **20,0%** | 33,3% | 0,166 | 83,4% | 0/11 | ODRZUCONY |
+| M9b `embed_desc` | 30,0% | 36,6% | **0,243** | **97,7%** | **2/11** | ODRZUCONY |
+| M9b `embed_desc_tie` | 26,6% | 40,0% | 0,173 | 85,2% | 0/11 | ODRZUCONY |
+| M9b `embed_desc_borda` | 33,3% | 46,6% | 0,194 | niemierzalne | 0/11 | NIEUPRAWNIONY |
+| M9c `gate_desc` | 26,6% | 36,6% | 0,172 | 85,2% | 0/11 | ODRZUCONY |
+| M9d `graph_desc` | 20,0% | 43,3% | 0,147 | **24,9%** | 0/11 | ODRZUCONY |
+
+Kryterium (`recall@10` >= 34,6% ORAZ `MRR` >= 0,172 ORAZ `neg/poz` <= 85,2%) nie spelnil
+zaden. **Czternasty pomiar na zbiorze roboczym, czternaste odrzucenie.**
+Regula ostrzegawcza nie musiala byc uzyta — nie przeszedl ani jeden, wiec nie ma ryzyka,
+ze wybieram zwyciezce z szumu.
+
+### NOWE #1 — `embed_desc` jako pierwszy wylawia to, co opisy uwidocznily
+
+`zero->top25` = **2 z 11**. Punkt odniesienia: M7 (embedding bez opisow) dal 1 z 11
+przy medianie rangi 336, M8 (opisy bez embeddingu) dal **0 z 11** przy medianie 200.
+Dopiero polaczenie obu wciaga cokolwiek z grupy zerowej do zasiegu.
+
+`MRR` 0,243 to drugi wynik w historii projektu (M7c mial 0,249) i drugi raz, gdy
+`MRR` przekroczylo baseline. Warunek wartosci dodanej spelniony z zapasem:
+`recall@10` 30,0% > 26,6% M8 ORAZ `MRR` 0,243 > 0,156 M8.
+
+Zabija go **kontrola negatywna: 97,7%**. To jest ta sama sciana co przy M7a (103,7%)
+i opisy jej NIE zdjely — mimo ze w samym M8 zbily te liczbe z 85,2% na 25,0%.
+
+### NOWE #2 — bramka pogorszyla sie od LEPSZEJ prozy. To izoluje przyczyne M6.
+
+| pomiar | M6 (commity + CBMS) | M9c (opisy) |
+|---|---|---|
+| `gate_size_median` | 140 ze 169 | **157 ze 169** |
+| `gate_cut` | 2 | 0 |
+| `gate_fallback` | 2 | 0 |
+
+Przewidywalem, ze mediana SPADNIE ponizej 140, bo routing wreszcie ma po czym rozrozniac
+pliki. Wzrosla do 157, a wynik jest **identyczny z baseline** — bramka przestala ciac
+cokolwiek. Mechanizm dzialania jest czytelny: gdy KAZDY plik ma opis, kazdy termin trafia
+w wiele plikow, wiec kazdy zakres zbiera trafienia — a punktacja nie jest normalizowana
+przez rozmiar zakresu, wiec zlepiona skladowa grafu na 139 plikow wygrywa zawsze.
+
+**To jest czysta izolacja przyczyny.** Zmienilem WYLACZNIE korpus i bylo gorzej, wiec
+korpus nie byl ograniczeniem M6 — ograniczeniem sa dwie wady konstrukcyjne opisane
+2026-08-12T03:10 (zlepiony graf wywolan, brak normalizacji). Swiadomie ich nie naprawialem,
+bo naprawa czynilaby z tego nowy mechanizm. Teraz wiadomo, ze to one sa waskim gardlem —
+i to jest ustalenie, ktorego M6 sam nie mogl dac.
+
+### NOWE #3 — rozszerzanie zapytania szkodzi takze na dobrym korpusie
+
+`prf_desc` dal `recall@10` **20,0%**, czyli o 6,6 punktu PONIZEJ baseline'u i najgorzej
+ze wszystkiego, co probowalismy poza M4.6. Korpus byl tym razem gesty, przypiety do plikow
+i pisany jezykiem pytan — czyli wszystkim, czego brakowalo M4.3. Nie pomoglo.
+
+Dziewiaty mechanizm z rodziny „dodaje terminy do zapytania" i dziewiaty raz to samo.
+Wniosek z 2026-08-12T01:15 („rozszerzanie zapytania jest zla dzwignia, niezaleznie od
+zrodla rozszerzenia") dostal wlasnie najmocniejsze potwierdzenie: zrodlo bylo najlepsze
+z mozliwych i dzwignia dalej jest zla.
+
+### BILANS PRZEWIDYWAN — werdykty 3 z 4, mechanizmy 0 z 4
+
+| przewidywalem | wyszlo |
+|---|---|
+| `prf_desc` przegra | TAK — ale przewidywalem wzrost recall, spadl o 6,6 pkt |
+| `embed_desc` pierwszy raz spelni warunek negatywny | **NIE**. 97,7% |
+| `gate_desc` przegra, mediana bramki spadnie ponizej 140 | przegral TAK, mediana **wzrosla** do 157 |
+| `graph_desc` — recall@25 w gore, MRR bez zmian | recall@25 TAK (43,3%), MRR **spadl** do 0,147 |
+
+Odnotowuje uczciwie: **przewidywanie „przegra" po dziesieciu porazkach nie jest umiejetnoscia.**
+Kazde przewidywanie dotyczace MECHANIZMU — czyli tego, DLACZEGO cos wyjdzie tak a nie
+inaczej — bylo bledne. To jest czternasty raz i nadal nie rozumiem tego systemu na tyle,
+zeby przewidziec jego zachowanie.
+
+### Co te szesc pomiarow rozstrzyga
+
+1. Rozszerzanie zapytania jest odrzucone **takze przy najlepszym mozliwym korpusie**.
+2. Bramka M6 przegrala przez KONSTRUKCJE, nie przez korpus — zmierzone, nie zgadniete.
+3. Opisy placa **wylacznie w polaczeniu z embeddingiem**, i tylko tam ruszaja grupe zerowa.
+4. Sciana przeniosla sie w jedno miejsce: **kontrola negatywna**. `embed_desc` ma najlepsze
+   uporzadkowanie (`MRR` 0,243) i nie umie powiedziec „nie wiem" (97,7%). Sam M8 umie
+   powiedziec „nie wiem" wzorowo (25,0%) i nie umie uporzadkowac. **Zadna proba nie ma
+   obu wlasciwosci naraz.**
+
+Punkt 4 NIE jest prerejestracja niczego. Zapisuje go jako obserwacje po fakcie, wiec
+nie ma sily dowodu i wymagalby wlasnego, wczesniej zapisanego kryterium.
+
+Held-out (`blake2b256:e5d8e5b4...`) **NIETKNIETY**. Nadal nie ma kandydata.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
