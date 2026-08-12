@@ -1067,3 +1067,123 @@ z definicji zawiera slowa, ktorymi czlowiek pyta. Ale spodziewam sie tez **wzros
 
 Moj bilans przewidywan to **0 z 9**. Zapisuje to ponownie, zeby wynik mial czym mnie
 poprawic.
+
+## 2026-08-12T23:22 — M8: ODRZUCONY wobec kryterium. Ale most ZOSTAL zbudowany.
+
+Pomiar: `_baseline/m4_desc_dev_9e6c082.json`, head `9e6c082`, zbior roboczy, held-out NIETKNIETY.
+Korpus: `_desc/descriptions.json` — 169 opisow, `claude-haiku-4-5-20251001`,
+pack_hash zrodla `6442322d...` (zgodny, weryfikowany przy starcie pomiaru).
+
+| miara | baseline | M8 desc | wymagane | werdykt |
+|---|---|---|---|---|
+| recall@10 | 26,6% | 26,6% | >= 34,6% | NIE |
+| recall@25 | 36,6% | **46,6%** | — | najlepszy w calej ablacji |
+| MRR | 0,172 | 0,156 | >= 0,172 | NIE |
+| neg/poz | 85,2% | **25,0%** | <= 85,2% | TAK, z ogromnym zapasem |
+
+**Dziesiaty mechanizm, dziesiate odrzucenie.** Dwa z trzech warunkow niespelnione.
+
+### WARUNEK DIAGNOSTYCZNY — pierwsze trafne przewidywanie w tym projekcie
+
+| pomiar | wartosc |
+|---|---|
+| pytan, gdzie wlasciwy symbol ma leksykalne ZERO | **11** |
+| z tego opis daje wynik NIEZEROWY | **11 z 11** |
+| z tego wchodzi do top-25 | **0** |
+| mediana rangi w tej grupie | **200** |
+
+Prerejestracja mowila: *„spodziewam sie, ze >= 7 z 11 przestanie miec zero"*. Wyszlo
+11 z 11. **To jest pierwsze trafne przewidywanie po dziewieciu chybionych** i pierwszy
+raz, gdy grupa zerowa w ogole drgnela — M7 (embedding) wciagnal do top-25 dokladnie
+jeden symbol przy medianie rangi 336.
+
+Ale drugie zdanie tej samej tabeli jest twarde: **zero z jedenastu dochodzi do top-25**,
+mediana rangi 200. Most istnieje i prowadzi we wlasciwa strone, tylko konczy sie
+dwiescie pozycji za daleko. Opis daje wlasciwemu plikowi punkty — i daje je rowniez
+kilkuset niewlasciwym.
+
+To rozdziela dwie rzeczy, ktore dziewiec poprzednich pomiarow mylilo: **„czy da sie
+zbudowac most" (TAK, zmierzone) i „czy ten most wystarczy do rankingu" (NIE, zmierzone).**
+
+### neg/poz spadl z 85,2% na 25,0% — i to NIE bylo przewidziane
+
+Prerejestracja stawiala `neg/poz` w roli wykrywacza halucynacji i przewidywala WZROST:
+*„opisy dodaja duzo tekstu pasujacego do wszystkiego"*. Spadl o 60 punktow, do wartosci
+trzy razy lepszej niz najlepsza z dziewieciu poprzednich (80,4% w M4.2b).
+
+Surowe liczby, bo sam stosunek tu nie wystarcza:
+
+| | baseline | M8 |
+|---|---|---|
+| sredni top1 na POZYTYWACH | 2661 | 980 |
+| sredni top1 na NEGATYWACH | 2268 | **245** |
+
+Oba spadly, bo decyzja M8-a (nizej) obniza wagi globalnie. Ale negatywy spadly
+**dziesieciokrotnie**, a pozytywy niecale trzykrotnie. Pytanie o rzecz, ktorej w repo
+nie ma, straciło znacznie wiecej niz pytanie o rzecz, ktora jest.
+
+### DECYZJA M8-a — opisy wchodza do `term_rarity`
+
+Prerejestracja ustalila wage opisu (`W_PATH = 1`) i **przemilczala**, czy tekst opisu ma
+liczyc sie do `df` przy wazeniu rzadkoscia. Milczenie nie bylo neutralne: `term_rarity`
+daje terminowi wage `total // (1 + df)` z sufitem 512, wiec termin o `df = 0` dostaje
+wage MAKSYMALNA. Slowa „machine", „password", „computer" po dodaniu opisow wystepuja
+w repo wylacznie w opisach — bez wliczenia opisow do `df` mialyby wage 512 zamiast ~7.
+
+Siedemdziesiat razy wiecej, niz wynika z „najnizszej wagi". M8 wygladalby swietnie
+z powodu, ktorego nikt nie zapisal. **To ta sama klasa bledu po raz piaty**
+(rowne wagi -> RARITY_CAP -> stosunek bez wsparcia -> LLR bez kontroli pospolitosci -> to).
+
+Decyzja podjeta i zakomunikowana Marcinowi PRZED pomiarem: opis wchodzi do `df` na rowni
+z pozostalymi polami. Wariant przeciwny NIE jest mierzony — bylby darmowym drugim strzalem.
+
+### Czego ten pomiar NIE rozstrzyga — ograniczenie, ktore z niego wynika
+
+Nie da sie na jego podstawie rozdzielic dwoch wyjasnien spadku `neg/poz`:
+1. opisy niosa realna tresc, wiec pytania spoza zakresu maja sie w co nie trafic, albo
+2. samo wliczenie opisow do `df` przekalibrowalo wagi pospolitych slow ludzkich.
+
+Rozdzielilby je wariant „opis punktuje, ale nie wchodzi do `df`" — czyli dokladnie ten,
+ktory decyzja M8-a odrzucila a priori. Odnotowuje to jako granice tego pomiaru, a nie
+jako powod do dolozenia trzeciego wariantu po zobaczeniu wyniku.
+
+Diagnostyka grupy zerowej jest wolna od tej watpliwosci: 11 z 11 symboli, ktore wczesniej
+mialy zero, ma teraz wynik dodatni. Zero nie zamienia sie w liczbe dodatnia przez
+przewazenie — tylko przez pojawienie sie trafienia. Opisy tresc niosa.
+
+### Bilans przewidywan: 1 z 10
+
+Trafione: grupa zerowa >= 7 z 11 (wyszlo 11 z 11).
+Chybione: `neg/poz` wzrosnie (spadl o 60 punktow).
+
+### Regresja po M8 — czysta
+
+- `python -m pytest` -> **190 testow zielonych**
+- `scripts/measure_m2.py` -> **10/10** przy wymaganych 8
+- `python -m acae pack --root .` -> `pack_hash 6442322d5d5a...` **NIEZMIENIONY**,
+  169 plikow, 1598 symboli, 36492 tokeny
+- `--variant baseline` przeliczony po wszystkich edycjach -> 26,6% / 36,6% / 0,172 / 85,2%,
+  czyli punkt odniesienia dla dziesieciu pomiarow odtworzony co do cyfry
+
+### Dlug do splacenia
+
+- `src/acae/describe.py` lezy w repo **bez testow**. Do napisania: `test_describe.py`.
+  Ten sam dlug co po M6 przy `scope.py` — odnotowany, zeby nie zniknal.
+
+## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
+
+Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
+agentow zaraportowal „descriptions are 100-160 words". Zmierzone: mediana **59 slow**,
+165 ze 169 ponizej zamowionego minimum, a jeden „opis" byl notatka agenta do siebie:
+`"Stopped at 1 line - file was already read before in batch."` dla realnego pliku serwera.
+
+Samoocena agenta nie jest pomiarem. Kazda partia przechodzi teraz przez
+`scripts/build_descriptions.py`, ktory ODMAWIA ZAPISU artefaktu przy: brakach pokrycia,
+duplikatach, `UNREADABLE`, meta-tekscie agenta, wyciekach z `tests/` i opisach urwanych.
+
+Przyczyna nie byla w modelu, tylko w dlugosci serii: 28 plikow na agenta (46-49 tur).
+Po podziale na 12 partii po ~14 plikow, tym samym modelem i ostrzejsza instrukcja:
+mediana **134 slowa**, 154 ze 169 powyzej 100 slow, zero meta-tekstu.
+Podzial idzie po BAJTACH, nie po sztukach (`scripts/make_desc_batches.py`) — koszt partii
+zalezy od rozmiaru plikow, wiec rowna liczba plikow dawala nierowne obciazenie.
+Wersja odrzucona lezy w `_desc/v1_rejected/`.
