@@ -461,7 +461,9 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             ranked, receipts = rank_codebook(
                 entries, terms, depth, ctx["codebook"], ctx["symtok"],
             )
-        elif variant == "gate":
+        elif variant in ("gate", "gate_desc"):
+            # `ctx["scope"]` jest juz zbudowany na wlasciwym zrodle prozy — dla `gate_desc`
+            # na opisach, dla `gate` na commitach i chunkach CBMS. Sama bramka bez zmian.
             ranked, receipts, pliki, fallback = rank_gate(entries, terms, depth, ctx["scope"])
             diagnostyka["gate_sizes"].append(len(pliki))
             if fallback:
