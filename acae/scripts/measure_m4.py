@@ -287,6 +287,14 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             ranked, receipts = rank_codebook(
                 entries, terms, depth, ctx["codebook"], ctx["symtok"],
             )
+        elif variant == "gate":
+            ranked, receipts, pliki, fallback = rank_gate(entries, terms, depth, ctx["scope"])
+            diagnostyka["gate_sizes"].append(len(pliki))
+            if fallback:
+                diagnostyka["gate_fallback"] += 1
+            elif q["kind"] == "positive" and not (set(q["answer_files"]) & pliki):
+                # Warunek diagnostyczny (propozycja GPT): bramka wyciela wlasciwy plik.
+                diagnostyka["gate_cut"] += 1
         else:
             raise SystemExit(f"nieznany wariant: {variant}")
 
