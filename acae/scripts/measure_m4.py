@@ -646,6 +646,12 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
         ),
         "m9_zero_bucket": diagnostyka["m9_zero_bucket"],
         "m9_zero_in_top25": diagnostyka["m9_zero_in_top25"],
+        "verify_cut": diagnostyka["verify_cut"],
+        "verify_empty": diagnostyka["verify_empty"],
+        "verify_kept_median": (
+            sorted(diagnostyka["verify_kept"])[len(diagnostyka["verify_kept"]) // 2]
+            if diagnostyka["verify_kept"] else 0
+        ),
         "per_query": per_query,
     }
 
