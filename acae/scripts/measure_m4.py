@@ -689,8 +689,10 @@ def main() -> int:
     # Warianty siegajace po korpus opisow: M8 (`desc`) i cztery powtorki M9.
     WARIANTY_Z_OPISAMI = (
         "desc", "prf_desc", "embed_desc", "embed_desc_tie", "embed_desc_borda",
-        "gate_desc", "graph_desc",
+        "gate_desc", "graph_desc", "verify1", "verify2",
     )
+    # Warianty stawiajace ranking na embeddingu Z OPISAMI (M9b i M10).
+    EMBED_Z_OPISAMI = ("embed_desc", "embed_desc_tie", "embed_desc_borda", "verify1", "verify2")
     if args.variant in WARIANTY_Z_OPISAMI:
         # pack_hash liczony TERAZ i porownywany z tym, dla ktorego powstaly opisy.
         # Rozjazd przerywa pomiar: opisy nieaktualnego kodu daja liczby, ktore wygladaja
