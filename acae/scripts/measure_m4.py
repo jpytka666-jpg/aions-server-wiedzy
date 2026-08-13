@@ -474,6 +474,38 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             elif q["kind"] == "positive" and not (set(q["answer_files"]) & pliki):
                 # Warunek diagnostyczny (propozycja GPT): bramka wyciela wlasciwy plik.
                 diagnostyka["gate_cut"] += 1
+        elif variant in ("verify1", "verify2"):
+            # M10: ranking `embed_desc` BEZ ZMIAN, po nim twardy warunek dopuszczenia.
+            # Filtr moze tylko usuwac — kolejnosc pozostaje ta, ktora nadal ranker.
+            min_terms = 1 if variant == "verify1" else 2
+            index = ctx["embed"]
+            opisy = ctx["descriptions"]
+            sims = index.scores(q["question"])
+            numery, _ = _order(index, sims)
+            pelny = _pack(index, numery, sims, len(numery))
+            dopuszczone = admit(pelny, terms, opisy, min_terms)
+            ranked = dopuszczone[:depth]
+            diagnostyka["verify_kept"].append(len(dopuszczone))
+            receipts = [{
+                "rule": "lexical_admission",
+                "note": f"symbol dopuszczony przy >= {min_terms} terminach obecnych doslownie",
+                "min_terms": min_terms,
+                "candidates_before": len(pelny),
+                "candidates_after": len(dopuszczone),
+            }]
+
+            # WARUNEK DIAGNOSTYCZNY M10 (prerejestracja 2026-08-13T00:41).
+            # `verify_cut` — ile razy filtr wyciął WLASCIWY symbol, ktory byl w rankingu.
+            # To jedyna rzecz odrozniajaca „filtr za ostry" od „ranker za slaby".
+            # `verify_empty` — ile pytan NEGATYWNYCH dostalo pusta odpowiedz, czyli
+            # ile razy system powiedzial wprost „nie wiem". Dzis: nigdy.
+            if q["kind"] == "positive":
+                if any(is_hit(it, q) for it in pelny) and not any(
+                    is_hit(it, q) for it in dopuszczone
+                ):
+                    diagnostyka["verify_cut"] += 1
+            elif not ranked:
+                diagnostyka["verify_empty"] += 1
         elif variant == "desc":
             opisy = ctx["descriptions"]
             pelny, rarity_desc = rank_desc_all(entries, terms, opisy)
