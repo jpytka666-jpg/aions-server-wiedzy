@@ -714,13 +714,12 @@ def main() -> int:
             entries, reader, str(repo_root),
             descriptions=ctx["descriptions"] if args.variant == "gate_desc" else None,
         )
-    elif args.variant in ("embed", "embed_tie", "embed_borda",
-                          "embed_desc", "embed_desc_tie", "embed_desc_borda"):
+    elif args.variant in ("embed", "embed_tie", "embed_borda", *EMBED_Z_OPISAMI):
         # Weryfikacja hashy jest wlaczona: podmieniony artefakt ma zatrzymac pomiar,
         # a nie po cichu wyprodukowac liczby, ktore wygladaja sensownie.
         ctx["embed"] = EmbedIndex(
             StaticEmbedder(ACAE_DIR / "_model"), entries,
-            descriptions=(ctx["descriptions"] if args.variant.startswith("embed_desc") else None),
+            descriptions=(ctx["descriptions"] if args.variant in EMBED_Z_OPISAMI else None),
         )
     elif args.variant in ("prf_code", "prf_prose", "assoc", "prf_desc"):
         if args.variant == "prf_code":
