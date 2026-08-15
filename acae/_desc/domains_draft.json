@@ -1,0 +1,283 @@
+{
+  "domains": [
+    {
+      "id": "knowledge-chunk-storage",
+      "name": "Where remembered pieces of knowledge are kept on disk",
+      "description": "This area is about the little files that hold what the system has learned, one small piece of knowledge per file, and everything that keeps that pile tidy. It covers saving a new piece, giving it an identifier and a topic, writing it into the folder where such pieces live, and keeping a master list so nothing gets lost. It also covers checking the pile for damage: pieces with broken text, missing fields, pieces nobody points at any more, pieces that point at something that is gone. There is work here for deciding whether a freshly added piece has proved itself useful enough to stay or should be moved aside to a holding area, and for gathering copies scattered in several folders back into one place. It also includes the map of how ideas connect to each other and which pieces refer to which, so related material can be pulled in together. Questions here sound like where is this stored, why did this piece disappear, how do I rebuild the list, or is my stored knowledge damaged.",
+      "not_about": "Not about deciding which stored piece best answers a particular question, and not about the vector database with sessions and similarity scores; this is the plain files on disk and their bookkeeping.",
+      "example_files": [
+        "aions_core/server/cbms_doctor.py",
+        "aions_core/server/cbms_purgatory.py",
+        "aions_core/server/refgraph.py",
+        "aions_core/tools/rebuild_manifest_force.py",
+        "aions_core/cbms_memory.py",
+        "aions_core/memory_graph_engine.py"
+      ]
+    },
+    {
+      "id": "korean-symbolic-encoding",
+      "name": "Squeezing words into short Korean and symbol codes",
+      "description": "This area is about turning ordinary sentences into short codes so they can be matched and stored compactly. One approach chops words into syllable-like fragments and hashes them into small keys; another turns any text into a string of Korean letters that acts as a short address; another rewrites Polish and English phrases into a neutral middle language first and then into numbered symbols from a codebook. There are pieces that go both ways, turning codes back into readable phrases, and an index that lets a question written in codes be matched against stored material written in the same codes. There are also demonstrations that walk a plain sentence all the way through the chain to show which stored pieces it lands on, and a production run that measures how much smaller the text became. Questions here sound like what are these strange Korean characters, how does the shorthand work, or why does this text get turned into symbols.",
+      "not_about": "Not about meaning-based search using numeric embeddings from a language model, and not about the storage folders themselves; this is the encoding scheme and its dictionaries.",
+      "example_files": [
+        "aions_core/server/korean_keys.py",
+        "aions_core/server/hangul_addressing.py",
+        "aions_core/server/codebook_engine.py",
+        "aions_core/server/esperanto_bridge.py",
+        "aions_core/server/cbms_symbolic_index.py",
+        "aions_core/tools/symbolic_probe.py"
+      ]
+    },
+    {
+      "id": "finding-the-right-answer",
+      "name": "Digging up the material that actually answers a question",
+      "description": "This area is about taking somebody's question and hunting through everything the system knows to find the passages that answer it, then ranking them so the best comes first. It mixes several ways of looking: plain word matching, meaning-based similarity, and a second pass that reshuffles the shortlist for quality. It also covers the decision of whether what was found is good enough to answer straight away or whether a bigger model needs to be asked, which saves both time and money. There are pieces that check how many known facts a question touches, pieces that assemble the found passages into a readable answer with its sources named, and layered lookups that try simple stored answers first before digging deeper. Questions here sound like why did it give me that answer, where did this come from, why did it not find the obvious thing, or how does it decide what is relevant.",
+      "not_about": "Not about how the found text is later polished for tone, and not about the storage layer or the embedding database itself; this is the act of searching and ranking.",
+      "example_files": [
+        "aions_core/aions_hybrid_retrieval.py",
+        "control_plane/cbms_gate.py",
+        "aions_core/smart_cbms.py",
+        "aions_core/server/generator_cbms.py",
+        "aions_core/aions_reformed_integration.py",
+        "aions_core/aions_vector_enhancement.py"
+      ]
+    },
+    {
+      "id": "meaning-database-and-sessions",
+      "name": "The database that finds things by meaning",
+      "description": "This area is about the store that keeps text alongside a numeric fingerprint of its meaning, so similar things can be found even when the words differ. It covers the workspaces the material is split into, adding batches of text with labels attached, asking for the closest matches with a score, listing what is in each workspace, and throwing away entries that have passed their expiry date. It includes the web service that offers all of this over the network, the shapes of the requests and replies, and the switch that decides whether to talk to a database running elsewhere or one embedded in the same program. There are also loading jobs that push selected material into the store for the first time, and checks that run afterwards to confirm the right number of items landed and that searches come back with sensible hits. Questions here sound like how many documents are in there, why does my search return nothing, or how do I load this batch in.",
+      "not_about": "Not about the plain knowledge files on disk and their manifest, and not about deciding which retrieved passage to use in a reply; this is the similarity database and the service around it.",
+      "example_files": [
+        "server/store.py",
+        "server/app.py",
+        "server/store_selector.py",
+        "scripts/ingest_tier1_chroma.py",
+        "scripts/verify_tier1_chroma.py",
+        "scripts/proof_provenance.py"
+      ]
+    },
+    {
+      "id": "importing-outside-content",
+      "name": "Pulling in material from the internet and other apps",
+      "description": "This area is about bringing in content that started life somewhere else and turning it into short factual sentences the system can look up. Some of it walks websites from a starting address, strips out the page furniture, splits what is left into sentences and files them with search keys. Some of it reaches out to the web only at the moment a question could not be answered locally, grabs the relevant lines and cites the page they came from. Another part digs through the leftovers of a chat application on the same computer to recover past conversations, titles, account details and drafts from its cache files. There is also a builder that walks folders of documents and notes and breaks them into indexed one-sentence facts. Questions here sound like where did this fact come from, can it look things up online, or can I get my old conversations back.",
+      "not_about": "Not about the searching that happens after material is imported, and not about scanning source code or inventorying drives; this is the intake of outside text.",
+      "example_files": [
+        "aions_core/tools/web_crawler_import.py",
+        "aions_core/server/web_rag_cbms.py",
+        "aions_core/tools/facts_builder.py",
+        "scripts/chatgpt_extractor.py",
+        "scripts/chatgpt_ultimate.py",
+        "scripts/chatgpt_parser_v2.py"
+      ]
+    },
+    {
+      "id": "answer-quality-and-refusals",
+      "name": "Checking answers and refusing to make things up",
+      "description": "This area is about judging whether a reply is good enough to hand over, and saying nothing rather than inventing something. One part checks a question against what is actually known and returns a plain refusal when there is no support for an answer. Another part runs several different attempts at the same question, scores each one on things like speed, whether it stuck to the sources, and how clean the wording is, then runs them against each other and keeps the winner. There are lightweight gatekeepers that look for injected junk or suspicious content before anything is stored, and a grader that gives a whole run of work a score out of a hundred and a letter grade, writing the results to a scoreboard. Questions here sound like why did it say it does not know, how is answer quality measured, or how does it pick between several possible answers.",
+      "not_about": "Not about rewording an accepted answer to sound friendlier, and not about permission checks on which actions an agent may take; this is about whether the answer itself is trustworthy and how good it is.",
+      "example_files": [
+        "aions_core/aions_smart_guardrail.py",
+        "aions_core/server/crla_core.py",
+        "aions_core/server/pocket_qc.py",
+        "aions_core/evaluator_engine.py",
+        "aions_core/aions_crla_reformed.py",
+        "aions_core/tools/test_guardrail.py"
+      ]
+    },
+    {
+      "id": "sounding-human",
+      "name": "Making replies sound like a person, and remembering the chat",
+      "description": "This area is about how a reply reads once the facts are settled: warmer or more formal, shorter or longer, plainer or more technical, without changing what is being said. It covers detecting whether someone is joking, upset, philosophical or asking something technical and matching the tone to that, avoiding repeating the same phrasing, and adding small natural touches. It also covers keeping a record of what was said earlier in the conversation so later replies can refer back, spotting when somebody introduces themselves, and rolling long discussions up into summaries. There is a tidy-up step that fixes spacing and paragraphing while checking that no numbers or citations went missing, and a speaking layer that rephrases supplied facts in the user's own language without adding anything new. There is also a test that fires personal, emotional and philosophical questions at the running system to see whether it can hold that kind of conversation. Questions here sound like why does it sound so robotic, can it remember what I said before, or how do I make it less formal.",
+      "not_about": "Not about whether the answer is factually supported, and not about which model produces the text; this is about tone, phrasing and conversational continuity.",
+      "example_files": [
+        "aions_core/server/conversation_enhancer.py",
+        "aions_core/server/conversation_memory.py",
+        "aions_core/aions_style_parameters.py",
+        "aions_core/server/stylist.py",
+        "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py",
+        "aions_core/test_aions_capabilities.py"
+      ]
+    },
+    {
+      "id": "local-language-models",
+      "name": "Running language models on this computer",
+      "description": "This area is about the language models installed on the machine itself rather than a paid service on the internet: finding which ones are present, loading one into memory, keeping only one loaded at a time to save space, and sending it a prompt. It covers a long-running model server that stays up and holds the model in memory so each question does not pay the loading cost, and a thin client that talks to it over the local network and quietly reports failure instead of crashing when it is down. It also covers the layer that builds the prompt by mixing in the operator's details, relevant stored knowledge and conversation context before the model is asked. There are small checks that confirm the required libraries are installed and that a Polish-speaking model answers in Polish and actually used the context it was handed. Questions here sound like which model is being used, why is the model slow or not responding, or how do I switch to a different model.",
+      "not_about": "Not about the wording and tone of the finished reply, and not about deciding whether a model needs to be called at all; this is the machinery of loading and calling models.",
+      "example_files": [
+        "aions_core/agi_existing_models.py",
+        "control_plane/llm/server_client.py",
+        "control_plane/llm_adapter.py",
+        "aions_core/verify_llama_cpp.py",
+        "scripts/test_llm_adapter.py"
+      ]
+    },
+    {
+      "id": "reasoning-and-getting-better",
+      "name": "Thinking things through and learning from mistakes",
+      "description": "This area is about the parts that reason step by step and the parts that try to make the system smarter over time. It covers breaking a hard question into smaller goals, working through them while collecting evidence, and reporting the chain of steps with a confidence figure. It covers watching how well the system has been doing on different abilities, spotting weak spots and proposing changes, and studying past exchanges to pull out patterns worth keeping. There is trainable machinery that adjusts itself from feedback, and a record of past mistakes where each one is written up with what went wrong, why, and the lesson drawn, which can then be searched later. There is also an engine that runs multi-round learning goals and turns what it worked out into reusable blocks. Questions here sound like how does it reason about a problem, does it learn from being corrected, or where are the lessons from past errors kept.",
+      "not_about": "Not about the reusable action blocks the system runs to get jobs done day to day, and not about grading a single answer; this is the reasoning process and long-term self-improvement.",
+      "example_files": [
+        "aions_core/agi_core.py",
+        "aions_core/agi_evolution.py",
+        "aions_core/agi_learning.py",
+        "aions_core/agi_neural_backprop.py",
+        "control_plane/blends/analyze_blend.py",
+        "aions_core/aions_reactor.py"
+      ]
+    },
+    {
+      "id": "assistant-and-its-chat-servers",
+      "name": "The assembled assistant and the chat services it answers on",
+      "description": "This area is about the top layer that wires all the separate parts into one working assistant and exposes it so a person or another program can ask it something. It covers the pieces that load every component at start-up, report which ones came up successfully, and carry on without the ones that failed. It covers routing an incoming question down the right path, trying arithmetic first if it looks like a sum, then common conversational replies, then a proper search, then the internet as a last resort. There are the listening services that accept a message and hand back an answer with its sources, plus the arithmetic and word-problem solver they lean on, and a small check that the service is reachable at all. Questions here sound like how do I actually talk to it, what happens to my question after I press send, or which port is it listening on.",
+      "not_about": "Not about the individual search, storage or wording components it calls, and not about the separate command centre that plans work across several machines; this is the front door of the assistant itself.",
+      "example_files": [
+        "aions_core/unified_core.py",
+        "aions_core/api.py",
+        "aions_core/server/cbms_unified_server.py",
+        "aions_core/server/cbms_direct_server.py",
+        "aions_core/AIONS_ULTIMATE_UNIFIED.py",
+        "aions_core/server/math_solver.py"
+      ]
+    },
+    {
+      "id": "skills-library-and-running-tasks",
+      "name": "The library of ready-made actions and how they get run",
+      "description": "This area is about the collection of small reusable actions the system can perform, each one a folder with a description of what it does and what it needs, discovered automatically so that dropping a new folder in is enough to make it available. It covers looking one up by describing what you want in ordinary words, running it, feeding the result of one into the next, and remembering a whole successful sequence so the same request next time replays the known-good steps instead of being worked out again. It includes the shared scratchpad of small helper powers each action is given, a live note of what is currently open or running so an action is not repeated pointlessly, and running tallies of how often each one worked and how quickly. There is also the bridge that offers all of this to outside tool clients. Questions here sound like what can it actually do, why did it not find the right action for my request, or does it remember how it did something last time.",
+      "not_about": "Not about whether an action is permitted to run or how a new one gets approved, and not about the sample walkthroughs that demonstrate the library in use.",
+      "example_files": [
+        "control_plane/skills/registry.py",
+        "control_plane/skills/executor.py",
+        "control_plane/skills/recipes.py",
+        "control_plane/skills/goal_planner.py",
+        "control_plane/skills/world_state.py",
+        "control_plane/skills/semantic_search.py"
+      ]
+    },
+    {
+      "id": "permissions-roles-and-new-abilities",
+      "name": "Who is allowed to do what, and approving new abilities",
+      "description": "This area is about limits: which actions a given helper role is permitted to take, how dangerous each action is considered, and what must be signed off before something irreversible happens. Roles are declared in small configuration files listing the actions they may use and a ceiling on how risky those may be, and anything above that ceiling is turned away before it ever reaches the point of running. There are block lists for obviously dangerous commands, a checkpoint that records every decision to an append-only log, and rules that let harmless read-only work through instantly while anything destructive needs a valid, unexpired approval. It also covers the pipeline for adding brand-new abilities: a request is filed, the code is checked against the required shape, compiled, tried out in an isolated test machine, and only then moved into the live library, or set aside as failed. Questions here sound like why was that blocked, who approved this, or how do I safely add a new capability.",
+      "not_about": "Not about the everyday running of already-approved actions and their recipes, and not about which physical machine a job is sent to; this is permission, risk and approval.",
+      "example_files": [
+        "control_plane/skills/gate.py",
+        "control_plane/agents/agent_runner.py",
+        "control_plane/agents/agent_schema.py",
+        "control_plane/policy.py",
+        "control_plane/skills/forge.py",
+        "aions_core/aions_agent_layer.py"
+      ]
+    },
+    {
+      "id": "plans-steps-and-worker-machines",
+      "name": "Turning a request into steps and choosing which machine runs them",
+      "description": "This area is the command centre that takes a stated goal, breaks it into numbered steps with a named action for each, keeps the plan so it can be picked up later, then runs the steps one at a time and records what each one returned and how long it took. It also keeps the roll of available worker computers: what each one can do, which tools it has, how healthy it is, how busy it is, and whether its last check-in was recent enough to trust. Work is then pointed either at the machine running right here or handed off to one across the network. There is a small program that lives on each worker machine, reports its load and free space, and accepts commands to run, plus regular check-in messages so the centre knows it is still alive. Questions here sound like which computer ran this job, why did a step fail, or how does work get shared between machines.",
+      "not_about": "Not about whether an action is permitted, and not about the assistant's own question-and-answer front door; this is job planning, step execution and the fleet of machines.",
+      "example_files": [
+        "control_plane/planner.py",
+        "control_plane/executor.py",
+        "control_plane/node_registry.py",
+        "control_plane/node_agent/agent.py",
+        "control_plane/api.py",
+        "scripts/aions_node_heartbeat.py"
+      ]
+    },
+    {
+      "id": "personal-admin-and-calendar",
+      "name": "Personal paperwork, deadlines, calendar and the daily briefing",
+      "description": "This area is about the person using the system rather than the system itself: their name and preferences, the cases they have open, the deadlines coming up, and their goals. It covers keeping small notes and paperwork items as plain files with a title, a due date, a priority and tags, listing what is still open, and finding what falls due in the next few days. It covers building a queue of what needs attention, flagging the urgent items, and printing a one-page morning summary in plain language with days remaining on each deadline. It also covers the connection to an outside calendar and mail account, including checking that today's and tomorrow's appointments can actually be fetched and that the sign-in still refreshes. Questions here sound like what is due this week, what does my morning briefing show, or is my calendar hooked up properly.",
+      "not_about": "Not about the health of the machines and services, and not about the general library of actions; this is the human owner's own tasks, dates and profile.",
+      "example_files": [
+        "control_plane/scheduler.py",
+        "scripts/operator_daily_brief.py",
+        "control_plane/skills/papiery.py",
+        "scripts/operator_profile_load.py",
+        "scripts/calendar_e2e_smoke.py",
+        "scripts/test_google_integration.py"
+      ]
+    },
+    {
+      "id": "worked-examples-and-walkthroughs",
+      "name": "Worked examples showing the system doing real jobs",
+      "description": "This area holds the runnable examples that show the whole thing in action from start to finish, meant to be read or run when somebody wants to see what actually happens rather than read about it. They open a text editor and type into it, create folders and files, zip things up, take a screenshot, check how much memory is free, open a web page and pop up a notification. Along the way they show the system noticing that an application is already open and skipping the redundant step, checking on disk whether the job really worked, and saving the successful sequence so the same request the second time round is faster. They finish by printing how many steps succeeded, how long each took, and how the tally of reliable actions changed. Questions here sound like show me an example, does this actually work end to end, or how do I try this out on my own machine.",
+      "not_about": "Not the library and machinery itself that these examples call into, and not the checks that watch a live system's health; these are demonstrations and end-to-end tryouts.",
+      "example_files": [
+        "scripts/demo_windows_session.py",
+        "scripts/demo_skill_live.py",
+        "scripts/demo_train.py",
+        "scripts/test_skill_engine_foundation.py",
+        "scripts/test_skill_open_apps.py",
+        "scripts/demo_windows_final.py"
+      ]
+    },
+    {
+      "id": "keeping-the-system-healthy",
+      "name": "Watching that everything is running and how fast it responds",
+      "description": "This area is about noticing when something is broken or slow and, where possible, fixing it without being asked. It covers a repeating loop that gathers memory use, disk use, failed services and error counts, applies simple rules such as disk over ninety per cent, takes a corrective step like restarting a service with a cool-down so it does not thrash, then looks again to confirm the problem is gone and writes up the incident, with a short plain-language note explaining what probably happened. It also covers the sweeps that confirm each component still answers, the checks that the installation is intact, and the reading of recorded errors. On the performance side it covers firing the same questions many times over to measure typical and worst-case response times, and scoring accuracy on a standard set of school maths problems. Questions here sound like is everything up, why is it suddenly slow, or what broke overnight.",
+      "not_about": "Not about the correctness or tone of a single answer, and not about setting up the environment in the first place; this is live health, self-repair and speed measurement.",
+      "example_files": [
+        "control_plane/operator/loop.py",
+        "control_plane/operator/mouth.py",
+        "aions_core/aions_monitoring_dashboard.py",
+        "scripts/aions_healthcheck.sh",
+        "aions_core/tools/bench_runner.py",
+        "aions_core/tools/gsm8k_quick.py"
+      ]
+    },
+    {
+      "id": "desktop-and-file-finding",
+      "name": "Driving the screen, keyboard and mouse, and finding files fast",
+      "description": "This area is about actually operating the computer: taking a picture of the screen, clicking at a point, typing text, pressing key combinations, scrolling, listing the open windows, bringing one to the front, launching or closing an application, and reading or setting the clipboard. It handles the differences between Windows and Linux behind one common set of commands and reports which of those abilities are actually available on the machine in question. It also covers the fast file finder: instead of walking the disk every time, it keeps a list of every file and folder with its size and date and answers name searches from that list, refreshing itself when it gets stale. There is a small tray icon that shows at a glance whether the desktop application is running and offers restart, stop and log-opening from a right-click menu. Questions here sound like can it click things for me, how does it find a file so quickly, or how do I restart the app from the taskbar.",
+      "not_about": "Not the protocol plumbing that connects an assistant to these abilities, and not the deep scans that analyse source code and project structure; this is direct control of the machine and quick file lookup.",
+      "example_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py",
+        "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py",
+        "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py",
+        "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py",
+        "scripts/aions_indexer.py",
+        "scripts/aions_tray.py"
+      ]
+    },
+    {
+      "id": "tool-server-plumbing",
+      "name": "The tool server that lets an assistant reach this computer",
+      "description": "This area is about the service that offers all the local abilities to an outside assistant as a set of callable tools, and the plumbing that keeps that connection working. It covers starting the service, choosing whether messages travel through piped input and output or over the network, making sure it runs from the right folder and inside the right isolated environment, and a Windows-specific fix for messages being bundled together when they should arrive one by one. It covers the big catalogue of what is offered: file search, container and Linux subsystem control, version history, network checks, memory storage and recall, knowledge lookup, calendar reading and overall health, with every call written to a log. There are also the small tests: a bare-bones service with a ping and an echo to prove the protocol works, a handshake check over the network, and a sweep that calls each tool once to confirm nothing broke after a change. Questions here sound like why can the assistant not see my tools, how do I start the server, or is the connection working.",
+      "not_about": "Not the individual abilities themselves such as screen control or file indexing, and not the assistant's own question-answering service; this is the connection layer and its start-up.",
+      "example_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/server.py",
+        "mcpServers/VS_CODE_MCP_CODEX/src/__main__.py",
+        "mcpServers/VS_CODE_MCP_CODEX/src/patched_stdio.py",
+        "scripts/run_mcp_server.sh",
+        "scripts/smoke_http_mcp.py",
+        "scripts/validate_aions_tools.py"
+      ]
+    },
+    {
+      "id": "mapping-files-and-projects",
+      "name": "Surveying the drives to see what code and data is where",
+      "description": "This area is about taking stock of everything sitting on the hard drives: which projects exist, where they live, which files are duplicates of each other, which files nothing else refers to, and which ones everything depends on. It walks folders or uses a fast desktop search tool to list files, reads code files to pull out what each one imports, builds a picture of what depends on what, and flags broken references and circular ones. It also reads source files to list every function and class with its line numbers so a codebase can be looked up by name. On the data side it inventories the big collections and backup folders across drives, counting files and gigabytes, and queries a scan database to report which folders hold the most stored pieces. Output is usually a report or spreadsheet you can read afterwards. Questions here sound like what is on my drives, where is this file duplicated, or what depends on this module.",
+      "not_about": "Not the health of running services, and not the bookkeeping of the knowledge folders themselves; this is a survey of files, code structure and disk contents.",
+      "example_files": [
+        "scripts/project_scanner.py",
+        "scripts/turbo_scanner.py",
+        "scripts/full_system_scan.py",
+        "aions_core/server/ts_symbols.py",
+        "scripts/catalog_e_treasures.py",
+        "aions_core/tools/query_db.py"
+      ]
+    },
+    {
+      "id": "setup-environment-and-secrets",
+      "name": "Getting the environment right and keeping passwords safe",
+      "description": "This area is about the groundwork that has to be correct before anything else works, and about protecting sensitive credentials. It covers a launcher that always picks the same Python installation no matter where a script is started from, creates it if missing, and a check that refuses to continue if the running version is not the expected one. It covers pointing all the download and temporary folders at one place on a chosen drive so the system drive does not fill up, and mirroring the live folder to a development copy with the bulky generated folders left out. On the sensitive side it covers locking API keys and sign-in credentials into an encrypted store readable only by the Windows account that created it, listing what is stored without revealing any of it, and unlocking one back into a tightly permissioned file. There is also a trivial hello-world script for confirming a fresh environment runs at all. Questions here sound like which Python is being used, where do my API keys live, or how do I keep secrets out of the repository.",
+      "not_about": "Not about whether services are currently healthy, and not about permissions on what an agent may do; this is installation, paths, versions and encrypted credential storage.",
+      "example_files": [
+        "scripts/aions_python.sh",
+        "scripts/verify_python_env.py",
+        "scripts/set_aions_cache_env.sh",
+        "scripts/vault/_core.py",
+        "scripts/vault/seal_secret.py",
+        "scripts/sync_dev_mirror.sh"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "aions_core/agi_core.py": {
+    "primary": "reasoning-and-getting-better",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["breaks down", "reasons", "reports"],
+    "why": "It walks a question through goals and evidence and reports the chain with a confidence figure, rather than searching a store for the best passage."
+  },
+  "aions_core/agi_unified.py": {
+    "primary": "reasoning-and-getting-better",
+    "secondary": "assistant-and-its-chat-servers",
+    "kind": "runs",
+    "action": ["routes", "combines", "saves"],
+    "why": "The parts it wires together are thinking, learning and self-improvement, not the search and wording components behind a chat front door."
+  },
+  "aions_core/evaluator_engine.py": {
+    "primary": "answer-quality-and-refusals",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["scores", "grades", "writes"],
+    "why": "It hands out a score out of a hundred and a letter grade for answer quality, not a report on whether services are up or fast."
+  },
+  "aions_core/server/facts_loader.py": {
+    "primary": "finding-the-right-answer",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["looks up", "counts"],
+    "why": "Its whole job is telling how many known facts a question touches so retrieval can judge relevance, not keeping the fact files tidy on disk."
+  },
+  "aions_core/tools/harvest_memory.py": {
+    "primary": "knowledge-chunk-storage",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["scans", "copies", "reports"],
+    "why": "It gathers chunk files scattered across folders into one library, which is plain file bookkeeping rather than loading anything into a similarity database."
+  },
+  "control_plane/blends/analyze_blend.py": {
+    "primary": "reasoning-and-getting-better",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["reads", "diagnoses", "saves"],
+    "why": "It writes up a past mistake with its error class and root cause so lessons accumulate, rather than grading a single answer as good or bad."
+  },
+  "control_plane/executor.py": {
+    "primary": "plans-steps-and-worker-machines",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["runs", "dispatches", "records"],
+    "why": "It takes one numbered step of a stored plan and points it at a local or remote machine; the policy call is a gate it consults, not the thing it is."
+  },
+  "control_plane/node_agent/agent.py": {
+    "primary": "plans-steps-and-worker-machines",
+    "secondary": null,
+    "kind": "serves",
+    "action": ["registers", "reports", "runs"],
+    "why": "It is the little program living on a worker box reporting load and accepting commands, not a health loop that repairs the system it watches."
+  },
+  "control_plane/scheduler.py": {
+    "primary": "personal-admin-and-calendar",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["reads", "queues", "flags"],
+    "why": "The queue it builds is the human owner's deadlines and cases from their profile, not steps of a machine job plan."
+  },
+  "scripts/aions_indexer.py": {
+    "primary": "desktop-and-file-finding",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["scans", "indexes", "refreshes"],
+    "why": "It keeps the fast name-lookup list fresh so file searches avoid walking the disk, rather than analysing code imports or duplicate files."
+  },
+  "scripts/calendar_e2e_smoke.py": {
+    "primary": "personal-admin-and-calendar",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["fetches", "verifies"],
+    "why": "It confirms the owner's outside calendar and sign-in actually work end to end, not that internal services are up."
+  },
+  "scripts/chatgpt_parser_v2.py": {
+    "primary": "importing-outside-content",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["digs", "extracts", "writes"],
+    "why": "It recovers conversations, titles and account details out of another app's export, which is intake of outside text rather than surveying files on the drives."
+  },
+  "scripts/demo_windows_final.py": {
+    "primary": "worked-examples-and-walkthroughs",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["demonstrates", "executes", "learns"],
+    "why": "It is a runnable show-and-tell of folders, zips and notepad from start to finish, not the registry and executor machinery it calls into."
+  },
+  "scripts/run_mcp_server.sh": {
+    "primary": "tool-server-plumbing",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["sets", "resolves", "launches"],
+    "why": "Its purpose is bringing the tool service up in stdio or http mode; the environment variables it sets are part of that launch, not general installation groundwork."
+  },
+  "aions_core/agi_soft_retrieval.py": {
+    "primary": "finding-the-right-answer",
+    "secondary": "reasoning-and-getting-better",
+    "kind": "runs",
+    "action": ["filters", "scores", "ranks"],
+    "why": "It shortlists candidates with word matching then re-scores them by meaning, which is the act of searching and ranking even though the scorer is trainable."
+  },
+  "aions_core/cbms_memory.py": {
+    "primary": "knowledge-chunk-storage",
+    "secondary": "finding-the-right-answer",
+    "kind": "stores",
+    "action": ["saves", "indexes", "retrieves"],
+    "why": "It owns the chunks directory, their identifiers and the thinking log on disk, rather than being a similarity database with sessions and scores."
+  },
+  "aions_core/server/cbms_doctor.py": {
+    "primary": "knowledge-chunk-storage",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["scans", "verifies", "reports"],
+    "why": "It hunts broken JSON, missing fields and dangling references in the chunk pile, not whether a produced answer is trustworthy."
+  },
+  "aions_core/server/pocket_qc.py": {
+    "primary": "answer-quality-and-refusals",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["inspects", "judges", "logs"],
+    "why": "It is the gatekeeper stamping text pass, fail or retry before it becomes knowledge, not a rule about which actions a role may take."
+  },
+  "aions_core/tools/test_api.py": {
+    "primary": "assistant-and-its-chat-servers",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["sends", "prints"],
+    "why": "It just pokes the assistant's own query endpoint to prove it is reachable, not the tool-protocol handshake or a whole-system health sweep."
+  },
+  "control_plane/api.py": {
+    "primary": "plans-steps-and-worker-machines",
+    "secondary": null,
+    "kind": "serves",
+    "action": ["accepts", "plans", "dispatches"],
+    "why": "This is the command centre's front door for plans, steps and node registration, not the assistant's question-and-answer endpoint."
+  },
+  "mcpServers/VS_CODE_MCP_CODEX/run_server.py": {
+    "primary": "tool-server-plumbing",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["fixes", "starts"],
+    "why": "It exists solely to correct the working directory and boot the tool service over piped streams, not to provide any ability itself."
+  },
+  "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py": {
+    "primary": "desktop-and-file-finding",
+    "secondary": null,
+    "kind": "connects",
+    "action": ["chooses", "creates", "reports"],
+    "why": "It picks which screen-control and file-search backend suits this machine, which is about those abilities themselves rather than the protocol carrying them."
+  },
+  "scripts/ingest_tier1_chroma.py": {
+    "primary": "meaning-database-and-sessions",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["selects", "loads", "adds"],
+    "why": "It pushes selected chunks into named Chroma sessions as embeddings, rather than tidying the plain chunk files it reads from."
+  },
+  "scripts/project_scanner.py": {
+    "primary": "mapping-files-and-projects",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["walks", "extracts", "reports"],
+    "why": "It maps imports, duplicates, orphans and circular links across a repo into a report, not a quick name lookup for finding a file."
+  },
+  "scripts/test_google_integration.py": {
+    "primary": "personal-admin-and-calendar",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["imports", "validates"],
+    "why": "It validates the owner's Gmail and Calendar wiring and scopes, not whether the encrypted credential store itself works."
+  },
+  "scripts/test_skill_engine_foundation.py": {
+    "primary": "worked-examples-and-walkthroughs",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["chains", "verifies", "replays"],
+    "why": "It is an end-to-end tryout showing discovery, chaining and recipe replay working, not the registry and recipe machinery being demonstrated."
+  },
+  "scripts/test_skill_open_apps.py": {
+    "primary": "worked-examples-and-walkthroughs",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["launches", "confirms", "skips"],
+    "why": "It opens real apps to demonstrate that an already-open program is not opened twice, rather than being the desktop control layer it drives."
+  },
+  "scripts/verify_python_env.py": {
+    "primary": "setup-environment-and-secrets",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["reads", "compares", "refuses"],
+    "why": "It refuses to continue when the running interpreter is not the pinned one, which is groundwork before anything runs, not live service health."
+  },
+  "server/store.py": {
+    "primary": "meaning-database-and-sessions",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["adds", "searches", "prunes"],
+    "why": "It is the Chroma wrapper with sessions, similarity scores and expiry pruning, not the folder of plain knowledge files and its manifest."
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "aions_core/server/generator_cbms.py": {
+    "primary": "finding-the-right-answer",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["assembles", "formats", "cites"],
+    "why": "It turns retrieved chunks and ranking scores into a sourced answer, which is the search-and-rank side rather than the tone polishing of sounding-human."
+  },
+  "aions_core/server/hangul_addressing.py": {
+    "primary": "korean-symbolic-encoding",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["hashes", "converts"],
+    "why": "It only turns text into a compact Hangul address code, so it is the encoding scheme itself and not the storage folder that later holds such codes."
+  },
+  "aions_core/server/korean_keys.py": {
+    "primary": "korean-symbolic-encoding",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["splits", "hashes", "keys"],
+    "why": "It chops words into syllable-like fragments and hashes them into short match keys, which is the shorthand scheme, not the ranked retrieval that consumes it."
+  },
+  "control_plane/skills/__init__.py": {
+    "primary": "skills-library-and-running-tasks",
+    "secondary": null,
+    "kind": "describes",
+    "action": ["declares"],
+    "why": "A bare package marker for the skill engine package, so it belongs with the action library rather than with permissions on those actions."
+  },
+  "control_plane/skills/stats.py": {
+    "primary": "skills-library-and-running-tasks",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["counts", "saves", "scores"],
+    "why": "These are the running tallies of how often each skill worked and how fast, used to pick a skill, not a live-health measurement of the machine."
+  },
+  "mcpServers/VS_CODE_MCP_CODEX/src/patched_stdio.py": {
+    "primary": "tool-server-plumbing",
+    "secondary": null,
+    "kind": "connects",
+    "action": ["reads", "writes", "flushes"],
+    "why": "It is the Windows message-transport fix for the tool server's pipe, pure connection plumbing rather than any of the local abilities offered over it."
+  },
+  "mcpServers/VS_CODE_MCP_CODEX/src/server.py": {
+    "primary": "tool-server-plumbing",
+    "secondary": null,
+    "kind": "serves",
+    "action": ["exposes", "answers", "logs"],
+    "why": "It is the catalogue service that offers every local ability to an outside assistant, not one of those abilities such as screen or file control."
+  },
+  "server/store_selector.py": {
+    "primary": "meaning-database-and-sessions",
+    "secondary": null,
+    "kind": "connects",
+    "action": ["detects", "chooses", "re-exports"],
+    "why": "It is the switch between a remote and an embedded vector database, which the meaning-database area explicitly owns, not general environment setup."
+  },
+  "aions_core/aions_hybrid_retrieval.py": {
+    "primary": "finding-the-right-answer",
+    "secondary": null,
+    "kind": "serves",
+    "action": ["searches", "merges", "ranks"],
+    "why": "It mixes keyword, vector and rerank passes to order results for a question, which is the act of searching rather than the vector store it queries."
+  },
+  "aions_core/aions_reformed_integration.py": {
+    "primary": "finding-the-right-answer",
+    "secondary": null,
+    "kind": "serves",
+    "action": ["matches", "looks up", "answers"],
+    "why": "It is the layered lookup that tries simple seed answers before digging into memory, a retrieval decision rather than a store of chunks."
+  },
+  "aions_core/ingest_cbms_data.py": {
+    "primary": "meaning-database-and-sessions",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["reads", "embeds", "loads"],
+    "why": "It is a loading job that pushes batches of text plus embeddings into the vector table, not intake of outside web or chat content."
+  },
+  "aions_core/server/cbms_memory.py": {
+    "primary": "knowledge-chunk-storage",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["saves", "indexes", "recalls"],
+    "why": "It writes one knowledge piece per JSON file and keeps the manifest with access counts, which is the plain files on disk, not the similarity database."
+  },
+  "aions_core/server/cbms_symbolic_index.py": {
+    "primary": "korean-symbolic-encoding",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["encodes", "indexes", "matches"],
+    "why": "It is the code-to-chunk index where both question and material are written in the same symbolic codes, not embedding-based meaning search."
+  },
+  "aions_core/server/web_rag_cbms.py": {
+    "primary": "importing-outside-content",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["fetches", "extracts", "injects"],
+    "why": "It reaches out to the web only when a question could not be answered locally and files the lines with their source URLs, which is intake of outside text."
+  },
+  "aions_core/tools/check_status.py": {
+    "primary": "keeping-the-system-healthy",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["queries", "prints"],
+    "why": "It reads the recorded error list off a running service's status endpoint, a live-health check rather than a survey of files on disk."
+  },
+  "control_plane/blends/search_blends.py": {
+    "primary": "reasoning-and-getting-better",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["searches", "ranks", "prints"],
+    "why": "It searches the write-ups of past mistakes and the lessons drawn from them, which is long-term self-improvement, not general question answering."
+  },
+  "control_plane/skills/schema.py": {
+    "primary": "skills-library-and-running-tasks",
+    "secondary": null,
+    "kind": "describes",
+    "action": ["defines", "loads", "validates"],
+    "why": "It defines the shape of a skill or recipe object and checks required fields; the risk field is only declared here, enforcement lives in the permissions area."
+  },
+  "mcpServers/VS_CODE_MCP_CODEX/src/__main__.py": {
+    "primary": "tool-server-plumbing",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["starts", "checks", "launches"],
+    "why": "It is the start-up entry point choosing pipe or network transport and verifying the virtual environment, the connection layer's launcher not the assistant's own front door."
+  },
+  "scripts/aions_node_heartbeat.py": {
+    "primary": "plans-steps-and-worker-machines",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["reports", "posts", "logs"],
+    "why": "It is the worker machine's regular check-in to the command centre so the fleet roll stays current, not the self-repair loop that watches services."
+  },
+  "scripts/full_system_scan.py": {
+    "primary": "mapping-files-and-projects",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["inventories", "analyzes", "reports"],
+    "why": "It walks every drive to list files, dependencies and project roots into reports, a survey of disk contents rather than bookkeeping of knowledge folders."
+  },
+  "scripts/set_aions_cache_env.sh": {
+    "primary": "setup-environment-and-secrets",
+    "secondary": null,
+    "kind": "describes",
+    "action": ["sets", "creates"],
+    "why": "It points all download and temporary folders at one chosen drive, which is groundwork configuration rather than anything about running service health."
+  },
+  "scripts/smoke_http_mcp.py": {
+    "primary": "tool-server-plumbing",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["handshakes", "lists", "verifies"],
+    "why": "It proves the tool server's protocol handshake and tool listing work over the network, a connection-layer test rather than a demonstration of doing real jobs."
+  },
+  "server/context_schema.py": {
+    "primary": "meaning-database-and-sessions",
+    "secondary": null,
+    "kind": "describes",
+    "action": ["normalizes", "converts"],
+    "why": "It fixes the shape of the labels and expiry days attached to entries in the similarity store, not the conversational recall that reads those turns back."
+  }
+}

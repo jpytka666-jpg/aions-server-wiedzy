@@ -1,0 +1,205 @@
+{
+  "aions_core/server/cbms_outline.py": {
+    "primary": "knowledge-chunk-storage",
+    "secondary": "finding-the-right-answer",
+    "kind": "runs",
+    "action": ["lists", "reads", "trims"],
+    "why": "Its subject is the chunk files themselves - their ids, sizes, access counts and active-versus-parked tier - so it is bookkeeping over the pile rather than ranking passages to answer a question."
+  },
+  "control_plane/agents/agent_registry.py": {
+    "primary": "permissions-roles-and-new-abilities",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["finds", "loads", "lists"],
+    "why": "What it discovers are helper roles with allowed-skill lists and risk caps, not the runnable actions themselves, so it belongs with roles rather than with the skills library."
+  },
+  "control_plane/blends/__init__.py": {
+    "primary": "reasoning-and-getting-better",
+    "secondary": null,
+    "kind": "describes",
+    "action": ["declares"],
+    "why": "It marks the package holding the mistake-and-lesson tooling, so it sits with long-term self-improvement rather than with any answer-grading area."
+  },
+  "control_plane/blends/write_conclusion.py": {
+    "primary": "reasoning-and-getting-better",
+    "secondary": "knowledge-chunk-storage",
+    "kind": "runs",
+    "action": ["writes", "saves", "exports"],
+    "why": "It finishes the write-up of a past mistake into a lesson, and only afterwards optionally emits a chunk file, so the lesson-drawing is the point and the chunk is a by-product."
+  },
+  "control_plane/llm_adapter.py": {
+    "primary": "local-language-models",
+    "secondary": null,
+    "kind": "connects",
+    "action": ["builds", "sends", "returns"],
+    "why": "It assembles the prompt and calls a locally hosted model, which is the calling machinery, not the tone-shaping of a finished reply."
+  },
+  "control_plane/skills/forge_linux_verify.py": {
+    "primary": "permissions-roles-and-new-abilities",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["validates", "compiles", "tries"],
+    "why": "It gates a brand-new ability into the live library by schema, compile and sandbox trial, which is the approval pipeline rather than the everyday running of approved skills."
+  },
+  "control_plane/skills/goal_planner.py": {
+    "primary": "skills-library-and-running-tasks",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["picks", "chains", "remembers"],
+    "why": "It chooses and chains entries from the skill catalogue and replays learned recipes, unlike the control-plane planner which numbers steps and picks a worker machine."
+  },
+  "control_plane/skills/papiery.py": {
+    "primary": "personal-admin-and-calendar",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["saves", "lists", "finds"],
+    "why": "The records it keeps are the owner's own tasks with deadlines, priorities and tags, not knowledge chunks the system learned."
+  },
+  "control_plane/skills/recipes.py": {
+    "primary": "skills-library-and-running-tasks",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["saves", "looks up", "counts"],
+    "why": "It remembers known-good skill chains so a repeat request replays them, which is the library's reuse memory rather than a lesson drawn from a mistake."
+  },
+  "mcpServers/VS_CODE_MCP_CODEX/src/__init__.py": {
+    "primary": "tool-server-plumbing",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["starts", "configures"],
+    "why": "It only decides transport and port and boots the tool service, so it is the start-up plumbing rather than any of the abilities that service exposes."
+  },
+  "scripts/test_node_registry.py": {
+    "primary": "plans-steps-and-worker-machines",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["registers", "verifies", "reports"],
+    "why": "It exercises the roll of worker machines and the plan-to-execution path, not the health of a live installation."
+  },
+  "scripts/turbo_scanner.py": {
+    "primary": "mapping-files-and-projects",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["scans", "compares", "reports"],
+    "why": "It surveys source files for duplicates, hubs and import links across the drives, which is a stocktake of code rather than a check on running services."
+  },
+  "scripts/vault/_core.py": {
+    "primary": "setup-environment-and-secrets",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["encrypts", "saves", "indexes"],
+    "why": "It locks credentials into a per-account encrypted store, which is credential safekeeping, not a rule about which actions an agent may take."
+  },
+  "scripts/vault/open_secret.py": {
+    "primary": "setup-environment-and-secrets",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["unlocks", "writes", "lists"],
+    "why": "It takes a sealed credential back out to a tightly permissioned file, the other half of the same encrypted store rather than any permission gate."
+  },
+  "server/models.py": {
+    "primary": "meaning-database-and-sessions",
+    "secondary": null,
+    "kind": "describes",
+    "action": ["declares"],
+    "why": "It states the request and reply shapes for the similarity store's web service - sessions, batches, scored hits - rather than defining anything about plain chunk files."
+  },
+  "aions_core/claude_aions_bridge.py": {
+    "primary": "finding-the-right-answer",
+    "secondary": null,
+    "kind": "connects",
+    "action": ["searches", "falls back", "measures"],
+    "why": "Its job is deciding whether the retrieved material suffices or a bigger model must be asked, which the model-running area explicitly excludes."
+  },
+  "aions_core/server/refgraph.py": {
+    "primary": "knowledge-chunk-storage",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["links", "resolves", "reports"],
+    "why": "It tracks which stored pieces point at which and flags broken or archived-dependency links, which is upkeep of the pile, not searching it for an answer."
+  },
+  "aions_core/tools/analyze_csv.py": {
+    "primary": "mapping-files-and-projects",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["reads", "groups", "reports"],
+    "why": "It reads a whole-disk scan listing to report where chunk folders and critical files sit, so it is a survey of the drives rather than maintenance of the chunk store itself."
+  },
+  "aions_core/unified_core.py": {
+    "primary": "assistant-and-its-chat-servers",
+    "secondary": null,
+    "kind": "serves",
+    "action": ["loads", "routes", "answers"],
+    "why": "It is the top layer that boots every component, tolerates the ones that fail and routes a query through them, rather than being any one of those components."
+  },
+  "control_plane/agents/agent_runner.py": {
+    "primary": "permissions-roles-and-new-abilities",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["filters", "rejects", "runs"],
+    "why": "Its whole logic is narrowing a role to its allowed actions and refusing anything above its risk ceiling, unlike the plain executor that just runs a planned step."
+  },
+  "control_plane/llm/server_client.py": {
+    "primary": "local-language-models",
+    "secondary": null,
+    "kind": "connects",
+    "action": ["sends", "waits", "reports"],
+    "why": "It is the thin talker to a locally hosted model server that stays loaded in memory, and it reports failure rather than judging whether the model was needed."
+  },
+  "control_plane/operator/mouth.py": {
+    "primary": "keeping-the-system-healthy",
+    "secondary": null,
+    "kind": "connects",
+    "action": ["explains", "asks", "gives up"],
+    "why": "It attaches a plain-language note to an incident the self-repair loop already decided on, so it belongs to live health rather than to the tone of a user-facing reply."
+  },
+  "control_plane/policy.py": {
+    "primary": "permissions-roles-and-new-abilities",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["allows", "blocks"],
+    "why": "It is the plain allow-list and dangerous-command block-list consulted before anything runs, not a judgement about whether an answer is trustworthy."
+  },
+  "control_plane/skills/semantic_search.py": {
+    "primary": "skills-library-and-running-tasks",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["searches", "blends", "ranks"],
+    "why": "What it hunts for is the right reusable action for a plainly worded request, not the passage that answers a user's question."
+  },
+  "mcpServers/VS_CODE_MCP_CODEX/src/test_server.py": {
+    "primary": "tool-server-plumbing",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["pings", "echoes", "proves"],
+    "why": "It exists only to prove the tool-server protocol itself starts and replies, not to demonstrate the system doing a real job."
+  },
+  "scripts/aions_tray.py": {
+    "primary": "desktop-and-file-finding",
+    "secondary": null,
+    "kind": "serves",
+    "action": ["watches", "restarts", "opens"],
+    "why": "It is the taskbar control for the desktop application - start, stop, open logs - rather than a sweep that measures whether services are healthy."
+  },
+  "scripts/demo_secretary.py": {
+    "primary": "worked-examples-and-walkthroughs",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["demonstrates", "chains", "saves"],
+    "why": "It is a runnable showcase of the skill engine end to end, calling into the library rather than being part of it."
+  },
+  "scripts/proof_provenance.py": {
+    "primary": "meaning-database-and-sessions",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["stores", "reads back", "verifies"],
+    "why": "It confirms what actually landed in the similarity store after a write, which is the after-the-fact check on that database rather than a judgement of answer quality."
+  },
+  "server/store_api.py": {
+    "primary": "meaning-database-and-sessions",
+    "secondary": null,
+    "kind": "connects",
+    "action": ["sends", "fetches", "wraps"],
+    "why": "It mirrors the similarity store's own interface over the network so callers cannot tell local from remote, making it part of that database's service layer."
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "aions_core/agi_existing_models.py": {
+    "primary": "local-language-models",
+    "secondary": null,
+    "kind": "serves",
+    "action": ["finds", "loads", "answers"],
+    "why": "It is the machinery that discovers Mistral/Phi-3/Bielik on the machine and keeps one loaded to generate text, not the search layer that decides what evidence to hand a model."
+  },
+  "aions_core/aions_crla_reformed.py": {
+    "primary": "answer-quality-and-refusals",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["scores", "picks", "saves"],
+    "why": "It generates several candidate answers and runs a scored tournament to keep the winner, which is judging answer quality rather than hunting for the passages in the first place."
+  },
+  "aions_core/aions_monitoring_dashboard.py": {
+    "primary": "keeping-the-system-healthy",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["tests", "measures", "reports"],
+    "why": "It sweeps every component for liveness and measures p95/p99 response times, which is live health and speed, not grading the correctness of one reply."
+  },
+  "aions_core/aions_vector_enhancement.py": {
+    "primary": "finding-the-right-answer",
+    "secondary": "meaning-database-and-sessions",
+    "kind": "connects",
+    "action": ["connects", "searches", "counts"],
+    "why": "Its purpose is to give AIONS a meaning-based way to retrieve relevant material; it borrows an existing LanceDB instance rather than being the store's own service."
+  },
+  "aions_core/tools/symbolic_probe.py": {
+    "primary": "korean-symbolic-encoding",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["converts", "encodes", "shows"],
+    "why": "It walks a plain Polish sentence through Esperanto and codebook symbols to show which chunks it lands on, so it belongs with the encoding chain, not with the desktop end-to-end demos."
+  },
+  "aions_core/tools/test_guardrail.py": {
+    "primary": "answer-quality-and-refusals",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["sends", "compares", "prints"],
+    "why": "It fires gibberish and a valid question at the server to confirm nonsense is refused, which tests trustworthiness of answers rather than whether the service is up."
+  },
+  "control_plane/agents/__init__.py": {
+    "primary": "permissions-roles-and-new-abilities",
+    "secondary": null,
+    "kind": "describes",
+    "action": ["declares", "explains"],
+    "why": "It states the rule that an agent is only a declaration with an allowed-skill list and a risk ceiling, which is the permission model, not the running of skills themselves."
+  },
+  "control_plane/models.py": {
+    "primary": "plans-steps-and-worker-machines",
+    "secondary": null,
+    "kind": "describes",
+    "action": ["defines", "generates"],
+    "why": "It declares the Plan, PlanStep, ExecutionResult and ExecutionState shapes used by the command centre, so it sits with job planning rather than with the assistant's front door."
+  },
+  "control_plane/operator/loop.py": {
+    "primary": "keeping-the-system-healthy",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["watches", "fixes", "records"],
+    "why": "It repeatedly gathers disk and service stats, restarts things with a cooldown and writes up the incident, which is self-repair rather than setting the environment up."
+  },
+  "scripts/chatgpt_ultimate.py": {
+    "primary": "importing-outside-content",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["reads", "extracts", "writes"],
+    "why": "It digs conversations, titles and account details out of another app's cache on this machine, which is intake of outside text, not a survey of drive contents."
+  },
+  "scripts/demo_papiery.py": {
+    "primary": "worked-examples-and-walkthroughs",
+    "secondary": "personal-admin-and-calendar",
+    "kind": "runs",
+    "action": ["adds", "lists", "reminds"],
+    "why": "It is a runnable showcase that adds sample tasks and pops a notification to prove the flow works, rather than being the paperwork store the demo calls into."
+  },
+  "scripts/test_llm_adapter.py": {
+    "primary": "local-language-models",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["asks", "checks", "reports"],
+    "why": "It confirms the local Bielik/Ollama model replies in Polish and actually used the injected context, which is about the model call working, not about the tone of a finished reply."
+  },
+  "scripts/validate_aions_tools.py": {
+    "primary": "tool-server-plumbing",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["calls", "counts", "reports"],
+    "why": "It calls every MCP tool once after a code change to prove the server still exposes them, which is the connection layer rather than the health of the running services themselves."
+  },
+  "server/app.py": {
+    "primary": "meaning-database-and-sessions",
+    "secondary": null,
+    "kind": "serves",
+    "action": ["accepts", "searches", "lists"],
+    "why": "It is the HTTP face of the vector store with session, add, search and prune endpoints, not the assistant's own question-and-answer front door."
+  },
+  "server/store_http.py": {
+    "primary": "meaning-database-and-sessions",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["saves", "searches", "reconnects"],
+    "why": "Its job is holding documents in Chroma collections per session and turning distances into similarity scores, which is the embedding store rather than the plain chunk files on disk."
+  },
+  "aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py": {
+    "primary": "korean-symbolic-encoding",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["splits", "maps", "measures"],
+    "why": "It chops Polish and technical words into meaningful syllables with Korean mappings and reports compression ratios, which is the encoding scheme, not the model-hosting machinery it happens to use."
+  },
+  "aions_core/agi_evolution.py": {
+    "primary": "reasoning-and-getting-better",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["tracks", "proposes", "records"],
+    "why": "It watches performance across eight abilities over time and proposes improvement strategies, which is long-term self-improvement rather than grading one answer."
+  },
+  "aions_core/agi_neural_backprop.py": {
+    "primary": "reasoning-and-getting-better",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["learns", "adjusts", "scores"],
+    "why": "It is the trainable engine that adjusts itself from feedback gradients across multi-hop reasoning, so it is self-improvement rather than the retrieval it reasons over."
+  },
+  "aions_core/api.py": {
+    "primary": "assistant-and-its-chat-servers",
+    "secondary": null,
+    "kind": "serves",
+    "action": ["listens", "routes", "answers"],
+    "why": "It is the HTTP entry point that hands incoming questions to the assembled AIONS core, not the vector-store service that keeps documents."
+  },
+  "aions_core/server/stylist.py": {
+    "primary": "sounding-human",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["tidies", "verifies"],
+    "why": "It only reshapes spacing and paragraphing of an already-settled answer while confirming no numbers or citations vanished, so it is presentation rather than factual grounding."
+  },
+  "aions_core/server/ts_symbols.py": {
+    "primary": "mapping-files-and-projects",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["parses", "lists", "exports"],
+    "why": "It parses source files to list every function and class with its line numbers and callers, which is surveying code structure rather than the bookkeeping of the knowledge folders."
+  },
+  "aions_core/smart_cbms.py": {
+    "primary": "finding-the-right-answer",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["looks up", "decides", "combines"],
+    "why": "Its whole point is deciding whether the cached retrieval is good enough or a bigger model must be paid for, which is the search-and-escalate decision, not the model-loading machinery."
+  },
+  "aions_core/tools/rebuild_manifest_force.py": {
+    "primary": "knowledge-chunk-storage",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["scans", "rebuilds", "saves"],
+    "why": "It walks the chunk files on disk and rewrites the manifest index, which is housekeeping of the plain stored pieces rather than any similarity database."
+  },
+  "control_plane/node_registry.py": {
+    "primary": "plans-steps-and-worker-machines",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["registers", "lists", "picks"],
+    "why": "It keeps the roll of worker machines with their tools, health and load so work can be routed, which is fleet bookkeeping rather than permission checking."
+  },
+  "control_plane/skills/planner.py": {
+    "primary": "skills-library-and-running-tasks",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["matches", "searches", "filters"],
+    "why": "It looks for a cached recipe or candidate skills for an intent from the skill registry, rather than breaking a goal into numbered steps and choosing a machine to run them."
+  },
+  "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py": {
+    "primary": "desktop-and-file-finding",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["indexes", "searches", "refreshes"],
+    "why": "It keeps a JSON list of every file with size and date so name searches skip walking the disk, which is the quick file finder, not the deep dependency scan of a codebase."
+  },
+  "scripts/aions_python.sh": {
+    "primary": "setup-environment-and-secrets",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["finds", "creates", "launches"],
+    "why": "It pins every script to the same venv and Python version, creating it if missing, which is groundwork before anything runs rather than a health check on live services."
+  },
+  "scripts/ingest_treasures_tier2.py": {
+    "primary": "meaning-database-and-sessions",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["reads", "summarises", "saves"],
+    "why": "It is a loading job that pushes catalogue summaries into Chroma collections, not the drive survey that produced the catalogue in the first place."
+  },
+  "scripts/verify_tier1_chroma.py": {
+    "primary": "meaning-database-and-sessions",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["searches", "counts", "reports"],
+    "why": "It runs sample searches and document counts after an ingest to confirm the right material landed in Chroma, so it checks the store rather than the quality of any answer."
+  },
+  "server/__init__.py": {
+    "primary": "meaning-database-and-sessions",
+    "secondary": null,
+    "kind": "describes",
+    "action": ["marks"],
+    "why": "It is only the package marker for the vector-store service directory, declaring importability rather than doing any storing or searching itself."
+  }
+}

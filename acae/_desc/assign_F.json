@@ -1,0 +1,198 @@
+{
+  "aions_core/AIONS_ULTIMATE_UNIFIED.py": {
+    "primary": "assistant-and-its-chat-servers",
+    "secondary": null,
+    "kind": "serves",
+    "action": ["routes", "answers", "tracks"],
+    "why": "It is the top-level wiring that loads every component and routes a question math-then-facts-then-knowledge, not any one of the search or encoding parts it calls."
+  },
+  "aions_core/aions_agent_layer.py": {
+    "primary": "permissions-roles-and-new-abilities",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["allows", "executes", "logs"],
+    "why": "Its point is the tool whitelist, risk ratings, per-session quotas and confirmation before anything runs, not the day-to-day skills library itself."
+  },
+  "aions_core/server/codebook_engine.py": {
+    "primary": "korean-symbolic-encoding",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["encodes", "decodes"],
+    "why": "It is the codebook dictionary that swaps phrases for numbered symbols both ways, not a search over stored material."
+  },
+  "aions_core/test_aions_capabilities.py": {
+    "primary": "sounding-human",
+    "secondary": "answer-quality-and-refusals",
+    "kind": "checks",
+    "action": ["asks", "measures", "scores"],
+    "why": "It fires personal, emotional and philosophical questions at the live system to see if it can hold that kind of conversation, rather than grading factual support."
+  },
+  "control_plane/cbms_gate.py": {
+    "primary": "finding-the-right-answer",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["retrieves", "ranks", "decides"],
+    "why": "It scores candidate chunks four ways and decides whether the hit is good enough or a model must be paid for, which is the search-and-rank act, not the model machinery."
+  },
+  "control_plane/operator/__init__.py": {
+    "primary": "keeping-the-system-healthy",
+    "secondary": null,
+    "kind": "describes",
+    "action": ["exports"],
+    "why": "A package marker that publishes the observe-diagnose-act-verify-learn loop, so it belongs with live health and self-repair rather than job planning."
+  },
+  "control_plane/skills/context.py": {
+    "primary": "skills-library-and-running-tasks",
+    "secondary": null,
+    "kind": "connects",
+    "action": ["provides", "finds", "saves"],
+    "why": "This is the shared scratchpad of small helper powers handed to each running skill, not the permission decision about whether the skill may run."
+  },
+  "control_plane/skills/gate.py": {
+    "primary": "permissions-roles-and-new-abilities",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["allows", "logs"],
+    "why": "It turns destructive skills away without a valid approval and writes every decision to an append-only log, which is permission and risk, not execution."
+  },
+  "control_plane/skills/registry.py": {
+    "primary": "skills-library-and-running-tasks",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["discovers", "searches", "lists"],
+    "why": "Dropping a skill.json folder in is enough to make it findable by plain-words search, which is the library itself rather than the gate that vets it."
+  },
+  "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py": {
+    "primary": "sounding-human",
+    "secondary": "local-language-models",
+    "kind": "connects",
+    "action": ["rephrases", "parses"],
+    "why": "Its job is to voice supplied facts in the user's language without adding any, which is phrasing; the Ollama/GGUF fallback is the secondary concern."
+  },
+  "scripts/aions_healthcheck.sh": {
+    "primary": "keeping-the-system-healthy",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["checks", "reports"],
+    "why": "It sweeps services, indexer and API to say up or degraded right now, rather than doing the installation work verify_python_env performs."
+  },
+  "scripts/demo_windows_batch2.py": {
+    "primary": "worked-examples-and-walkthroughs",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["demonstrates", "verifies", "reports"],
+    "why": "A runnable chain of folder, clipboard, screenshot and browser steps meant to show the skills engine working end to end, not the engine itself."
+  },
+  "scripts/operator_daily_brief.py": {
+    "primary": "personal-admin-and-calendar",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["reads", "formats", "prints"],
+    "why": "It prints the owner's cases, deadlines and goals as a one-page morning summary; the optional health flag is incidental."
+  },
+  "scripts/sync_dev_mirror.sh": {
+    "primary": "setup-environment-and-secrets",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["copies", "excludes"],
+    "why": "Mirroring the live tree to a dev copy with venv and cache folders left out is groundwork plumbing, not a survey of what is on the drives."
+  },
+  "aions_core/aions_reactor.py": {
+    "primary": "reasoning-and-getting-better",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["orchestrates", "learns", "evaluates"],
+    "why": "It drives multi-round learning goals and turns the results into reusable blocks, which is self-improvement rather than the everyday skills library."
+  },
+  "aions_core/aions_style_parameters.py": {
+    "primary": "sounding-human",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["rewords", "adjusts"],
+    "why": "Formality, brevity and warmth dials change how a reply reads without touching the facts, so it is tone and not answer quality."
+  },
+  "aions_core/server/cbms_purgatory.py": {
+    "primary": "knowledge-chunk-storage",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["moves", "records", "judges"],
+    "why": "It shuffles chunk files between purgatory, active and quarantine folders and keeps the ledger, which is on-disk bookkeeping, not deciding which chunk answers a question."
+  },
+  "aions_core/server/crla_core.py": {
+    "primary": "answer-quality-and-refusals",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["scores", "ranks", "selects"],
+    "why": "Eight candidates scored on coverage, latency and hygiene then run off in a bracket is quality judging, not the retrieval that produced the material."
+  },
+  "aions_core/tools/check_schema.py": {
+    "primary": "mapping-files-and-projects",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["reads", "prints"],
+    "why": "It dumps the tables and columns of the scan database so you can see what was inventoried, which sits with the drive survey tooling, not the vector store."
+  },
+  "aions_core/tools/facts_builder.py": {
+    "primary": "importing-outside-content",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["splits", "indexes", "writes"],
+    "why": "It walks folders of documents and notes and turns them into indexed one-sentence facts, which is intake, not the later searching over them."
+  },
+  "control_plane/planner.py": {
+    "primary": "plans-steps-and-worker-machines",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["classifies", "plans", "picks"],
+    "why": "It breaks a stated intent into numbered steps and picks which node runs them, the command centre job rather than the assistant's own answering front door."
+  },
+  "control_plane/skills/forge.py": {
+    "primary": "permissions-roles-and-new-abilities",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["validates", "sandboxes", "promotes"],
+    "why": "This is the request-check-compile-sandbox-promote pipeline for brand-new abilities, not the running of already-approved ones."
+  },
+  "control_plane/skills/world_state.py": {
+    "primary": "skills-library-and-running-tasks",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["saves", "reads", "matches"],
+    "why": "It is the live note of what is currently open or running so a skill is not repeated pointlessly, not a health monitor of services."
+  },
+  "mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py": {
+    "primary": "desktop-and-file-finding",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["clicks", "types", "captures"],
+    "why": "It is the actual screen, keyboard and window control ability, not the tool server plumbing that exposes it to an assistant."
+  },
+  "scripts/demo_train.py": {
+    "primary": "worked-examples-and-walkthroughs",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["demonstrates", "verifies", "saves"],
+    "why": "Three scripted scenarios showing planning before and after a recipe is learned; it is the tryout, not the learning machinery it exercises."
+  },
+  "scripts/demo_windows_session.py": {
+    "primary": "worked-examples-and-walkthroughs",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["demonstrates", "opens", "reports"],
+    "why": "A full monitored session opening Notepad and typing a poem to show real desktop work end to end, rather than the desktop control layer itself."
+  },
+  "scripts/hello_world.py": {
+    "primary": "setup-environment-and-secrets",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["prints", "exits"],
+    "why": "The trivial script for confirming a fresh Python environment or harness runs at all, not a demonstration of the system doing a job."
+  },
+  "scripts/register_treasure_chunk.py": {
+    "primary": "knowledge-chunk-storage",
+    "secondary": "mapping-files-and-projects",
+    "kind": "stores",
+    "action": ["writes", "indexes"],
+    "why": "It creates a chunk file and updates the manifest index, which is the storage bookkeeping; the drive catalogue it registers is only its input."
+  }
+}

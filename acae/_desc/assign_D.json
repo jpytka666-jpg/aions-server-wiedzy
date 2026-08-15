@@ -1,0 +1,212 @@
+{
+  "aions_core/agi_learning.py": {
+    "primary": "reasoning-and-getting-better",
+    "secondary": null,
+    "kind": "stores",
+    "action": ["learns", "saves", "consolidates"],
+    "why": "It mines finished conversations for patterns and gaps to improve over time, rather than grading any single answer."
+  },
+  "aions_core/memory_graph_engine.py": {
+    "primary": "knowledge-chunk-storage",
+    "secondary": "finding-the-right-answer",
+    "kind": "stores",
+    "action": ["builds", "reads", "expands"],
+    "why": "It is the map of how stored concepts refer to each other, kept in its own JSON file, not the ranking of retrieved passages."
+  },
+  "aions_core/server/cbms_direct_server.py": {
+    "primary": "assistant-and-its-chat-servers",
+    "secondary": null,
+    "kind": "serves",
+    "action": ["listens", "routes", "answers"],
+    "why": "It is the listening front door on port 9000 that routes a question through math, chit-chat, memory and web, not any one of those components."
+  },
+  "aions_core/server/conversation_enhancer.py": {
+    "primary": "sounding-human",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["rewrites", "detects", "adapts"],
+    "why": "It only reshapes tone and phrasing of an already-settled reply, never judging whether the facts are supported."
+  },
+  "aions_core/server/conversation_memory.py": {
+    "primary": "sounding-human",
+    "secondary": "knowledge-chunk-storage",
+    "kind": "stores",
+    "action": ["logs", "summarizes", "recalls"],
+    "why": "Its point is conversational continuity across turns, with chunk writing only a side effect of rolling up summaries."
+  },
+  "aions_core/tools/bench_runner.py": {
+    "primary": "keeping-the-system-healthy",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["measures", "records", "reports"],
+    "why": "It fires the same queries fifty times to time p50/p95 of the live service, which is speed measurement rather than answer correctness."
+  },
+  "aions_core/tools/gsm8k_quick.py": {
+    "primary": "keeping-the-system-healthy",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["scores", "times", "compares"],
+    "why": "It benchmarks accuracy and latency of the running service on a standard maths set, not the design of any refusal or quality rule."
+  },
+  "aions_core/tools/query_db.py": {
+    "primary": "mapping-files-and-projects",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["queries", "counts", "prints"],
+    "why": "It interrogates the drive-scan database to report which folders hold the most files, a survey job rather than chunk bookkeeping itself."
+  },
+  "control_plane/__init__.py": {
+    "primary": "plans-steps-and-worker-machines",
+    "secondary": null,
+    "kind": "describes",
+    "action": ["marks", "declares"],
+    "why": "It is the package marker for the control plane coordination layer, so it belongs with the command centre and not with any single skill."
+  },
+  "control_plane/agents/agent_schema.py": {
+    "primary": "permissions-roles-and-new-abilities",
+    "secondary": null,
+    "kind": "describes",
+    "action": ["defines", "validates", "rejects"],
+    "why": "It pins down which skills a role may use and its risk ceiling, fail-closed, which is permission shape rather than day-to-day skill running."
+  },
+  "scripts/catalog_e_treasures.py": {
+    "primary": "mapping-files-and-projects",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["scans", "counts", "catalogs"],
+    "why": "It inventories data and backup folders across drives by file count and gigabytes, a disk survey rather than manifest upkeep."
+  },
+  "scripts/chatgpt_extractor.py": {
+    "primary": "importing-outside-content",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["parses", "extracts", "exports"],
+    "why": "It recovers conversations out of another application's cache into local files, which is intake of outside text, not scanning code on disk."
+  },
+  "scripts/demo_skill_live.py": {
+    "primary": "worked-examples-and-walkthroughs",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["demonstrates", "executes", "verifies"],
+    "why": "It is a runnable showcase proving recipe reuse end to end, not the registry and executor machinery it calls into."
+  },
+  "scripts/operator_profile_load.py": {
+    "primary": "personal-admin-and-calendar",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["locates", "reads", "returns"],
+    "why": "It loads the human owner's identity and preferences file, which is about the operator rather than environment paths or secrets."
+  },
+  "scripts/vault/seal_secret.py": {
+    "primary": "setup-environment-and-secrets",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["encrypts", "stores", "indexes"],
+    "why": "It locks API keys into a Windows-user-bound vault, which is credential protection, not permission checks on agent actions."
+  },
+  "aions_core/aions_smart_guardrail.py": {
+    "primary": "answer-quality-and-refusals",
+    "secondary": "finding-the-right-answer",
+    "kind": "checks",
+    "action": ["scores", "grounds", "refuses"],
+    "why": "Its output is either evidence or an explicit refusal, so the point is not inventing answers rather than ranking the best passage."
+  },
+  "aions_core/cbms_curve_machine.py": {
+    "primary": "reasoning-and-getting-better",
+    "secondary": "local-language-models",
+    "kind": "describes",
+    "action": ["registers", "composes", "emits"],
+    "why": "It declares kernels and composes them into retrieval, reasoning and backprop training graphs, which is thinking machinery rather than the day-to-day skill library."
+  },
+  "aions_core/server/cbms_unified_server.py": {
+    "primary": "assistant-and-its-chat-servers",
+    "secondary": null,
+    "kind": "serves",
+    "action": ["listens", "routes", "answers"],
+    "why": "It is the assembled chat endpoint wiring memory, facts, web and math together, not any single retrieval or wording component."
+  },
+  "aions_core/server/esperanto_bridge.py": {
+    "primary": "korean-symbolic-encoding",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["normalizes", "maps", "reverses"],
+    "why": "It rewrites Polish and English into a neutral middle language for symbolic indexing, the encoding scheme itself rather than the search that uses it."
+  },
+  "aions_core/server/math_solver.py": {
+    "primary": "assistant-and-its-chat-servers",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["detects", "parses", "computes"],
+    "why": "It is the arithmetic and word-problem solver the chat front door tries first, not a reasoning-and-learning component."
+  },
+  "aions_core/tools/web_crawler_import.py": {
+    "primary": "importing-outside-content",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["crawls", "splits", "saves"],
+    "why": "It walks websites and files the sentences as facts with search keys, which is intake, not the later searching over them."
+  },
+  "aions_core/verify_llama_cpp.py": {
+    "primary": "local-language-models",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["imports", "prints"],
+    "why": "It smoke-tests that the local model runtime library is installed, which is model machinery rather than general environment setup."
+  },
+  "control_plane/llm/__init__.py": {
+    "primary": "local-language-models",
+    "secondary": null,
+    "kind": "describes",
+    "action": ["documents", "marks"],
+    "why": "It documents the fast local model server channel and its fallback, so it sits with model loading and calling, not with plan dispatch."
+  },
+  "control_plane/node_dispatch.py": {
+    "primary": "plans-steps-and-worker-machines",
+    "secondary": null,
+    "kind": "connects",
+    "action": ["decides", "forwards", "returns"],
+    "why": "It picks between running a step here or on a remote node, which is fleet routing rather than whether the action is permitted."
+  },
+  "control_plane/orchestrator_loop.py": {
+    "primary": "assistant-and-its-chat-servers",
+    "secondary": "finding-the-right-answer",
+    "kind": "runs",
+    "action": ["understands", "retrieves", "answers"],
+    "why": "It is the top-level loop chaining mouth, retrieval gate and memory into one grounded answer, not one of those retrieval parts on its own."
+  },
+  "control_plane/skills/executor.py": {
+    "primary": "skills-library-and-running-tasks",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["resolves", "executes", "records"],
+    "why": "It chains skills and passes outputs forward, calling the gate rather than being the permission rules itself."
+  },
+  "control_plane/skills/mcp_bridge.py": {
+    "primary": "skills-library-and-running-tasks",
+    "secondary": "tool-server-plumbing",
+    "kind": "connects",
+    "action": ["exposes", "searches", "runs"],
+    "why": "It is the bridge offering the skill registry and recipes to outside tool clients, with hot rediscovery of skills as its main concern."
+  },
+  "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py": {
+    "primary": "desktop-and-file-finding",
+    "secondary": null,
+    "kind": "runs",
+    "action": ["clicks", "types", "captures"],
+    "why": "It actually drives screen, keyboard and windows across Windows and Linux, not the protocol layer that publishes those abilities."
+  },
+  "scripts/test_control_plane.py": {
+    "primary": "plans-steps-and-worker-machines",
+    "secondary": null,
+    "kind": "checks",
+    "action": ["plans", "executes", "probes"],
+    "why": "It exercises plan storage, step execution and a remote node's API, verifying the job pipeline rather than demonstrating desktop work."
+  },
+  "scripts/test_forge.py": {
+    "primary": "permissions-roles-and-new-abilities",
+    "secondary": "skills-library-and-running-tasks",
+    "kind": "checks",
+    "action": ["requests", "promotes", "cleans"],
+    "why": "It walks a new ability from request through build to promotion into the live registry, which is the approval pipeline rather than everyday skill use."
+  }
+}
