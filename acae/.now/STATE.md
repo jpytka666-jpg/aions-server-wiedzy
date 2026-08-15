@@ -1617,6 +1617,141 @@ lub `scripts/` uniewaznia korpus opisow. Pomiary ACAE trzeba robic na stanie rep
 przypietym do `pack_hash 6442322d...`, albo swiadomie przemrozic korpus od nowa
 i zaczac tabele porownawcza od zera.
 
+## 2026-08-15T22:20 — DIAGNOZA: pomylki sa SKUPIONE, nie rozrzucone
+
+Skrypt: `scripts/measure_confusion.py`. Nic nie buduje, tylko liczy. Pytanie Marcina:
+czy zle odpowiedzi biora sie z balaganu, czy z mylenia dziedzin (jego obraz: bibliotekarz
+nie odroznia oleju silnikowego od slonecznikowego).
+
+Dla kazdego pytania pozytywnego bierzemy czolowa dziesiatke obecnego najlepszego rankera
+(`embed_desc`) i patrzymy, z ilu ROZNYCH katalogow pochodzi. Katalog (dwa poziomy) jest
+tu przyblizeniem dziedziny.
+
+| | pytania UDANE (9) | pytania NIEUDANE (21) |
+|---|---|---|
+| roznych katalogow w czolowce, mediana | 3 | **2** |
+| ile z 10 z jednego katalogu, mediana | 5 | **8** |
+| wlasciwy katalog obecny w czolowce | **9 z 9** | **7 z 21** |
+
+**Wynik jest odwrotny do mojego oczekiwania i potwierdza hipoteze Marcina.** Przy porazce
+ranking jest BARDZIEJ skupiony, nie mniej: osiem z dziesieciu odpowiedzi z jednego
+katalogu — i w **14 z 21** przypadkow wlasciwy katalog nie pojawia sie w ogole.
+
+Przyklady skrajne:
+```
+d007  wszystkie 10 z control_plane/operator   ->  odpowiedz byla w scripts
+d009  wszystkie 10 z aions_core/server        ->  odpowiedz w mcpServers/VS_CODE_MCP_CODEX
+d010  wszystkie 10 z aions_core/tools         ->  odpowiedz w aions_core/server
+d022  wszystkie 10 z control_plane            ->  odpowiedz w mcpServers, pozycja 1127
+d026  wszystkie 10 z aions_core/server        ->  odpowiedz w scripts, pozycja 770
+```
+
+**To nie jest szum. To jest pewne siebie chodzenie na zla polke.** Blad uporzadkowany
+da sie naprawic kierowaniem; szumu nie.
+
+### Sufit tego kierunku, policzony teraz
+
+14 z 21 porazek to „zla polka" — te da sie w zasadzie uratowac routowaniem.
+Pozostale **7 z 21 to „dobra polka, zla ksiazka"** — tam samo zawezenie nie wystarczy.
+Czyli warstwa dziedzin adresuje najwyzej **dwie trzecie** dzisiejszych chybien.
+
+### Drugi wzorzec, widoczny golym okiem w tych samych danych
+
+Czterokrotnie powtarza sie ten sam ksztalt: **odpowiedz w `scripts`, ranker idzie
+w `aions_core/server`** (d001, d007, d025, d026). To nie jest pomylka co do TEMATU,
+tylko co do RODZAJU rzeczy: pytanie dotyczy czegos, co sie URUCHAMIA, a ranker podaje
+cos, co STOI I NASLUCHUJE. Odnotowuje jako kandydata na druga warstwe, po dziedzinach.
+
+## 2026-08-15T22:26 — PREREJESTRACJA M11: warstwa DZIEDZIN (routowanie do polki)
+
+### Skad sie bierze i czym rozni sie od M6
+
+M6 (`gate`) tez zawezal i przegral. Ale jego „zakresy" byly wyprowadzane ze STRUKTURY —
+wspolzmiennosci commitow i grafu wywolan — i zlepily sie w jedna kluche na 139 plikow
+ze 169. Bramka nie bramkowala. M9c powtorzyl go na opisach i bylo GORZEJ (mediana 157).
+
+M11 zmienia rzecz zasadnicza: **dziedziny sa PISANE po ludzku, nie wyliczane.**
+Ten sam ruch, ktory zadzialal przy opisach — nie licz tego, czego w repo nie ma, tylko
+to wytworz. Dziedzina moze przecinac katalogi i nie ma obowiazku pokrywac sie z drzewem.
+
+### Co powstaje
+
+Dwuetapowo, obie czesci pisane przez model, obie zamrozone i zacommitowane:
+
+1. **Lista dziedzin** — model dostaje wszystkie 169 opisow (zamrozony korpus
+   `cc54efc7...`) i proponuje dziedziny wraz z opisem kazdej: czym jest, jakimi slowami
+   czlowiek by o nia zapytal.
+2. **Przypisanie** — kazdy ze 169 plikow trafia do jednej lub kilku dziedzin.
+
+**KATEGORYCZNY ZAKAZ: model NIE oglada `acae/tests/`.** Ta sama regula co przy opisach
+i ten sam powod — inaczej piszemy sobie odpowiedzi do wlasnego egzaminu.
+
+Wyjscie: `_desc/domains.json` — dziedziny plus mapa plik -> dziedziny, z prowieniencja
+(model, data, `pack_hash`, hash korpusu opisow).
+
+### Jak sie tego uzywa przy zapytaniu
+
+Pytanie porownywane jest **z opisami DZIEDZIN**, nie z plikami — tym samym embeddingiem,
+ktory juz mamy. Wybieramy `TOP_DOMAINS` dziedzin. Ranking `embed_desc` biegnie potem
+WYLACZNIE po plikach z tych dziedzin. Sam ranker BEZ ZMIAN.
+
+**Fallback:** gdy zadna dziedzina nie zostanie wybrana — pelna przestrzen, jak w M6.
+Chroni recall i jest oznaczane w diagnostyce.
+
+### `TOP_DOMAINS` — dwa warianty, oba zadeklarowane TERAZ
+
+- **M11a `domain3`** — trzy dziedziny. Wartosc z precedensu: `TOP_SCOPES = 3` w M6.
+- **M11b `domain1`** — jedna dziedzina. Zawezenie maksymalne, drugi kraniec.
+
+**Trzeciej wartosci nie bedzie.**
+
+### WARUNEK KONIECZNY — nauczka z M6 i M10, zapisana PRZED pomiarem
+
+Dwa razy zbudowalem filtr, ktory nie filtrowal (M6: mediana 140/169 plikow,
+M10: 1429/1598 symboli), i dwa razy odczytalem z tego wnioski, ktorych ten pomiar
+nie uprawnial.
+
+Dlatego: **jesli mediana zawezenia zostawi wiecej niz POLOWE plikow (>= 85 ze 169),
+mechanizm uznaje za NIEURUCHOMIONY, a wynik za NIEINTERPRETOWALNY** — niezaleznie od
+tego, co pokaza pozostale liczby. Nie wolno wtedy napisac ani „zawezanie dziala",
+ani „zawezanie nie dziala".
+
+### KRYTERIUM PRZYJECIA — bez zmian, siedemnasty raz
+
+`recall@10` >= **34,6%** ORAZ `MRR` >= **0,172** ORAZ `neg/poz` <= **85,2%**.
+Wszystkie trzy naraz. Zbior roboczy 30+/6-.
+
+### WARUNEK WARTOSCI DODANEJ
+
+Musi pobic punkt wyjscia `embed_desc`: `recall@10` > 30,0% ALBO `neg/poz` < 97,7%.
+
+### DIAGNOSTYKA — obowiazkowa, trzy liczby
+
+1. `domain_files_median` — ile plikow zostaje po zawezeniu (patrz warunek konieczny).
+2. `domain_cut` — dla ilu pytan pozytywnych wlasciwy plik zostal WYCIETY.
+   Sufit z pomiaru 22:20 mowi, ze 14 z 21 porazek to zla polka; ta liczba powie,
+   ile z nich naprawilismy, a ile nowych zepsulismy.
+3. `domain_empty` — dla ilu pytan NEGATYWNYCH nie wybrano zadnej dziedziny.
+   Dzis system nie mowi „nie wiem" ani razu.
+
+### PRZEWIDYWANIA. Bilans: 1 na 15
+
+- **Zawezenie tym razem ZADZIALA** — mediana spadnie znacznie ponizej 85 plikow.
+  Opieram to na tym, ze dziedziny sa pisane, a nie zlepiane ze struktury.
+- **`recall@10` wzrosnie**, bo 14 z 21 porazek to zla polka.
+- **`domain_cut` bedzie niezerowy** — spodziewam sie 2-4 pytan, w ktorych zawezenie
+  wytnie wlasciwy plik. To jest cena kierowania i chce ja zobaczyc, a nie ukryc.
+- **`neg/poz` prawie sie nie ruszy.** Dziedzina zawsze jakas zostanie wybrana, wiec
+  odpowiedz i tak powstanie. „Nie wiem" wymaga warstwy „czym to NIE jest" — osobnej
+  i nierejestrowanej tutaj.
+
+Zapisuje takze kierunek zgloszony dzis przez Marcina, ktorego NIE mierze i ktory
+wymagalby wlasnej prerejestracji: **bibliotekarz, ktory pyta, gdy nie wie.** Warunkiem
+wstepnym jest umiejetnosc rozpoznania wlasnej niewiedzy — czyli dokladnie to, czego
+brakuje od szesnastu pomiarow. Wariant zachowujacy determinizm: pytac OFFLINE i zamrazac
+odpowiedz, tak jak zrobilismy z opisami. Wariant slabszy, ale tani: zapisywac pytania
+bez odpowiedzi jako liste dziur w bibliotece.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
