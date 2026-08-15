@@ -1689,6 +1689,13 @@ i ten sam powod — inaczej piszemy sobie odpowiedzi do wlasnego egzaminu.
 Wyjscie: `_desc/domains.json` — dziedziny plus mapa plik -> dziedziny, z prowieniencja
 (model, data, `pack_hash`, hash korpusu opisow).
 
+**LICZBA DZIEDZIN: 12-20, ustalona TERAZ, przed generowaniem.** Nie jest to pokretlo
+strojone na wyniku, tylko warunek arytmetyczny: przy 169 plikach daje 8-14 plikow na
+dziedzine, wiec przy `TOP_DOMAINS = 3` zawezenie wypada w okolicach 25-42 plikow —
+z zapasem ponizej progu 85 z warunku koniecznego. Gdyby dziedzin bylo 5, kazda mialaby
+po 34 pliki i trzy wybrane daly by 100+, czyli mechanizm bylby no-opem jeszcze przed
+pomiarem. Ta liczba jest wiec czescia konstrukcji, nie jej strojeniem.
+
 ### Jak sie tego uzywa przy zapytaniu
 
 Pytanie porownywane jest **z opisami DZIEDZIN**, nie z plikami — tym samym embeddingiem,
