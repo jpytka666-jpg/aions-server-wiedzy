@@ -438,6 +438,7 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
         "desc_zero_reached_25": 0, "desc_zero_ranks": [],
         "m9_zero_bucket": 0, "m9_zero_in_top25": 0,
         "verify_cut": 0, "verify_empty": 0, "verify_kept": [],
+        "domain_cut": 0, "domain_empty": 0, "domain_fallback": 0, "domain_files": [],
     }
     for q in queries:
         terms = query_terms(q["question"])
