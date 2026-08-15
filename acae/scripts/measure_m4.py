@@ -664,7 +664,9 @@ def main() -> int:
                  "gate", "embed", "embed_tie", "embed_borda", "desc",
                  # M9: cztery odrzucone mechanizmy powtorzone na korpusie opisow
                  "prf_desc", "embed_desc", "embed_desc_tie", "embed_desc_borda",
-                 "gate_desc", "graph_desc"),
+                 "gate_desc", "graph_desc",
+                 # M10: warunek dopuszczenia po rankingu embed_desc
+                 "verify1", "verify2"),
     )
     parser.add_argument("--set", dest="qset", default="dev", choices=tuple(SETS))
     parser.add_argument("--out", default=None)

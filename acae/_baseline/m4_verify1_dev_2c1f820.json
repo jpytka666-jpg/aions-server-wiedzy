@@ -1,0 +1,668 @@
+{
+  "depth": 25,
+  "descriptions": {
+    "batches": [
+      "desc_0.json",
+      "desc_1.json",
+      "desc_2.json",
+      "desc_3.json",
+      "desc_4.json",
+      "desc_5.json",
+      "desc_6.json",
+      "desc_7.json",
+      "desc_8.json",
+      "desc_9.json",
+      "desc_10.json",
+      "desc_11.json"
+    ],
+    "count": 169,
+    "generated_at": "2026-08-12T22:02:08+00:00",
+    "model": "claude-haiku-4-5-20251001",
+    "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db"
+  },
+  "head": "2c1f820",
+  "metrics": {
+    "counts": {
+      "negative": 6,
+      "positive": 30
+    },
+    "desc_zero_bucket": 0,
+    "desc_zero_nonzero": 0,
+    "desc_zero_rank_median": 0,
+    "desc_zero_reached_25": 0,
+    "gate_cut": 0,
+    "gate_fallback": 0,
+    "gate_size_median": 0,
+    "m7_zero_bucket": 0,
+    "m7_zero_rank_median": 0,
+    "m7_zero_reached_25": 0,
+    "m9_zero_bucket": 11,
+    "m9_zero_in_top25": 2,
+    "mean_top1_negative": 516,
+    "mean_top1_positive": 528,
+    "mrr_permille": 243,
+    "negative_ratio_permille": 977,
+    "recall_at_10_permille": 300,
+    "recall_at_25_permille": 366,
+    "verify_cut": 0,
+    "verify_empty": 0,
+    "verify_kept_median": 1429
+  },
+  "packages": {
+    "tiktoken": "0.13.0"
+  },
+  "per_query": [
+    {
+      "expansion": [
+        {
+          "candidates_after": 1546,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d001",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 579
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1298,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d002",
+      "kind": "positive",
+      "rank": 6,
+      "top1_score": 465
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1304,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d003",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 505
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1346,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d004",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 483
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1581,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d005",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": 617
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1504,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d006",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 487
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1203,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d007",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 560
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1372,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d008",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 397
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1383,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d009",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 498
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1521,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d010",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 634
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1004,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d011",
+      "kind": "positive",
+      "rank": 14,
+      "top1_score": 598
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1574,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d012",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 625
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1489,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d013",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 466
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 741,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d014",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 509
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1321,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d015",
+      "kind": "positive",
+      "rank": 13,
+      "top1_score": 495
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1581,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d016",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 663
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1450,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d017",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 563
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1421,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d018",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 701
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1521,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d019",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 450
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1153,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d020",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": 371
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1308,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d021",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 514
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1530,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d022",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 522
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1550,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d023",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 544
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1449,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d024",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 546
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1550,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d025",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 470
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1319,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d026",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 531
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1479,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d027",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 441
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1557,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d028",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 530
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 958,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d029",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 518
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1246,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d030",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 572
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1146,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "id": "d031",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 493
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1503,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "id": "d032",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 559
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1390,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "id": "d033",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 567
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1429,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "id": "d034",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 607
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 1548,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "id": "d035",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 461
+    },
+    {
+      "expansion": [
+        {
+          "candidates_after": 941,
+          "candidates_before": 1598,
+          "min_terms": 1,
+          "note": "symbol dopuszczony przy >= 1 terminach obecnych doslownie",
+          "rule": "lexical_admission"
+        }
+      ],
+      "id": "d036",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 409
+    }
+  ],
+  "question_set": {
+    "content_hash": "blake2b256:278f2dc2b92fd4573bdbd3ae37bbc690d5a59ab0fc0d78af5ade6ad97dded4da",
+    "file": "dev_questions.json",
+    "name": "dev"
+  },
+  "result_hash": "blake2b256:2c73d028099ada3a958395251ebeae60ad6199aa1c4c422abb3c5d7c0cf7e01e",
+  "schema": "acae.m4.v1",
+  "scope": {
+    "files": 169,
+    "symbols": 1598
+  },
+  "variant": "verify1"
+}
