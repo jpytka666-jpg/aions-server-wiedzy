@@ -1861,6 +1861,104 @@ Regresja: `pytest` 215 zielonych, `baseline` 26,6/36,6/0,172/85,2, `embed_desc`
 30,0/36,6/0,243/97,7 — oba odtworzone co do cyfry. Poprawka echa cofnieta na czas
 pomiaru i przywrocona po nim (`git checkout 299411d`).
 
+## 2026-08-15T23:15 — STAN SZTUKI: to nie jest nowy problem i ma nazwe
+
+Sprawdzone na zadanie Marcina, PRZED zbudowaniem czegokolwiek.
+
+To, co robimy od M11, nazywa sie w literaturze **collection selection** (albo shard
+selection / query routing): dzielimy zbior na czesci i kierujemy zapytanie tylko do tych,
+w ktorych prawdopodobnie lezy odpowiedz. Klasyczne algorytmy to **CORI** (Callan i in.,
+lata 90., podejscie leksykalne) i **ReDDE** (podejscie oparte na probkowaniu).
+
+**Pomysl Marcina z wieza Babel — „slowo z jednej dziedziny slychac tylko w tej dziedzinie" —
+jest DOKLADNIE skladnikiem `ICF` w CORI.** `ICF` to odwrotna czestosc kolekcyjna:
+
+    icf_i = log((|C| + 0.5) / cf_i) / log(|C| + 1.0)
+
+gdzie `cf_i` to liczba kolekcji zawierajacych termin. Termin obecny w niewielu kolekcjach
+daje wysokie `ICF` i mocno wskazuje kolekcje; termin obecny prawie wszedzie daje `ICF`
+bliskie zeru i nie wnosi nic. To jest to samo zdanie, ktore Marcin powiedzial obrazem
+o chinskich paleczkach, tylko zapisane trzydziesci lat wczesniej.
+
+### Co z tego BIERZEMY, a czego NIE
+
+**Bierzemy zasade:** waga slowa rosnie, gdy nalezy do malej liczby dziedzin.
+
+**NIE bierzemy wzoru CORI.** Ma wbudowane stale `d_t = 0.4` i `d_b = 0.4`, a praca
+„Is CORI Effective for Collection Selection?" (ADCS 2004) pokazala, ze wynik jest na te
+stale bardzo czuly, a przy `b = 1.0` CORI sprowadza sie po prostu do liczenia wspolnych
+terminow. Stale dobrane na cudzych zbiorach sa dokladnie tym pokretlem, ktorego ta
+metodologia zabrania. Wolimy wersje bez ani jednej takiej stalej.
+
+Odnotowuje tez, ze istnieje bliska praca „Collection Selection with Highly Discriminative
+Keys" (Hiemstra) — czyli dobor **kluczy odrozniajacych** dla kolekcji, co jest wprost
+odpowiednikiem „karteczki chochlika".
+
+## 2026-08-15T23:15 — PREREJESTRACJA M12: routing leksykalny po slowach odrozniajacych
+
+### Co konkretnie naprawia
+
+M11 przegral z jednego powodu, nazwanego w jego wpisie: **router wybieral polke tym samym
+embeddingiem, ktory te polki myli.** Pomiar to potwierdzil — wlasciwa dziedzina trafiala
+do pierwszej trojki tylko w 12 z 30 pytan.
+
+M12 zmienia **DOKLADNIE JEDNA RZECZ: narzedzie routingu.** Dziedziny, przypisania,
+ranking `embed_desc`, `TOP_DOMAINS` — wszystko bez ruchu. Dzieki temu roznica wobec M11
+jest przypisywalna wylacznie zmianie routera, a nie czemukolwiek innemu.
+
+### Konstrukcja
+
+**Karteczki.** Kazda z 20 dziedzin dostaje pisana liste slow, na ktore ma sie odezwac.
+Slowa dobierane pod **ODROZNIANIE**, nie pod opisywanie — to inne zadanie niz streszczanie
+i tak zostanie modelowi postawione. Model widzi wszystkie 20 opisow naraz, zeby moc
+wybierac slowa rozlaczne. **Zakaz ogladania `acae/tests/`** jak zawsze.
+
+**Glosowanie.** Termin zapytania glosuje na kazda dziedzine, ktora ma go na karteczce,
+z waga zalezna od tego, na ilu karteczkach w ogole wystepuje:
+
+    waga = LICZBA_DZIEDZIN // liczba_dziedzin_z_tym_slowem
+
+Arytmetyka calkowita, bez floatow. Slowo na jednej karteczce wazy 20, na dwoch 10,
+na dziesieciu 2, na wszystkich 1. **Zero progow, zero stalych do dobrania.**
+
+**Cisza.** Gdy zadne slowo zapytania nie pada na zadnej karteczce, nie ma glosow —
+fallback na pelna przestrzen, odnotowany w diagnostyce jako `imp_silent`. Dla pytan
+NEGATYWNYCH ta liczba jest wprost odpowiedzia na „czy system umie powiedziec nie wiem".
+
+### Warianty: `imp3` i `imp1`
+
+Te same wartosci co w M11 (3 i 1), zeby porownanie bylo jeden do jednego.
+**Trzeciej wartosci nie bedzie.**
+
+### KRYTERIUM PRZYJECIA — bez zmian, dziewietnasty raz
+
+`recall@10` >= **34,6%** ORAZ `MRR` >= **0,172** ORAZ `neg/poz` <= **85,2%**.
+
+### WARUNEK WARTOSCI DODANEJ — dwustopniowy, bo tu porownujemy dwie rzeczy
+
+1. Wobec M11 (izolacja zmiany): `domain_cut` musi spasc **ponizej 18 z 30**.
+   Bez tego zmiana routera nic nie dala i cala hipoteza upada, niezaleznie od reszty.
+2. Wobec punktu wyjscia `embed_desc`: `recall@10` > 30,0% ALBO `neg/poz` < 97,7%.
+
+### WARUNEK KONIECZNY — jak w M11
+
+Jesli `domain_files_median` >= 85 ze 169, mechanizm jest NIEURUCHOMIONY, a wynik
+NIEINTERPRETOWALNY. (W M11 wyszlo 29 i 9, wiec ryzyko jest male, ale zapis zostaje.)
+
+### PRZEWIDYWANIA. Bilans: 3 trafione na 19
+
+- **`domain_cut` spadnie** — ale nie wiem o ile. Stawiam, ze ponizej 18, czyli warunek
+  pierwszy bedzie spelniony.
+- **`recall@10` wzrosnie wobec M11 (23,3%)**, ale **NIE dobije do 34,6%**.
+- **`imp_silent` bedzie niezerowy na negatywach** i to bedzie najciekawsza liczba
+  tego etapu — pierwszy raz mielibysmy mechanizm, ktory potrafi zamilknac.
+- **Kryterium jako calosc NIE zostanie spelnione.**
+
+Zapisuje to ostatnie zdanie swiadomie po wczorajszym, gdy postawilem na sukces i przegralem.
+Nie zmieniam jednak zdania z powodu wstydu: zmieniam je, bo M11 pokazal, ze routing trafia
+w dobra polke w 12 z 30 przypadkow, a poprawa narzedzia musialaby byc ogromna, zeby
+z tego zrobic 34,6% skutecznosci calosci.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
