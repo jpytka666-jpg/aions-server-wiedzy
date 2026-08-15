@@ -57,7 +57,8 @@ def katalog(sciezka: str, poziomy: int = 2) -> str:
 
 
 def main():
-    root = pathlib.Path("..").resolve()
+    # Uruchamiane z korzenia repo, jak `measure_prose_ceiling.py`.
+    root = pathlib.Path(".").resolve()
     cfg = tomllib.load(open(ACAE / "config" / "acae.toml", "rb"))
     loc = FsLocator(
         root=str(root), roots=cfg["pack"]["roots"],
