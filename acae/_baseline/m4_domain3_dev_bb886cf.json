@@ -1,0 +1,1140 @@
+{
+  "depth": 25,
+  "descriptions": {
+    "batches": [
+      "desc_0.json",
+      "desc_1.json",
+      "desc_2.json",
+      "desc_3.json",
+      "desc_4.json",
+      "desc_5.json",
+      "desc_6.json",
+      "desc_7.json",
+      "desc_8.json",
+      "desc_9.json",
+      "desc_10.json",
+      "desc_11.json"
+    ],
+    "count": 169,
+    "generated_at": "2026-08-12T22:02:08+00:00",
+    "model": "claude-haiku-4-5-20251001",
+    "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db"
+  },
+  "head": "bb886cf",
+  "metrics": {
+    "counts": {
+      "negative": 6,
+      "positive": 30
+    },
+    "desc_zero_bucket": 0,
+    "desc_zero_nonzero": 0,
+    "desc_zero_rank_median": 0,
+    "desc_zero_reached_25": 0,
+    "domain_cut": 18,
+    "domain_empty": 0,
+    "domain_fallback": 0,
+    "domain_files_median": 29,
+    "gate_cut": 0,
+    "gate_fallback": 0,
+    "gate_size_median": 0,
+    "m7_zero_bucket": 0,
+    "m7_zero_rank_median": 0,
+    "m7_zero_reached_25": 0,
+    "m9_zero_bucket": 11,
+    "m9_zero_in_top25": 0,
+    "mean_top1_negative": 493,
+    "mean_top1_positive": 500,
+    "mrr_permille": 178,
+    "negative_ratio_permille": 986,
+    "recall_at_10_permille": 233,
+    "recall_at_25_permille": 300,
+    "verify_cut": 0,
+    "verify_empty": 0,
+    "verify_kept_median": 0
+  },
+  "packages": {
+    "tiktoken": "0.13.0"
+  },
+  "per_query": [
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "korean-symbolic-encoding",
+              "permille": 534
+            },
+            {
+              "id": "meaning-database-and-sessions",
+              "permille": 506
+            },
+            {
+              "id": "worked-examples-and-walkthroughs",
+              "permille": 491
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 30,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d001",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 511
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "meaning-database-and-sessions",
+              "permille": 461
+            },
+            {
+              "id": "worked-examples-and-walkthroughs",
+              "permille": 453
+            },
+            {
+              "id": "local-language-models",
+              "permille": 452
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 31,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d002",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 407
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "setup-environment-and-secrets",
+              "permille": 543
+            },
+            {
+              "id": "permissions-roles-and-new-abilities",
+              "permille": 534
+            },
+            {
+              "id": "skills-library-and-running-tasks",
+              "permille": 519
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 30,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d003",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 493
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "korean-symbolic-encoding",
+              "permille": 592
+            },
+            {
+              "id": "worked-examples-and-walkthroughs",
+              "permille": 416
+            },
+            {
+              "id": "meaning-database-and-sessions",
+              "permille": 405
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 30,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d004",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 462
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "assistant-and-its-chat-servers",
+              "permille": 571
+            },
+            {
+              "id": "local-language-models",
+              "permille": 501
+            },
+            {
+              "id": "keeping-the-system-healthy",
+              "permille": 488
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 25,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d005",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": 617
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "permissions-roles-and-new-abilities",
+              "permille": 476
+            },
+            {
+              "id": "tool-server-plumbing",
+              "permille": 443
+            },
+            {
+              "id": "plans-steps-and-worker-machines",
+              "permille": 439
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 31,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d006",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 444
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "plans-steps-and-worker-machines",
+              "permille": 609
+            },
+            {
+              "id": "keeping-the-system-healthy",
+              "permille": 545
+            },
+            {
+              "id": "worked-examples-and-walkthroughs",
+              "permille": 500
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 28,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d007",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 560
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "knowledge-chunk-storage",
+              "permille": 479
+            },
+            {
+              "id": "setup-environment-and-secrets",
+              "permille": 441
+            },
+            {
+              "id": "importing-outside-content",
+              "permille": 425
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 26,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d008",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 341
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "finding-the-right-answer",
+              "permille": 573
+            },
+            {
+              "id": "meaning-database-and-sessions",
+              "permille": 512
+            },
+            {
+              "id": "knowledge-chunk-storage",
+              "permille": 436
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 36,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d009",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 498
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "desktop-and-file-finding",
+              "permille": 547
+            },
+            {
+              "id": "importing-outside-content",
+              "permille": 528
+            },
+            {
+              "id": "worked-examples-and-walkthroughs",
+              "permille": 498
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 21,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d010",
+      "kind": "positive",
+      "rank": 18,
+      "top1_score": 634
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "setup-environment-and-secrets",
+              "permille": 514
+            },
+            {
+              "id": "permissions-roles-and-new-abilities",
+              "permille": 464
+            },
+            {
+              "id": "tool-server-plumbing",
+              "permille": 437
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 28,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d011",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 466
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "personal-admin-and-calendar",
+              "permille": 656
+            },
+            {
+              "id": "meaning-database-and-sessions",
+              "permille": 524
+            },
+            {
+              "id": "skills-library-and-running-tasks",
+              "permille": 491
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 34,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d012",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 625
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "worked-examples-and-walkthroughs",
+              "permille": 601
+            },
+            {
+              "id": "plans-steps-and-worker-machines",
+              "permille": 527
+            },
+            {
+              "id": "skills-library-and-running-tasks",
+              "permille": 513
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 33,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d013",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 456
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "permissions-roles-and-new-abilities",
+              "permille": 391
+            },
+            {
+              "id": "keeping-the-system-healthy",
+              "permille": 356
+            },
+            {
+              "id": "answer-quality-and-refusals",
+              "permille": 339
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 25,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d014",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 509
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "permissions-roles-and-new-abilities",
+              "permille": 478
+            },
+            {
+              "id": "setup-environment-and-secrets",
+              "permille": 471
+            },
+            {
+              "id": "meaning-database-and-sessions",
+              "permille": 469
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 32,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d015",
+      "kind": "positive",
+      "rank": 5,
+      "top1_score": 455
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "worked-examples-and-walkthroughs",
+              "permille": 508
+            },
+            {
+              "id": "plans-steps-and-worker-machines",
+              "permille": 488
+            },
+            {
+              "id": "local-language-models",
+              "permille": 481
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 28,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d016",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 527
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "meaning-database-and-sessions",
+              "permille": 433
+            },
+            {
+              "id": "korean-symbolic-encoding",
+              "permille": 411
+            },
+            {
+              "id": "finding-the-right-answer",
+              "permille": 395
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 34,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d017",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 553
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "plans-steps-and-worker-machines",
+              "permille": 503
+            },
+            {
+              "id": "meaning-database-and-sessions",
+              "permille": 501
+            },
+            {
+              "id": "answer-quality-and-refusals",
+              "permille": 491
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 32,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d018",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 591
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "answer-quality-and-refusals",
+              "permille": 575
+            },
+            {
+              "id": "keeping-the-system-healthy",
+              "permille": 550
+            },
+            {
+              "id": "reasoning-and-getting-better",
+              "permille": 532
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 27,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d019",
+      "kind": "positive",
+      "rank": 11,
+      "top1_score": 450
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "keeping-the-system-healthy",
+              "permille": 515
+            },
+            {
+              "id": "plans-steps-and-worker-machines",
+              "permille": 454
+            },
+            {
+              "id": "worked-examples-and-walkthroughs",
+              "permille": 417
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 28,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d020",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": 371
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "local-language-models",
+              "permille": 576
+            },
+            {
+              "id": "keeping-the-system-healthy",
+              "permille": 552
+            },
+            {
+              "id": "plans-steps-and-worker-machines",
+              "permille": 546
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 27,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d021",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 514
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "local-language-models",
+              "permille": 501
+            },
+            {
+              "id": "meaning-database-and-sessions",
+              "permille": 413
+            },
+            {
+              "id": "keeping-the-system-healthy",
+              "permille": 411
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 30,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d022",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 501
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "meaning-database-and-sessions",
+              "permille": 489
+            },
+            {
+              "id": "mapping-files-and-projects",
+              "permille": 480
+            },
+            {
+              "id": "knowledge-chunk-storage",
+              "permille": 477
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 34,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d023",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 544
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "reasoning-and-getting-better",
+              "permille": 576
+            },
+            {
+              "id": "local-language-models",
+              "permille": 574
+            },
+            {
+              "id": "worked-examples-and-walkthroughs",
+              "permille": 558
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 28,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d024",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 523
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "meaning-database-and-sessions",
+              "permille": 446
+            },
+            {
+              "id": "assistant-and-its-chat-servers",
+              "permille": 422
+            },
+            {
+              "id": "sounding-human",
+              "permille": 406
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 29,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d025",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 470
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "assistant-and-its-chat-servers",
+              "permille": 416
+            },
+            {
+              "id": "worked-examples-and-walkthroughs",
+              "permille": 414
+            },
+            {
+              "id": "local-language-models",
+              "permille": 413
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 26,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d026",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 468
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "knowledge-chunk-storage",
+              "permille": 454
+            },
+            {
+              "id": "worked-examples-and-walkthroughs",
+              "permille": 426
+            },
+            {
+              "id": "importing-outside-content",
+              "permille": 416
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 27,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d027",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 441
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "personal-admin-and-calendar",
+              "permille": 583
+            },
+            {
+              "id": "meaning-database-and-sessions",
+              "permille": 473
+            },
+            {
+              "id": "setup-environment-and-secrets",
+              "permille": 454
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 29,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d028",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 530
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "setup-environment-and-secrets",
+              "permille": 524
+            },
+            {
+              "id": "permissions-roles-and-new-abilities",
+              "permille": 508
+            },
+            {
+              "id": "answer-quality-and-refusals",
+              "permille": 473
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 25,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d029",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 518
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "setup-environment-and-secrets",
+              "permille": 492
+            },
+            {
+              "id": "local-language-models",
+              "permille": 454
+            },
+            {
+              "id": "tool-server-plumbing",
+              "permille": 453
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 26,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d030",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 528
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "keeping-the-system-healthy",
+              "permille": 347
+            },
+            {
+              "id": "mapping-files-and-projects",
+              "permille": 337
+            },
+            {
+              "id": "setup-environment-and-secrets",
+              "permille": 332
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 25,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "id": "d031",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 493
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "assistant-and-its-chat-servers",
+              "permille": 557
+            },
+            {
+              "id": "local-language-models",
+              "permille": 536
+            },
+            {
+              "id": "skills-library-and-running-tasks",
+              "permille": 532
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 30,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "id": "d032",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 485
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "tool-server-plumbing",
+              "permille": 371
+            },
+            {
+              "id": "meaning-database-and-sessions",
+              "permille": 370
+            },
+            {
+              "id": "worked-examples-and-walkthroughs",
+              "permille": 356
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 33,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "id": "d033",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 501
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "assistant-and-its-chat-servers",
+              "permille": 520
+            },
+            {
+              "id": "keeping-the-system-healthy",
+              "permille": 484
+            },
+            {
+              "id": "sounding-human",
+              "permille": 472
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 23,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "id": "d034",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 607
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "korean-symbolic-encoding",
+              "permille": 425
+            },
+            {
+              "id": "local-language-models",
+              "permille": 382
+            },
+            {
+              "id": "desktop-and-file-finding",
+              "permille": 376
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 21,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "id": "d035",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 461
+    },
+    {
+      "expansion": [
+        {
+          "domains": [
+            {
+              "id": "worked-examples-and-walkthroughs",
+              "permille": 435
+            },
+            {
+              "id": "plans-steps-and-worker-machines",
+              "permille": 428
+            },
+            {
+              "id": "skills-library-and-running-tasks",
+              "permille": 403
+            }
+          ],
+          "fallback": false,
+          "files_in_scope": 33,
+          "note": "pytanie porownane z opisami dziedzin, wybrano 3",
+          "rule": "domain_routing"
+        }
+      ],
+      "id": "d036",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 413
+    }
+  ],
+  "question_set": {
+    "content_hash": "blake2b256:278f2dc2b92fd4573bdbd3ae37bbc690d5a59ab0fc0d78af5ade6ad97dded4da",
+    "file": "dev_questions.json",
+    "name": "dev"
+  },
+  "result_hash": "blake2b256:c6c12f8b872b9c97d7b3722c2834a8f4d19f282f5de5b2a0ce2ed4e5e3e5569a",
+  "schema": "acae.m4.v1",
+  "scope": {
+    "files": 169,
+    "symbols": 1598
+  },
+  "variant": "domain3"
+}

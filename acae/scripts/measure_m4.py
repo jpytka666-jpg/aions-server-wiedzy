@@ -709,7 +709,9 @@ def main() -> int:
                  "prf_desc", "embed_desc", "embed_desc_tie", "embed_desc_borda",
                  "gate_desc", "graph_desc",
                  # M10: warunek dopuszczenia po rankingu embed_desc
-                 "verify1", "verify2"),
+                 "verify1", "verify2",
+                 # M11: warstwa dziedzin — najpierw polka, potem ksiazka
+                 "domain3", "domain1"),
     )
     parser.add_argument("--set", dest="qset", default="dev", choices=tuple(SETS))
     parser.add_argument("--out", default=None)
