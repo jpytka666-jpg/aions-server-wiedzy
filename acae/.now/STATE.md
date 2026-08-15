@@ -1759,6 +1759,108 @@ brakuje od szesnastu pomiarow. Wariant zachowujacy determinizm: pytac OFFLINE i 
 odpowiedz, tak jak zrobilismy z opisami. Wariant slabszy, ale tani: zapisywac pytania
 bez odpowiedzi jako liste dziur w bibliotece.
 
+## 2026-08-15T23:07 — M11: ODRZUCONY. Ale PIERWSZY RAZ zawezenie faktycznie zawezilo.
+
+Pomiary: `_baseline/m4_domain3_dev_bb886cf.json`, `m4_domain1_dev_bb886cf.json`.
+Artefakt: `_desc/domains.json` — 20 dziedzin, 169 przypisan, `claude-opus-5`.
+Zbior roboczy 30+/6-, held-out NIETKNIETY.
+
+| wariant | recall@10 | recall@25 | MRR | neg/poz | werdykt |
+|---|---|---|---|---|---|
+| `embed_desc` (punkt wyjscia) | 30,0% | 36,6% | 0,243 | 97,7% | — |
+| **M11a `domain3`** | 23,3% | 30,0% | 0,178 | 98,6% | ODRZUCONY |
+| **M11b `domain1`** | 23,3% | 26,6% | 0,164 | 94,2% | ODRZUCONY |
+
+Siedemnasty i osiemnasty pomiar. Oba gorsze od punktu wyjscia na `recall@10`.
+
+### WARUNEK KONIECZNY — po raz pierwszy SPELNIONY
+
+| | domain3 | domain1 | prog niezadzialania |
+|---|---|---|---|
+| `domain_files_median` | **29 ze 169** | **9 ze 169** | >= 85 |
+
+M6 zostawial 140 ze 169, M9c 157, M10 1429 z 1598 symboli. **Tym razem mechanizm
+naprawde sie uruchomil** i wynik JEST interpretowalny. To jest jedyny powod, dla ktorego
+mozna z tego pomiaru cokolwiek wyczytac.
+
+### DLACZEGO PRZEGRAL — i to nie jest wina dziedzin
+
+| | domain3 | domain1 |
+|---|---|---|
+| `domain_cut` | **18 z 30** | **22 z 30** |
+| `domain_empty` | 0 z 6 | 0 z 6 |
+
+Zawezenie wycina wlasciwy plik w 60% pytan przy trzech dziedzinach i w 73% przy jednej.
+Ryzyko nazwane w prerejestracji („jesli pytanie trafi do zlego dzialu, ksiazki nie
+znajdziemy w ogole") zrealizowalo sie w skali, ktorej nie przewidzialem — zakladalem
+2-4 przypadki, wyszlo 18.
+
+### Pomiar rozstrzygajacy: routing czy dziedziny?
+
+Dla kazdego pytania sprawdzilem, na ktorej pozycji router stawia dziedzine, w ktorej
+NAPRAWDE lezy odpowiedz (na 20 dziedzin):
+
+| | ile z 30 |
+|---|---|
+| wlasciwa dziedzina w pierwszej trojce | **12** |
+| wlasciwa dziedzina w pierwszej szostce | 17 |
+| mediana pozycji wlasciwej dziedziny | **6 z 20** |
+
+Losowo bylaby mediana 10 i okolo 4-5 trafien w trojce. Router jest wiec **lepszy od
+przypadku, ale nierzetelny**: trafia za pierwszym podejsciem w 12 z 30 pytan.
+
+**Dziedziny sa dobre.** Tam, gdzie router trafia, trafia w rzeczy oczywiste i czytelne
+dla czlowieka: `personal-admin-and-calendar`, `keeping-the-system-healthy`,
+`setup-environment-and-secrets`. Struktura polek nie jest problemem.
+
+### BLAD KONSTRUKCYJNY, ktory teraz widze jasno
+
+Pomiar z 22:20 mowil: **ranker pewnym krokiem idzie na zla polke**. Zbudowalem wiec
+warstwe wybierajaca polke — i kazalem jej wybierac **tym samym embeddingiem**, ktory
+te zla polke wybiera.
+
+Wiec router chodzi tam, gdzie ranker i tak by poszedl. Roznica polega tylko na tym,
+ze wczesniej wlasciwa odpowiedz lezala nisko (pozycja 40-800), a teraz jest **wycieta
+calkowicie**. Zamienilem bledna kolejnosc na bledna nieodwracalnie.
+
+To jest ta sama klasa bledu co przy M10: skopiowalem KSZTALT rozwiazania, nie zmieniajac
+NARZEDZIA, ktore jest zepsute. Tam liczylem slowa tam, gdzie AIONS liczy swiadectwa.
+Tu wybieram polke tym, co polki myli.
+
+### Czego ten pomiar NIE rozstrzyga
+
+**Nie rozstrzyga, czy kierowanie do dziedziny jest zlym pomyslem.** Rozstrzyga, ze
+kierowanie NIE MOZE isc po tym samym podobienstwie, co ranking. Twierdzenie „warstwa
+dziedzin nie dziala" nie ma pokrycia w tym pomiarze i nie wolno go zapisac jako wniosku.
+
+Nie stroje `TOP_DOMAINS` na 6, mimo ze mediana 6 az sie o to prosi. To byloby dobranie
+progu po zobaczeniu wyniku i uniewaznilo by cala prerejestracje. Zgodnie z zapisem —
+trzeciej wartosci nie ma.
+
+### BILANS PRZEWIDYWAN: 2 z 4
+
+| przewidywalem | wyszlo |
+|---|---|
+| zawezenie zadziala, mediana ponizej 85 | **TAK** — 29 i 9 |
+| `recall@10` wzrosnie | **NIE** — spadl z 30,0% na 23,3% |
+| `domain_cut` 2-4 | **NIE** — 18 i 22 |
+| `neg/poz` sie nie ruszy | TAK — 97,7% -> 98,6% i 94,2% |
+
+### CO Z TEGO WYNIKA NA NASTEPNY KROK
+
+Artefakt `_desc/domains.json` **zostaje i jest dobry** — 20 czytelnych polek, po 6-14
+plikow, kazda ksiazka ma miejsce. Problemem jest wylacznie **czym wybieramy polke**.
+
+Kandydat zgloszony przez Marcina tego samego wieczoru, teraz z konkretnym uzasadnieniem
+z pomiaru: **kazda ksiazka (albo dziedzina) dostaje wypisana liste slow, na ktore ma sie
+odezwac** — pisana, wybrana pod ODROZNIANIE, a nie pod opisywanie. Router leksykalny
+po takich listach jest narzedziem INNYM niz embedding, wiec nie odziedziczy jego bledu.
+Wymaga wlasnej prerejestracji.
+
+Regresja: `pytest` 215 zielonych, `baseline` 26,6/36,6/0,172/85,2, `embed_desc`
+30,0/36,6/0,243/97,7 — oba odtworzone co do cyfry. Poprawka echa cofnieta na czas
+pomiaru i przywrocona po nim (`git checkout 299411d`).
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
