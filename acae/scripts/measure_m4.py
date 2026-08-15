@@ -688,6 +688,13 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             sorted(diagnostyka["verify_kept"])[len(diagnostyka["verify_kept"]) // 2]
             if diagnostyka["verify_kept"] else 0
         ),
+        "domain_cut": diagnostyka["domain_cut"],
+        "domain_empty": diagnostyka["domain_empty"],
+        "domain_fallback": diagnostyka["domain_fallback"],
+        "domain_files_median": (
+            sorted(diagnostyka["domain_files"])[len(diagnostyka["domain_files"]) // 2]
+            if diagnostyka["domain_files"] else 0
+        ),
         "per_query": per_query,
     }
 
