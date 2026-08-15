@@ -476,6 +476,40 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             elif q["kind"] == "positive" and not (set(q["answer_files"]) & pliki):
                 # Warunek diagnostyczny (propozycja GPT): bramka wyciela wlasciwy plik.
                 diagnostyka["gate_cut"] += 1
+        elif variant in ("domain3", "domain1"):
+            # M11: najpierw POLKA, potem ksiazka. Ranking `embed_desc` BEZ ZMIAN,
+            # tylko biegnie po plikach wybranych dziedzin. Pytanie porownywane jest
+            # wylacznie z opisami dziedzin — kod nie jest na tym etapie dotykany.
+            top = 3 if variant == "domain3" else 1
+            index = ctx["embed"]
+            pliki, wybrane = ctx["domain_index"].files(q["question"], top)
+            fallback = not pliki
+            if fallback:
+                diagnostyka["domain_fallback"] += 1
+
+            sims = index.scores(q["question"])
+            numery, _ = _order(index, sims)
+            if not fallback:
+                numery = [i for i in numery if index.items[i][0] in pliki]
+            ranked = _pack(index, numery, sims, depth)
+            diagnostyka["domain_files"].append(len(entries) if fallback else len(pliki))
+            receipts = [{
+                "rule": "domain_routing",
+                "note": f"pytanie porownane z opisami dziedzin, wybrano {top}",
+                "domains": [{"id": d, "permille": w} for d, w in wybrane],
+                "files_in_scope": len(entries) if fallback else len(pliki),
+                "fallback": fallback,
+            }]
+
+            # WARUNEK DIAGNOSTYCZNY M11 (prerejestracja 2026-08-15T22:26).
+            # `domain_cut` — ile razy zawezenie wycielo WLASCIWY plik. To jest cena
+            # kierowania i ma byc widoczna, a nie schowana.
+            # `domain_empty` — ile pytan NEGATYWNYCH nie trafilo do zadnej dziedziny.
+            if q["kind"] == "positive":
+                if not fallback and not (set(q["answer_files"]) & pliki):
+                    diagnostyka["domain_cut"] += 1
+            elif fallback:
+                diagnostyka["domain_empty"] += 1
         elif variant in ("verify1", "verify2"):
             # M10: ranking `embed_desc` BEZ ZMIAN, po nim twardy warunek dopuszczenia.
             # Filtr moze tylko usuwac — kolejnosc pozostaje ta, ktora nadal ranker.
