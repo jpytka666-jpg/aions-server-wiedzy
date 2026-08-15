@@ -1522,6 +1522,101 @@ Moj bilans przewidywan mechanizmow to **0 na 14**; przewidywalem porazke czterna
 i czternascie razy mialem racje, co nie jest umiejetnoscia. Pierwszy raz stawiam
 na sukces i pierwszy raz naprawde nie wiem.
 
+## 2026-08-15T21:46 — M10: ODRZUCONY, oba warianty. Filtr nie filtruje.
+
+Pomiary: `_baseline/m4_verify1_dev_2c1f820.json`, `m4_verify2_dev_2c1f820.json`.
+Zbior roboczy 30+/6-, held-out NIETKNIETY, korpus opisow bez zmian (`cc54efc7...`).
+
+| wariant | recall@10 | recall@25 | MRR | neg/poz | werdykt |
+|---|---|---|---|---|---|
+| `embed_desc` (punkt wyjscia) | 30,0% | 36,6% | 0,243 | 97,7% | — |
+| **M10a `verify1`** (MIN_TERMS=1) | 30,0% | 36,6% | 0,243 | **97,7%** | ODRZUCONY |
+| **M10b `verify2`** (MIN_TERMS=2) | 30,0% | 36,6% | 0,242 | **97,5%** | ODRZUCONY |
+
+Oba nie spelniaja dwoch z trzech warunkow. **Pietnasty i szesnasty pomiar, dwa kolejne
+odrzucenia.** Zgodnie z prerejestracja: trzeciej wartosci `MIN_TERMS` NIE BEDZIE,
+kierunek „twardy warunek dopuszczenia" w TEJ konstrukcji jest zamkniety.
+
+### WARUNEK DIAGNOSTYCZNY — odpowiedzial jednoznacznie
+
+| pomiar | verify1 | verify2 | co znaczy |
+|---|---|---|---|
+| `verify_kept_median` | **1429 z 1598** | **897 z 1598** | filtr przepuszcza 89% / 56% wszystkiego |
+| `verify_empty` | **0 z 6** | **0 z 6** | ANI RAZU nie powiedzial „nie wiem" |
+| `verify_cut` | 0 | 1 | filtr prawie nie tnie wlasciwych symboli |
+| grupa zerowa -> top25 | 2 z 11 | 1 z 11 | zaostrzenie zaczyna szkodzic tej grupie |
+
+`verify_empty = 0` jest calym werdyktem. Mechanizm powstal po to, zeby system
+umial zwrocic pustke na pytanie o rzecz, ktorej nie ma. Nie zrobil tego ani raz.
+
+### PRZYCZYNA — i jest to blad, ktory SAM zdiagnozowalem trzy dni wczesniej
+
+Opisy daly kazdemu plikowi ~134 slowa zwyklej angielszczyzny. Slowa z pytan tez sa zwykle.
+Wiec prawie kazdy symbol ma w tekscie swojego pliku co najmniej jedno — czesto dwa —
+slowo z pytania. Warunek „>= N terminow obecnych" jest **trywialnie spelnialny**.
+
+To jest DOKLADNIE ten sam tryb awarii co M9c (`gate_desc`), gdzie zapisalem:
+
+> *„gdy KAZDY plik ma opis, kazdy termin trafia w wiele plikow, wiec kazdy zakres zbiera
+> trafienia — a punktacja nie jest normalizowana przez rozmiar"*
+
+Zdiagnozowalem to na poziomie ZAKRESOW i trzy dni pozniej zbudowalem to samo na poziomie
+SYMBOLI. Mediana 140/169 plikow w M6, mediana 1429/1598 symboli w M10. Ten sam ksztalt.
+
+**Wniosek ogolniejszy, wart zapamietania:** korpus opisow rozwiazal problem braku kandydata
+i tym samym **uniewaznil kazdy filtr oparty na obecnosci slowa**. Te dwie rzeczy sa
+tym samym zjawiskiem widzianym z dwoch stron: bogaty opis sprawia, ze wszystko pasuje
+do wszystkiego — i dlatego pomaga na zerowy recall, i dlatego psuje kazde zawezanie.
+
+### Blad w PRZENIESIENIU wzorca z AIONS — moj, nie AIONS-a
+
+Wzorzec `len(refs) < 2` w AIONS dziala, bo `refs` to **wyniki retrievalu**, czyli juz
+wyselekcjonowany maly zbior. Liczy „ile swiadectw ZNALAZLEM".
+
+Ja policzylem „ile slow z pytania WYSTEPUJE w tym kandydacie" — i zastosowalem to do
+KAZDEGO z 1598 kandydatow. To nie jest ta sama wielkosc. Skopiowalem forme licznika,
+nie jego znaczenie. Prerejestracja tego nie wylapala, bo opisywala konstrukcje poprawnie
+i nie zadawala pytania, czy licznik mierzy to samo, co pierwowzor.
+
+### BILANS PRZEWIDYWAN: 1 z 5 w tym etapie
+
+| przewidywalem | wyszlo |
+|---|---|
+| `neg/poz` mocno spadnie w obu | **NIE**. 97,7% -> 97,7% i 97,5%. Bez zmian |
+| `verify1` nie utnie grupy zerowej | TAK. `verify_cut` = 0 |
+| `verify2` utnie czesc, `verify_cut` >= 3 | **NIE**. `verify_cut` = 1 |
+| `MRR` wzrosnie w obu | **NIE**. 0,243 -> 0,243 i 0,242 |
+| **pierwszy raz przejdzie kryterium** | **NIE** |
+
+Pierwszy raz postawilem na sukces i pierwszy raz mialem konkretny powod, zeby w niego
+wierzyc. Nie przeszlo. Odnotowuje to z ta sama waga, z jaka zapisalem przewidywanie.
+
+### Regresja
+
+- `python -m pytest` -> **215 zielonych**
+- `--variant baseline` -> 26,6% / 36,6% / 0,172 / 85,2% (punkt odniesienia odtworzony)
+- `--variant embed_desc` -> 30,0% / 36,6% / 0,243 / 97,7% (punkt wyjscia odtworzony)
+- `pack_hash` = `6442322d...` NIEZMIENIONY
+
+### Gotcha — naprawa AIONS przesunela grunt pod eksperymentem
+
+Poprawka echa (`299411d`) dotknela `aions_core/server/cbms_direct_server.py`
+i `cbms_unified_server.py` — a oba sa wsrod 169 plikow packa. `pack_hash` zmienil sie
+na `89447c7c...` i miernik **ODMOWIL LICZENIA**, zamiast po cichu wyprodukowac liczby
+nieporownywalne z czternastoma poprzednimi pomiarami.
+
+Dokladnie po to `load_descriptions` sprawdza hash. Gdyby tego warunku nie bylo, M10
+zostalby zmierzony na innym repo niz M8 i M9, a roznica bylaby nie do wykrycia po fakcie.
+
+Rozwiazanie: na czas pomiaru te dwa pliki cofniete do stanu z `262c70d`
+(`git checkout 262c70d -- ...`), pomiar wykonany, poprawka przywrocona z `299411d`.
+Obie wersje sa zacommitowane, wiec operacja jest odwracalna i widoczna w historii.
+
+**Regula na przyszlosc:** kazda zmiana w `aions_core/`, `control_plane/`, `server/`
+lub `scripts/` uniewaznia korpus opisow. Pomiary ACAE trzeba robic na stanie repo
+przypietym do `pack_hash 6442322d...`, albo swiadomie przemrozic korpus od nowa
+i zaczac tabele porownawcza od zera.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
