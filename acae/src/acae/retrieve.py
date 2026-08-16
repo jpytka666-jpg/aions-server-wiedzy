@@ -231,7 +231,15 @@ def build_slice(
     Ciche ucinanie zamienialoby oszczednosc tokenow w gubienie kodu.
     """
     terms = query_terms(query)
-    outline, drill = select(entries, terms, outline_limit, drill_limit)
+    if ranked is None:
+        outline, drill = select(entries, terms, outline_limit, drill_limit)
+    else:
+        # Gotowa kolejnosc z innego rankera (np. po znaczeniu, `acae.embedindex`).
+        # `select` jest wtedy pomijany, ale reszta — wycinanie szkieletu, dociaganie cial,
+        # ucinanie — dziala IDENTYCZNIE. Dzieki temu bramka M2 mierzy nadal to samo,
+        # bo `measure_m2.py` wola `build_slice` bez tego argumentu.
+        outline = list(ranked[:outline_limit])
+        drill = list(ranked[:drill_limit])
 
     # Grupujemy po pliku, zeby kazdy plik sparsowac raz.
     wanted: dict[str, list[str]] = {}
