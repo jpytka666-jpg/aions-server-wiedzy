@@ -2753,6 +2753,76 @@ pytania**: `dev` byl budowany celowo tak, zeby bylo trudno.
 
 Held-out (`blake2b256:e5d8e5b4...`) **NIETKNIETY**.
 
+## 2026-08-16T06:44 — GDZIE JESTESMY. Podsumowanie i decyzja o kierunku.
+
+### Czy to „rozumie ludzka mowe"? NIE. I ta roznica jest operacyjna.
+
+Nie ma tu zadnego rozumienia — jest **dopasowanie slow pytania do OPISOW**, ktore raz
+napisalismy po ludzku dla kazdego ze 169 plikow. Cala „inteligencja" siedzi w tych
+opisach, nie w mechanizmie. Konsekwencje sa przewidywalne:
+
+- **dziala**, gdy pytanie uzywa slowa, ktore ktos wpisal do opisu tej rzeczy,
+- **nie dziala**, gdy slowa nie zapisal nikt — to jest dokladnie ta sciana z 11 pytan
+  grupy zerowej, ktora zamknela dwadziescia trzy mechanizmy,
+- **nie pamieta** poprzedniego pytania, nie ma stanu, nie wnioskuje.
+
+Swietny indeks, nie zrozumienie. Do celu z kontraktu indeks wystarcza w zupelnosci.
+
+### STAN NARZEDZIA — liczby, nie wrazenia
+
+| co | wynik | bramka |
+|---|---|---|
+| pack calego repo | 36 492 tokeny = **10,4% sufitu** | <= 50% |
+| wycinek pod pytanie | **3,6% - 12,2%** kosztu grep+read | 8 z 10 zapytan |
+| bramka M2 | **10/10** | 8/10 |
+| pytanie, cieple | **~1250 ms** | (bylo 9490 ms) |
+| pack, zimny | **3354 ms** | 60 000 ms |
+| testy | **225 zielonych** | — |
+| `pack_hash` | `6442322d5d5a...` niezmieniony od M1 | — |
+
+**Trafnosc na pytaniach zadanych po ludzku** (306 pytan, zbior `wide`):
+`recall@10` **62,0%**, `recall@25` **76,7%**, `MRR` **0,451**, `neg/poz` **74,3%** —
+wobec `25,1% / 39,2% / 0,136 / 78,6%` dla samego szukania po slowach.
+
+**Na zamrozonym `dev`** (30 pytan budowanych CELOWO tak, zeby bylo trudno):
+`recall@10` 30,0%, `MRR` 0,243, `neg/poz` 97,7%. **Dwadziescia trzy mechanizmy odrzucone.**
+
+Te dwa obrazy nie sa sprzeczne. `dev` zostaje jako twardy egzamin i go nie tykamy.
+
+### DECYZJA MARCINA (2026-08-16): nie osobny MCP, tylko integracja
+
+Osobny serwer MCP odrzucony swiadomie: druga instalacja, druga konfiguracja, drugi punkt
+awarii, i sztuczna sciana miedzy „gdzie to jest w kodzie" (ACAE) a „co o tym wiemy" (CBMS).
+To sa dwie strony tej samej odpowiedzi i maja stac w jednym miejscu.
+
+**To reaktywuje M1-F z kontraktu**, ktory lezal nierozpoczety od pierwszego dnia — wtedy
+nie mialo sensu go robic, bo narzedzie nie dzialalo.
+
+Zakres trzeba PRZEDEFINIOWAC. Pierwotnie: `acae_pack` i `acae_pack_status`. Dzis
+wartosciowe jest co innego — **`acae_ask`**, czyli to, co odpowiada na pytanie.
+Pakowanie jest krokiem przygotowawczym, nie tym, po co siega czlowiek.
+
+### Co trzeba rozstrzygnac PRZED kodem M1-F
+
+1. **Otwarte pytanie z kontraktu, wciaz otwarte:** jak `project_scan_*` trzyma stan
+   zadania (pamiec / plik / SQLite)? Do przeczytania w `server.py:957-1049`. Decyduje,
+   czy status przezyje restart serwera.
+2. **`server.py` LEZY W PACKU.** Kazda jego edycja zmienia `pack_hash` i uniewaznia
+   korpus opisow — dokladnie tak jak poprawka echa w serwerach CBMS. Trzeba z gory
+   zdecydowac: przemrozic korpus po integracji, albo trzymac pomiary na stanie
+   przypietym do `6442322d`.
+3. **Jezyk.** Narzedzie dziala po angielsku (zmierzone: 70% vs 20% na tych samych
+   pytaniach). W MCP wolanym przez model tlumaczenie jest darmowe, ale to musi byc
+   **zapisany warunek uzycia**, a nie ciche zalozenie.
+
+### Cztery kierunki zamkniete pomiarem, zeby nikt do nich nie wracal
+
+- rozszerzanie zapytania o dodatkowe terminy — dziewiec wariantow, wszystkie obnizaly `MRR`
+- odczytanie „nie wiem" z ksztaltu ocen embeddingu — rozklady nakladaja sie, miejscami
+  odwrocone (M14)
+- przesiewacz cross-encoder na tym materiale — 24 przestawienia, **zero awansow** (M15)
+- kierowanie do dziedziny tym samym embeddingiem, ktory dziedziny myli (M11)
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
