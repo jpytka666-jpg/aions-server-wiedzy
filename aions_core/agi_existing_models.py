@@ -118,7 +118,12 @@ class ExistingModelsHub:
         # nie siegajac nawet dalej. Prawdziwe 167 blokow lezy w aions_core/memory/chunks.
         # Dwie sciezki zewnetrzne usuniete: `E:\AIONS_COMPLETE\cbms_memory\chunks`
         # to puste lustro (0 plikow), a `D:\AGI_CODex\chunks` nie istnieje wcale.
-        from .lokalizacje import katalog_pamieci
+        try:
+            from .lokalizacje import katalog_pamieci
+        except ImportError:
+            # Dwa znane tryby uruchomienia — jako czesc pakietu i jako skrypt.
+            # Patrz ten sam komentarz w cbms_curve_machine._load_chunks.
+            from lokalizacje import katalog_pamieci
         paths = [
             (Path(env_mem) / 'chunks') if env_mem else None,
             katalog_pamieci() / 'chunks',

@@ -3413,3 +3413,165 @@ ktore roznia sie rozmiarem, a niosa te sama tresc. Z nimi bylo by ~10 GB.
 
 NIE USUWAM tych archiwow — to nie byla tresc polecenia, a kasowanie gigabajtow
 cudzych kopii zapasowych wymaga osobnej zgody.
+
+## 2026-08-16T15:20 — SCIEZKI NA SZTYWNO: jedno miejsce zamiast rozsypki
+
+### Najpierw pomiar, bo „porozpierdalane" to nie to samo co „rozsypane pliki"
+
+23,2 GB plikow CBMS na komputerze to w 99% ARCHIWA z wrzesnia 2025. Przenoszenie ich
+niczego by nie naprawilo. Prawdziwe rozproszenie to **kod siegajacy na sztywno poza repo** —
+kazda taka sciezka wiaze system z ta maszyna, a poniewaz prawie wszystkie siedza
+w `try/except`, znikniecie katalogu wylacza kawalek systemu po cichu.
+
+`scripts/scan_hardcoded_paths.py`. Rozroznia trzy stany: ZYWA (istnieje, poza repo),
+MARTWA (nie istnieje), WEWN (wskazuje do repo).
+
+**BLAD WE WLASNYM KLASYFIKATORZE, zlapany przed raportem.** Pierwszy przebieg dal
+119 zaleznosci zewnetrznych. Sciezki z podwojnym ukosnikiem (jak w JSON-ach) nie
+dopasowywaly sie do korzenia repo, wiec 42 sciezki WEWNATRZ repo raportowal jako
+zewnetrzne. Po normalizacji: **77**, nie 119.
+
+### Zrobione
+
+`config/lokalizacje.json` + `aions_core/lokalizacje.py` — jedno miejsce na wszystko,
+co musi zostac poza repo (modele jezykowe waza 72 GB i nie wejda do srodka).
+Nadpisanie przez `AIONS_LOK_<KLUCZ>`, brak lokalizacji zwraca None zamiast wybuchac,
+`wymagana=True` dla miejsc, bez ktorych nie ma sensu udawac, ze cos dziala.
+Korzen repo LICZONY z polozenia pliku, nie wpisany.
+
+Przepiete: `operator/mouth.py`, `skills/goal_planner.py` (te same dwie sciezki do modelu
+byly wpisane na sztywno w OBU plikach — przeniesienie modelu wymagalo poprawki w dwoch
+miejscach albo w jednym, i wtedy polowa systemu przestawala widziec model),
+`skills/context.py` (es.exe).
+
+### DWA CICHE BLEDY ZNALEZIONE PRZY OKAZJI
+
+1. **`agi_existing_models.py:117`** szukal blokow w `<repo>/memory/chunks`
+   (`root.parent`, o jeden poziom za wysoko). Ten katalog ISTNIEJE, ale jest PUSTY,
+   wiec petla brala go jako pierwszy pasujacy i konczyla z wynikiem **0 blokow** —
+   nie siegajac nawet do dalszych sciezek. Prawdziwe 167 lezy w `aions_core/memory/chunks`.
+2. **`cbms_curve_machine._load_chunks`** czytal z `E:/AIONS_COMPLETE/cbms_memory/chunks/`.
+   Ten katalog istnieje, ale ma **zero plikow**, wiec `if chunks_dir.exists()` przechodzil
+   i funkcja od zawsze zwracala pusta liste.
+
+Po poprawce, sprawdzone uruchomieniem w OBU trybach ladowania (jako czesc pakietu
+i jako samodzielny skrypt — ten kod uruchamia sie na dwa sposoby):
+```
+tryb skryptowy  : blokow 100
+tryb pakietowy  : blokow 100      (bylo 0)
+```
+
+### Stan po zmianach
+
+```
+              przed    po
+ZYWA (poza repo)   77    70      z tego w KODZIE .py: 34, w DANYCH: 36
+MARTWA            236   235
+WEWN              105   105
+```
+
+Z pozostalych 34 w kodzie: **10 to `scripts/catalog_e_treasures.py`**, ktorego CALA robota
+polega na katalogowaniu tamtych zewnetrznych folderow — to nie jest blad.
+Osiem wskazuje na `E:\AIONS_COMPLETE` (agent_layer, crla_reformed, monitoring) — to samo
+puste lustro, do zrobienia w nastepnej kolejnosci.
+
+### Czego NIE zrobilem i dlaczego
+
+Nie przenioslem 23 GB archiwow ani 72 GB modeli. Archiwa to kopie zapasowe — kasowanie
+albo przenoszenie cudzych kopii wymaga osobnej zgody, a modele nie maja czego szukac
+w repozytorium kodu. Sens polega na tym, zeby ich adres byl w JEDNYM miejscu, nie zeby
+lezaly w jednym miejscu.
+
+## 2026-08-16T15:45 — PUNKT ZAPISU PRZED RESETEM MARCINA
+
+### Gdzie jestesmy, jednym akapitem
+
+Dzien poszedl na audyt AIONS. Znalezione i naprawione: dwie kopie `cbms_memory`
+(ladowala sie starsza, bez bramki zapisu), turniej CRLA (osmiu kandydatow, jedna
+odpowiedz), PocketQC (czytal pole, ktorego nie ma, i sprawdzal po ksiazce z 16 hasel),
+dwa moduly istniejace TYLKO w `C:\Windows\System32`, dwa moduly czytajace bloki
+z pustych katalogow. Sciezki wpisane na sztywno zebrane do `config/lokalizacje.json`.
+
+### CO TRZEBA ZROBIC PO RESTARCIE — w tej kolejnosci
+
+1. **Zrestartowac serwer MCP.** Bez tego nie widac narzedzia `code_health`
+   (ani `acae_ask`, jesli serwer nie byl restartowany od 2026-08-16 rano).
+2. **Sprawdzic, czy operator mowi.** Adresy modelu jezykowego zostaly przepiete
+   na `config/lokalizacje.json`. Sprawdzone, ze plik istnieje i adres sie zgadza,
+   NIE sprawdzone uruchomieniem modelu.
+3. **Sprawdzic `/crla/ask`.** Wejscie bylo zepsute od zawsze (zle argumenty),
+   poprawione, ale testowane tylko wywolaniem funkcji, nie po HTTP.
+
+### PYTANIE OTWARTE, CZEKA NA MARCINA
+
+Osiem miejsc w kodzie wskazuje na `E:\AIONS_COMPLETE` — katalog, ktory ISTNIEJE,
+ale jest pusty (4 pliki logow). Dotyczy `aions_agent_layer.py` (3),
+`aions_crla_reformed.py` (2), `aions_monitoring_dashboard.py` (1),
+`aions_smart_guardrail.py` (1), `agi_existing_models.py` (1).
+Domknac teraz czy po sprawdzeniu dzisiejszych zmian — Marcin nie odpowiedzial.
+
+### NIC NIE ZOSTALO ZACOMMITOWANE
+
+Zmiany leza w drzewie roboczym. `git status` pokaze wszystko. Pliki dotkniete dzisiaj:
+
+```
+NOWE:
+  config/lokalizacje.json
+  aions_core/lokalizacje.py
+  aions_core/server/cbms_consciousness.py   <- uratowany z System32
+  aions_core/server/ultimate_memo.py        <- uratowany z System32
+  acae/scripts/audit_calls.py               (zacommitowany wczesniej, a301687)
+  acae/scripts/triage_audit.py
+  acae/scripts/probe_imports.py
+  acae/scripts/scan_hardcoded_paths.py
+  acae/scripts/measure_m16.py
+  backups/system32_stray_20260816/           <- kopia tego, co bylo w System32
+
+ZMIENIONE:
+  control_plane/cbms_gate.py                (kolejnosc sys.path)
+  control_plane/operator/mouth.py           (adres modelu z konfiguracji)
+  control_plane/skills/goal_planner.py      (adres modelu z konfiguracji)
+  control_plane/skills/context.py           (adres es.exe z konfiguracji)
+  aions_core/server/crla_core.py            (martwa drabinka usunieta, diagnostyka)
+  aions_core/server/pocket_qc.py            (bramka zamiast liczenia symboli)
+  aions_core/server/cbms_unified_server.py  (poprawione wywolanie run_crla)
+  aions_core/cbms_curve_machine.py          (bloki z pamieci repo, nie z pustego lustra)
+  aions_core/agi_existing_models.py         (to samo + poprawiony poziom katalogu)
+  acae/.now/STATE.md, acae/.now/CONTRACT.md
+
+USUNIETE:
+  aions_core/cbms_memory.py                 (starsza kopia; .usuniety.bak obok)
+  C:\Windows\System32\memory\                (smieci, kopia w backups/)
+  C:\Windows\System32\server\                (pliki usuniete, pusty katalog zostal
+                                              — cos go trzyma, zniknie po restarcie)
+```
+
+### LICZNIK MECHANIZMOW
+
+24 odrzucone, **1 przyjety** (M17, PocketQC). Kryterium zapisywane PRZED pomiarem
+w kazdym przypadku. M16 (turniej CRLA) odrzucony: kandydaci roznia sie naprawde
+(8 z 8 roznych odpowiedzi, 26% podobienstwa), ale wszyscy produkuja echo — problemem
+nie jest WYBOR odpowiedzi, tylko SPOSOB jej skladania.
+
+### SPROSTOWANIE DO AKAPITU WYZEJ — „NIC NIE ZACOMMITOWANE" JEST NIEPRAWDA
+
+Sprawdzone `git log` i `git show HEAD:<plik>` tuz przed zapisem stanu:
+**wszystkie dzisiejsze zmiany SA W HISTORII.** Nie commitowalem ich recznie —
+zrobil to hook `checkpoint.py`, ktory commituje PRZED kazda edycja. Stad 14 commitow
+o trescach „checkpoint: before edit of <plik>", ktore w rzeczywistosci niosa
+poprzednie zmiany, nie te zapowiedziane w opisie.
+
+W drzewie roboczym zostaja tylko OSTATNIE edycje, jeszcze nie zamiecione:
+`acae/.now/STATE.md` i `aions_core/agi_existing_models.py`.
+
+To DRUGI raz tego samego dnia. Pierwszy byl przy commicie `3f7f54e`, ktory zamiotl
+do HEAD celowo cofniete serwery. Regula zapisana wtedy obowiazuje i trzeba ja
+stosowac ZAWSZE, nie tylko po cofaniu plikow:
+
+**Zanim powiesz Marcinowi „nic nie zacommitowane", sprawdz `git log` i
+`git show HEAD:<plik>`. Stan dysku to nie to samo co stan historii, a przy
+`defaultMode: acceptEdits` hook pracuje bez pytania.**
+
+Praktyczny skutek dla Marcina: cofniecie dzisiejszej pracy NIE polega na
+`git checkout .` — trzeba cofnac commity. Punkt sprzed dzisiejszej sesji to `a301687`
+(„audyt statyczny AIONS"), a stan sprzed calego audytu to `8bbb1b9` („CONTRACT: M1-F odhaczone").
