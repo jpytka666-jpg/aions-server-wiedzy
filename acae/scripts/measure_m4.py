@@ -823,7 +823,7 @@ def main() -> int:
     WARIANTY_Z_OPISAMI = (
         "desc", "prf_desc", "embed_desc", "embed_desc_tie", "embed_desc_borda",
         "gate_desc", "graph_desc", "verify1", "verify2", "domain3", "domain1",
-        "intent", "intent_domain",
+        "intent", "intent_domain", "rerank",
     )
     # Warianty stawiajace ranking na embeddingu Z OPISAMI (M9b, M10, M11 i M13).
     EMBED_Z_OPISAMI = ("embed_desc", "embed_desc_tie", "embed_desc_borda",
