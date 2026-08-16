@@ -92,7 +92,18 @@ def _cmd_ask(args: argparse.Namespace) -> int:
     Podsumowanie pojawia sie tylko wtedy, gdy tresc trafia do pliku.
     """
     root, locator, reader, _ = _ports(args)
-    entries, _skipped = collect_entries(locator, reader)
+
+    # Cache sparsowanych outline'ow. Zmierzone przed jego dolozeniem: jedno pytanie
+    # trwalo 9490 ms, z czego 8865 ms szlo na ponowne parsowanie tych samych plikow,
+    # a samo szukanie 0 ms. Cache nie zmienia ANI wyniku, ANI `pack_hash` —
+    # pilnuje tego `test_cache_nie_zmienia_pack_hash`.
+    cache_path = root / "acae" / "_out" / "parse_cache.json"
+    outline_cache = parsecache.load(cache_path)
+    przed = len(outline_cache)
+    entries, _skipped = collect_entries(locator, reader, outline_cache=outline_cache)
+    if len(outline_cache) != przed:
+        parsecache.save(cache_path, outline_cache)
+
     text, meta = build_slice(
         entries,
         args.query,
