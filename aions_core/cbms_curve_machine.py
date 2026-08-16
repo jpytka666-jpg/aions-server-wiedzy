@@ -679,7 +679,14 @@ class CBMSCurveMachine:
         zwracala zero blokow, a `if chunks_dir.exists()` na to nie reagowal.
         Prawdziwe 167 blokow lezy w pamieci repo.
         """
-        from .lokalizacje import katalog_pamieci
+        try:
+            from .lokalizacje import katalog_pamieci
+        except ImportError:
+            # Ten modul bywa ladowany na DWA sposoby: jako czesc pakietu `aions_core`
+            # oraz jako samodzielny skrypt z `aions_core` juz na sciezce. Import
+            # wzgledny dziala tylko w pierwszym trybie. To nie jest polkniety blad,
+            # tylko dwa znane, sprawdzone tryby uruchomienia.
+            from lokalizacje import katalog_pamieci
         chunks = []
         chunks_dir = katalog_pamieci() / "chunks"
 
