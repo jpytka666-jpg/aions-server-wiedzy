@@ -3138,3 +3138,224 @@ parametry 58 -> 56. Czyli czesc audytu byla echem tego samego kodu w dwoch kopia
   ignoruja `query`. Turniej osmiu kandydatow liczy osiem razy to samo.
 - Osiem podsystemow zastapionych zaslepka, z czego cztery nie istnieja nigdzie w repo.
 - 22 importy nierozstrzygniete (plik sam dokłada sciezki) — sonda nie ma o nich zdania.
+
+## 2026-08-16T12:30 — KROK 1 ZROBIONY + PREREJESTRACJA M16 (turniej CRLA)
+
+### Krok 1: naprawione trzy klamstwa
+
+1. **Wejscie `/crla/ask` nie dzialalo ANI RAZU.** `run_crla(query, cbms, FACTS, seed=, candidates=)`
+   wobec `run_crla(cbms, query, seed=, n_candidates=)` — odwrocona kolejnosc, trzeci
+   argument, ktorego funkcja nigdy nie przyjmowala, i zla nazwa czwartego. Poprawione.
+   `FACTS` porzucony swiadomie: `run_crla` nie ma parametru na fakty, wiec dodanie go
+   byloby przeprojektowaniem, nie naprawa.
+2. **Drabinka turniejowa usunieta.** Dostawala liste JUZ POSORTOWANA, wiec nie miala
+   prawa zwrocic nikogo innego niz `ranked[0]`. Sprawdzone: 3000 losowych turniejow,
+   zero roznic. Kod, ktory nie moze zmienic wyniku, a wyglada na mechanizm wyboru,
+   jest gorszy niz jego brak.
+3. **Dziewiate zapytanie usuniete.** Po wylonieniu zwyciezcy wolano `simulate_candidate`
+   jeszcze raz, zeby odtworzyc odpowiedz, ktora juz byla w petli.
+4. **PocketQC czytal pole, ktorego nie ma.** Szukal `text`/`answer` w ZWYCIEZCY,
+   a `CandidateResult` niesie `answer_preview`; pelna odpowiedz lezy poziom wyzej.
+   Skutek: tresc zawsze pusta, `cbms_symbols` zawsze 0, werdykt PASS NIEOSIAGALNY.
+   Po poprawce widzi 497 znakow zamiast 0.
+
+Dolozona **diagnostyka uczciwosci** do wyniku `run_crla`: liczba roznych odpowiedzi,
+roznych zestawow blokow i lista skladnikow oceny, ktore w danym przebiegu byly stale.
+Pierwszy przebieg po poprawce:
+
+```
+{'rozne_odpowiedzi': 1, 'rozne_zestawy_blokow': 1,
+ 'skladniki_bez_wplywu': ['f1_facts','f2_determinism','f4_policies','f5_trace','f6_hygiene']}
+```
+
+Piec z szesciu kryteriow oceny nie rozstrzyga niczego. Zostaje zegar.
+
+### PocketQC — druga, glebsza przyczyna
+
+Po naprawie pola werdykt nadal nie moze byc PASS, bo warunek `cbms_symbols > 0`
+opiera sie na ksiazce kodowej, ktora ma **16 hasel** (`memory/codebook/codebook.json`,
+1408 bajtow, pazdziernik 2025). Dla dowolnego prawdziwego tekstu koduje sie 0 symboli.
+To NIE jest juz blad w kodzie — to pusty slownik. Decyzja nalezy do Marcina:
+albo ksiazka kodowa powstaje naprawde, albo warunek PASS przestaje od niej zalezec.
+
+### PREREJESTRACJA M16 — czy turniej ma w ogole co wygrywac
+
+**Zapisane PRZED napisaniem pomiaru.**
+
+Hipoteza: osiem kandydatow z ROZNYMI zestawami blokow na wejsciu da rozne odpowiedzi,
+a najlepsza z nich bedzie lepsza niz pojedyncze wywolanie.
+
+**Warunek konieczny (rozstrzyga pierwszy, bez zadnego sedziego):**
+Na 30 pytaniach mediana liczby ROZNYCH odpowiedzi wsrod 8 kandydatow musi wyniesc
+**>= 3**. Jesli kandydaci mimo roznych wejsc daja to samo, turniej nie ma z czego
+wybierac i jest odrzucony — dalszy pomiar bezprzedmiotowy.
+
+**Warunek drugi (tylko jesli pierwszy przeszedl):**
+Na **>= 25%** pytan istnieje kandydat, ktorego odpowiedz PRZECHODZI bramke
+`learning_gate`, podczas gdy odpowiedz pojedynczego wywolania jej NIE przechodzi.
+Bramka jest tu sedzia niezaleznym od turnieju: zostala zmierzona osobno
+(0 falszywych alarmow na 164 blokach) i nie wie nic o kandydatach.
+
+**Zbior pytan:** 30 pojec (`concept`) wzietych z blokow bazy, kolejnosc alfabetyczna,
+pierwsze 30 unikalnych. Zbior zapisany do pliku, zeby pomiar byl powtarzalny.
+ZASTRZEZENIE: pytania pochodza z tej samej bazy, ktora przeszukujemy, wiec wynik
+jest ZAWYZONY. Sluzy do znalezienia sufitu, nie do porownan z czymkolwiek innym.
+
+**Roznicowanie kandydatow:** `cbms_think(query, context)` przyjmuje liste ID blokow
+wstrzykiwanych na wejsciu. Kandydat i dostaje i-ty rozlaczny kawalek listy blokow
+zwroconych przez zwykle wyszukanie. Zero losowosci — ten sam seed daje to samo.
+
+**MOJA PREDYKCJA, zapisana przed uruchomieniem:**
+warunek konieczny PRZEJDZIE (rozne bloki na wejsciu musza dac rozne zestawy),
+warunek drugi NIE PRZEJDZIE (szablon odpowiedzi „Na podstawie N fragmentow wiedzy:"
+jest doklejany niezaleznie od tego, jakie bloki weszly, wiec bramka odrzuci kazda).
+
+Jesli predykcja sie sprawdzi, wniosek brzmi: problemem nie jest WYBOR odpowiedzi,
+tylko SPOSOB jej skladania. Turniej wtedy nie ma czego naprawiac.
+
+## 2026-08-16T12:55 — M16 ZMIERZONY. ODRZUCONY. Predykcja trafiona w obie strony.
+
+```
+pytan: 30   kandydatow na pytanie: 8
+
+WARUNEK KONIECZNY  mediana roznych odpowiedzi >= 3
+   zmierzone: 8.0   rozklad: [8]              -> SPELNIONY
+
+WARUNEK DRUGI      >= 25% pytan z wygrana kandydata nad bazowym
+   zmierzone: 0/30 = 0.0%                      -> NIESPELNIONY
+
+na marginesie: odpowiedz pojedynczego wywolania przechodzi bramke w 0/30 pytan
+
+WERDYKT: ODRZUCONY
+```
+
+**Predykcja zapisana przed pomiarem sprawdzila sie co do obu warunkow.**
+
+### Co to znaczy
+
+Roznicowanie DZIALA. Wstrzykniecie roznych zestawow blokow daje osiem naprawde roznych
+odpowiedzi — na wszystkich 30 pytaniach, bez wyjatku (rozklad `[8]`, nie ma pytania
+o mniejszej liczbie). Sprawdzone, ze to nie artefakt samej liczby w naglowku:
+dwaj kandydaci na tym samym pytaniu maja **26,1% podobienstwa** przy identycznej
+dlugosci 564 znakow. Czyli 74% tresci to inne fragmenty.
+
+Ale **kazda z osmiu jest echem**. Bramka odrzuca wszystkie osiem i odrzuca tez odpowiedz
+pojedynczego wywolania — 0 na 30 w obu przypadkach. Nie ma czego wybierac, bo caly zbior
+jest tej samej jakosci.
+
+### Wniosek, ktory zamyka temat turnieju
+
+Problemem nie jest WYBOR odpowiedzi. Problemem jest SPOSOB jej skladania:
+`cbms_think` doklejal naglowek „Na podstawie N fragmentow wiedzy:" i wypisuje fragmenty,
+niezaleznie od tego, ktore bloki weszly. To jest wzorzec `R2_opakowanie_syntezy` —
+ten sam, ktory bramka blokuje przed zapisem od 2026-08-04.
+
+**Turniej nie ma czego naprawiac.** Osiem razy drozsze pytanie oddaje osiem wariantow
+tego samego szablonu. Mechanizm ODRZUCONY — jak dziewiec poprzednich, wobec kryterium
+zapisanego przed pomiarem.
+
+To NIE znaczy, ze roznicowanie przez konteksty jest bezuzyteczne. Znaczy, ze zanim
+cokolwiek na nim zbudujemy, trzeba naprawic skladanie odpowiedzi. Dopoki generator
+oddaje szablon, kazdy mechanizm wyboru nad nim bedzie wybieral miedzy szablonami.
+
+### Higiena pomiaru
+
+`cbms_think` wola `create_knowledge_chunk`, wiec 270 wywolan zapisywaloby do zywej bazy.
+Pomiar szedl na KOPII w scratchpadzie. Sprawdzone po fakcie: zywa baza nadal 167 blokow.
+
+Licznik mechanizmow: **24 zmierzone, 24 odrzucone wobec kryterium zapisanego z gory.**
+
+## 2026-08-16T13:40 — KSIAZKA KODOWA: SZUKANIE ZAMKNIETE + PREREJESTRACJA M17
+
+### Szukanie na calym komputerze (Everything, nie `find`)
+
+Marcin: *„zamiast kurwa everything toola uzyc"*. Mial racje — `es.exe` odpowiedzial
+natychmiast na to, co skanowaniem trzech dyskow ciagneloby sie minuty. Zapisane
+w pamieci jako regula.
+
+```
+es.exe codebook.json -size -sort size-descending
+   6,948  acae/config/semantic_codebook.json     <- NASZ, inny mechanizm
+   1,429  C:\Windows\System32\...\codebook.json  <- te same 16 hasel, inne formatowanie
+   1,408  (43 pozostale kopie)
+   plikow codebook.json na calym komputerze: 45
+```
+
+**Wiekszej ksiazki nie ma i nigdy nie bylo.** 16 hasel dzieli sie tak: piec to
+podrecznikowy przyklad („mi estis hodiaŭ en vendejo, mi aĉetis panon" — bylem dzis
+w sklepie, kupilem chleb), jedenascie to recznie wpisane terminy o samym systemie.
+To demo, w ktorym zostal przykladowy zakup chleba.
+
+### ALE: znalezione cos innego — `CODEBOOK_CBMS_ES.jsonl`, 490 hasel
+
+`C:\Users\User\Downloads\CODEBOOK_CBMS_ES.jsonl` (2026-08-08), naglowek `CBMS-Eo-v1.1-EXT`.
+Szukanie po `codebook.json` go NIE ZNAJDOWALO — inne rozszerzenie.
+To NIE jest wieksza wersja tamtej ksiazki, tylko **alfabet kompresji**: slowo
+esperanckie -> jeden znak Unicode (`pensi=Ъ`, `suno=ᴝ`). Inna robota, ta sama nazwa.
+
+### POMIAR, KTORY ZAMYKA POMYSL ROZBUDOWY
+
+Pytanie brzmialo: czy PocketQC dziala zle dlatego, ze ksiazka jest za mala.
+Test na dwoch tekstach, mala ksiazka (16) i duza (477 hasel z pliku wyzej):
+
+```
+ECHO (smiec)   dlugosc  497   mala: 0 symboli   duza: 0 symboli
+SENSOWNA       dlugosc  388   mala: 0 symboli   duza: 1 symbol
+```
+
+**Rozbudowa z 16 do 477 hasel przesunela wynik z zera na jeden.**
+
+Waskim gardlem NIE jest ksiazka kodowa, tylko **tlumacz przed nia**. Lancuch to:
+polski tekst -> `to_esperanto` (maly slownik zrobiony pod demo z chlebem) -> szukanie
+w ksiazce. Pierwsze ogniwo nie tlumaczy prawdziwego polskiego, wiec do ksiazki trafia
+tekst, ktory nie ma prawa sie dopasowac. Rozbudowa drugiego ogniwa nic nie da.
+
+Do tego argument osobny: liczenie slow ze slownika mierzy SLOWNICTWO, nie jakosc.
+Nasze echo jest nabite terminami systemowymi (CBMS, blok, fragment), wiec przy
+dzialajacym tlumaczu wypadaloby LEPIEJ niz odpowiedz sensowna. Naprawa lancucha
+zrobilaby te miare gorsza, nie lepsza.
+
+### PREREJESTRACJA M17 — PocketQC ma zaczac mierzyc jakosc
+
+**Zapisane PRZED napisaniem kodu.**
+
+Zmiana: warunek PASS przestaje zalezec od liczby symboli. Nowe warunki, kazdy
+sprawdzalny i kazdy juz istniejacy w systemie:
+1. BEZPIECZENSTWO — obecny test na wstrzykniecia (dziala, zostaje),
+2. NIE-ECHO — `learning_gate`, zmierzona osobno: 0 falszywych alarmow na 164 blokach,
+3. UGRUNTOWANIE — odpowiedz wskazuje co najmniej jeden blok, ktory NAPRAWDE istnieje
+   w bazie (dzis nikt tego nie sprawdza),
+4. NIE-ODMOWA — juz jest.
+Liczba symboli zostaje w wyniku jako DIAGNOSTYKA, nigdy jako warunek.
+
+**Warunek konieczny:** nowy PocketQC musi zwrocic PASS dla co najmniej jednego wejscia —
+recznie napisanej odpowiedzi bez echa, wskazujacej istniejacy blok. Obecny NIE MOZE
+zwrocic PASS dla ZADNEGO wejscia; to udowodnione pomiarem wyzej.
+
+**Warunek drugi:** na 30 pytaniach z M16 nowy PocketQC ma dac **zero** werdyktow PASS,
+bo M16 pokazal, ze wszystkie 30 odpowiedzi to echo. Zgodnosc z bramka 30/30.
+Gdyby przepuscil cokolwiek, znaczyloby to, ze nowe warunki sa luzniejsze niz bramka.
+
+**MOJA PREDYKCJA:** oba warunki przejda.
+
+### Sprzatanie: C:\Windows\System32
+
+Dwa katalogi AIONS lezaly w katalogu systemowym Windows (2025-10-28), bo cos
+uruchomilo sie ze sciezka wzgledna. **Przed usunieciem sprawdzone, co w nich jest —
+i dobrze.**
+
+`System32\server\` mial 9 plikow. Siedem to starsze kopie tego, co jest w repo.
+Ale DWA — `cbms_consciousness.py` (9729 B) i `ultimate_memo.py` (3401 B) — **nie
+istnialy NIGDZIE INDZIEJ NA CALYM KOMPUTERZE** (sprawdzone przez Everything, po jednym
+trafieniu kazdy). To wlasnie te moduly, o ktorych sonda importow mowila „NIE MA GO
+NIGDZIE W REPO", a `cbms_direct_server.py` importuje oba.
+
+Przywrocone do `aions_core/server/`. Kopia calosci: `backups/system32_stray_20260816/`.
+
+`System32\memory\` — 6 blokow, wszystkie „Podsumowanie rozmowy (ostatnie 5 wymian)",
+czyli wzorzec `R8_log_rozmowy`, ktory bramka i tak blokuje. Plus 4 sesje diagnostyczne
+z pazdziernika. Smieci. Usuniete.
+
+**Gdybym usunal te katalogi bez zagladania, zniszczylbym jedyne kopie dwoch modulow.**
+Regula na przyszlosc: przed usunieciem „duplikatow" sprawdz Everything, czy kazdy plik
+ma naprawde inna kopie.

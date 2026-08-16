@@ -261,7 +261,12 @@ class UnifiedCBMSHandler(http.server.SimpleHTTPRequestHandler):
                 print(f"\n[{time.strftime('%H:%M:%S')}] CRLA Query: {query[:80]}...")
                 
                 start = time.time()
-                result = run_crla(query, cbms, FACTS, seed=seed, candidates=candidates)
+                # POPRAWKA 2026-08-16: wolanie bylo niezgodne z sygnatura na trzy sposoby —
+                # odwrocona kolejnosc (`query, cbms` zamiast `cbms, query`), trzeci argument
+                # `FACTS`, ktorego `run_crla` nigdy nie przyjmowal, oraz `candidates=`
+                # zamiast `n_candidates=`. To wejscie oddawalo 500 przy KAZDYM wywolaniu,
+                # wiec nie zostalo nigdy uruchomione. Sygnatura: crla_core.py:166.
+                result = run_crla(cbms, query, seed=seed, n_candidates=candidates)
                 elapsed = time.time() - start
                 
                 print(f"  CRLA time: {elapsed*1000:.2f}ms")
