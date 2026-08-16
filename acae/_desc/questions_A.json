@@ -1,0 +1,94 @@
+{
+  "aions_core/server/generator_cbms.py": [
+    "How do I make search hits into readable text?",
+    "Where do you link sources when answering?"
+  ],
+  "aions_core/server/hangul_addressing.py": [
+    "How do I create short references from text?",
+    "What represents data as Korean characters?"
+  ],
+  "aions_core/server/korean_keys.py": [
+    "How do I search queries without exact keywords?",
+    "What generates lookup patterns from words?"
+  ],
+  "control_plane/skills/__init__.py": [
+    "Why can I import this directory as a module?",
+    "What tells Python this folder is a library?"
+  ],
+  "control_plane/skills/stats.py": [
+    "How do I choose the best automation method?",
+    "Where do success rates get tracked?"
+  ],
+  "mcpServers/VS_CODE_MCP_CODEX/src/patched_stdio.py": [
+    "Why are tool responses arriving together?",
+    "What fixes network message bundling on Windows?"
+  ],
+  "mcpServers/VS_CODE_MCP_CODEX/src/server.py": [
+    "How do I give Claude access to my system?",
+    "What provides Claude with tool access?"
+  ],
+  "server/store_selector.py": [
+    "How do I use either local or remote databases?",
+    "What detects and switches database backends?"
+  ],
+  "aions_core/aions_hybrid_retrieval.py": [
+    "How do I make search results better?",
+    "What blends keyword and semantic search?"
+  ],
+  "aions_core/aions_reformed_integration.py": [
+    "How do I answer questions my data doesn't know?",
+    "Where does it learn facts from memory?"
+  ],
+  "aions_core/ingest_cbms_data.py": [
+    "How do I make my JSON files searchable?",
+    "What converts text into searchable embeddings?"
+  ],
+  "aions_core/server/cbms_memory.py": [
+    "How do I keep the AI from memorizing garbage?",
+    "What organizes knowledge so it's easy to recall?"
+  ],
+  "aions_core/server/cbms_symbolic_index.py": [
+    "How do I find knowledge by code instead of words?",
+    "What translates text into symbolic lookups?"
+  ],
+  "aions_core/server/web_rag_cbms.py": [
+    "How do I pull live facts from the web?",
+    "What adds internet sources to temporary memory?"
+  ],
+  "aions_core/tools/check_status.py": [
+    "How do I check what services are broken?",
+    "What displays error logs from services?"
+  ],
+  "control_plane/blends/search_blends.py": [
+    "How do I find patterns from past problems?",
+    "What searches stored insights from experience?"
+  ],
+  "control_plane/skills/schema.py": [
+    "How do I verify a skill has all fields?",
+    "What defines the structure of system objects?"
+  ],
+  "mcpServers/VS_CODE_MCP_CODEX/src/__main__.py": [
+    "How do I launch the remote tool server?",
+    "What boots up the network protocol handler?"
+  ],
+  "scripts/aions_node_heartbeat.py": [
+    "How do I tell the hub I'm still running?",
+    "What sends status reports at regular intervals?"
+  ],
+  "scripts/full_system_scan.py": [
+    "How do I catalog all my code on disk?",
+    "What finds projects and traces their dependencies?"
+  ],
+  "scripts/set_aions_cache_env.sh": [
+    "How do I move caches off the system drive?",
+    "What configures where development tools store data?"
+  ],
+  "scripts/smoke_http_mcp.py": [
+    "How do I test if the server is working?",
+    "What checks server health over the network?"
+  ],
+  "server/context_schema.py": [
+    "How do I standardize messy message metadata?",
+    "What stores who spoke and what they said?"
+  ]
+}

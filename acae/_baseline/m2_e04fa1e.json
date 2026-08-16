@@ -1,0 +1,220 @@
+{
+  "baseline": {
+    "file": "baseline_2e2e260.json",
+    "head": "2e2e260",
+    "result_hash": "blake2b256:89766585a330aa72bc57dda154ad4cc602bb03d65e23fa57bb8522d183db5641"
+  },
+  "head": "e04fa1e",
+  "params": {
+    "drill_limit": 5,
+    "max_body_lines": 200,
+    "outline_limit": 40
+  },
+  "passed": 10,
+  "queries": [
+    {
+      "b_query": 52200,
+      "drilled": 5,
+      "files": 22,
+      "id": "q01-memory-cbms",
+      "outline_symbols": 40,
+      "passed": true,
+      "ratio_permille": 56,
+      "slice_tokens": 2967,
+      "terms": [
+        "cbms",
+        "chunks",
+        "memory",
+        "read",
+        "store",
+        "stored"
+      ],
+      "topic": "pamiec / CBMS"
+    },
+    {
+      "b_query": 35964,
+      "drilled": 5,
+      "files": 15,
+      "id": "q02-mcp-tools",
+      "outline_symbols": 40,
+      "passed": true,
+      "ratio_permille": 65,
+      "slice_tokens": 2344,
+      "terms": [
+        "exposed",
+        "fastmcp",
+        "mcp",
+        "registered",
+        "server",
+        "tool"
+      ],
+      "topic": "MCP"
+    },
+    {
+      "b_query": 25237,
+      "drilled": 5,
+      "files": 11,
+      "id": "q03-tree-sitter",
+      "outline_symbols": 40,
+      "passed": true,
+      "ratio_permille": 122,
+      "slice_tokens": 3092,
+      "terms": [
+        "code",
+        "extracted",
+        "outlines",
+        "parsers",
+        "sitter",
+        "symbols",
+        "tree"
+      ],
+      "topic": "tree-sitter"
+    },
+    {
+      "b_query": 42300,
+      "drilled": 5,
+      "files": 18,
+      "id": "q04-crla",
+      "outline_symbols": 40,
+      "passed": true,
+      "ratio_permille": 73,
+      "slice_tokens": 3092,
+      "terms": [
+        "computed",
+        "crla",
+        "evaluate",
+        "resulting",
+        "score"
+      ],
+      "topic": "CRLA"
+    },
+    {
+      "b_query": 42508,
+      "drilled": 5,
+      "files": 22,
+      "id": "q05-config",
+      "outline_symbols": 40,
+      "passed": true,
+      "ratio_permille": 82,
+      "slice_tokens": 3500,
+      "terms": [
+        "configuration",
+        "environment",
+        "loaded",
+        "read",
+        "variables"
+      ],
+      "topic": "konfiguracja"
+    },
+    {
+      "b_query": 48198,
+      "drilled": 5,
+      "files": 20,
+      "id": "q06-tests",
+      "outline_symbols": 40,
+      "passed": true,
+      "ratio_permille": 79,
+      "slice_tokens": 3817,
+      "terms": [
+        "assertions",
+        "cover",
+        "layer",
+        "memory",
+        "organized",
+        "tests"
+      ],
+      "topic": "testy"
+    },
+    {
+      "b_query": 41359,
+      "drilled": 5,
+      "files": 30,
+      "id": "q07-startup",
+      "outline_symbols": 40,
+      "passed": true,
+      "ratio_permille": 94,
+      "slice_tokens": 3919,
+      "terms": [
+        "environment",
+        "launcher",
+        "scripts",
+        "server",
+        "set",
+        "started"
+      ],
+      "topic": "skrypty startowe"
+    },
+    {
+      "b_query": 47820,
+      "drilled": 5,
+      "files": 22,
+      "id": "q08-provenance",
+      "outline_symbols": 40,
+      "passed": true,
+      "ratio_permille": 36,
+      "slice_tokens": 1734,
+      "terms": [
+        "agent",
+        "host",
+        "memory",
+        "provenance",
+        "recorded",
+        "surface",
+        "write"
+      ],
+      "topic": "provenance"
+    },
+    {
+      "b_query": 49705,
+      "drilled": 5,
+      "files": 21,
+      "id": "q09-retrieval",
+      "outline_symbols": 40,
+      "passed": true,
+      "ratio_permille": 68,
+      "slice_tokens": 3384,
+      "terms": [
+        "candidates",
+        "rank",
+        "results",
+        "return",
+        "scores",
+        "search",
+        "semantic"
+      ],
+      "topic": "retrieval"
+    },
+    {
+      "b_query": 52406,
+      "drilled": 5,
+      "files": 29,
+      "id": "q10-hooks",
+      "outline_symbols": 40,
+      "passed": true,
+      "ratio_permille": 38,
+      "slice_tokens": 2036,
+      "terms": [
+        "before",
+        "block",
+        "checkpoint",
+        "hooks",
+        "run",
+        "they",
+        "write"
+      ],
+      "topic": "hooki"
+    }
+  ],
+  "required": 8,
+  "result_hash": "blake2b256:9e88f0ad6bde5a80d26ecd71bee7de4c6fcbd57a8ad6d1ff2121e1fc670882e4",
+  "schema": "acae.m2.v1",
+  "scope": {
+    "files_in_outline_source": 169
+  },
+  "tokenizer": {
+    "encoding": "cl100k_base",
+    "library": "tiktoken",
+    "version": "0.13.0"
+  },
+  "verdict": "PASS"
+}
