@@ -1638,55 +1638,61 @@ def _health_worker() -> None:
     ),
 )
 @auto_logged
-def code_health(level: str = "risk", limit: int = 25) -> str:
-    """level: 'risk' (tylko groźne) albo 'all' (pelne liczby, bez list)."""
+def code_health(level: str = "risk", limit: int = 25, refresh: bool = False) -> str:
+    """level: 'risk' (tylko grozne) albo 'all' (same liczby). refresh: policz od nowa."""
     try:
-        start = time.time()
-        surowy = _health_run("audit_calls", "acae/_out/audit.json")
-        triaz = _health_run("triage_audit", "acae/_out/triaz.json")
-        importy = _health_run("probe_imports", "acae/_out/importy.json")
+        with _health_lock:
+            trwa, wynik, kiedy, blad = (_health_state["trwa"], _health_state["wynik"],
+                                        _health_state["kiedy"], _health_state["blad"])
+            if not trwa and (refresh or wynik is None):
+                _health_state.update(trwa=True, blad=None)
+                threading.Thread(target=_health_worker, daemon=True).start()
+                trwa = True
 
-        wyjatki = [x for x in triaz["B_wyjatki"] if x["kubelek"] == "RYZYKO"]
-        parametry = [x for x in triaz["A_parametry"] if x["kubelek"] == "RYZYKO"]
-        brak = importy["brakujace"]
+        # Krotkie czekanie: gdy maszyna jest szybka, wynik przychodzi w tym samym
+        # wywolaniu. Gdy wolna — oddajemy sterowanie zamiast wisiec do limitu klienta.
+        if trwa and (wynik is None or refresh):
+            koniec = time.time() + 25
+            while time.time() < koniec:
+                time.sleep(0.5)
+                with _health_lock:
+                    if not _health_state["trwa"]:
+                        wynik, kiedy, blad = (_health_state["wynik"], _health_state["kiedy"],
+                                              _health_state["blad"])
+                        break
+            else:
+                return _success({"state": "liczę", "hint":
+                                 "audit is running in the background; call code_health "
+                                 "again in ~30 s to get the report"})
 
-        podsumowanie = {
-            "sygnatury_niezgodne": len(surowy["D_sygnatury"]),
-            "polkniety_wyjatek_wokol_zapisu": len(wyjatki),
-            "ignorowany_parametr_ktory_ktos_podaje": len(parametry),
-            "podsystem_zastapiony_zaslepka": len(brak),
-        }
-        odp: Dict[str, Any] = {
-            "summary": podsumowanie,
-            "total_findings": sum(podsumowanie.values()),
-            "raw_counts_before_triage": {
-                "swallowed_exceptions": len(surowy["B_polkniete"]),
-                "unused_parameters": len(surowy["A_nieuzyte_parametry"]),
-                "dead_imports": len(surowy["C_martwe_importy"]),
-            },
-            "elapsed_ms": int((time.time() - start) * 1000),
-        }
+        if blad:
+            return _error(f"audyt nie doszedl do konca: {blad}")
+        if wynik is None:
+            return _success({"state": "liczę", "hint": "call again in ~30 s"})
+
+        odp: Dict[str, Any] = {k: v for k, v in wynik.items() if not k.startswith("_")}
+        odp["report_age_s"] = int(time.time() - kiedy) if kiedy else None
 
         if level == "risk":
             odp["signature_mismatch"] = [
                 f"{x['plik']}:{x['linia']} {x['wolane']}() — {x['powod']}"
-                for x in surowy["D_sygnatury"][:limit]
+                for x in wynik["_D"][:limit]
             ]
             odp["swallowed_around_write"] = [
-                f"{x['plik']}:{x['linia']} — {x['powod']}" for x in wyjatki[:limit]
+                f"{x['plik']}:{x['linia']} — {x['powod']}" for x in wynik["_B"][:limit]
             ]
             odp["ignored_parameter"] = [
                 f"{x['plik']}:{x['linia']} {x['funkcja']}() ignores `{x['parametr']}` — {x['powod']}"
-                for x in parametry[:limit]
+                for x in wynik["_A"][:limit]
             ]
             odp["missing_module"] = [
                 f"{x['plik']}:{x['linia']} needs `{x['modul']}` — "
                 + (f"it lives in {x['lezy_w'][0]}" if x["lezy_w"] else "NOT IN THE REPO AT ALL")
-                for x in brak[:limit]
+                for x in wynik["_brak"][:limit]
             ]
             # Nierozstrzygniete mowimy GLOSNO. Milczenie o nich czytaloby sie jak
             # "sprawdzone i czyste", a to nieprawda: dla tych plikow sonda nie ma zdania.
-            odp["undecided_imports"] = len(importy.get("niepewne", []))
+            odp["undecided_imports"] = wynik["_niepewne"]
 
         return _success(odp)
     except Exception as e:
