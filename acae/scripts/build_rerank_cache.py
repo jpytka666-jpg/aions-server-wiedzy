@@ -103,12 +103,13 @@ def main():
     for nr, q in enumerate(pytania, 1):
         numery = czolowka(q["question"])
         pary = [(q["question"], teksty[i]) for i in numery]
-        surowe = model.predict(pary)   # sigmoid, bo model ma jeden neuron wyjsciowy
+        surowe = model.predict(pary)   # SUROWY LOGIT — model deklaruje Identity, patrz naglowek
         wpis = {}
         for i, s in zip(numery, surowe):
             p, row = items[i]
-            # Kwantyzacja do promili. Zaokraglenie w gore od polowy, deterministyczne.
-            wpis[candidate_key(p, str(row["name_path"]))] = int(float(s) * 1000 + 0.5)
+            # Kwantyzacja do milijednostek logitu. `floor(x+0.5)` dziala tak samo
+            # dla dodatnich i ujemnych, w odroznieniu od `int()`, ktore scina do zera.
+            wpis[candidate_key(p, str(row["name_path"]))] = math.floor(float(s) * 1000 + 0.5)
         scores[question_key(q["question"])] = wpis
         pary_total += len(pary)
         print(f"  [{nr:>2}/{len(pytania)}] {q['id']:<8} {len(pary)} par")
