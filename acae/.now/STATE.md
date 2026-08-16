@@ -2242,6 +2242,66 @@ ze rozklady sa podobne. Ale `neg/poz` porownuje SREDNIE, a NQC patrzy na ROZRZUT
 to inna wielkosc i moze rozdzielac tam, gdzie srednia nie rozdziela.
 Bilans przewidywan: 6 na 23.
 
+### WYNIK — SYGNALU NIE MA. Kierunek zamkniety za godzine zamiast za dzien.
+
+Skrypt: `scripts/measure_qpp_ceiling.py`. Ranking `embed_desc`, 30 pozytywow, 6 negatywow.
+
+| miara | pozytywy (mediana) | negatywy (mediana) | rozlaczne? |
+|---|---|---|---|
+| NQC | 39 | **49** | NIE |
+| spadek top1→top10 | 35 | **52** | NIE |
+| odchylenie czolowki | 11 | **15** | NIE |
+| top1 | 522 | **559** | NIE |
+| srednia czolowki | 497 | **520** | NIE |
+
+**Rozklady nie tylko sie nakladaja — sa lekko ODWROCONE.** Na kazdej z pieciu miar
+negatywy wypadaja WYZEJ od pozytywow, czyli pytanie o rzecz, ktorej nie ma, wyglada
+odrobine PEWNIEJ niz pytanie o rzecz, ktora jest.
+
+Liczby szczegolowe sa jeszcze wymowniejsze. Szesc negatywow ma NQC 19, 22, 35, 49, 89, 96.
+Szesc pozytywow o najnizszym NQC: 8, 12, 13, 14, 16, 19. **Pozytywy zajmuja DOLNY koniec
+skali.** Prog „odmawiaj, gdy NQC ponizej X" odcinalby najpierw pytania, na ktore
+odpowiedz istnieje.
+
+### Dlaczego intuicja z literatury tu nie dziala
+
+Hipoteza, ktorej NIE weryfikuje (obserwacja po fakcie): przy pytaniu SPOZA zakresu
+embedding znajduje kilka rzeczy powierzchownie podobnych i one odstaja od reszty —
+czolowka wychodzi ostra. Przy pytaniu SENSOWNYM wiele powiazanych plikow dostaje
+podobne oceny, bo naprawde sa powiazane — czolowka wychodzi plaska.
+
+Czyli w naszym korpusie **plaskosc znaczy „duzo rzeczy na temat", a nie „nic na temat"**.
+To jest odwrotnie niz w klasycznym IR, gdzie kolekcja jest heterogeniczna. Nasze 169
+plikow to jeden system, wiec wszystko jest ze wszystkim troche zwiazane.
+
+Zgadza sie to takze z zastrzezeniem z literatury: NQC dziala gorzej na neuronowym IR.
+U nas nie tyle dziala gorzej, co **nie dziala wcale**.
+
+### Co ten pomiar rozstrzyga, a czego nie
+
+**Rozstrzyga:** z samego rozkladu ocen `embed_desc` NIE DA SIE odczytac, czy odpowiedz
+istnieje. Zadnego progu nie da sie tu poprowadzic i nie bedziemy udawac, ze da sie.
+Cala rodzina po-wyszukiwawczych QPP na TYM rankerze jest zamknieta.
+
+**NIE rozstrzyga:** czy dalo by sie to odczytac z rozkladu ocen INNEGO rankera —
+w szczegolnosci przesiewacza (cross-encoder), ktory zwraca ocene z zupelnie innej skali
+i z innego rodzaju osadu. To pozostaje otwarte.
+
+### BILANS PRZEWIDYWAN: trafione
+
+Przewidywalem „slabe rozdzielenie". Wyszlo **zadne, miejscami odwrocone** — czyli
+kierunek zgodny, sila gorsza niz zakladalem. Zaliczam jako trafione: 7 na 24.
+
+### CO Z TEGO WYNIKA
+
+Ten pomiar **wzmacnia argument za przesiewaczem**. Skoro ksztalt ocen nie niesie
+informacji o tym, czy odpowiedz istnieje, to potrzebne jest cos, co **naprawde czyta
+pytanie i kandydata razem** — a nie mierzy statystyke tego, co juz policzyl embedding.
+
+Koszt tego ustalenia: jeden skrypt i jedno uruchomienie. Gdybym poszedl od razu
+w mechanizm, dobralbym prog na szesciu negatywach, dostal jakis wynik i dopiero pozniej
+zorientowal sie, ze prog stoi po zlej stronie rozkladu.
+
 ### Uwaga Marcina do etapu przesiewacza (nie teraz, ale zapisane)
 
 Gdy powstanie warstwa przesiewacza (cross-encoder), jej zapisane oceny **maja tworzyc
