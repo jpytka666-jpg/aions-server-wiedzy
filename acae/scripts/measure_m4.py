@@ -828,7 +828,7 @@ def main() -> int:
     # Warianty stawiajace ranking na embeddingu Z OPISAMI (M9b, M10, M11 i M13).
     EMBED_Z_OPISAMI = ("embed_desc", "embed_desc_tie", "embed_desc_borda",
                        "verify1", "verify2", "domain3", "domain1",
-                       "intent", "intent_domain")
+                       "intent", "intent_domain", "rerank")
     # Warianty siegajace po artefakt dziedzin (przypisania i/lub routing).
     Z_DZIEDZINAMI = ("domain3", "domain1", "intent", "intent_domain")
     if args.variant in WARIANTY_Z_OPISAMI:
