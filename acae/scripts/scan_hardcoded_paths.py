@@ -108,7 +108,7 @@ def main() -> int:
             except OSError:
                 pamiec[s] = False
         istnieje = pamiec[s]
-        wewnatrz = s.lower().replace("/", "\\").startswith(korzen_txt.replace("/", "\\"))
+        wewnatrz = _znormalizuj(s).startswith(_znormalizuj(korzen_txt))
         z["istnieje"] = istnieje
         z["stan"] = "WEWN" if wewnatrz else ("ZYWA" if istnieje else "MARTWA")
 
