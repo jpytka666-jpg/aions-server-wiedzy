@@ -1,0 +1,118 @@
+{
+  "aions_core/agi_core.py": [
+    "how do I make it think through problems step by step",
+    "where does it keep track of what it's currently thinking"
+  ],
+  "aions_core/agi_unified.py": [
+    "why isn't the system getting smarter from what I tell it",
+    "how do I switch between different thinking and learning modes"
+  ],
+  "aions_core/evaluator_engine.py": [
+    "why didn't the task completion get a numeric score",
+    "where does it save the performance results and grades"
+  ],
+  "aions_core/server/facts_loader.py": [
+    "why doesn't it find stored knowledge that should apply",
+    "how do I see which facts answer a question"
+  ],
+  "aions_core/tools/harvest_memory.py": [
+    "why isn't my newly saved knowledge appearing in responses",
+    "what command brings all stored knowledge together in one place"
+  ],
+  "control_plane/blends/analyze_blend.py": [
+    "why did the system make that particular mistake",
+    "how do I understand what went wrong after a failure"
+  ],
+  "control_plane/executor.py": [
+    "why didn't this operation complete successfully",
+    "what actually runs a single task from a bigger plan"
+  ],
+  "control_plane/node_agent/agent.py": [
+    "why isn't the worker machine reporting its status",
+    "how do I run commands on distant machines"
+  ],
+  "control_plane/scheduler.py": [
+    "what reminds me what's due today and this week",
+    "why don't the most urgent items appear at the top"
+  ],
+  "scripts/aions_indexer.py": [
+    "why can't I search for files I know exist",
+    "how do I find any file on my computer"
+  ],
+  "scripts/calendar_e2e_smoke.py": [
+    "why can't I see my scheduled events appear",
+    "what checks that my calendar connection is properly working"
+  ],
+  "scripts/chatgpt_parser_v2.py": [
+    "how do I turn that ChatGPT export into structured data",
+    "what pulls out conversation details from raw text files"
+  ],
+  "scripts/demo_windows_final.py": [
+    "why isn't the system remembering successful task workflows",
+    "how do I test that multiple steps work together"
+  ],
+  "scripts/run_mcp_server.sh": [
+    "why isn't the Claude connection working right now",
+    "how do I start the protocol bridge on Windows"
+  ],
+  "aions_core/agi_soft_retrieval.py": [
+    "why doesn't it find the most relevant answers first",
+    "how does the system improve its search ability over time"
+  ],
+  "aions_core/cbms_memory.py": [
+    "why can't it find related concepts stored together",
+    "how do I organize knowledge so it's always findable"
+  ],
+  "aions_core/server/cbms_doctor.py": [
+    "why isn't the system using stored knowledge anymore",
+    "what finds problems in saved memory files"
+  ],
+  "aions_core/server/pocket_qc.py": [
+    "why was this new fact marked as rejected",
+    "how do I prevent bad answers from being saved"
+  ],
+  "aions_core/tools/test_api.py": [
+    "why isn't the server responding to my request",
+    "what quickly confirms the server is running right"
+  ],
+  "control_plane/api.py": [
+    "why won't the system send work to distant nodes",
+    "how do I delegate tasks to remote machines"
+  ],
+  "mcpServers/VS_CODE_MCP_CODEX/run_server.py": [
+    "why can't the tool access my source code files",
+    "how do I connect my editor to this system"
+  ],
+  "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py": [
+    "why isn't it using the faster search method available",
+    "how does it pick which search engine to use"
+  ],
+  "scripts/ingest_tier1_chroma.py": [
+    "why can't I find information I just added",
+    "how do I make knowledge searchable by meaning"
+  ],
+  "scripts/project_scanner.py": [
+    "why does changing one file break that other one",
+    "what shows me all the connections between my files"
+  ],
+  "scripts/test_google_integration.py": [
+    "why is my Google account not connecting properly",
+    "what tests that all the Google integrations are ready"
+  ],
+  "scripts/test_skill_engine_foundation.py": [
+    "why doesn't it remember how to do this again",
+    "how do I teach it to repeat saved workflows"
+  ],
+  "scripts/test_skill_open_apps.py": [
+    "why does it keep opening the app over again",
+    "what prevents it from repeating the exact same work"
+  ],
+  "scripts/verify_python_env.py": [
+    "why does it complain about the wrong Python version",
+    "what makes sure the system has correct setup"
+  ],
+  "server/store.py": [
+    "why can't I find related information this way",
+    "how do I search for things by meaning instead"
+  ]
+}

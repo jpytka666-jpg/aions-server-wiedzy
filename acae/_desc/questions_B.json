@@ -1,0 +1,118 @@
+{
+  "aions_core/server/cbms_outline.py": [
+    "how do I search for knowledge without loading everything",
+    "why does searching return metadata before the actual content"
+  ],
+  "control_plane/agents/agent_registry.py": [
+    "how do I add a new role without touching code",
+    "where are all my available roles registered"
+  ],
+  "control_plane/blends/__init__.py": [
+    "why doesn't Python find this module",
+    "what command line tools go here"
+  ],
+  "control_plane/blends/write_conclusion.py": [
+    "how do I save what I just learned to storage",
+    "why does my exported data need manual approval first"
+  ],
+  "control_plane/llm_adapter.py": [
+    "how do I answer questions using models on my computer",
+    "where do I set which language model to use"
+  ],
+  "control_plane/skills/forge_linux_verify.py": [
+    "how do I check if a new skill works before deploying",
+    "why does my skill get rejected when I try to publish it"
+  ],
+  "control_plane/skills/goal_planner.py": [
+    "how do I teach the system to reuse good solutions",
+    "why does it remember how to do something I did before"
+  ],
+  "control_plane/skills/papiery.py": [
+    "how do I keep track of my to-do items",
+    "where are my pending tasks stored on disk"
+  ],
+  "control_plane/skills/recipes.py": [
+    "how do I save workflows I want to reuse later",
+    "why do paraphrased goals match the same solution"
+  ],
+  "mcpServers/VS_CODE_MCP_CODEX/src/__init__.py": [
+    "how do I start the communication server with different settings",
+    "where do I configure what port the server runs on"
+  ],
+  "scripts/test_node_registry.py": [
+    "how do I verify the system nodes are registered correctly",
+    "what does the smoke test check about the registry"
+  ],
+  "scripts/turbo_scanner.py": [
+    "how do I find duplicate files in my codebase quickly",
+    "where are my orphan files with no dependencies"
+  ],
+  "scripts/vault/_core.py": [
+    "how do I store passwords without exposing them",
+    "why can't another user read my stored credentials"
+  ],
+  "scripts/vault/open_secret.py": [
+    "how do I get a password from the vault to use it",
+    "where does it write the decrypted secret"
+  ],
+  "server/models.py": [
+    "how do I define what a search request should look like",
+    "what does the API expect when I store context"
+  ],
+  "aions_core/claude_aions_bridge.py": [
+    "how does Claude get answers from my knowledge base",
+    "why does it use local data before asking the model"
+  ],
+  "aions_core/server/refgraph.py": [
+    "how do I find broken links in my knowledge base",
+    "what happens when knowledge pieces depend on archived data"
+  ],
+  "aions_core/tools/analyze_csv.py": [
+    "how do I audit where all my data files are stored",
+    "why does it look for specific critical files"
+  ],
+  "aions_core/unified_core.py": [
+    "how do I use all systems at the same time",
+    "why does it gracefully handle components that fail to load"
+  ],
+  "control_plane/agents/agent_runner.py": [
+    "how do I prevent agents from running dangerous commands",
+    "why was this agent blocked from using that skill"
+  ],
+  "control_plane/llm/server_client.py": [
+    "how do I talk to a running model server",
+    "where is the model running that I'm sending requests to"
+  ],
+  "control_plane/operator/mouth.py": [
+    "how do I get explanations for why the system made decisions",
+    "what happens if the language model is not responding"
+  ],
+  "control_plane/policy.py": [
+    "how do I block certain commands from running",
+    "what tools am I allowed to use in this system"
+  ],
+  "control_plane/skills/semantic_search.py": [
+    "how do I find a skill when I don't know its name",
+    "why does it find skills based on what I mean"
+  ],
+  "mcpServers/VS_CODE_MCP_CODEX/src/test_server.py": [
+    "how do I test if the server infrastructure works at all",
+    "what are the minimal tools needed to verify server startup"
+  ],
+  "scripts/aions_tray.py": [
+    "how do I restart Claude from the notification area",
+    "where do I see if Claude is still running"
+  ],
+  "scripts/demo_secretary.py": [
+    "how do I see all the skills working together in practice",
+    "why does it save the workflow as a reusable recipe"
+  ],
+  "scripts/proof_provenance.py": [
+    "how do I verify audit trails are being recorded correctly",
+    "what metadata gets attached when information is stored"
+  ],
+  "server/store_api.py": [
+    "how do I use a remote database as if it were local",
+    "what happens if the database server is unreachable"
+  ]
+}

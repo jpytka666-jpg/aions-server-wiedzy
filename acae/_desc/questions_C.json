@@ -1,0 +1,122 @@
+{
+  "aions_core/agi_existing_models.py": [
+    "Why does it use so much memory when running multiple models",
+    "How do I tell which model is currently active in memory"
+  ],
+  "aions_core/aions_crla_reformed.py": [
+    "Why does the system pick different answers on repeated queries",
+    "How can I trace why this specific response was selected"
+  ],
+  "aions_core/aions_monitoring_dashboard.py": [
+    "Why isn't my monitoring showing updated performance numbers lately",
+    "Where does it save the historical test result logs"
+  ],
+  "aions_core/aions_vector_enhancement.py": [
+    "Why don't semantic searches find the right information",
+    "What tables are available inside this vector store"
+  ],
+  "aions_core/tools/symbolic_probe.py": [
+    "Why does translating to intermediate format break the search",
+    "What format do the resulting symbol codes take"
+  ],
+  "aions_core/tools/test_guardrail.py": [
+    "Why does the server refuse some legitimate looking questions",
+    "How do I run this validation against my server"
+  ],
+  "control_plane/agents/__init__.py": [
+    "Why doesn't my new agent show up after adding it",
+    "Where does it scan for new agent declarations"
+  ],
+  "control_plane/models.py": [
+    "Why can't I track which plan step is currently running",
+    "How are identifiers generated for plans and steps"
+  ],
+  "control_plane/operator/loop.py": [
+    "Why didn't the system automatically restart the failed service",
+    "Where does it save what happened during repairs"
+  ],
+  "scripts/chatgpt_ultimate.py": [
+    "Why are my conversation titles showing up garbled in exports",
+    "What data formats can the export generate"
+  ],
+  "scripts/demo_papiery.py": [
+    "Why haven't I received notifications for overdue items",
+    "Where are my task definitions stored on disk"
+  ],
+  "scripts/test_llm_adapter.py": [
+    "Why doesn't the model seem to use my context",
+    "How do I verify the model is loaded"
+  ],
+  "scripts/validate_aions_tools.py": [
+    "Why did some tools fail their validation checks",
+    "Which tools does this validation suite actually test"
+  ],
+  "server/app.py": [
+    "Why can't I find the document I just added",
+    "What endpoints are available for managing sessions"
+  ],
+  "server/store_http.py": [
+    "Why did the connection drop to embedded mode",
+    "How does it choose between connection modes"
+  ],
+  "aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py": [
+    "Why is this processing running slower than normal",
+    "What does the efficiency score actually measure"
+  ],
+  "aions_core/agi_evolution.py": [
+    "Why does it keep trying strategies that failed before",
+    "How does it decide which improvement to attempt next"
+  ],
+  "aions_core/agi_neural_backprop.py": [
+    "Why are my training gradients exploding so rapidly",
+    "How does it decide where to read data"
+  ],
+  "aions_core/api.py": [
+    "Why is the server returning a startup error",
+    "What structure should my query requests be in"
+  ],
+  "aions_core/server/stylist.py": [
+    "Why did it remove my answer formatting entirely",
+    "How can I verify nothing important disappeared"
+  ],
+  "aions_core/server/ts_symbols.py": [
+    "Why aren't all my methods appearing in the index",
+    "What programming languages can this tool parse"
+  ],
+  "aions_core/smart_cbms.py": [
+    "Why is the response sometimes from cache versus model",
+    "How long does it wait before timing out"
+  ],
+  "aions_core/tools/rebuild_manifest_force.py": [
+    "Why can't it find the chunks I just saved",
+    "What metadata does it pull from each chunk"
+  ],
+  "control_plane/node_registry.py": [
+    "Why was this assigned to a machine lacking tools",
+    "How does it know when a worker goes offline"
+  ],
+  "control_plane/skills/planner.py": [
+    "Why isn't the system finding the skill I need",
+    "What happens when all skills are currently unavailable"
+  ],
+  "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py": [
+    "Why does the search index show files that don't exist",
+    "When does it update the file index automatically"
+  ],
+  "scripts/aions_python.sh": [
+    "Why am I getting a different Python version",
+    "Where does it load the venv configuration"
+  ],
+  "scripts/ingest_treasures_tier2.py": [
+    "Why can't I search for the cataloged items afterward",
+    "What happens to the original files after ingestion"
+  ],
+  "scripts/verify_tier1_chroma.py": [
+    "Why did the tests return empty search results",
+    "How does it validate the database was set up"
+  ],
+  "server/__init__.py": [
+    "How do I confirm this is a package",
+    "What happens when Python imports this directory"
+  ]
+}

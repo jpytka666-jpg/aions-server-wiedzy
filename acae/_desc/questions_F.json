@@ -1,0 +1,114 @@
+{
+  "aions_core/AIONS_ULTIMATE_UNIFIED.py": [
+    "how do I get an answer from the entire system",
+    "why isn't it finding anything in the knowledge base"
+  ],
+  "aions_core/aions_agent_layer.py": [
+    "how do I let the agent run tasks safely",
+    "why did the agent refuse to delete that file"
+  ],
+  "aions_core/server/codebook_engine.py": [
+    "how do I turn text into compact codes",
+    "why won't it decode the symbols correctly"
+  ],
+  "aions_core/test_aions_capabilities.py": [
+    "where can I test whether the chatbot works",
+    "why is it refusing to answer that question"
+  ],
+  "control_plane/cbms_gate.py": [
+    "how does it decide whether to call the model",
+    "why isn't it using what I stored in memory"
+  ],
+  "control_plane/operator/__init__.py": [
+    "where's the main loop that fixes system issues",
+    "how do I start the automatic monitoring system"
+  ],
+  "control_plane/skills/context.py": [
+    "what helper functions can a skill actually use",
+    "why can't the skill write files to disk"
+  ],
+  "control_plane/skills/gate.py": [
+    "how do I approve a skill before it runs",
+    "why did it block me from running this skill"
+  ],
+  "control_plane/skills/registry.py": [
+    "where does it find all the available skills",
+    "why won't it find the skill I'm looking for"
+  ],
+  "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py": [
+    "how does it understand what I'm really asking",
+    "why is it making up facts that aren't true"
+  ],
+  "scripts/aions_healthcheck.sh": [
+    "where can I see if the system is healthy",
+    "why doesn't it tell me which service is broken"
+  ],
+  "scripts/demo_windows_batch2.py": [
+    "how do I run a sequence of desktop tasks",
+    "why didn't it create the file like I asked"
+  ],
+  "scripts/operator_daily_brief.py": [
+    "where's the script that shows my morning tasks",
+    "why is it missing today's deadline from the list"
+  ],
+  "scripts/sync_dev_mirror.sh": [
+    "how do I keep the development copy in sync",
+    "why did it delete my changes from the mirror"
+  ],
+  "aions_core/aions_reactor.py": [
+    "where does it manage the skill learning pipeline",
+    "why didn't it create the skill I requested"
+  ],
+  "aions_core/aions_style_parameters.py": [
+    "how do I change the tone of responses",
+    "why doesn't it sound more professional like I asked"
+  ],
+  "aions_core/server/cbms_purgatory.py": [
+    "where do new saved notes go when they arrive",
+    "why is it hiding my knowledge from searches"
+  ],
+  "aions_core/server/crla_core.py": [
+    "how does it pick the best answer from candidates",
+    "why did it choose that answer over the better one"
+  ],
+  "aions_core/tools/check_schema.py": [
+    "how do I see what tables are in the database",
+    "why can't I understand the database structure"
+  ],
+  "aions_core/tools/facts_builder.py": [
+    "how do I make my documents searchable",
+    "why isn't it finding the facts I added"
+  ],
+  "control_plane/planner.py": [
+    "how does it turn a goal into action steps",
+    "why did it plan to do something I didn't ask"
+  ],
+  "control_plane/skills/forge.py": [
+    "where does it test new skills before adding them",
+    "why did it reject the skill I built"
+  ],
+  "control_plane/skills/world_state.py": [
+    "how does it track what's currently open on screen",
+    "why does it think the browser is closed"
+  ],
+  "mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py": [
+    "how do I automate clicking and typing on desktop",
+    "why can't it take a screenshot right now"
+  ],
+  "scripts/demo_train.py": [
+    "where can I see how the system learns new tasks",
+    "why didn't it remember how to do that again"
+  ],
+  "scripts/demo_windows_session.py": [
+    "where does it show what it learned in this session",
+    "why didn't it automatically open the editor like I asked"
+  ],
+  "scripts/hello_world.py": [
+    "what do I run to check if Python works",
+    "why did it print nothing to the console"
+  ],
+  "scripts/register_treasure_chunk.py": [
+    "how do I add a dataset to the search index",
+    "why can't it find the data I registered"
+  ]
+}
