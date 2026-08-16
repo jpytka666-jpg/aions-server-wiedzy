@@ -108,7 +108,7 @@ def triaz_wyjatkow(drzewa) -> list[dict]:
                 typy = typy_handlera(h)
                 if typy & OPCJONALNE:
                     kubelek, powod = "NISKIE", "zaleznosc opcjonalna"
-                elif zapisy and not (sprzat and not zapisy):
+                elif zapisy:
                     kubelek, powod = "RYZYKO", f"w bloku try stoi zapis: {zapisy[:3]}"
                 elif sprzat:
                     kubelek, powod = "NISKIE", f"sprzatanie: {sprzat[:3]}"
