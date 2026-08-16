@@ -1,0 +1,6344 @@
+{
+  "queries": [
+    {
+      "id": "w001",
+      "kind": "positive",
+      "question": "how do I get an answer from the entire system",
+      "answer_files": [
+        "aions_core/AIONS_ULTIMATE_UNIFIED.py"
+      ],
+      "answer_symbols": [
+        "math_solve",
+        "is_math_candidate",
+        "style_pass",
+        "AIONS_ULTIMATE",
+        "AIONS_ULTIMATE/__init__",
+        "AIONS_ULTIMATE/_init_memory_system",
+        "AIONS_ULTIMATE/_init_korean_compression",
+        "AIONS_ULTIMATE/_load_korean_patterns",
+        "AIONS_ULTIMATE/_init_crla_system",
+        "AIONS_ULTIMATE/_init_facts_system",
+        "AIONS_ULTIMATE/_init_conversation_system",
+        "AIONS_ULTIMATE/_init_advanced_features",
+        "AIONS_ULTIMATE/_update_stats",
+        "AIONS_ULTIMATE/query",
+        "AIONS_ULTIMATE/_search_facts",
+        "AIONS_ULTIMATE/_cbms_query",
+        "AIONS_ULTIMATE/_create_soft_refusal",
+        "AIONS_ULTIMATE/benchmark",
+        "AIONS_ULTIMATE/get_system_info",
+        "AIONS_ULTIMATE/save_state",
+        "interactive_chat",
+        "run_full_test"
+      ]
+    },
+    {
+      "id": "w002",
+      "kind": "positive",
+      "question": "why isn't it finding anything in the knowledge base",
+      "answer_files": [
+        "aions_core/AIONS_ULTIMATE_UNIFIED.py"
+      ],
+      "answer_symbols": [
+        "math_solve",
+        "is_math_candidate",
+        "style_pass",
+        "AIONS_ULTIMATE",
+        "AIONS_ULTIMATE/__init__",
+        "AIONS_ULTIMATE/_init_memory_system",
+        "AIONS_ULTIMATE/_init_korean_compression",
+        "AIONS_ULTIMATE/_load_korean_patterns",
+        "AIONS_ULTIMATE/_init_crla_system",
+        "AIONS_ULTIMATE/_init_facts_system",
+        "AIONS_ULTIMATE/_init_conversation_system",
+        "AIONS_ULTIMATE/_init_advanced_features",
+        "AIONS_ULTIMATE/_update_stats",
+        "AIONS_ULTIMATE/query",
+        "AIONS_ULTIMATE/_search_facts",
+        "AIONS_ULTIMATE/_cbms_query",
+        "AIONS_ULTIMATE/_create_soft_refusal",
+        "AIONS_ULTIMATE/benchmark",
+        "AIONS_ULTIMATE/get_system_info",
+        "AIONS_ULTIMATE/save_state",
+        "interactive_chat",
+        "run_full_test"
+      ]
+    },
+    {
+      "id": "w003",
+      "kind": "positive",
+      "question": "Why is this processing running slower than normal",
+      "answer_files": [
+        "aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py"
+      ],
+      "answer_symbols": [
+        "ProductionAIONSCBMS",
+        "ProductionAIONSCBMS/__init__",
+        "ProductionAIONSCBMS/load_korean_modified_model",
+        "ProductionAIONSCBMS/split_to_syllables",
+        "ProductionAIONSCBMS/syllable_to_cbms_block",
+        "ProductionAIONSCBMS/compress_with_cbms",
+        "ProductionAIONSCBMS/neural_process_cbms",
+        "ProductionAIONSCBMS/generate_aions_response",
+        "ProductionAIONSCBMS/run_production_demo",
+        "main"
+      ]
+    },
+    {
+      "id": "w004",
+      "kind": "positive",
+      "question": "What does the efficiency score actually measure",
+      "answer_files": [
+        "aions_core/PRODUCTION_AIONS_CBMS_SYSTEM.py"
+      ],
+      "answer_symbols": [
+        "ProductionAIONSCBMS",
+        "ProductionAIONSCBMS/__init__",
+        "ProductionAIONSCBMS/load_korean_modified_model",
+        "ProductionAIONSCBMS/split_to_syllables",
+        "ProductionAIONSCBMS/syllable_to_cbms_block",
+        "ProductionAIONSCBMS/compress_with_cbms",
+        "ProductionAIONSCBMS/neural_process_cbms",
+        "ProductionAIONSCBMS/generate_aions_response",
+        "ProductionAIONSCBMS/run_production_demo",
+        "main"
+      ]
+    },
+    {
+      "id": "w005",
+      "kind": "positive",
+      "question": "how do I make it think through problems step by step",
+      "answer_files": [
+        "aions_core/agi_core.py"
+      ],
+      "answer_symbols": [
+        "Thought",
+        "Thought/add_child",
+        "Goal",
+        "WorkingMemory",
+        "WorkingMemory/push_context",
+        "WorkingMemory/get_recent_context",
+        "AGICore",
+        "AGICore/__init__",
+        "AGICore/_load_meta_knowledge",
+        "AGICore/reason",
+        "AGICore/_understand_query",
+        "AGICore/_create_reasoning_plan",
+        "AGICore/_execute_reasoning_plan",
+        "AGICore/_multi_hop_reasoning",
+        "AGICore/_reflect_on_reasoning",
+        "AGICore/_learn_from_interaction",
+        "AGICore/_divide_and_conquer",
+        "AGICore/_means_end_analysis",
+        "AGICore/_constraint_satisfaction",
+        "AGICore/_extract_concepts",
+        "AGICore/_classify_query_type",
+        "AGICore/_assess_complexity",
+        "AGICore/_identify_assumptions",
+        "AGICore/_decompose_complex_goal",
+        "AGICore/_retrieve_knowledge",
+        "AGICore/_synthesize_knowledge",
+        "AGICore/_generate_hypotheses",
+        "AGICore/_validate_hypotheses",
+        "AGICore/_form_conclusion",
+        "AGICore/_calculate_confidence",
+        "AGICore/_find_related_concepts",
+        "AGICore/_assess_reasoning_quality",
+        "AGICore/_identify_knowledge_gaps",
+        "AGICore/_consider_alternatives",
+        "AGICore/_analyze_confidence_factors",
+        "AGICore/_suggest_improvements",
+        "AGICore/_extract_successful_strategies",
+        "AGICore/_analyze_failure_patterns",
+        "AGICore/_identify_differences",
+        "AGICore/_check_constraint",
+        "AGICore/_check_positive_factor",
+        "AGICore/_check_negative_factor"
+      ]
+    },
+    {
+      "id": "w006",
+      "kind": "positive",
+      "question": "where does it keep track of what it's currently thinking",
+      "answer_files": [
+        "aions_core/agi_core.py"
+      ],
+      "answer_symbols": [
+        "Thought",
+        "Thought/add_child",
+        "Goal",
+        "WorkingMemory",
+        "WorkingMemory/push_context",
+        "WorkingMemory/get_recent_context",
+        "AGICore",
+        "AGICore/__init__",
+        "AGICore/_load_meta_knowledge",
+        "AGICore/reason",
+        "AGICore/_understand_query",
+        "AGICore/_create_reasoning_plan",
+        "AGICore/_execute_reasoning_plan",
+        "AGICore/_multi_hop_reasoning",
+        "AGICore/_reflect_on_reasoning",
+        "AGICore/_learn_from_interaction",
+        "AGICore/_divide_and_conquer",
+        "AGICore/_means_end_analysis",
+        "AGICore/_constraint_satisfaction",
+        "AGICore/_extract_concepts",
+        "AGICore/_classify_query_type",
+        "AGICore/_assess_complexity",
+        "AGICore/_identify_assumptions",
+        "AGICore/_decompose_complex_goal",
+        "AGICore/_retrieve_knowledge",
+        "AGICore/_synthesize_knowledge",
+        "AGICore/_generate_hypotheses",
+        "AGICore/_validate_hypotheses",
+        "AGICore/_form_conclusion",
+        "AGICore/_calculate_confidence",
+        "AGICore/_find_related_concepts",
+        "AGICore/_assess_reasoning_quality",
+        "AGICore/_identify_knowledge_gaps",
+        "AGICore/_consider_alternatives",
+        "AGICore/_analyze_confidence_factors",
+        "AGICore/_suggest_improvements",
+        "AGICore/_extract_successful_strategies",
+        "AGICore/_analyze_failure_patterns",
+        "AGICore/_identify_differences",
+        "AGICore/_check_constraint",
+        "AGICore/_check_positive_factor",
+        "AGICore/_check_negative_factor"
+      ]
+    },
+    {
+      "id": "w007",
+      "kind": "positive",
+      "question": "Why does it keep trying strategies that failed before",
+      "answer_files": [
+        "aions_core/agi_evolution.py"
+      ],
+      "answer_symbols": [
+        "PerformanceMetric",
+        "PerformanceMetric/add_measurement",
+        "PerformanceMetric/_calculate_improvement_rate",
+        "PerformanceMetric/current_performance",
+        "PerformanceMetric/average_performance",
+        "Strategy",
+        "Strategy/can_apply",
+        "Strategy/apply",
+        "Strategy/update_success",
+        "AGIEvolution",
+        "AGIEvolution/__init__",
+        "AGIEvolution/_init_metrics",
+        "AGIEvolution/_init_strategies",
+        "AGIEvolution/_load_config",
+        "AGIEvolution/_apply_config",
+        "AGIEvolution/analyze_performance",
+        "AGIEvolution/generate_improvement_plan",
+        "AGIEvolution/execute_improvement",
+        "AGIEvolution/adapt_strategies",
+        "AGIEvolution/identify_emergent_capabilities",
+        "AGIEvolution/optimize_resource_allocation",
+        "AGIEvolution/generate_self_assessment",
+        "AGIEvolution/_prioritize_weaknesses",
+        "AGIEvolution/_select_strategy_for_weakness",
+        "AGIEvolution/_estimate_improvement",
+        "AGIEvolution/_select_exploration_strategies",
+        "AGIEvolution/_needs_consolidation",
+        "AGIEvolution/_capture_metrics",
+        "AGIEvolution/_calculate_metrics_delta",
+        "AGIEvolution/_apply_improvement",
+        "AGIEvolution/_adjust_strategy_parameters",
+        "AGIEvolution/_generate_new_strategies",
+        "AGIEvolution/_adjust_meta_learning_rate",
+        "AGIEvolution/_extract_recent_patterns",
+        "AGIEvolution/_extract_historical_patterns",
+        "AGIEvolution/_calculate_component_importance",
+        "AGIEvolution/_calculate_overall_performance",
+        "AGIEvolution/_calculate_improvement_trend",
+        "AGIEvolution/_calculate_readiness_level",
+        "AGIEvolution/save_state"
+      ]
+    },
+    {
+      "id": "w008",
+      "kind": "positive",
+      "question": "How does it decide which improvement to attempt next",
+      "answer_files": [
+        "aions_core/agi_evolution.py"
+      ],
+      "answer_symbols": [
+        "PerformanceMetric",
+        "PerformanceMetric/add_measurement",
+        "PerformanceMetric/_calculate_improvement_rate",
+        "PerformanceMetric/current_performance",
+        "PerformanceMetric/average_performance",
+        "Strategy",
+        "Strategy/can_apply",
+        "Strategy/apply",
+        "Strategy/update_success",
+        "AGIEvolution",
+        "AGIEvolution/__init__",
+        "AGIEvolution/_init_metrics",
+        "AGIEvolution/_init_strategies",
+        "AGIEvolution/_load_config",
+        "AGIEvolution/_apply_config",
+        "AGIEvolution/analyze_performance",
+        "AGIEvolution/generate_improvement_plan",
+        "AGIEvolution/execute_improvement",
+        "AGIEvolution/adapt_strategies",
+        "AGIEvolution/identify_emergent_capabilities",
+        "AGIEvolution/optimize_resource_allocation",
+        "AGIEvolution/generate_self_assessment",
+        "AGIEvolution/_prioritize_weaknesses",
+        "AGIEvolution/_select_strategy_for_weakness",
+        "AGIEvolution/_estimate_improvement",
+        "AGIEvolution/_select_exploration_strategies",
+        "AGIEvolution/_needs_consolidation",
+        "AGIEvolution/_capture_metrics",
+        "AGIEvolution/_calculate_metrics_delta",
+        "AGIEvolution/_apply_improvement",
+        "AGIEvolution/_adjust_strategy_parameters",
+        "AGIEvolution/_generate_new_strategies",
+        "AGIEvolution/_adjust_meta_learning_rate",
+        "AGIEvolution/_extract_recent_patterns",
+        "AGIEvolution/_extract_historical_patterns",
+        "AGIEvolution/_calculate_component_importance",
+        "AGIEvolution/_calculate_overall_performance",
+        "AGIEvolution/_calculate_improvement_trend",
+        "AGIEvolution/_calculate_readiness_level",
+        "AGIEvolution/save_state"
+      ]
+    },
+    {
+      "id": "w009",
+      "kind": "positive",
+      "question": "Why does it use so much memory when running multiple models",
+      "answer_files": [
+        "aions_core/agi_existing_models.py"
+      ],
+      "answer_symbols": [
+        "ModelConfig",
+        "ExistingModelsHub",
+        "ExistingModelsHub/__init__",
+        "ExistingModelsHub/_discover_models",
+        "ExistingModelsHub/_find_chunks_path",
+        "ExistingModelsHub/load_model",
+        "ExistingModelsHub/get_chunks",
+        "KoreanCompression",
+        "KoreanCompression/__init__",
+        "KoreanCompression/_load_patterns",
+        "KoreanCompression/_generate_default_patterns",
+        "KoreanCompression/compress",
+        "KoreanCompression/decompress",
+        "AGIExistingModels",
+        "AGIExistingModels/__init__",
+        "AGIExistingModels/select_model",
+        "AGIExistingModels/retrieve_chunks",
+        "AGIExistingModels/generate_with_model",
+        "AGIExistingModels/process",
+        "MultiModelEnsemble",
+        "MultiModelEnsemble/__init__",
+        "MultiModelEnsemble/ensemble_generate",
+        "test_existing_models"
+      ]
+    },
+    {
+      "id": "w010",
+      "kind": "positive",
+      "question": "How do I tell which model is currently active in memory",
+      "answer_files": [
+        "aions_core/agi_existing_models.py"
+      ],
+      "answer_symbols": [
+        "ModelConfig",
+        "ExistingModelsHub",
+        "ExistingModelsHub/__init__",
+        "ExistingModelsHub/_discover_models",
+        "ExistingModelsHub/_find_chunks_path",
+        "ExistingModelsHub/load_model",
+        "ExistingModelsHub/get_chunks",
+        "KoreanCompression",
+        "KoreanCompression/__init__",
+        "KoreanCompression/_load_patterns",
+        "KoreanCompression/_generate_default_patterns",
+        "KoreanCompression/compress",
+        "KoreanCompression/decompress",
+        "AGIExistingModels",
+        "AGIExistingModels/__init__",
+        "AGIExistingModels/select_model",
+        "AGIExistingModels/retrieve_chunks",
+        "AGIExistingModels/generate_with_model",
+        "AGIExistingModels/process",
+        "MultiModelEnsemble",
+        "MultiModelEnsemble/__init__",
+        "MultiModelEnsemble/ensemble_generate",
+        "test_existing_models"
+      ]
+    },
+    {
+      "id": "w011",
+      "kind": "positive",
+      "question": "how do I make the system learn from history",
+      "answer_files": [
+        "aions_core/agi_learning.py"
+      ],
+      "answer_symbols": [
+        "KnowledgePattern",
+        "LearningMemory",
+        "AGILearning",
+        "AGILearning/__init__",
+        "AGILearning/_init_database",
+        "AGILearning/_load_existing_knowledge",
+        "AGILearning/learn_from_interaction",
+        "AGILearning/_record_interaction",
+        "AGILearning/_extract_patterns",
+        "AGILearning/_update_concept_graph",
+        "AGILearning/_generate_knowledge_chunk",
+        "AGILearning/_identify_knowledge_gaps",
+        "AGILearning/_generate_learning_queries",
+        "AGILearning/consolidate_knowledge",
+        "AGILearning/_consolidate_patterns",
+        "AGILearning/_strengthen_concept_links",
+        "AGILearning/_merge_similar_chunks",
+        "AGILearning/_prioritize_gaps",
+        "AGILearning/generate_insights",
+        "AGILearning/_classify_query_type",
+        "AGILearning/_analyze_response_structure",
+        "AGILearning/_find_pattern",
+        "AGILearning/_extract_reasoning_patterns",
+        "AGILearning/_extract_concepts",
+        "AGILearning/_classify_concept",
+        "AGILearning/_update_concept_link",
+        "AGILearning/_update_manifest",
+        "AGILearning/_store_knowledge_chunk",
+        "AGILearning/_persist_learning",
+        "AGILearning/_pattern_similarity",
+        "AGILearning/_chunk_similarity"
+      ]
+    },
+    {
+      "id": "w012",
+      "kind": "positive",
+      "question": "where are discovered patterns saved and indexed",
+      "answer_files": [
+        "aions_core/agi_learning.py"
+      ],
+      "answer_symbols": [
+        "KnowledgePattern",
+        "LearningMemory",
+        "AGILearning",
+        "AGILearning/__init__",
+        "AGILearning/_init_database",
+        "AGILearning/_load_existing_knowledge",
+        "AGILearning/learn_from_interaction",
+        "AGILearning/_record_interaction",
+        "AGILearning/_extract_patterns",
+        "AGILearning/_update_concept_graph",
+        "AGILearning/_generate_knowledge_chunk",
+        "AGILearning/_identify_knowledge_gaps",
+        "AGILearning/_generate_learning_queries",
+        "AGILearning/consolidate_knowledge",
+        "AGILearning/_consolidate_patterns",
+        "AGILearning/_strengthen_concept_links",
+        "AGILearning/_merge_similar_chunks",
+        "AGILearning/_prioritize_gaps",
+        "AGILearning/generate_insights",
+        "AGILearning/_classify_query_type",
+        "AGILearning/_analyze_response_structure",
+        "AGILearning/_find_pattern",
+        "AGILearning/_extract_reasoning_patterns",
+        "AGILearning/_extract_concepts",
+        "AGILearning/_classify_concept",
+        "AGILearning/_update_concept_link",
+        "AGILearning/_update_manifest",
+        "AGILearning/_store_knowledge_chunk",
+        "AGILearning/_persist_learning",
+        "AGILearning/_pattern_similarity",
+        "AGILearning/_chunk_similarity"
+      ]
+    },
+    {
+      "id": "w013",
+      "kind": "positive",
+      "question": "Why are my training gradients exploding so rapidly",
+      "answer_files": [
+        "aions_core/agi_neural_backprop.py"
+      ],
+      "answer_symbols": [
+        "KnowledgeEmbedder",
+        "KnowledgeEmbedder/__init__",
+        "KnowledgeEmbedder/forward",
+        "KnowledgeEmbedder/_tokenize",
+        "ReasoningGraph",
+        "ReasoningGraph/__init__",
+        "ReasoningGraph/forward",
+        "DifferentiableMemory",
+        "DifferentiableMemory/__init__",
+        "DifferentiableMemory/read",
+        "DifferentiableMemory/write",
+        "AGINeuralBackprop",
+        "AGINeuralBackprop/__init__",
+        "AGINeuralBackprop/forward",
+        "AGINeuralBackprop/backward_step",
+        "AGINeuralBackprop/compute_loss",
+        "AGINeuralBackprop/train_on_interaction",
+        "AGINeuralBackprop/_encode_query",
+        "AGINeuralBackprop/_decode_output",
+        "AGINeuralBackprop/_knowledge_consistency_loss",
+        "AGINeuralBackprop/_self_improvement_loss",
+        "AGINeuralBackprop/_create_training_target",
+        "AGINeuralBackprop/save_checkpoint",
+        "AGINeuralBackprop/load_checkpoint",
+        "AGINeuralBackprop/analyze_gradients",
+        "create_synthetic_chunks"
+      ]
+    },
+    {
+      "id": "w014",
+      "kind": "positive",
+      "question": "How does it decide where to read data",
+      "answer_files": [
+        "aions_core/agi_neural_backprop.py"
+      ],
+      "answer_symbols": [
+        "KnowledgeEmbedder",
+        "KnowledgeEmbedder/__init__",
+        "KnowledgeEmbedder/forward",
+        "KnowledgeEmbedder/_tokenize",
+        "ReasoningGraph",
+        "ReasoningGraph/__init__",
+        "ReasoningGraph/forward",
+        "DifferentiableMemory",
+        "DifferentiableMemory/__init__",
+        "DifferentiableMemory/read",
+        "DifferentiableMemory/write",
+        "AGINeuralBackprop",
+        "AGINeuralBackprop/__init__",
+        "AGINeuralBackprop/forward",
+        "AGINeuralBackprop/backward_step",
+        "AGINeuralBackprop/compute_loss",
+        "AGINeuralBackprop/train_on_interaction",
+        "AGINeuralBackprop/_encode_query",
+        "AGINeuralBackprop/_decode_output",
+        "AGINeuralBackprop/_knowledge_consistency_loss",
+        "AGINeuralBackprop/_self_improvement_loss",
+        "AGINeuralBackprop/_create_training_target",
+        "AGINeuralBackprop/save_checkpoint",
+        "AGINeuralBackprop/load_checkpoint",
+        "AGINeuralBackprop/analyze_gradients",
+        "create_synthetic_chunks"
+      ]
+    },
+    {
+      "id": "w015",
+      "kind": "positive",
+      "question": "why doesn't it find the most relevant answers first",
+      "answer_files": [
+        "aions_core/agi_soft_retrieval.py"
+      ],
+      "answer_symbols": [
+        "BM25",
+        "BM25/__init__",
+        "BM25/_build_index",
+        "BM25/score",
+        "BM25/search",
+        "ChunkEmbedder",
+        "ChunkEmbedder/__init__",
+        "ChunkEmbedder/forward",
+        "SoftRetriever",
+        "SoftRetriever/__init__",
+        "SoftRetriever/initialize_cache",
+        "SoftRetriever/forward",
+        "SoftRetriever/_compute_gradient_info",
+        "SoftRetriever/get_entropy",
+        "SoftRetriever/get_top_chunks",
+        "CitationCoverageLoss",
+        "CitationCoverageLoss/__init__",
+        "CitationCoverageLoss/forward",
+        "CitationCoverageLoss/get_coverage_stats",
+        "verify_gradient_flow",
+        "test_soft_retrieval"
+      ]
+    },
+    {
+      "id": "w016",
+      "kind": "positive",
+      "question": "how does the system improve its search ability over time",
+      "answer_files": [
+        "aions_core/agi_soft_retrieval.py"
+      ],
+      "answer_symbols": [
+        "BM25",
+        "BM25/__init__",
+        "BM25/_build_index",
+        "BM25/score",
+        "BM25/search",
+        "ChunkEmbedder",
+        "ChunkEmbedder/__init__",
+        "ChunkEmbedder/forward",
+        "SoftRetriever",
+        "SoftRetriever/__init__",
+        "SoftRetriever/initialize_cache",
+        "SoftRetriever/forward",
+        "SoftRetriever/_compute_gradient_info",
+        "SoftRetriever/get_entropy",
+        "SoftRetriever/get_top_chunks",
+        "CitationCoverageLoss",
+        "CitationCoverageLoss/__init__",
+        "CitationCoverageLoss/forward",
+        "CitationCoverageLoss/get_coverage_stats",
+        "verify_gradient_flow",
+        "test_soft_retrieval"
+      ]
+    },
+    {
+      "id": "w017",
+      "kind": "positive",
+      "question": "why isn't the system getting smarter from what I tell it",
+      "answer_files": [
+        "aions_core/agi_unified.py"
+      ],
+      "answer_symbols": [
+        "AGIState",
+        "AGIUnified",
+        "AGIUnified/__init__",
+        "AGIUnified/_default_config",
+        "AGIUnified/_init_components",
+        "AGIUnified/process",
+        "AGIUnified/_process_symbolic",
+        "AGIUnified/_process_neural",
+        "AGIUnified/_process_hybrid",
+        "AGIUnified/_process_fallback",
+        "AGIUnified/_retrieve_chunks",
+        "AGIUnified/_decode_neural_response",
+        "AGIUnified/_synthesize_from_chunks",
+        "AGIUnified/_trigger_learning",
+        "AGIUnified/_trigger_evolution",
+        "AGIUnified/_process_learning_queue",
+        "AGIUnified/_process_evolution_queue",
+        "AGIUnified/_error_response",
+        "AGIUnified/_report_status",
+        "AGIUnified/start_parallel_processing",
+        "AGIUnified/_learning_worker",
+        "AGIUnified/_evolution_worker",
+        "AGIUnified/stop_parallel_processing",
+        "AGIUnified/set_mode",
+        "AGIUnified/get_insights",
+        "AGIUnified/save_state",
+        "AGIUnified/load_state",
+        "run_interactive_session"
+      ]
+    },
+    {
+      "id": "w018",
+      "kind": "positive",
+      "question": "how do I switch between different thinking and learning modes",
+      "answer_files": [
+        "aions_core/agi_unified.py"
+      ],
+      "answer_symbols": [
+        "AGIState",
+        "AGIUnified",
+        "AGIUnified/__init__",
+        "AGIUnified/_default_config",
+        "AGIUnified/_init_components",
+        "AGIUnified/process",
+        "AGIUnified/_process_symbolic",
+        "AGIUnified/_process_neural",
+        "AGIUnified/_process_hybrid",
+        "AGIUnified/_process_fallback",
+        "AGIUnified/_retrieve_chunks",
+        "AGIUnified/_decode_neural_response",
+        "AGIUnified/_synthesize_from_chunks",
+        "AGIUnified/_trigger_learning",
+        "AGIUnified/_trigger_evolution",
+        "AGIUnified/_process_learning_queue",
+        "AGIUnified/_process_evolution_queue",
+        "AGIUnified/_error_response",
+        "AGIUnified/_report_status",
+        "AGIUnified/start_parallel_processing",
+        "AGIUnified/_learning_worker",
+        "AGIUnified/_evolution_worker",
+        "AGIUnified/stop_parallel_processing",
+        "AGIUnified/set_mode",
+        "AGIUnified/get_insights",
+        "AGIUnified/save_state",
+        "AGIUnified/load_state",
+        "run_interactive_session"
+      ]
+    },
+    {
+      "id": "w019",
+      "kind": "positive",
+      "question": "how do I let the agent run tasks safely",
+      "answer_files": [
+        "aions_core/aions_agent_layer.py"
+      ],
+      "answer_symbols": [
+        "RiskLevel",
+        "Tool",
+        "TaskStep",
+        "TaskResult",
+        "ToolCatalog",
+        "ToolCatalog/__init__",
+        "ToolCatalog/_init_tools",
+        "ToolCatalog/is_allowed",
+        "ToolCatalog/check_execution_limit",
+        "ToolCatalog/record_execution",
+        "SafeExecutor",
+        "SafeExecutor/__init__",
+        "SafeExecutor/execute_tool",
+        "SafeExecutor/_read_file",
+        "SafeExecutor/_write_file",
+        "SafeExecutor/_list_directory",
+        "SafeExecutor/_web_search",
+        "SafeExecutor/_python_eval",
+        "SafeExecutor/_memory_query",
+        "SafeExecutor/_memory_add",
+        "SafeExecutor/_system_info",
+        "TaskPlanner",
+        "TaskPlanner/__init__",
+        "TaskPlanner/plan_task",
+        "TaskPlanner/execute_task",
+        "test_agent_layer"
+      ]
+    },
+    {
+      "id": "w020",
+      "kind": "positive",
+      "question": "why did the agent refuse to delete that file",
+      "answer_files": [
+        "aions_core/aions_agent_layer.py"
+      ],
+      "answer_symbols": [
+        "RiskLevel",
+        "Tool",
+        "TaskStep",
+        "TaskResult",
+        "ToolCatalog",
+        "ToolCatalog/__init__",
+        "ToolCatalog/_init_tools",
+        "ToolCatalog/is_allowed",
+        "ToolCatalog/check_execution_limit",
+        "ToolCatalog/record_execution",
+        "SafeExecutor",
+        "SafeExecutor/__init__",
+        "SafeExecutor/execute_tool",
+        "SafeExecutor/_read_file",
+        "SafeExecutor/_write_file",
+        "SafeExecutor/_list_directory",
+        "SafeExecutor/_web_search",
+        "SafeExecutor/_python_eval",
+        "SafeExecutor/_memory_query",
+        "SafeExecutor/_memory_add",
+        "SafeExecutor/_system_info",
+        "TaskPlanner",
+        "TaskPlanner/__init__",
+        "TaskPlanner/plan_task",
+        "TaskPlanner/execute_task",
+        "test_agent_layer"
+      ]
+    },
+    {
+      "id": "w021",
+      "kind": "positive",
+      "question": "Why does the system pick different answers on repeated queries",
+      "answer_files": [
+        "aions_core/aions_crla_reformed.py"
+      ],
+      "answer_symbols": [
+        "CompleteAIONS",
+        "CompleteAIONS/__init__",
+        "CompleteAIONS/query_with_crla",
+        "CompleteAIONS/_generate_candidates",
+        "CompleteAIONS/_tournament_select",
+        "CompleteAIONS/_save_derivation",
+        "CompleteAIONS/_save_as_fact",
+        "test_complete_system"
+      ]
+    },
+    {
+      "id": "w022",
+      "kind": "positive",
+      "question": "How can I trace why this specific response was selected",
+      "answer_files": [
+        "aions_core/aions_crla_reformed.py"
+      ],
+      "answer_symbols": [
+        "CompleteAIONS",
+        "CompleteAIONS/__init__",
+        "CompleteAIONS/query_with_crla",
+        "CompleteAIONS/_generate_candidates",
+        "CompleteAIONS/_tournament_select",
+        "CompleteAIONS/_save_derivation",
+        "CompleteAIONS/_save_as_fact",
+        "test_complete_system"
+      ]
+    },
+    {
+      "id": "w023",
+      "kind": "positive",
+      "question": "How do I make search results better?",
+      "answer_files": [
+        "aions_core/aions_hybrid_retrieval.py"
+      ],
+      "answer_symbols": [
+        "SearchResult",
+        "BM25Scorer",
+        "BM25Scorer/__init__",
+        "BM25Scorer/fit",
+        "BM25Scorer/_tokenize",
+        "BM25Scorer/score",
+        "BM25Scorer/search",
+        "HybridRetriever",
+        "HybridRetriever/__init__",
+        "HybridRetriever/_init_bm25",
+        "HybridRetriever/retrieve",
+        "HybridRetriever/_keyword_search",
+        "HybridRetriever/_vector_search",
+        "HybridRetriever/_merge_results",
+        "HybridRetriever/_rerank",
+        "HybridRetriever/process",
+        "HybridRetriever/get_stats",
+        "test_hybrid_retrieval"
+      ]
+    },
+    {
+      "id": "w024",
+      "kind": "positive",
+      "question": "What blends keyword and semantic search?",
+      "answer_files": [
+        "aions_core/aions_hybrid_retrieval.py"
+      ],
+      "answer_symbols": [
+        "SearchResult",
+        "BM25Scorer",
+        "BM25Scorer/__init__",
+        "BM25Scorer/fit",
+        "BM25Scorer/_tokenize",
+        "BM25Scorer/score",
+        "BM25Scorer/search",
+        "HybridRetriever",
+        "HybridRetriever/__init__",
+        "HybridRetriever/_init_bm25",
+        "HybridRetriever/retrieve",
+        "HybridRetriever/_keyword_search",
+        "HybridRetriever/_vector_search",
+        "HybridRetriever/_merge_results",
+        "HybridRetriever/_rerank",
+        "HybridRetriever/process",
+        "HybridRetriever/get_stats",
+        "test_hybrid_retrieval"
+      ]
+    },
+    {
+      "id": "w025",
+      "kind": "positive",
+      "question": "Why isn't my monitoring showing updated performance numbers lately",
+      "answer_files": [
+        "aions_core/aions_monitoring_dashboard.py"
+      ],
+      "answer_symbols": [
+        "TestResult",
+        "PerformanceMetrics",
+        "AIONSMonitor",
+        "AIONSMonitor/__init__",
+        "AIONSMonitor/health_check",
+        "AIONSMonitor/run_test_suite",
+        "AIONSMonitor/_test_core",
+        "AIONSMonitor/_test_vector",
+        "AIONSMonitor/_test_hybrid",
+        "AIONSMonitor/benchmark_performance",
+        "AIONSMonitor/_get_memory_usage",
+        "AIONSMonitor/_save_test_results",
+        "AIONSMonitor/_save_metrics",
+        "AIONSMonitor/generate_report",
+        "main_monitoring"
+      ]
+    },
+    {
+      "id": "w026",
+      "kind": "positive",
+      "question": "Where does it save the historical test result logs",
+      "answer_files": [
+        "aions_core/aions_monitoring_dashboard.py"
+      ],
+      "answer_symbols": [
+        "TestResult",
+        "PerformanceMetrics",
+        "AIONSMonitor",
+        "AIONSMonitor/__init__",
+        "AIONSMonitor/health_check",
+        "AIONSMonitor/run_test_suite",
+        "AIONSMonitor/_test_core",
+        "AIONSMonitor/_test_vector",
+        "AIONSMonitor/_test_hybrid",
+        "AIONSMonitor/benchmark_performance",
+        "AIONSMonitor/_get_memory_usage",
+        "AIONSMonitor/_save_test_results",
+        "AIONSMonitor/_save_metrics",
+        "AIONSMonitor/generate_report",
+        "main_monitoring"
+      ]
+    },
+    {
+      "id": "w027",
+      "kind": "positive",
+      "question": "where does it manage the skill learning pipeline",
+      "answer_files": [
+        "aions_core/aions_reactor.py"
+      ],
+      "answer_symbols": [
+        "AdvancedSkillForge",
+        "AdvancedSkillForge/__init__",
+        "AdvancedSkillForge/load_existing_skills",
+        "AdvancedSkillForge/create_skill",
+        "AdvancedSkillForge/get_skill",
+        "AdvancedSkillForge/find_skills_by_concept",
+        "AdvancedSkillForge/update_skill_performance",
+        "FinalReactorCRLA",
+        "FinalReactorCRLA/__init__",
+        "FinalReactorCRLA/load_config",
+        "FinalReactorCRLA/load_goal",
+        "FinalReactorCRLA/execute_goal",
+        "FinalReactorCRLA/execute_enhanced_round",
+        "FinalReactorCRLA/master_research_task",
+        "FinalReactorCRLA/master_simulate_task",
+        "FinalReactorCRLA/master_distill_task",
+        "FinalReactorCRLA/master_generic_task",
+        "FinalReactorCRLA/identify_skill_gaps",
+        "FinalReactorCRLA/advanced_distill_skills",
+        "main"
+      ]
+    },
+    {
+      "id": "w028",
+      "kind": "positive",
+      "question": "why didn't it create the skill I requested",
+      "answer_files": [
+        "aions_core/aions_reactor.py"
+      ],
+      "answer_symbols": [
+        "AdvancedSkillForge",
+        "AdvancedSkillForge/__init__",
+        "AdvancedSkillForge/load_existing_skills",
+        "AdvancedSkillForge/create_skill",
+        "AdvancedSkillForge/get_skill",
+        "AdvancedSkillForge/find_skills_by_concept",
+        "AdvancedSkillForge/update_skill_performance",
+        "FinalReactorCRLA",
+        "FinalReactorCRLA/__init__",
+        "FinalReactorCRLA/load_config",
+        "FinalReactorCRLA/load_goal",
+        "FinalReactorCRLA/execute_goal",
+        "FinalReactorCRLA/execute_enhanced_round",
+        "FinalReactorCRLA/master_research_task",
+        "FinalReactorCRLA/master_simulate_task",
+        "FinalReactorCRLA/master_distill_task",
+        "FinalReactorCRLA/master_generic_task",
+        "FinalReactorCRLA/identify_skill_gaps",
+        "FinalReactorCRLA/advanced_distill_skills",
+        "main"
+      ]
+    },
+    {
+      "id": "w029",
+      "kind": "positive",
+      "question": "How do I answer questions my data doesn't know?",
+      "answer_files": [
+        "aions_core/aions_reformed_integration.py"
+      ],
+      "answer_symbols": [
+        "ReformedAIONS",
+        "ReformedAIONS/__init__",
+        "ReformedAIONS/_load_seed",
+        "ReformedAIONS/query",
+        "test_reformed"
+      ]
+    },
+    {
+      "id": "w030",
+      "kind": "positive",
+      "question": "Where does it learn facts from memory?",
+      "answer_files": [
+        "aions_core/aions_reformed_integration.py"
+      ],
+      "answer_symbols": [
+        "ReformedAIONS",
+        "ReformedAIONS/__init__",
+        "ReformedAIONS/_load_seed",
+        "ReformedAIONS/query",
+        "test_reformed"
+      ]
+    },
+    {
+      "id": "w031",
+      "kind": "positive",
+      "question": "why does it refuse to answer some questions",
+      "answer_files": [
+        "aions_core/aions_smart_guardrail.py"
+      ],
+      "answer_symbols": [
+        "SmartGuardrail",
+        "SmartGuardrail/__init__",
+        "SmartGuardrail/_tokenize",
+        "SmartGuardrail/_load_combined_index",
+        "SmartGuardrail/retrieve",
+        "SmartGuardrail/check"
+      ]
+    },
+    {
+      "id": "w032",
+      "kind": "positive",
+      "question": "what facts back up an approved response",
+      "answer_files": [
+        "aions_core/aions_smart_guardrail.py"
+      ],
+      "answer_symbols": [
+        "SmartGuardrail",
+        "SmartGuardrail/__init__",
+        "SmartGuardrail/_tokenize",
+        "SmartGuardrail/_load_combined_index",
+        "SmartGuardrail/retrieve",
+        "SmartGuardrail/check"
+      ]
+    },
+    {
+      "id": "w033",
+      "kind": "positive",
+      "question": "how do I change the tone of responses",
+      "answer_files": [
+        "aions_core/aions_style_parameters.py"
+      ],
+      "answer_symbols": [
+        "StyleProfile",
+        "StyleParameters",
+        "StyleParameters/validate",
+        "StyleController",
+        "StyleController/__init__",
+        "StyleController/_init_profiles",
+        "StyleController/set_profile",
+        "StyleController/set_custom",
+        "StyleController/apply_style",
+        "StyleController/_adjust_formality",
+        "StyleController/_adjust_brevity",
+        "StyleController/_adjust_friendliness",
+        "StyleController/_adjust_confidence",
+        "StyleController/_adjust_technicality",
+        "StyleController/analyze_style",
+        "StyleController/get_stats",
+        "StyledAIONS",
+        "StyledAIONS/__init__",
+        "StyledAIONS/process",
+        "test_style_parameters"
+      ]
+    },
+    {
+      "id": "w034",
+      "kind": "positive",
+      "question": "why doesn't it sound more professional like I asked",
+      "answer_files": [
+        "aions_core/aions_style_parameters.py"
+      ],
+      "answer_symbols": [
+        "StyleProfile",
+        "StyleParameters",
+        "StyleParameters/validate",
+        "StyleController",
+        "StyleController/__init__",
+        "StyleController/_init_profiles",
+        "StyleController/set_profile",
+        "StyleController/set_custom",
+        "StyleController/apply_style",
+        "StyleController/_adjust_formality",
+        "StyleController/_adjust_brevity",
+        "StyleController/_adjust_friendliness",
+        "StyleController/_adjust_confidence",
+        "StyleController/_adjust_technicality",
+        "StyleController/analyze_style",
+        "StyleController/get_stats",
+        "StyledAIONS",
+        "StyledAIONS/__init__",
+        "StyledAIONS/process",
+        "test_style_parameters"
+      ]
+    },
+    {
+      "id": "w035",
+      "kind": "positive",
+      "question": "Why don't semantic searches find the right information",
+      "answer_files": [
+        "aions_core/aions_vector_enhancement.py"
+      ],
+      "answer_symbols": [
+        "VectorSearchResult",
+        "VectorEnhancement",
+        "VectorEnhancement/__init__",
+        "VectorEnhancement/connect",
+        "VectorEnhancement/search",
+        "VectorEnhancement/get_stats"
+      ]
+    },
+    {
+      "id": "w036",
+      "kind": "positive",
+      "question": "What tables are available inside this vector store",
+      "answer_files": [
+        "aions_core/aions_vector_enhancement.py"
+      ],
+      "answer_symbols": [
+        "VectorSearchResult",
+        "VectorEnhancement",
+        "VectorEnhancement/__init__",
+        "VectorEnhancement/connect",
+        "VectorEnhancement/search",
+        "VectorEnhancement/get_stats"
+      ]
+    },
+    {
+      "id": "w037",
+      "kind": "positive",
+      "question": "Why is the server returning a startup error",
+      "answer_files": [
+        "aions_core/api.py"
+      ],
+      "answer_symbols": [
+        "QueryRequest",
+        "query_endpoint",
+        "status_endpoint",
+        "root"
+      ]
+    },
+    {
+      "id": "w038",
+      "kind": "positive",
+      "question": "What structure should my query requests be in",
+      "answer_files": [
+        "aions_core/api.py"
+      ],
+      "answer_symbols": [
+        "QueryRequest",
+        "query_endpoint",
+        "status_endpoint",
+        "root"
+      ]
+    },
+    {
+      "id": "w039",
+      "kind": "positive",
+      "question": "how are machine learning operations organized",
+      "answer_files": [
+        "aions_core/cbms_curve_machine.py"
+      ],
+      "answer_symbols": [
+        "Kernel",
+        "WeightManifest",
+        "CBMSCurveMachine",
+        "CBMSCurveMachine/__init__",
+        "CBMSCurveMachine/_init_directories",
+        "CBMSCurveMachine/_register_kernels",
+        "CBMSCurveMachine/_save_kernels",
+        "CBMSCurveMachine/_load_weights_manifest",
+        "CBMSCurveMachine/create_cbms_graph",
+        "CBMSCurveMachine/create_agi_reasoning_graph",
+        "CBMSCurveMachine/create_agi_backprop_graph",
+        "CBMSCurveMachine/create_model_inference_kernel",
+        "CBMSCurveMachine/create_stacked_decoder_graph",
+        "CBMSCurveMachine/execute_graph",
+        "CBMSCurveMachine/benchmark_kernels",
+        "CBMSCurveMachine/optimize_graph_schedule",
+        "CBMSCurveMachine/_load_chunks",
+        "CBMSCurveMachine/_apply_korean_compression",
+        "CBMSCurveMachine/_crla_tournament",
+        "test_curve_machine"
+      ]
+    },
+    {
+      "id": "w040",
+      "kind": "positive",
+      "question": "where are the model weight files located",
+      "answer_files": [
+        "aions_core/cbms_curve_machine.py"
+      ],
+      "answer_symbols": [
+        "Kernel",
+        "WeightManifest",
+        "CBMSCurveMachine",
+        "CBMSCurveMachine/__init__",
+        "CBMSCurveMachine/_init_directories",
+        "CBMSCurveMachine/_register_kernels",
+        "CBMSCurveMachine/_save_kernels",
+        "CBMSCurveMachine/_load_weights_manifest",
+        "CBMSCurveMachine/create_cbms_graph",
+        "CBMSCurveMachine/create_agi_reasoning_graph",
+        "CBMSCurveMachine/create_agi_backprop_graph",
+        "CBMSCurveMachine/create_model_inference_kernel",
+        "CBMSCurveMachine/create_stacked_decoder_graph",
+        "CBMSCurveMachine/execute_graph",
+        "CBMSCurveMachine/benchmark_kernels",
+        "CBMSCurveMachine/optimize_graph_schedule",
+        "CBMSCurveMachine/_load_chunks",
+        "CBMSCurveMachine/_apply_korean_compression",
+        "CBMSCurveMachine/_crla_tournament",
+        "test_curve_machine"
+      ]
+    },
+    {
+      "id": "w041",
+      "kind": "positive",
+      "question": "why can't it find related concepts stored together",
+      "answer_files": [
+        "aions_core/cbms_memory.py"
+      ],
+      "answer_symbols": [
+        "CBMSMemory",
+        "CBMSMemory/__init__",
+        "CBMSMemory/_load_manifest",
+        "CBMSMemory/_save_manifest",
+        "CBMSMemory/create_knowledge_chunk",
+        "CBMSMemory/retrieve_chunk",
+        "CBMSMemory/find_chunks_by_concept",
+        "CBMSMemory/cbms_think",
+        "CBMSMemory/_extract_concepts",
+        "CBMSMemory/_synthesize_chunks",
+        "CBMSMemory/_should_create_new_chunk",
+        "CBMSMemory/_primary_concept",
+        "CBMSMemory/_log_thinking_session",
+        "CBMSMemory/_build_korean_chunk_index",
+        "CBMSMemory/get_memory_stats",
+        "CBMSMemory/cbms_think_like_claude",
+        "CBMSMemory/_synthesize_chunks_with_claude_reasoning",
+        "demo_cbms_memory"
+      ]
+    },
+    {
+      "id": "w042",
+      "kind": "positive",
+      "question": "how do I organize knowledge so it's always findable",
+      "answer_files": [
+        "aions_core/cbms_memory.py"
+      ],
+      "answer_symbols": [
+        "CBMSMemory",
+        "CBMSMemory/__init__",
+        "CBMSMemory/_load_manifest",
+        "CBMSMemory/_save_manifest",
+        "CBMSMemory/create_knowledge_chunk",
+        "CBMSMemory/retrieve_chunk",
+        "CBMSMemory/find_chunks_by_concept",
+        "CBMSMemory/cbms_think",
+        "CBMSMemory/_extract_concepts",
+        "CBMSMemory/_synthesize_chunks",
+        "CBMSMemory/_should_create_new_chunk",
+        "CBMSMemory/_primary_concept",
+        "CBMSMemory/_log_thinking_session",
+        "CBMSMemory/_build_korean_chunk_index",
+        "CBMSMemory/get_memory_stats",
+        "CBMSMemory/cbms_think_like_claude",
+        "CBMSMemory/_synthesize_chunks_with_claude_reasoning",
+        "demo_cbms_memory"
+      ]
+    },
+    {
+      "id": "w043",
+      "kind": "positive",
+      "question": "how does Claude get answers from my knowledge base",
+      "answer_files": [
+        "aions_core/claude_aions_bridge.py"
+      ],
+      "answer_symbols": [
+        "ClaudeAionsBridge",
+        "ClaudeAionsBridge/__init__",
+        "ClaudeAionsBridge/get_hybrid_response",
+        "ClaudeAionsBridge/get_stats"
+      ]
+    },
+    {
+      "id": "w044",
+      "kind": "positive",
+      "question": "why does it use local data before asking the model",
+      "answer_files": [
+        "aions_core/claude_aions_bridge.py"
+      ],
+      "answer_symbols": [
+        "ClaudeAionsBridge",
+        "ClaudeAionsBridge/__init__",
+        "ClaudeAionsBridge/get_hybrid_response",
+        "ClaudeAionsBridge/get_stats"
+      ]
+    },
+    {
+      "id": "w045",
+      "kind": "positive",
+      "question": "why didn't the task completion get a numeric score",
+      "answer_files": [
+        "aions_core/evaluator_engine.py"
+      ],
+      "answer_symbols": [
+        "PerformanceEvaluator",
+        "PerformanceEvaluator/__init__",
+        "PerformanceEvaluator/initialize_scoreboard",
+        "PerformanceEvaluator/evaluate_reactor_run",
+        "PerformanceEvaluator/evaluate_round",
+        "PerformanceEvaluator/score_task_quality",
+        "PerformanceEvaluator/calculate_overall_score",
+        "PerformanceEvaluator/get_performance_grade",
+        "PerformanceEvaluator/save_to_scoreboard",
+        "PerformanceEvaluator/generate_performance_report",
+        "test_evaluator"
+      ]
+    },
+    {
+      "id": "w046",
+      "kind": "positive",
+      "question": "where does it save the performance results and grades",
+      "answer_files": [
+        "aions_core/evaluator_engine.py"
+      ],
+      "answer_symbols": [
+        "PerformanceEvaluator",
+        "PerformanceEvaluator/__init__",
+        "PerformanceEvaluator/initialize_scoreboard",
+        "PerformanceEvaluator/evaluate_reactor_run",
+        "PerformanceEvaluator/evaluate_round",
+        "PerformanceEvaluator/score_task_quality",
+        "PerformanceEvaluator/calculate_overall_score",
+        "PerformanceEvaluator/get_performance_grade",
+        "PerformanceEvaluator/save_to_scoreboard",
+        "PerformanceEvaluator/generate_performance_report",
+        "test_evaluator"
+      ]
+    },
+    {
+      "id": "w047",
+      "kind": "positive",
+      "question": "How do I make my JSON files searchable?",
+      "answer_files": [
+        "aions_core/ingest_cbms_data.py"
+      ],
+      "answer_symbols": [
+        "ingest_chunks"
+      ]
+    },
+    {
+      "id": "w048",
+      "kind": "positive",
+      "question": "What converts text into searchable embeddings?",
+      "answer_files": [
+        "aions_core/ingest_cbms_data.py"
+      ],
+      "answer_symbols": [
+        "ingest_chunks"
+      ]
+    },
+    {
+      "id": "w049",
+      "kind": "positive",
+      "question": "how can I find related concepts when searching",
+      "answer_files": [
+        "aions_core/memory_graph_engine.py"
+      ],
+      "answer_symbols": [
+        "MemoryGraph",
+        "MemoryGraph/__init__",
+        "MemoryGraph/load_graph",
+        "MemoryGraph/find_related_concepts",
+        "MemoryGraph/find_closest_concept",
+        "MemoryGraph/expand_query_concepts",
+        "MemoryGraph/get_concept_cluster",
+        "MemoryGraph/suggest_skill_tags",
+        "MemoryGraph/add_concept",
+        "MemoryGraph/save_graph",
+        "EnhancedCBMSRetrieval",
+        "EnhancedCBMSRetrieval/__init__",
+        "EnhancedCBMSRetrieval/enhanced_retrieve",
+        "EnhancedCBMSRetrieval/smart_cbms_with_graph",
+        "test_memory_graph"
+      ]
+    },
+    {
+      "id": "w050",
+      "kind": "positive",
+      "question": "what makes connected topics appear in results",
+      "answer_files": [
+        "aions_core/memory_graph_engine.py"
+      ],
+      "answer_symbols": [
+        "MemoryGraph",
+        "MemoryGraph/__init__",
+        "MemoryGraph/load_graph",
+        "MemoryGraph/find_related_concepts",
+        "MemoryGraph/find_closest_concept",
+        "MemoryGraph/expand_query_concepts",
+        "MemoryGraph/get_concept_cluster",
+        "MemoryGraph/suggest_skill_tags",
+        "MemoryGraph/add_concept",
+        "MemoryGraph/save_graph",
+        "EnhancedCBMSRetrieval",
+        "EnhancedCBMSRetrieval/__init__",
+        "EnhancedCBMSRetrieval/enhanced_retrieve",
+        "EnhancedCBMSRetrieval/smart_cbms_with_graph",
+        "test_memory_graph"
+      ]
+    },
+    {
+      "id": "w051",
+      "kind": "positive",
+      "question": "where do I send questions for answers",
+      "answer_files": [
+        "aions_core/server/cbms_direct_server.py"
+      ],
+      "answer_symbols": [
+        "create_web_rag_instance",
+        "log_exchange",
+        "summarize_if_needed",
+        "get_best_conversation_context",
+        "update_user_profile",
+        "compose_answer",
+        "UnifiedCBMSHandler",
+        "UnifiedCBMSHandler/__init__",
+        "UnifiedCBMSHandler/_set_cors",
+        "UnifiedCBMSHandler/do_GET",
+        "UnifiedCBMSHandler/do_POST",
+        "UnifiedCBMSHandler/_try_conversational_response",
+        "UnifiedCBMSHandler/_create_soft_refusal"
+      ]
+    },
+    {
+      "id": "w052",
+      "kind": "positive",
+      "question": "why does it claim ignorance on some topics",
+      "answer_files": [
+        "aions_core/server/cbms_direct_server.py"
+      ],
+      "answer_symbols": [
+        "create_web_rag_instance",
+        "log_exchange",
+        "summarize_if_needed",
+        "get_best_conversation_context",
+        "update_user_profile",
+        "compose_answer",
+        "UnifiedCBMSHandler",
+        "UnifiedCBMSHandler/__init__",
+        "UnifiedCBMSHandler/_set_cors",
+        "UnifiedCBMSHandler/do_GET",
+        "UnifiedCBMSHandler/do_POST",
+        "UnifiedCBMSHandler/_try_conversational_response",
+        "UnifiedCBMSHandler/_create_soft_refusal"
+      ]
+    },
+    {
+      "id": "w053",
+      "kind": "positive",
+      "question": "why isn't the system using stored knowledge anymore",
+      "answer_files": [
+        "aions_core/server/cbms_doctor.py"
+      ],
+      "answer_symbols": [
+        "Finding",
+        "Finding/__init__",
+        "Finding/as_dict",
+        "load_chunks",
+        "looks_like_chunk_id",
+        "diagnose",
+        "main"
+      ]
+    },
+    {
+      "id": "w054",
+      "kind": "positive",
+      "question": "what finds problems in saved memory files",
+      "answer_files": [
+        "aions_core/server/cbms_doctor.py"
+      ],
+      "answer_symbols": [
+        "Finding",
+        "Finding/__init__",
+        "Finding/as_dict",
+        "load_chunks",
+        "looks_like_chunk_id",
+        "diagnose",
+        "main"
+      ]
+    },
+    {
+      "id": "w055",
+      "kind": "positive",
+      "question": "How do I keep the AI from memorizing garbage?",
+      "answer_files": [
+        "aions_core/server/cbms_memory.py"
+      ],
+      "answer_symbols": [
+        "CBMSMemory",
+        "CBMSMemory/__init__",
+        "CBMSMemory/_load_manifest",
+        "CBMSMemory/_save_manifest",
+        "CBMSMemory/learning_gate",
+        "CBMSMemory/_log_gate_rejection",
+        "CBMSMemory/create_knowledge_chunk",
+        "CBMSMemory/retrieve_chunk",
+        "CBMSMemory/find_chunks_by_concept",
+        "CBMSMemory/expand_with_references",
+        "CBMSMemory/cbms_think",
+        "CBMSMemory/_extract_concepts",
+        "CBMSMemory/_synthesize_chunks",
+        "CBMSMemory/_should_create_new_chunk",
+        "CBMSMemory/_primary_concept",
+        "CBMSMemory/_log_thinking_session",
+        "CBMSMemory/_build_korean_chunk_index",
+        "CBMSMemory/get_memory_stats",
+        "CBMSMemory/cbms_think_like_claude",
+        "CBMSMemory/_synthesize_chunks_with_claude_reasoning",
+        "demo_cbms_memory"
+      ]
+    },
+    {
+      "id": "w056",
+      "kind": "positive",
+      "question": "What organizes knowledge so it's easy to recall?",
+      "answer_files": [
+        "aions_core/server/cbms_memory.py"
+      ],
+      "answer_symbols": [
+        "CBMSMemory",
+        "CBMSMemory/__init__",
+        "CBMSMemory/_load_manifest",
+        "CBMSMemory/_save_manifest",
+        "CBMSMemory/learning_gate",
+        "CBMSMemory/_log_gate_rejection",
+        "CBMSMemory/create_knowledge_chunk",
+        "CBMSMemory/retrieve_chunk",
+        "CBMSMemory/find_chunks_by_concept",
+        "CBMSMemory/expand_with_references",
+        "CBMSMemory/cbms_think",
+        "CBMSMemory/_extract_concepts",
+        "CBMSMemory/_synthesize_chunks",
+        "CBMSMemory/_should_create_new_chunk",
+        "CBMSMemory/_primary_concept",
+        "CBMSMemory/_log_thinking_session",
+        "CBMSMemory/_build_korean_chunk_index",
+        "CBMSMemory/get_memory_stats",
+        "CBMSMemory/cbms_think_like_claude",
+        "CBMSMemory/_synthesize_chunks_with_claude_reasoning",
+        "demo_cbms_memory"
+      ]
+    },
+    {
+      "id": "w057",
+      "kind": "positive",
+      "question": "how do I search for knowledge without loading everything",
+      "answer_files": [
+        "aions_core/server/cbms_outline.py"
+      ],
+      "answer_symbols": [
+        "toks",
+        "is_id_like",
+        "summarize",
+        "Store",
+        "Store/__init__",
+        "Store/load",
+        "Store/outline",
+        "Store/drill",
+        "Store/compare",
+        "render_outline",
+        "main"
+      ]
+    },
+    {
+      "id": "w058",
+      "kind": "positive",
+      "question": "why does searching return metadata before the actual content",
+      "answer_files": [
+        "aions_core/server/cbms_outline.py"
+      ],
+      "answer_symbols": [
+        "toks",
+        "is_id_like",
+        "summarize",
+        "Store",
+        "Store/__init__",
+        "Store/load",
+        "Store/outline",
+        "Store/drill",
+        "Store/compare",
+        "render_outline",
+        "main"
+      ]
+    },
+    {
+      "id": "w059",
+      "kind": "positive",
+      "question": "where do new saved notes go when they arrive",
+      "answer_files": [
+        "aions_core/server/cbms_purgatory.py"
+      ],
+      "answer_symbols": [
+        "now_utc",
+        "iso",
+        "parse_dt",
+        "day_str",
+        "resolve_when",
+        "Config",
+        "Config/__init__",
+        "Config/from_args",
+        "Config/as_dict",
+        "backups_dir_for",
+        "default_ledger",
+        "load_ledger",
+        "save_ledger",
+        "backup_ledger",
+        "get_entry",
+        "touch_session",
+        "new_entry",
+        "locate_chunk",
+        "read_chunk",
+        "safe_move",
+        "judge_entry",
+        "cmd_config",
+        "cmd_admit",
+        "cmd_record_drill",
+        "cmd_record_outline",
+        "_status_rows",
+        "cmd_status",
+        "cmd_judge",
+        "build_argparser",
+        "main"
+      ]
+    },
+    {
+      "id": "w060",
+      "kind": "positive",
+      "question": "why is it hiding my knowledge from searches",
+      "answer_files": [
+        "aions_core/server/cbms_purgatory.py"
+      ],
+      "answer_symbols": [
+        "now_utc",
+        "iso",
+        "parse_dt",
+        "day_str",
+        "resolve_when",
+        "Config",
+        "Config/__init__",
+        "Config/from_args",
+        "Config/as_dict",
+        "backups_dir_for",
+        "default_ledger",
+        "load_ledger",
+        "save_ledger",
+        "backup_ledger",
+        "get_entry",
+        "touch_session",
+        "new_entry",
+        "locate_chunk",
+        "read_chunk",
+        "safe_move",
+        "judge_entry",
+        "cmd_config",
+        "cmd_admit",
+        "cmd_record_drill",
+        "cmd_record_outline",
+        "_status_rows",
+        "cmd_status",
+        "cmd_judge",
+        "build_argparser",
+        "main"
+      ]
+    },
+    {
+      "id": "w061",
+      "kind": "positive",
+      "question": "How do I find knowledge by code instead of words?",
+      "answer_files": [
+        "aions_core/server/cbms_symbolic_index.py"
+      ],
+      "answer_symbols": [
+        "SymbolicIndex",
+        "SymbolicIndex/__init__",
+        "SymbolicIndex/build",
+        "SymbolicIndex/search"
+      ]
+    },
+    {
+      "id": "w062",
+      "kind": "positive",
+      "question": "What translates text into symbolic lookups?",
+      "answer_files": [
+        "aions_core/server/cbms_symbolic_index.py"
+      ],
+      "answer_symbols": [
+        "SymbolicIndex",
+        "SymbolicIndex/__init__",
+        "SymbolicIndex/build",
+        "SymbolicIndex/search"
+      ]
+    },
+    {
+      "id": "w063",
+      "kind": "positive",
+      "question": "where should I send knowledge-based questions",
+      "answer_files": [
+        "aions_core/server/cbms_unified_server.py"
+      ],
+      "answer_symbols": [
+        "create_web_rag_instance",
+        "log_exchange",
+        "summarize_if_needed",
+        "get_best_conversation_context",
+        "update_user_profile",
+        "compose_answer",
+        "UnifiedCBMSHandler",
+        "UnifiedCBMSHandler/__init__",
+        "UnifiedCBMSHandler/_set_cors",
+        "UnifiedCBMSHandler/do_GET",
+        "UnifiedCBMSHandler/do_POST",
+        "UnifiedCBMSHandler/_try_conversational_response",
+        "UnifiedCBMSHandler/_create_soft_refusal"
+      ]
+    },
+    {
+      "id": "w064",
+      "kind": "positive",
+      "question": "when does it search the internet for answers",
+      "answer_files": [
+        "aions_core/server/cbms_unified_server.py"
+      ],
+      "answer_symbols": [
+        "create_web_rag_instance",
+        "log_exchange",
+        "summarize_if_needed",
+        "get_best_conversation_context",
+        "update_user_profile",
+        "compose_answer",
+        "UnifiedCBMSHandler",
+        "UnifiedCBMSHandler/__init__",
+        "UnifiedCBMSHandler/_set_cors",
+        "UnifiedCBMSHandler/do_GET",
+        "UnifiedCBMSHandler/do_POST",
+        "UnifiedCBMSHandler/_try_conversational_response",
+        "UnifiedCBMSHandler/_create_soft_refusal"
+      ]
+    },
+    {
+      "id": "w065",
+      "kind": "positive",
+      "question": "how do I turn text into compact codes",
+      "answer_files": [
+        "aions_core/server/codebook_engine.py"
+      ],
+      "answer_symbols": [
+        "Codebook",
+        "Codebook/__init__",
+        "Codebook/load",
+        "Codebook/encode_eo_to_cbms",
+        "Codebook/decode_cbms_to_eo"
+      ]
+    },
+    {
+      "id": "w066",
+      "kind": "positive",
+      "question": "why won't it decode the symbols correctly",
+      "answer_files": [
+        "aions_core/server/codebook_engine.py"
+      ],
+      "answer_symbols": [
+        "Codebook",
+        "Codebook/__init__",
+        "Codebook/load",
+        "Codebook/encode_eo_to_cbms",
+        "Codebook/decode_cbms_to_eo"
+      ]
+    },
+    {
+      "id": "w067",
+      "kind": "positive",
+      "question": "why do responses sound less robotic",
+      "answer_files": [
+        "aions_core/server/conversation_enhancer.py"
+      ],
+      "answer_symbols": [
+        "ConversationEnhancer",
+        "ConversationEnhancer/__init__",
+        "ConversationEnhancer/enhance_response",
+        "ConversationEnhancer/_detect_query_type",
+        "ConversationEnhancer/_is_refusal",
+        "ConversationEnhancer/_enhance_refusal",
+        "ConversationEnhancer/_add_natural_starter",
+        "ConversationEnhancer/_add_emotional_elements",
+        "ConversationEnhancer/_personalize_response",
+        "ConversationEnhancer/_add_context_reference",
+        "ConversationEnhancer/_add_natural_ending",
+        "ConversationEnhancer/update_user_profile",
+        "ConversationEnhancer/set_conversation_style",
+        "ConversationEnhancer/get_conversation_summary",
+        "ConversationEnhancer/_extract_topics",
+        "ContextMemory",
+        "ContextMemory/__init__",
+        "ContextMemory/add_exchange",
+        "ContextMemory/_extract_entities",
+        "ContextMemory/get_context",
+        "ContextMemory/remember_fact",
+        "ContextMemory/recall_fact",
+        "ResponseVariator",
+        "ResponseVariator/__init__",
+        "ResponseVariator/variate_response",
+        "ResponseVariator/_apply_variations",
+        "enhance_cbms_response"
+      ]
+    },
+    {
+      "id": "w068",
+      "kind": "positive",
+      "question": "how does it match my emotional tone",
+      "answer_files": [
+        "aions_core/server/conversation_enhancer.py"
+      ],
+      "answer_symbols": [
+        "ConversationEnhancer",
+        "ConversationEnhancer/__init__",
+        "ConversationEnhancer/enhance_response",
+        "ConversationEnhancer/_detect_query_type",
+        "ConversationEnhancer/_is_refusal",
+        "ConversationEnhancer/_enhance_refusal",
+        "ConversationEnhancer/_add_natural_starter",
+        "ConversationEnhancer/_add_emotional_elements",
+        "ConversationEnhancer/_personalize_response",
+        "ConversationEnhancer/_add_context_reference",
+        "ConversationEnhancer/_add_natural_ending",
+        "ConversationEnhancer/update_user_profile",
+        "ConversationEnhancer/set_conversation_style",
+        "ConversationEnhancer/get_conversation_summary",
+        "ConversationEnhancer/_extract_topics",
+        "ContextMemory",
+        "ContextMemory/__init__",
+        "ContextMemory/add_exchange",
+        "ContextMemory/_extract_entities",
+        "ContextMemory/get_context",
+        "ContextMemory/remember_fact",
+        "ContextMemory/recall_fact",
+        "ResponseVariator",
+        "ResponseVariator/__init__",
+        "ResponseVariator/variate_response",
+        "ResponseVariator/_apply_variations",
+        "enhance_cbms_response"
+      ]
+    },
+    {
+      "id": "w069",
+      "kind": "positive",
+      "question": "how do I make the system remember our talks",
+      "answer_files": [
+        "aions_core/server/conversation_memory.py"
+      ],
+      "answer_symbols": [
+        "_conv_dir",
+        "log_exchange",
+        "summarize_if_needed",
+        "update_user_profile",
+        "get_best_conversation_context",
+        "rollup_summaries"
+      ]
+    },
+    {
+      "id": "w070",
+      "kind": "positive",
+      "question": "where does it store session transcripts and summaries",
+      "answer_files": [
+        "aions_core/server/conversation_memory.py"
+      ],
+      "answer_symbols": [
+        "_conv_dir",
+        "log_exchange",
+        "summarize_if_needed",
+        "update_user_profile",
+        "get_best_conversation_context",
+        "rollup_summaries"
+      ]
+    },
+    {
+      "id": "w071",
+      "kind": "positive",
+      "question": "how does it pick the best answer from candidates",
+      "answer_files": [
+        "aions_core/server/crla_core.py"
+      ],
+      "answer_symbols": [
+        "Candidate",
+        "CandidateResult",
+        "_normalize_latency_ms",
+        "_compact_trace_score",
+        "_hygiene_score",
+        "generate_candidates",
+        "simulate_candidate",
+        "score_candidate",
+        "_pairwise_tournament",
+        "run_crla"
+      ]
+    },
+    {
+      "id": "w072",
+      "kind": "positive",
+      "question": "why did it choose that answer over the better one",
+      "answer_files": [
+        "aions_core/server/crla_core.py"
+      ],
+      "answer_symbols": [
+        "Candidate",
+        "CandidateResult",
+        "_normalize_latency_ms",
+        "_compact_trace_score",
+        "_hygiene_score",
+        "generate_candidates",
+        "simulate_candidate",
+        "score_candidate",
+        "_pairwise_tournament",
+        "run_crla"
+      ]
+    },
+    {
+      "id": "w073",
+      "kind": "positive",
+      "question": "why convert text to a neutral language",
+      "answer_files": [
+        "aions_core/server/esperanto_bridge.py"
+      ],
+      "answer_symbols": [
+        "_normalize_text",
+        "_pl_to_eo_basic",
+        "to_esperanto",
+        "from_esperanto_to_pl"
+      ]
+    },
+    {
+      "id": "w074",
+      "kind": "positive",
+      "question": "how does it handle Polish phrases",
+      "answer_files": [
+        "aions_core/server/esperanto_bridge.py"
+      ],
+      "answer_symbols": [
+        "_normalize_text",
+        "_pl_to_eo_basic",
+        "to_esperanto",
+        "from_esperanto_to_pl"
+      ]
+    },
+    {
+      "id": "w075",
+      "kind": "positive",
+      "question": "why doesn't it find stored knowledge that should apply",
+      "answer_files": [
+        "aions_core/server/facts_loader.py"
+      ],
+      "answer_symbols": [
+        "build_keys",
+        "Facts",
+        "Facts/__init__",
+        "Facts/coverage",
+        "Facts/coverage_hashed"
+      ]
+    },
+    {
+      "id": "w076",
+      "kind": "positive",
+      "question": "how do I see which facts answer a question",
+      "answer_files": [
+        "aions_core/server/facts_loader.py"
+      ],
+      "answer_symbols": [
+        "build_keys",
+        "Facts",
+        "Facts/__init__",
+        "Facts/coverage",
+        "Facts/coverage_hashed"
+      ]
+    },
+    {
+      "id": "w077",
+      "kind": "positive",
+      "question": "How do I make search hits into readable text?",
+      "answer_files": [
+        "aions_core/server/generator_cbms.py"
+      ],
+      "answer_symbols": [
+        "_load_chunk_texts",
+        "compose_answer"
+      ]
+    },
+    {
+      "id": "w078",
+      "kind": "positive",
+      "question": "Where do you link sources when answering?",
+      "answer_files": [
+        "aions_core/server/generator_cbms.py"
+      ],
+      "answer_symbols": [
+        "_load_chunk_texts",
+        "compose_answer"
+      ]
+    },
+    {
+      "id": "w079",
+      "kind": "positive",
+      "question": "How do I create short references from text?",
+      "answer_files": [
+        "aions_core/server/hangul_addressing.py"
+      ],
+      "answer_symbols": [
+        "_hex_to_hangul",
+        "make_hangul_code"
+      ]
+    },
+    {
+      "id": "w080",
+      "kind": "positive",
+      "question": "What represents data as Korean characters?",
+      "answer_files": [
+        "aions_core/server/hangul_addressing.py"
+      ],
+      "answer_symbols": [
+        "_hex_to_hangul",
+        "make_hangul_code"
+      ]
+    },
+    {
+      "id": "w081",
+      "kind": "positive",
+      "question": "How do I search queries without exact keywords?",
+      "answer_files": [
+        "aions_core/server/korean_keys.py"
+      ],
+      "answer_symbols": [
+        "_trigrams",
+        "build_keys"
+      ]
+    },
+    {
+      "id": "w082",
+      "kind": "positive",
+      "question": "What generates lookup patterns from words?",
+      "answer_files": [
+        "aions_core/server/korean_keys.py"
+      ],
+      "answer_symbols": [
+        "_trigrams",
+        "build_keys"
+      ]
+    },
+    {
+      "id": "w083",
+      "kind": "positive",
+      "question": "can it extract numbers from word descriptions",
+      "answer_files": [
+        "aions_core/server/math_solver.py"
+      ],
+      "answer_symbols": [
+        "is_math_candidate",
+        "_extract_ints",
+        "_extract_floats",
+        "_janet_ducks",
+        "_bolts_half",
+        "_house_profit",
+        "_per_each_simple",
+        "_sum_total",
+        "_remaining_after",
+        "_price_per_unit",
+        "_percent_change",
+        "_sequence_addsub",
+        "_multi_step_work_rate",
+        "_distance_time_speed",
+        "_percentage_of_total",
+        "_multiplication_sequence",
+        "_complex_profit_loss",
+        "_remainder_after_operations",
+        "_simple_arithmetic",
+        "solve"
+      ]
+    },
+    {
+      "id": "w084",
+      "kind": "positive",
+      "question": "where does it check for mathematical content",
+      "answer_files": [
+        "aions_core/server/math_solver.py"
+      ],
+      "answer_symbols": [
+        "is_math_candidate",
+        "_extract_ints",
+        "_extract_floats",
+        "_janet_ducks",
+        "_bolts_half",
+        "_house_profit",
+        "_per_each_simple",
+        "_sum_total",
+        "_remaining_after",
+        "_price_per_unit",
+        "_percent_change",
+        "_sequence_addsub",
+        "_multi_step_work_rate",
+        "_distance_time_speed",
+        "_percentage_of_total",
+        "_multiplication_sequence",
+        "_complex_profit_loss",
+        "_remainder_after_operations",
+        "_simple_arithmetic",
+        "solve"
+      ]
+    },
+    {
+      "id": "w085",
+      "kind": "positive",
+      "question": "why was this new fact marked as rejected",
+      "answer_files": [
+        "aions_core/server/pocket_qc.py"
+      ],
+      "answer_symbols": [
+        "_logs_dir",
+        "_append_log",
+        "_codebook_symbols_for_text",
+        "qc_text",
+        "qc_crla_result"
+      ]
+    },
+    {
+      "id": "w086",
+      "kind": "positive",
+      "question": "how do I prevent bad answers from being saved",
+      "answer_files": [
+        "aions_core/server/pocket_qc.py"
+      ],
+      "answer_symbols": [
+        "_logs_dir",
+        "_append_log",
+        "_codebook_symbols_for_text",
+        "qc_text",
+        "qc_crla_result"
+      ]
+    },
+    {
+      "id": "w087",
+      "kind": "positive",
+      "question": "how do I find broken links in my knowledge base",
+      "answer_files": [
+        "aions_core/server/refgraph.py"
+      ],
+      "answer_symbols": [
+        "tokens",
+        "is_id_like",
+        "SoftRef",
+        "SoftRef/__init__",
+        "SoftRef/alive",
+        "SoftRef/as_dict",
+        "SoftRef/__repr__",
+        "SoftGraph",
+        "SoftGraph/__init__",
+        "SoftGraph/build",
+        "SoftGraph/_norm",
+        "SoftGraph/_load_dir",
+        "SoftGraph/_index_files",
+        "SoftGraph/_resolve",
+        "SoftGraph/_semantic",
+        "SoftGraph/who_references",
+        "SoftGraph/references_of",
+        "SoftGraph/at_risk",
+        "SoftGraph/unresolved",
+        "SoftGraph/orphans",
+        "SoftGraph/hubs",
+        "SoftGraph/stats",
+        "SoftGraph/to_index",
+        "SoftGraph/save_index",
+        "main"
+      ]
+    },
+    {
+      "id": "w088",
+      "kind": "positive",
+      "question": "what happens when knowledge pieces depend on archived data",
+      "answer_files": [
+        "aions_core/server/refgraph.py"
+      ],
+      "answer_symbols": [
+        "tokens",
+        "is_id_like",
+        "SoftRef",
+        "SoftRef/__init__",
+        "SoftRef/alive",
+        "SoftRef/as_dict",
+        "SoftRef/__repr__",
+        "SoftGraph",
+        "SoftGraph/__init__",
+        "SoftGraph/build",
+        "SoftGraph/_norm",
+        "SoftGraph/_load_dir",
+        "SoftGraph/_index_files",
+        "SoftGraph/_resolve",
+        "SoftGraph/_semantic",
+        "SoftGraph/who_references",
+        "SoftGraph/references_of",
+        "SoftGraph/at_risk",
+        "SoftGraph/unresolved",
+        "SoftGraph/orphans",
+        "SoftGraph/hubs",
+        "SoftGraph/stats",
+        "SoftGraph/to_index",
+        "SoftGraph/save_index",
+        "main"
+      ]
+    },
+    {
+      "id": "w089",
+      "kind": "positive",
+      "question": "Why did it remove my answer formatting entirely",
+      "answer_files": [
+        "aions_core/server/stylist.py"
+      ],
+      "answer_symbols": [
+        "_normalize_ws",
+        "_safe_invariants",
+        "_safe_invariants/grab",
+        "style_pass"
+      ]
+    },
+    {
+      "id": "w090",
+      "kind": "positive",
+      "question": "How can I verify nothing important disappeared",
+      "answer_files": [
+        "aions_core/server/stylist.py"
+      ],
+      "answer_symbols": [
+        "_normalize_ws",
+        "_safe_invariants",
+        "_safe_invariants/grab",
+        "style_pass"
+      ]
+    },
+    {
+      "id": "w091",
+      "kind": "positive",
+      "question": "Why aren't all my methods appearing in the index",
+      "answer_files": [
+        "aions_core/server/ts_symbols.py"
+      ],
+      "answer_symbols": [
+        "sha12",
+        "Symbol",
+        "Symbol/__init__",
+        "Symbol/outline_row",
+        "Symbol/as_dict",
+        "SymbolIndex",
+        "SymbolIndex/__init__",
+        "SymbolIndex/from_file",
+        "SymbolIndex/_node_name",
+        "SymbolIndex/_walk",
+        "SymbolIndex/_docstring",
+        "SymbolIndex/_collect_refs",
+        "SymbolIndex/_collect_refs/rec",
+        "SymbolIndex/outline",
+        "SymbolIndex/get",
+        "SymbolIndex/hashes",
+        "SymbolIndex/drift",
+        "SymbolIndex/as_chunk_candidates",
+        "scan_dir",
+        "main"
+      ]
+    },
+    {
+      "id": "w092",
+      "kind": "positive",
+      "question": "What programming languages can this tool parse",
+      "answer_files": [
+        "aions_core/server/ts_symbols.py"
+      ],
+      "answer_symbols": [
+        "sha12",
+        "Symbol",
+        "Symbol/__init__",
+        "Symbol/outline_row",
+        "Symbol/as_dict",
+        "SymbolIndex",
+        "SymbolIndex/__init__",
+        "SymbolIndex/from_file",
+        "SymbolIndex/_node_name",
+        "SymbolIndex/_walk",
+        "SymbolIndex/_docstring",
+        "SymbolIndex/_collect_refs",
+        "SymbolIndex/_collect_refs/rec",
+        "SymbolIndex/outline",
+        "SymbolIndex/get",
+        "SymbolIndex/hashes",
+        "SymbolIndex/drift",
+        "SymbolIndex/as_chunk_candidates",
+        "scan_dir",
+        "main"
+      ]
+    },
+    {
+      "id": "w093",
+      "kind": "positive",
+      "question": "How do I pull live facts from the web?",
+      "answer_files": [
+        "aions_core/server/web_rag_cbms.py"
+      ],
+      "answer_symbols": [
+        "WebRAGTextExtractor",
+        "WebRAGTextExtractor/__init__",
+        "WebRAGTextExtractor/handle_starttag",
+        "WebRAGTextExtractor/handle_endtag",
+        "WebRAGTextExtractor/handle_data",
+        "WebRAGTextExtractor/get_text",
+        "WebRAGCBMS",
+        "WebRAGCBMS/__init__",
+        "WebRAGCBMS/search_and_inject",
+        "WebRAGCBMS/_generate_search_urls",
+        "WebRAGCBMS/_crawl_and_extract",
+        "WebRAGCBMS/_fetch_page",
+        "WebRAGCBMS/_split_into_sentences",
+        "WebRAGCBMS/_is_relevant_sentence",
+        "WebRAGCBMS/_score_relevance",
+        "WebRAGCBMS/_is_trusted_domain",
+        "WebRAGCBMS/_inject_facts_as_chunks",
+        "WebRAGCBMS/cleanup_temporary_chunks",
+        "create_web_rag_instance"
+      ]
+    },
+    {
+      "id": "w094",
+      "kind": "positive",
+      "question": "What adds internet sources to temporary memory?",
+      "answer_files": [
+        "aions_core/server/web_rag_cbms.py"
+      ],
+      "answer_symbols": [
+        "WebRAGTextExtractor",
+        "WebRAGTextExtractor/__init__",
+        "WebRAGTextExtractor/handle_starttag",
+        "WebRAGTextExtractor/handle_endtag",
+        "WebRAGTextExtractor/handle_data",
+        "WebRAGTextExtractor/get_text",
+        "WebRAGCBMS",
+        "WebRAGCBMS/__init__",
+        "WebRAGCBMS/search_and_inject",
+        "WebRAGCBMS/_generate_search_urls",
+        "WebRAGCBMS/_crawl_and_extract",
+        "WebRAGCBMS/_fetch_page",
+        "WebRAGCBMS/_split_into_sentences",
+        "WebRAGCBMS/_is_relevant_sentence",
+        "WebRAGCBMS/_score_relevance",
+        "WebRAGCBMS/_is_trusted_domain",
+        "WebRAGCBMS/_inject_facts_as_chunks",
+        "WebRAGCBMS/cleanup_temporary_chunks",
+        "create_web_rag_instance"
+      ]
+    },
+    {
+      "id": "w095",
+      "kind": "positive",
+      "question": "Why is the response sometimes from cache versus model",
+      "answer_files": [
+        "aions_core/smart_cbms.py"
+      ],
+      "answer_symbols": [
+        "smart_cbms_response",
+        "test_speed_optimization",
+        "interactive_chat"
+      ]
+    },
+    {
+      "id": "w096",
+      "kind": "positive",
+      "question": "How long does it wait before timing out",
+      "answer_files": [
+        "aions_core/smart_cbms.py"
+      ],
+      "answer_symbols": [
+        "smart_cbms_response",
+        "test_speed_optimization",
+        "interactive_chat"
+      ]
+    },
+    {
+      "id": "w097",
+      "kind": "positive",
+      "question": "where can I test whether the chatbot works",
+      "answer_files": [
+        "aions_core/test_aions_capabilities.py"
+      ],
+      "answer_symbols": [
+        "test_server_health",
+        "send_message",
+        "run_conversation_tests"
+      ]
+    },
+    {
+      "id": "w098",
+      "kind": "positive",
+      "question": "why is it refusing to answer that question",
+      "answer_files": [
+        "aions_core/test_aions_capabilities.py"
+      ],
+      "answer_symbols": [
+        "test_server_health",
+        "send_message",
+        "run_conversation_tests"
+      ]
+    },
+    {
+      "id": "w099",
+      "kind": "positive",
+      "question": "how do I audit where all my data files are stored",
+      "answer_files": [
+        "aions_core/tools/analyze_csv.py"
+      ],
+      "answer_symbols": [
+        "analyze_csv"
+      ]
+    },
+    {
+      "id": "w100",
+      "kind": "positive",
+      "question": "why does it look for specific critical files",
+      "answer_files": [
+        "aions_core/tools/analyze_csv.py"
+      ],
+      "answer_symbols": [
+        "analyze_csv"
+      ]
+    },
+    {
+      "id": "w101",
+      "kind": "positive",
+      "question": "what's the speed of each response type",
+      "answer_files": [
+        "aions_core/tools/bench_runner.py"
+      ],
+      "answer_symbols": [
+        "post_chat",
+        "is_refusal",
+        "main"
+      ]
+    },
+    {
+      "id": "w102",
+      "kind": "positive",
+      "question": "does performance degrade over repeated test queries",
+      "answer_files": [
+        "aions_core/tools/bench_runner.py"
+      ],
+      "answer_symbols": [
+        "post_chat",
+        "is_refusal",
+        "main"
+      ]
+    },
+    {
+      "id": "w103",
+      "kind": "positive",
+      "question": "how do I see what tables are in the database",
+      "answer_files": [
+        "aions_core/tools/check_schema.py"
+      ],
+      "answer_symbols": [
+        "check_schema"
+      ]
+    },
+    {
+      "id": "w104",
+      "kind": "positive",
+      "question": "why can't I understand the database structure",
+      "answer_files": [
+        "aions_core/tools/check_schema.py"
+      ],
+      "answer_symbols": [
+        "check_schema"
+      ]
+    },
+    {
+      "id": "w105",
+      "kind": "positive",
+      "question": "How do I check what services are broken?",
+      "answer_files": [
+        "aions_core/tools/check_status.py"
+      ],
+      "answer_symbols": [
+        "check_status"
+      ]
+    },
+    {
+      "id": "w106",
+      "kind": "positive",
+      "question": "What displays error logs from services?",
+      "answer_files": [
+        "aions_core/tools/check_status.py"
+      ],
+      "answer_symbols": [
+        "check_status"
+      ]
+    },
+    {
+      "id": "w107",
+      "kind": "positive",
+      "question": "how do I make my documents searchable",
+      "answer_files": [
+        "aions_core/tools/facts_builder.py"
+      ],
+      "answer_symbols": [
+        "split_sentences",
+        "make_id",
+        "main"
+      ]
+    },
+    {
+      "id": "w108",
+      "kind": "positive",
+      "question": "why isn't it finding the facts I added",
+      "answer_files": [
+        "aions_core/tools/facts_builder.py"
+      ],
+      "answer_symbols": [
+        "split_sentences",
+        "make_id",
+        "main"
+      ]
+    },
+    {
+      "id": "w109",
+      "kind": "positive",
+      "question": "can it correctly answer word problems",
+      "answer_files": [
+        "aions_core/tools/gsm8k_quick.py"
+      ],
+      "answer_symbols": [
+        "final_number",
+        "post_chat"
+      ]
+    },
+    {
+      "id": "w110",
+      "kind": "positive",
+      "question": "how well does the math module perform",
+      "answer_files": [
+        "aions_core/tools/gsm8k_quick.py"
+      ],
+      "answer_symbols": [
+        "final_number",
+        "post_chat"
+      ]
+    },
+    {
+      "id": "w111",
+      "kind": "positive",
+      "question": "why isn't my newly saved knowledge appearing in responses",
+      "answer_files": [
+        "aions_core/tools/harvest_memory.py"
+      ],
+      "answer_symbols": [
+        "harvest_memory"
+      ]
+    },
+    {
+      "id": "w112",
+      "kind": "positive",
+      "question": "what command brings all stored knowledge together in one place",
+      "answer_files": [
+        "aions_core/tools/harvest_memory.py"
+      ],
+      "answer_symbols": [
+        "harvest_memory"
+      ]
+    },
+    {
+      "id": "w113",
+      "kind": "positive",
+      "question": "where is my data stored across the system",
+      "answer_files": [
+        "aions_core/tools/query_db.py"
+      ],
+      "answer_symbols": [
+        "query_db"
+      ]
+    },
+    {
+      "id": "w114",
+      "kind": "positive",
+      "question": "how many files are in each storage location",
+      "answer_files": [
+        "aions_core/tools/query_db.py"
+      ],
+      "answer_symbols": [
+        "query_db"
+      ]
+    },
+    {
+      "id": "w115",
+      "kind": "positive",
+      "question": "Why can't it find the chunks I just saved",
+      "answer_files": [
+        "aions_core/tools/rebuild_manifest_force.py"
+      ],
+      "answer_symbols": [
+        "rebuild_manifest"
+      ]
+    },
+    {
+      "id": "w116",
+      "kind": "positive",
+      "question": "What metadata does it pull from each chunk",
+      "answer_files": [
+        "aions_core/tools/rebuild_manifest_force.py"
+      ],
+      "answer_symbols": [
+        "rebuild_manifest"
+      ]
+    },
+    {
+      "id": "w117",
+      "kind": "positive",
+      "question": "Why does translating to intermediate format break the search",
+      "answer_files": [
+        "aions_core/tools/symbolic_probe.py"
+      ],
+      "answer_symbols": [
+        "_load",
+        "demo"
+      ]
+    },
+    {
+      "id": "w118",
+      "kind": "positive",
+      "question": "What format do the resulting symbol codes take",
+      "answer_files": [
+        "aions_core/tools/symbolic_probe.py"
+      ],
+      "answer_symbols": [
+        "_load",
+        "demo"
+      ]
+    },
+    {
+      "id": "w119",
+      "kind": "positive",
+      "question": "why isn't the server responding to my request",
+      "answer_files": [
+        "aions_core/tools/test_api.py"
+      ],
+      "answer_symbols": [
+        "test_api"
+      ]
+    },
+    {
+      "id": "w120",
+      "kind": "positive",
+      "question": "what quickly confirms the server is running right",
+      "answer_files": [
+        "aions_core/tools/test_api.py"
+      ],
+      "answer_symbols": [
+        "test_api"
+      ]
+    },
+    {
+      "id": "w121",
+      "kind": "positive",
+      "question": "Why does the server refuse some legitimate looking questions",
+      "answer_files": [
+        "aions_core/tools/test_guardrail.py"
+      ],
+      "answer_symbols": [
+        "test_guardrail"
+      ]
+    },
+    {
+      "id": "w122",
+      "kind": "positive",
+      "question": "How do I run this validation against my server",
+      "answer_files": [
+        "aions_core/tools/test_guardrail.py"
+      ],
+      "answer_symbols": [
+        "test_guardrail"
+      ]
+    },
+    {
+      "id": "w123",
+      "kind": "positive",
+      "question": "how do I add web content to knowledge",
+      "answer_files": [
+        "aions_core/tools/web_crawler_import.py"
+      ],
+      "answer_symbols": [
+        "TextExtractor",
+        "TextExtractor/__init__",
+        "TextExtractor/handle_starttag",
+        "TextExtractor/handle_endtag",
+        "TextExtractor/handle_data",
+        "TextExtractor/text",
+        "split_sentences",
+        "sha1",
+        "crawl",
+        "crawl/allowed",
+        "crawl/normalize",
+        "main"
+      ]
+    },
+    {
+      "id": "w124",
+      "kind": "positive",
+      "question": "what happens when I crawl a website",
+      "answer_files": [
+        "aions_core/tools/web_crawler_import.py"
+      ],
+      "answer_symbols": [
+        "TextExtractor",
+        "TextExtractor/__init__",
+        "TextExtractor/handle_starttag",
+        "TextExtractor/handle_endtag",
+        "TextExtractor/handle_data",
+        "TextExtractor/text",
+        "split_sentences",
+        "sha1",
+        "crawl",
+        "crawl/allowed",
+        "crawl/normalize",
+        "main"
+      ]
+    },
+    {
+      "id": "w125",
+      "kind": "positive",
+      "question": "how do I use all systems at the same time",
+      "answer_files": [
+        "aions_core/unified_core.py"
+      ],
+      "answer_symbols": [
+        "AIONSv2",
+        "AIONSv2/__init__",
+        "AIONSv2/process",
+        "AIONSv2/_should_use_hybrid",
+        "AIONSv2/_should_use_vector",
+        "AIONSv2/execute_task",
+        "AIONSv2/health_check",
+        "AIONSv2/get_stats",
+        "AIONSv2/benchmark",
+        "interactive_demo"
+      ]
+    },
+    {
+      "id": "w126",
+      "kind": "positive",
+      "question": "why does it gracefully handle components that fail to load",
+      "answer_files": [
+        "aions_core/unified_core.py"
+      ],
+      "answer_symbols": [
+        "AIONSv2",
+        "AIONSv2/__init__",
+        "AIONSv2/process",
+        "AIONSv2/_should_use_hybrid",
+        "AIONSv2/_should_use_vector",
+        "AIONSv2/execute_task",
+        "AIONSv2/health_check",
+        "AIONSv2/get_stats",
+        "AIONSv2/benchmark",
+        "interactive_demo"
+      ]
+    },
+    {
+      "id": "w127",
+      "kind": "positive",
+      "question": "how do I add a new role without touching code",
+      "answer_files": [
+        "control_plane/agents/agent_registry.py"
+      ],
+      "answer_symbols": [
+        "AgentRegistry",
+        "AgentRegistry/__init__",
+        "AgentRegistry/discover",
+        "AgentRegistry/get",
+        "AgentRegistry/list_ids"
+      ]
+    },
+    {
+      "id": "w128",
+      "kind": "positive",
+      "question": "where are all my available roles registered",
+      "answer_files": [
+        "control_plane/agents/agent_registry.py"
+      ],
+      "answer_symbols": [
+        "AgentRegistry",
+        "AgentRegistry/__init__",
+        "AgentRegistry/discover",
+        "AgentRegistry/get",
+        "AgentRegistry/list_ids"
+      ]
+    },
+    {
+      "id": "w129",
+      "kind": "positive",
+      "question": "how do I prevent agents from running dangerous commands",
+      "answer_files": [
+        "control_plane/agents/agent_runner.py"
+      ],
+      "answer_symbols": [
+        "FilteredRegistry",
+        "FilteredRegistry/__init__",
+        "FilteredRegistry/_matches",
+        "FilteredRegistry/get",
+        "FilteredRegistry/handler",
+        "FilteredRegistry/list_ids",
+        "FilteredRegistry/search",
+        "_deterministic_plan",
+        "_plan",
+        "_build_skill_registry",
+        "run_agent",
+        "main"
+      ]
+    },
+    {
+      "id": "w130",
+      "kind": "positive",
+      "question": "why was this agent blocked from using that skill",
+      "answer_files": [
+        "control_plane/agents/agent_runner.py"
+      ],
+      "answer_symbols": [
+        "FilteredRegistry",
+        "FilteredRegistry/__init__",
+        "FilteredRegistry/_matches",
+        "FilteredRegistry/get",
+        "FilteredRegistry/handler",
+        "FilteredRegistry/list_ids",
+        "FilteredRegistry/search",
+        "_deterministic_plan",
+        "_plan",
+        "_build_skill_registry",
+        "run_agent",
+        "main"
+      ]
+    },
+    {
+      "id": "w131",
+      "kind": "positive",
+      "question": "what agent rules prevent it from running",
+      "answer_files": [
+        "control_plane/agents/agent_schema.py"
+      ],
+      "answer_symbols": [
+        "AgentObject",
+        "AgentObject/blob",
+        "load",
+        "validate"
+      ]
+    },
+    {
+      "id": "w132",
+      "kind": "positive",
+      "question": "how do I create a valid agent configuration",
+      "answer_files": [
+        "control_plane/agents/agent_schema.py"
+      ],
+      "answer_symbols": [
+        "AgentObject",
+        "AgentObject/blob",
+        "load",
+        "validate"
+      ]
+    },
+    {
+      "id": "w133",
+      "kind": "positive",
+      "question": "why won't the system send work to distant nodes",
+      "answer_files": [
+        "control_plane/api.py"
+      ],
+      "answer_symbols": [
+        "PlanRequest",
+        "ExecuteRequest",
+        "NodeRegisterRequest",
+        "NodeHeartbeatRequest",
+        "NodeDispatchRequest",
+        "_default_tool_runner",
+        "set_tool_runner",
+        "post_plan",
+        "post_execute",
+        "get_scheduler_summary",
+        "post_scheduler_tick",
+        "get_execution_status",
+        "post_node_register",
+        "get_nodes",
+        "get_nodes_summary",
+        "get_node_detail",
+        "post_node_heartbeat",
+        "post_node_dispatch"
+      ]
+    },
+    {
+      "id": "w134",
+      "kind": "positive",
+      "question": "how do I delegate tasks to remote machines",
+      "answer_files": [
+        "control_plane/api.py"
+      ],
+      "answer_symbols": [
+        "PlanRequest",
+        "ExecuteRequest",
+        "NodeRegisterRequest",
+        "NodeHeartbeatRequest",
+        "NodeDispatchRequest",
+        "_default_tool_runner",
+        "set_tool_runner",
+        "post_plan",
+        "post_execute",
+        "get_scheduler_summary",
+        "post_scheduler_tick",
+        "get_execution_status",
+        "post_node_register",
+        "get_nodes",
+        "get_nodes_summary",
+        "get_node_detail",
+        "post_node_heartbeat",
+        "post_node_dispatch"
+      ]
+    },
+    {
+      "id": "w135",
+      "kind": "positive",
+      "question": "why did the system make that particular mistake",
+      "answer_files": [
+        "control_plane/blends/analyze_blend.py"
+      ],
+      "answer_symbols": [
+        "resolve_input",
+        "main"
+      ]
+    },
+    {
+      "id": "w136",
+      "kind": "positive",
+      "question": "how do I understand what went wrong after a failure",
+      "answer_files": [
+        "control_plane/blends/analyze_blend.py"
+      ],
+      "answer_symbols": [
+        "resolve_input",
+        "main"
+      ]
+    },
+    {
+      "id": "w137",
+      "kind": "positive",
+      "question": "How do I find patterns from past problems?",
+      "answer_files": [
+        "control_plane/blends/search_blends.py"
+      ],
+      "answer_symbols": [
+        "main"
+      ]
+    },
+    {
+      "id": "w138",
+      "kind": "positive",
+      "question": "What searches stored insights from experience?",
+      "answer_files": [
+        "control_plane/blends/search_blends.py"
+      ],
+      "answer_symbols": [
+        "main"
+      ]
+    },
+    {
+      "id": "w139",
+      "kind": "positive",
+      "question": "how do I save what I just learned to storage",
+      "answer_files": [
+        "control_plane/blends/write_conclusion.py"
+      ],
+      "answer_symbols": [
+        "resolve_input",
+        "append_ingest_note",
+        "main"
+      ]
+    },
+    {
+      "id": "w140",
+      "kind": "positive",
+      "question": "why does my exported data need manual approval first",
+      "answer_files": [
+        "control_plane/blends/write_conclusion.py"
+      ],
+      "answer_symbols": [
+        "resolve_input",
+        "append_ingest_note",
+        "main"
+      ]
+    },
+    {
+      "id": "w141",
+      "kind": "positive",
+      "question": "how does it decide whether to call the model",
+      "answer_files": [
+        "control_plane/cbms_gate.py"
+      ],
+      "answer_symbols": [
+        "_env",
+        "_env_float",
+        "gate_enabled",
+        "confidence_threshold",
+        "cache_enabled",
+        "cache_ttl_s",
+        "_cache_key",
+        "_load_disk_cache",
+        "_save_disk_cache",
+        "_cache_get",
+        "_cache_put",
+        "_aions_path",
+        "_memory_dir",
+        "_ensure_server_path",
+        "_get_memory",
+        "_get_codebook",
+        "_get_vector_store",
+        "_make_hangul",
+        "_significant_tokens",
+        "_lexical_score",
+        "encode_query_symbols",
+        "format_cb_tokens",
+        "_load_chunk",
+        "_chroma_hits",
+        "retrieve",
+        "gate_decide",
+        "compose_from_chunks",
+        "enrich_prompt_context",
+        "gate_answer",
+        "chat_cbms_first_full",
+        "evaluate"
+      ]
+    },
+    {
+      "id": "w142",
+      "kind": "positive",
+      "question": "why isn't it using what I stored in memory",
+      "answer_files": [
+        "control_plane/cbms_gate.py"
+      ],
+      "answer_symbols": [
+        "_env",
+        "_env_float",
+        "gate_enabled",
+        "confidence_threshold",
+        "cache_enabled",
+        "cache_ttl_s",
+        "_cache_key",
+        "_load_disk_cache",
+        "_save_disk_cache",
+        "_cache_get",
+        "_cache_put",
+        "_aions_path",
+        "_memory_dir",
+        "_ensure_server_path",
+        "_get_memory",
+        "_get_codebook",
+        "_get_vector_store",
+        "_make_hangul",
+        "_significant_tokens",
+        "_lexical_score",
+        "encode_query_symbols",
+        "format_cb_tokens",
+        "_load_chunk",
+        "_chroma_hits",
+        "retrieve",
+        "gate_decide",
+        "compose_from_chunks",
+        "enrich_prompt_context",
+        "gate_answer",
+        "chat_cbms_first_full",
+        "evaluate"
+      ]
+    },
+    {
+      "id": "w143",
+      "kind": "positive",
+      "question": "why didn't this operation complete successfully",
+      "answer_files": [
+        "control_plane/executor.py"
+      ],
+      "answer_symbols": [
+        "_audit",
+        "store_plan",
+        "get_plan",
+        "get_execution",
+        "execute_step"
+      ]
+    },
+    {
+      "id": "w144",
+      "kind": "positive",
+      "question": "what actually runs a single task from a bigger plan",
+      "answer_files": [
+        "control_plane/executor.py"
+      ],
+      "answer_symbols": [
+        "_audit",
+        "store_plan",
+        "get_plan",
+        "get_execution",
+        "execute_step"
+      ]
+    },
+    {
+      "id": "w145",
+      "kind": "positive",
+      "question": "how do I talk to a running model server",
+      "answer_files": [
+        "control_plane/llm/server_client.py"
+      ],
+      "answer_symbols": [
+        "generate_http",
+        "health"
+      ]
+    },
+    {
+      "id": "w146",
+      "kind": "positive",
+      "question": "where is the model running that I'm sending requests to",
+      "answer_files": [
+        "control_plane/llm/server_client.py"
+      ],
+      "answer_symbols": [
+        "generate_http",
+        "health"
+      ]
+    },
+    {
+      "id": "w147",
+      "kind": "positive",
+      "question": "how do I answer questions using models on my computer",
+      "answer_files": [
+        "control_plane/llm_adapter.py"
+      ],
+      "answer_symbols": [
+        "_env",
+        "LLMError",
+        "_aions_path",
+        "load_operator_profile",
+        "_profile_summary",
+        "_chunk_id",
+        "_load_chunk_content",
+        "cbms_context",
+        "_cbms_block",
+        "build_messages",
+        "_resolve_model",
+        "_call_ollama",
+        "_call_openai",
+        "chat_full",
+        "chat",
+        "health"
+      ]
+    },
+    {
+      "id": "w148",
+      "kind": "positive",
+      "question": "where do I set which language model to use",
+      "answer_files": [
+        "control_plane/llm_adapter.py"
+      ],
+      "answer_symbols": [
+        "_env",
+        "LLMError",
+        "_aions_path",
+        "load_operator_profile",
+        "_profile_summary",
+        "_chunk_id",
+        "_load_chunk_content",
+        "cbms_context",
+        "_cbms_block",
+        "build_messages",
+        "_resolve_model",
+        "_call_ollama",
+        "_call_openai",
+        "chat_full",
+        "chat",
+        "health"
+      ]
+    },
+    {
+      "id": "w149",
+      "kind": "positive",
+      "question": "Why can't I track which plan step is currently running",
+      "answer_files": [
+        "control_plane/models.py"
+      ],
+      "answer_symbols": [
+        "PlanStep",
+        "Plan",
+        "ExecutionResult",
+        "ExecutionState",
+        "new_plan_id",
+        "new_step_id"
+      ]
+    },
+    {
+      "id": "w150",
+      "kind": "positive",
+      "question": "How are identifiers generated for plans and steps",
+      "answer_files": [
+        "control_plane/models.py"
+      ],
+      "answer_symbols": [
+        "PlanStep",
+        "Plan",
+        "ExecutionResult",
+        "ExecutionState",
+        "new_plan_id",
+        "new_step_id"
+      ]
+    },
+    {
+      "id": "w151",
+      "kind": "positive",
+      "question": "why isn't the worker machine reporting its status",
+      "answer_files": [
+        "control_plane/node_agent/agent.py"
+      ],
+      "answer_symbols": [
+        "load_config",
+        "setup_logging",
+        "get_cpu_load_1m",
+        "get_cpu_count",
+        "get_normalized_load",
+        "get_mem_used_pct",
+        "get_mem_total_mb",
+        "get_disk_used_pct",
+        "get_metrics",
+        "get_local_ip",
+        "parse_core_host",
+        "CoreClient",
+        "CoreClient/__init__",
+        "CoreClient/_post",
+        "CoreClient/register",
+        "CoreClient/heartbeat",
+        "registration_and_heartbeat_loop",
+        "AgentState",
+        "AgentState/__init__",
+        "_truncate",
+        "Handler",
+        "Handler/log_message",
+        "Handler/_send_json",
+        "Handler/do_GET",
+        "Handler/do_POST",
+        "run_http_server",
+        "main"
+      ]
+    },
+    {
+      "id": "w152",
+      "kind": "positive",
+      "question": "how do I run commands on distant machines",
+      "answer_files": [
+        "control_plane/node_agent/agent.py"
+      ],
+      "answer_symbols": [
+        "load_config",
+        "setup_logging",
+        "get_cpu_load_1m",
+        "get_cpu_count",
+        "get_normalized_load",
+        "get_mem_used_pct",
+        "get_mem_total_mb",
+        "get_disk_used_pct",
+        "get_metrics",
+        "get_local_ip",
+        "parse_core_host",
+        "CoreClient",
+        "CoreClient/__init__",
+        "CoreClient/_post",
+        "CoreClient/register",
+        "CoreClient/heartbeat",
+        "registration_and_heartbeat_loop",
+        "AgentState",
+        "AgentState/__init__",
+        "_truncate",
+        "Handler",
+        "Handler/log_message",
+        "Handler/_send_json",
+        "Handler/do_GET",
+        "Handler/do_POST",
+        "run_http_server",
+        "main"
+      ]
+    },
+    {
+      "id": "w153",
+      "kind": "positive",
+      "question": "how does it decide where to run the tool",
+      "answer_files": [
+        "control_plane/node_dispatch.py"
+      ],
+      "answer_symbols": [
+        "is_local_node",
+        "remote_dispatch_url",
+        "dispatch_step_to_node"
+      ]
+    },
+    {
+      "id": "w154",
+      "kind": "positive",
+      "question": "what happens when I send work remotely",
+      "answer_files": [
+        "control_plane/node_dispatch.py"
+      ],
+      "answer_symbols": [
+        "is_local_node",
+        "remote_dispatch_url",
+        "dispatch_step_to_node"
+      ]
+    },
+    {
+      "id": "w155",
+      "kind": "positive",
+      "question": "Why was this assigned to a machine lacking tools",
+      "answer_files": [
+        "control_plane/node_registry.py"
+      ],
+      "answer_symbols": [
+        "NodeRecord",
+        "NodeRecord/to_dict",
+        "NodeRecord/from_dict",
+        "_ensure_loaded",
+        "_load_from_disk",
+        "_save_to_disk",
+        "_seed_default_local_node",
+        "register_node",
+        "list_nodes",
+        "get_node",
+        "heartbeat",
+        "_is_stale",
+        "pick_node_for_intent",
+        "registry_summary"
+      ]
+    },
+    {
+      "id": "w156",
+      "kind": "positive",
+      "question": "How does it know when a worker goes offline",
+      "answer_files": [
+        "control_plane/node_registry.py"
+      ],
+      "answer_symbols": [
+        "NodeRecord",
+        "NodeRecord/to_dict",
+        "NodeRecord/from_dict",
+        "_ensure_loaded",
+        "_load_from_disk",
+        "_save_to_disk",
+        "_seed_default_local_node",
+        "register_node",
+        "list_nodes",
+        "get_node",
+        "heartbeat",
+        "_is_stale",
+        "pick_node_for_intent",
+        "registry_summary"
+      ]
+    },
+    {
+      "id": "w157",
+      "kind": "positive",
+      "question": "Why didn't the system automatically restart the failed service",
+      "answer_files": [
+        "control_plane/operator/loop.py"
+      ],
+      "answer_symbols": [
+        "_now_iso",
+        "_pct_to_float",
+        "_issue_key",
+        "_load_json_dict",
+        "_save_json_dict",
+        "_load_baseline",
+        "_save_baseline",
+        "_log_spike_baseline",
+        "_record_baseline",
+        "_load_disk_overrides",
+        "_load_restarts",
+        "_save_restarts",
+        "_prune_restart_window",
+        "_check_restart_cooldown",
+        "_register_restart",
+        "observe",
+        "diagnose",
+        "act",
+        "verify",
+        "_snapshot_digest",
+        "learn",
+        "run_cycle",
+        "_request_stop",
+        "main"
+      ]
+    },
+    {
+      "id": "w158",
+      "kind": "positive",
+      "question": "Where does it save what happened during repairs",
+      "answer_files": [
+        "control_plane/operator/loop.py"
+      ],
+      "answer_symbols": [
+        "_now_iso",
+        "_pct_to_float",
+        "_issue_key",
+        "_load_json_dict",
+        "_save_json_dict",
+        "_load_baseline",
+        "_save_baseline",
+        "_log_spike_baseline",
+        "_record_baseline",
+        "_load_disk_overrides",
+        "_load_restarts",
+        "_save_restarts",
+        "_prune_restart_window",
+        "_check_restart_cooldown",
+        "_register_restart",
+        "observe",
+        "diagnose",
+        "act",
+        "verify",
+        "_snapshot_digest",
+        "learn",
+        "run_cycle",
+        "_request_stop",
+        "main"
+      ]
+    },
+    {
+      "id": "w159",
+      "kind": "positive",
+      "question": "how do I get explanations for why the system made decisions",
+      "answer_files": [
+        "control_plane/operator/mouth.py"
+      ],
+      "answer_symbols": [
+        "_short_incident_desc",
+        "_ensure_env_defaults",
+        "comment_incident",
+        "_comment_incident_impl"
+      ]
+    },
+    {
+      "id": "w160",
+      "kind": "positive",
+      "question": "what happens if the language model is not responding",
+      "answer_files": [
+        "control_plane/operator/mouth.py"
+      ],
+      "answer_symbols": [
+        "_short_incident_desc",
+        "_ensure_env_defaults",
+        "comment_incident",
+        "_comment_incident_impl"
+      ]
+    },
+    {
+      "id": "w161",
+      "kind": "positive",
+      "question": "how does the system answer my questions",
+      "answer_files": [
+        "control_plane/orchestrator_loop.py"
+      ],
+      "answer_symbols": [
+        "_utc",
+        "_ensure_paths",
+        "run_local",
+        "run_mcp_smoke_note",
+        "main"
+      ]
+    },
+    {
+      "id": "w162",
+      "kind": "positive",
+      "question": "where does it find the answer information",
+      "answer_files": [
+        "control_plane/orchestrator_loop.py"
+      ],
+      "answer_symbols": [
+        "_utc",
+        "_ensure_paths",
+        "run_local",
+        "run_mcp_smoke_note",
+        "main"
+      ]
+    },
+    {
+      "id": "w163",
+      "kind": "positive",
+      "question": "how does it turn a goal into action steps",
+      "answer_files": [
+        "control_plane/planner.py"
+      ],
+      "answer_symbols": [
+        "_cbms_lookup",
+        "create_plan"
+      ]
+    },
+    {
+      "id": "w164",
+      "kind": "positive",
+      "question": "why did it plan to do something I didn't ask",
+      "answer_files": [
+        "control_plane/planner.py"
+      ],
+      "answer_symbols": [
+        "_cbms_lookup",
+        "create_plan"
+      ]
+    },
+    {
+      "id": "w165",
+      "kind": "positive",
+      "question": "how do I block certain commands from running",
+      "answer_files": [
+        "control_plane/policy.py"
+      ],
+      "answer_symbols": [
+        "evaluate_tool",
+        "check_intent"
+      ]
+    },
+    {
+      "id": "w166",
+      "kind": "positive",
+      "question": "what tools am I allowed to use in this system",
+      "answer_files": [
+        "control_plane/policy.py"
+      ],
+      "answer_symbols": [
+        "evaluate_tool",
+        "check_intent"
+      ]
+    },
+    {
+      "id": "w167",
+      "kind": "positive",
+      "question": "what reminds me what's due today and this week",
+      "answer_files": [
+        "control_plane/scheduler.py"
+      ],
+      "answer_symbols": [
+        "JobKind",
+        "ScheduledJob",
+        "SchedulerEvent",
+        "SchedulerSummary",
+        "_resolve_aions_path",
+        "operator_profile_path",
+        "load_operator_profile",
+        "_parse_date",
+        "_now_iso",
+        "collect_deadlines",
+        "build_job_queue",
+        "_audit_dir",
+        "emit_event",
+        "run_scheduler",
+        "_job_to_dict",
+        "summary_to_dict"
+      ]
+    },
+    {
+      "id": "w168",
+      "kind": "positive",
+      "question": "why don't the most urgent items appear at the top",
+      "answer_files": [
+        "control_plane/scheduler.py"
+      ],
+      "answer_symbols": [
+        "JobKind",
+        "ScheduledJob",
+        "SchedulerEvent",
+        "SchedulerSummary",
+        "_resolve_aions_path",
+        "operator_profile_path",
+        "load_operator_profile",
+        "_parse_date",
+        "_now_iso",
+        "collect_deadlines",
+        "build_job_queue",
+        "_audit_dir",
+        "emit_event",
+        "run_scheduler",
+        "_job_to_dict",
+        "summary_to_dict"
+      ]
+    },
+    {
+      "id": "w169",
+      "kind": "positive",
+      "question": "what helper functions can a skill actually use",
+      "answer_files": [
+        "control_plane/skills/context.py"
+      ],
+      "answer_symbols": [
+        "_find_files",
+        "_save_note",
+        "_launch_app",
+        "_close_app",
+        "build_context"
+      ]
+    },
+    {
+      "id": "w170",
+      "kind": "positive",
+      "question": "why can't the skill write files to disk",
+      "answer_files": [
+        "control_plane/skills/context.py"
+      ],
+      "answer_symbols": [
+        "_find_files",
+        "_save_note",
+        "_launch_app",
+        "_close_app",
+        "build_context"
+      ]
+    },
+    {
+      "id": "w171",
+      "kind": "positive",
+      "question": "how do I run a saved skill recipe",
+      "answer_files": [
+        "control_plane/skills/executor.py"
+      ],
+      "answer_symbols": [
+        "_resolve",
+        "_blocked_by_state",
+        "run_skill",
+        "run_chain"
+      ]
+    },
+    {
+      "id": "w172",
+      "kind": "positive",
+      "question": "which conditions prevent skill execution",
+      "answer_files": [
+        "control_plane/skills/executor.py"
+      ],
+      "answer_symbols": [
+        "_resolve",
+        "_blocked_by_state",
+        "run_skill",
+        "run_chain"
+      ]
+    },
+    {
+      "id": "w173",
+      "kind": "positive",
+      "question": "where does it test new skills before adding them",
+      "answer_files": [
+        "control_plane/skills/forge.py"
+      ],
+      "answer_symbols": [
+        "_slug",
+        "_ensure",
+        "request_skill",
+        "list_requests",
+        "_content_token_count",
+        "gap_detect",
+        "plan_or_request",
+        "_move_request",
+        "promote"
+      ]
+    },
+    {
+      "id": "w174",
+      "kind": "positive",
+      "question": "why did it reject the skill I built",
+      "answer_files": [
+        "control_plane/skills/forge.py"
+      ],
+      "answer_symbols": [
+        "_slug",
+        "_ensure",
+        "request_skill",
+        "list_requests",
+        "_content_token_count",
+        "gap_detect",
+        "plan_or_request",
+        "_move_request",
+        "promote"
+      ]
+    },
+    {
+      "id": "w175",
+      "kind": "positive",
+      "question": "how do I check if a new skill works before deploying",
+      "answer_files": [
+        "control_plane/skills/forge_linux_verify.py"
+      ],
+      "answer_symbols": [
+        "_now_ts",
+        "_check_schema",
+        "_check_compile",
+        "_load_handler_run",
+        "_check_sandbox",
+        "_write_vm_log",
+        "_append_local_log",
+        "verify_linux_skill"
+      ]
+    },
+    {
+      "id": "w176",
+      "kind": "positive",
+      "question": "why does my skill get rejected when I try to publish it",
+      "answer_files": [
+        "control_plane/skills/forge_linux_verify.py"
+      ],
+      "answer_symbols": [
+        "_now_ts",
+        "_check_schema",
+        "_check_compile",
+        "_load_handler_run",
+        "_check_sandbox",
+        "_write_vm_log",
+        "_append_local_log",
+        "verify_linux_skill"
+      ]
+    },
+    {
+      "id": "w177",
+      "kind": "positive",
+      "question": "how do I approve a skill before it runs",
+      "answer_files": [
+        "control_plane/skills/gate.py"
+      ],
+      "answer_symbols": [
+        "classify",
+        "_is_approved",
+        "check",
+        "audit"
+      ]
+    },
+    {
+      "id": "w178",
+      "kind": "positive",
+      "question": "why did it block me from running this skill",
+      "answer_files": [
+        "control_plane/skills/gate.py"
+      ],
+      "answer_symbols": [
+        "classify",
+        "_is_approved",
+        "check",
+        "audit"
+      ]
+    },
+    {
+      "id": "w179",
+      "kind": "positive",
+      "question": "how do I teach the system to reuse good solutions",
+      "answer_files": [
+        "control_plane/skills/goal_planner.py"
+      ],
+      "answer_symbols": [
+        "_ensure_env_defaults",
+        "_call_llm",
+        "_extract_json",
+        "_looks_like_placeholder",
+        "_truncate_desc",
+        "_candidate_text",
+        "_cbms_cache_enabled",
+        "_log_cbms_decision",
+        "_steps_from_cbms_hit",
+        "plan_goal",
+        "_step_explicit_ok_false",
+        "execute_goal",
+        "_build_registry",
+        "main"
+      ]
+    },
+    {
+      "id": "w180",
+      "kind": "positive",
+      "question": "why does it remember how to do something I did before",
+      "answer_files": [
+        "control_plane/skills/goal_planner.py"
+      ],
+      "answer_symbols": [
+        "_ensure_env_defaults",
+        "_call_llm",
+        "_extract_json",
+        "_looks_like_placeholder",
+        "_truncate_desc",
+        "_candidate_text",
+        "_cbms_cache_enabled",
+        "_log_cbms_decision",
+        "_steps_from_cbms_hit",
+        "plan_goal",
+        "_step_explicit_ok_false",
+        "execute_goal",
+        "_build_registry",
+        "main"
+      ]
+    },
+    {
+      "id": "w181",
+      "kind": "positive",
+      "question": "how do I make new skills available",
+      "answer_files": [
+        "control_plane/skills/mcp_bridge.py"
+      ],
+      "answer_symbols": [
+        "_reg",
+        "list_skills",
+        "search_skills",
+        "run_skill",
+        "run_task",
+        "list_recipes"
+      ]
+    },
+    {
+      "id": "w182",
+      "kind": "positive",
+      "question": "where can I find all available skills",
+      "answer_files": [
+        "control_plane/skills/mcp_bridge.py"
+      ],
+      "answer_symbols": [
+        "_reg",
+        "list_skills",
+        "search_skills",
+        "run_skill",
+        "run_task",
+        "list_recipes"
+      ]
+    },
+    {
+      "id": "w183",
+      "kind": "positive",
+      "question": "how do I keep track of my to-do items",
+      "answer_files": [
+        "control_plane/skills/papiery.py"
+      ],
+      "answer_symbols": [
+        "_pid",
+        "add",
+        "_all",
+        "list_open",
+        "due",
+        "done",
+        "find"
+      ]
+    },
+    {
+      "id": "w184",
+      "kind": "positive",
+      "question": "where are my pending tasks stored on disk",
+      "answer_files": [
+        "control_plane/skills/papiery.py"
+      ],
+      "answer_symbols": [
+        "_pid",
+        "add",
+        "_all",
+        "list_open",
+        "due",
+        "done",
+        "find"
+      ]
+    },
+    {
+      "id": "w185",
+      "kind": "positive",
+      "question": "Why isn't the system finding the skill I need",
+      "answer_files": [
+        "control_plane/skills/planner.py"
+      ],
+      "answer_symbols": [
+        "plan"
+      ]
+    },
+    {
+      "id": "w186",
+      "kind": "positive",
+      "question": "What happens when all skills are currently unavailable",
+      "answer_files": [
+        "control_plane/skills/planner.py"
+      ],
+      "answer_symbols": [
+        "plan"
+      ]
+    },
+    {
+      "id": "w187",
+      "kind": "positive",
+      "question": "how do I save workflows I want to reuse later",
+      "answer_files": [
+        "control_plane/skills/recipes.py"
+      ],
+      "answer_symbols": [
+        "_sem_threshold",
+        "_get_vs",
+        "_index_recipe_to_cbms",
+        "find_recipe_semantic",
+        "_load",
+        "_save",
+        "_key",
+        "save_recipe",
+        "find_recipe",
+        "mark_used"
+      ]
+    },
+    {
+      "id": "w188",
+      "kind": "positive",
+      "question": "why do paraphrased goals match the same solution",
+      "answer_files": [
+        "control_plane/skills/recipes.py"
+      ],
+      "answer_symbols": [
+        "_sem_threshold",
+        "_get_vs",
+        "_index_recipe_to_cbms",
+        "find_recipe_semantic",
+        "_load",
+        "_save",
+        "_key",
+        "save_recipe",
+        "find_recipe",
+        "mark_used"
+      ]
+    },
+    {
+      "id": "w189",
+      "kind": "positive",
+      "question": "where does it find all the available skills",
+      "answer_files": [
+        "control_plane/skills/registry.py"
+      ],
+      "answer_symbols": [
+        "_stem_en",
+        "_stem_pl",
+        "_stem_token",
+        "_stem_set",
+        "SkillRegistry",
+        "SkillRegistry/__init__",
+        "SkillRegistry/discover",
+        "SkillRegistry/_load_handler",
+        "SkillRegistry/get",
+        "SkillRegistry/handler",
+        "SkillRegistry/list_ids",
+        "SkillRegistry/search"
+      ]
+    },
+    {
+      "id": "w190",
+      "kind": "positive",
+      "question": "why won't it find the skill I'm looking for",
+      "answer_files": [
+        "control_plane/skills/registry.py"
+      ],
+      "answer_symbols": [
+        "_stem_en",
+        "_stem_pl",
+        "_stem_token",
+        "_stem_set",
+        "SkillRegistry",
+        "SkillRegistry/__init__",
+        "SkillRegistry/discover",
+        "SkillRegistry/_load_handler",
+        "SkillRegistry/get",
+        "SkillRegistry/handler",
+        "SkillRegistry/list_ids",
+        "SkillRegistry/search"
+      ]
+    },
+    {
+      "id": "w191",
+      "kind": "positive",
+      "question": "How do I verify a skill has all fields?",
+      "answer_files": [
+        "control_plane/skills/schema.py"
+      ],
+      "answer_symbols": [
+        "AObject",
+        "AObject/blob",
+        "validate",
+        "load"
+      ]
+    },
+    {
+      "id": "w192",
+      "kind": "positive",
+      "question": "What defines the structure of system objects?",
+      "answer_files": [
+        "control_plane/skills/schema.py"
+      ],
+      "answer_symbols": [
+        "AObject",
+        "AObject/blob",
+        "validate",
+        "load"
+      ]
+    },
+    {
+      "id": "w193",
+      "kind": "positive",
+      "question": "how do I find a skill when I don't know its name",
+      "answer_files": [
+        "control_plane/skills/semantic_search.py"
+      ],
+      "answer_symbols": [
+        "_normalize_text",
+        "semantic_enabled",
+        "_active_embedder",
+        "_active_collection",
+        "_env_float",
+        "_active_defaults",
+        "_weight_lex",
+        "_lex_saturation",
+        "_base_min",
+        "_sem_only_min",
+        "_get_vs",
+        "_get_registry",
+        "_get_v3_model",
+        "_v3_semantic_scores",
+        "build_skill_index",
+        "semantic_skill_search"
+      ]
+    },
+    {
+      "id": "w194",
+      "kind": "positive",
+      "question": "why does it find skills based on what I mean",
+      "answer_files": [
+        "control_plane/skills/semantic_search.py"
+      ],
+      "answer_symbols": [
+        "_normalize_text",
+        "semantic_enabled",
+        "_active_embedder",
+        "_active_collection",
+        "_env_float",
+        "_active_defaults",
+        "_weight_lex",
+        "_lex_saturation",
+        "_base_min",
+        "_sem_only_min",
+        "_get_vs",
+        "_get_registry",
+        "_get_v3_model",
+        "_v3_semantic_scores",
+        "build_skill_index",
+        "semantic_skill_search"
+      ]
+    },
+    {
+      "id": "w195",
+      "kind": "positive",
+      "question": "How do I choose the best automation method?",
+      "answer_files": [
+        "control_plane/skills/stats.py"
+      ],
+      "answer_symbols": [
+        "_load",
+        "_save",
+        "record",
+        "get",
+        "rank"
+      ]
+    },
+    {
+      "id": "w196",
+      "kind": "positive",
+      "question": "Where do success rates get tracked?",
+      "answer_files": [
+        "control_plane/skills/stats.py"
+      ],
+      "answer_symbols": [
+        "_load",
+        "_save",
+        "record",
+        "get",
+        "rank"
+      ]
+    },
+    {
+      "id": "w197",
+      "kind": "positive",
+      "question": "how does it track what's currently open on screen",
+      "answer_files": [
+        "control_plane/skills/world_state.py"
+      ],
+      "answer_symbols": [
+        "load",
+        "save",
+        "get",
+        "set",
+        "matches"
+      ]
+    },
+    {
+      "id": "w198",
+      "kind": "positive",
+      "question": "why does it think the browser is closed",
+      "answer_files": [
+        "control_plane/skills/world_state.py"
+      ],
+      "answer_symbols": [
+        "load",
+        "save",
+        "get",
+        "set",
+        "matches"
+      ]
+    },
+    {
+      "id": "w199",
+      "kind": "positive",
+      "question": "how do I start the communication server with different settings",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/__init__.py"
+      ],
+      "answer_symbols": [
+        "main"
+      ]
+    },
+    {
+      "id": "w200",
+      "kind": "positive",
+      "question": "where do I configure what port the server runs on",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/__init__.py"
+      ],
+      "answer_symbols": [
+        "main"
+      ]
+    },
+    {
+      "id": "w201",
+      "kind": "positive",
+      "question": "How do I launch the remote tool server?",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/__main__.py"
+      ],
+      "answer_symbols": [
+        "_expected_venv_roots",
+        "_in_project_venv",
+        "main",
+        "main/run_stdio"
+      ]
+    },
+    {
+      "id": "w202",
+      "kind": "positive",
+      "question": "What boots up the network protocol handler?",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/__main__.py"
+      ],
+      "answer_symbols": [
+        "_expected_venv_roots",
+        "_in_project_venv",
+        "main",
+        "main/run_stdio"
+      ]
+    },
+    {
+      "id": "w203",
+      "kind": "positive",
+      "question": "how do I automate clicking and typing on desktop",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py"
+      ],
+      "answer_symbols": [
+        "_log",
+        "_check_deps",
+        "desktop_unavailable_msg",
+        "is_desktop_ready",
+        "run_desktop",
+        "run_desktop/_task",
+        "_configure_pyautogui",
+        "_process_name_from_pid",
+        "_enum_visible_windows",
+        "_enum_visible_windows/callback",
+        "_bring_window_to_front",
+        "_resolve_launch_target",
+        "impl_snapshot",
+        "impl_click",
+        "impl_type",
+        "impl_key",
+        "impl_windows",
+        "impl_focus",
+        "impl_launch",
+        "impl_scroll",
+        "impl_shell",
+        "impl_clipboard",
+        "impl_ui_tree",
+        "impl_ui_tree/walk"
+      ]
+    },
+    {
+      "id": "w204",
+      "kind": "positive",
+      "question": "why can't it take a screenshot right now",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/desktop_control.py"
+      ],
+      "answer_symbols": [
+        "_log",
+        "_check_deps",
+        "desktop_unavailable_msg",
+        "is_desktop_ready",
+        "run_desktop",
+        "run_desktop/_task",
+        "_configure_pyautogui",
+        "_process_name_from_pid",
+        "_enum_visible_windows",
+        "_enum_visible_windows/callback",
+        "_bring_window_to_front",
+        "_resolve_launch_target",
+        "impl_snapshot",
+        "impl_click",
+        "impl_type",
+        "impl_key",
+        "impl_windows",
+        "impl_focus",
+        "impl_launch",
+        "impl_scroll",
+        "impl_shell",
+        "impl_clipboard",
+        "impl_ui_tree",
+        "impl_ui_tree/walk"
+      ]
+    },
+    {
+      "id": "w205",
+      "kind": "positive",
+      "question": "how do I control the desktop from code",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+      ],
+      "answer_symbols": [
+        "DesktopProviderError",
+        "BaseDesktopProvider",
+        "BaseDesktopProvider/is_ready",
+        "BaseDesktopProvider/unavailable_message",
+        "BaseDesktopProvider/capabilities",
+        "BaseDesktopProvider/snapshot",
+        "BaseDesktopProvider/click",
+        "BaseDesktopProvider/type",
+        "BaseDesktopProvider/key",
+        "BaseDesktopProvider/windows",
+        "BaseDesktopProvider/focus",
+        "BaseDesktopProvider/launch",
+        "BaseDesktopProvider/scroll",
+        "BaseDesktopProvider/shell",
+        "BaseDesktopProvider/clipboard",
+        "BaseDesktopProvider/ui_tree",
+        "WindowsDesktopProvider",
+        "WindowsDesktopProvider/__init__",
+        "WindowsDesktopProvider/is_ready",
+        "WindowsDesktopProvider/unavailable_message",
+        "WindowsDesktopProvider/capabilities",
+        "WindowsDesktopProvider/snapshot",
+        "WindowsDesktopProvider/click",
+        "WindowsDesktopProvider/type",
+        "WindowsDesktopProvider/key",
+        "WindowsDesktopProvider/windows",
+        "WindowsDesktopProvider/focus",
+        "WindowsDesktopProvider/launch",
+        "WindowsDesktopProvider/scroll",
+        "WindowsDesktopProvider/shell",
+        "WindowsDesktopProvider/clipboard",
+        "WindowsDesktopProvider/ui_tree",
+        "_LinuxSystemSlice",
+        "_LinuxSystemSlice/is_ready",
+        "_LinuxSystemSlice/windows",
+        "_LinuxSystemSlice/launch",
+        "_LinuxSystemSlice/shell",
+        "_LinuxSystemSlice/clipboard",
+        "_LinuxAutomationSlice",
+        "_LinuxAutomationSlice/_xdotool",
+        "_LinuxAutomationSlice/_mss_available",
+        "_LinuxAutomationSlice/is_ready",
+        "_LinuxAutomationSlice/capabilities",
+        "_LinuxAutomationSlice/_run_xdotool",
+        "_LinuxAutomationSlice/_active_window_geometry",
+        "_LinuxAutomationSlice/snapshot",
+        "_LinuxAutomationSlice/_button_code",
+        "_LinuxAutomationSlice/click",
+        "_LinuxAutomationSlice/type",
+        "_LinuxAutomationSlice/key",
+        "_LinuxAutomationSlice/scroll",
+        "_LinuxAutomationSlice/focus",
+        "LinuxDesktopProvider",
+        "LinuxDesktopProvider/__init__",
+        "LinuxDesktopProvider/is_ready",
+        "LinuxDesktopProvider/unavailable_message",
+        "LinuxDesktopProvider/capabilities",
+        "LinuxDesktopProvider/snapshot",
+        "LinuxDesktopProvider/click",
+        "LinuxDesktopProvider/type",
+        "LinuxDesktopProvider/key",
+        "LinuxDesktopProvider/windows",
+        "LinuxDesktopProvider/focus",
+        "LinuxDesktopProvider/launch",
+        "LinuxDesktopProvider/scroll",
+        "LinuxDesktopProvider/shell",
+        "LinuxDesktopProvider/clipboard",
+        "LinuxDesktopProvider/ui_tree",
+        "DisabledDesktopProvider",
+        "DisabledDesktopProvider/__init__",
+        "DisabledDesktopProvider/unavailable_message",
+        "get_desktop_provider"
+      ]
+    },
+    {
+      "id": "w206",
+      "kind": "positive",
+      "question": "what platform-specific tools are being used",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py"
+      ],
+      "answer_symbols": [
+        "DesktopProviderError",
+        "BaseDesktopProvider",
+        "BaseDesktopProvider/is_ready",
+        "BaseDesktopProvider/unavailable_message",
+        "BaseDesktopProvider/capabilities",
+        "BaseDesktopProvider/snapshot",
+        "BaseDesktopProvider/click",
+        "BaseDesktopProvider/type",
+        "BaseDesktopProvider/key",
+        "BaseDesktopProvider/windows",
+        "BaseDesktopProvider/focus",
+        "BaseDesktopProvider/launch",
+        "BaseDesktopProvider/scroll",
+        "BaseDesktopProvider/shell",
+        "BaseDesktopProvider/clipboard",
+        "BaseDesktopProvider/ui_tree",
+        "WindowsDesktopProvider",
+        "WindowsDesktopProvider/__init__",
+        "WindowsDesktopProvider/is_ready",
+        "WindowsDesktopProvider/unavailable_message",
+        "WindowsDesktopProvider/capabilities",
+        "WindowsDesktopProvider/snapshot",
+        "WindowsDesktopProvider/click",
+        "WindowsDesktopProvider/type",
+        "WindowsDesktopProvider/key",
+        "WindowsDesktopProvider/windows",
+        "WindowsDesktopProvider/focus",
+        "WindowsDesktopProvider/launch",
+        "WindowsDesktopProvider/scroll",
+        "WindowsDesktopProvider/shell",
+        "WindowsDesktopProvider/clipboard",
+        "WindowsDesktopProvider/ui_tree",
+        "_LinuxSystemSlice",
+        "_LinuxSystemSlice/is_ready",
+        "_LinuxSystemSlice/windows",
+        "_LinuxSystemSlice/launch",
+        "_LinuxSystemSlice/shell",
+        "_LinuxSystemSlice/clipboard",
+        "_LinuxAutomationSlice",
+        "_LinuxAutomationSlice/_xdotool",
+        "_LinuxAutomationSlice/_mss_available",
+        "_LinuxAutomationSlice/is_ready",
+        "_LinuxAutomationSlice/capabilities",
+        "_LinuxAutomationSlice/_run_xdotool",
+        "_LinuxAutomationSlice/_active_window_geometry",
+        "_LinuxAutomationSlice/snapshot",
+        "_LinuxAutomationSlice/_button_code",
+        "_LinuxAutomationSlice/click",
+        "_LinuxAutomationSlice/type",
+        "_LinuxAutomationSlice/key",
+        "_LinuxAutomationSlice/scroll",
+        "_LinuxAutomationSlice/focus",
+        "LinuxDesktopProvider",
+        "LinuxDesktopProvider/__init__",
+        "LinuxDesktopProvider/is_ready",
+        "LinuxDesktopProvider/unavailable_message",
+        "LinuxDesktopProvider/capabilities",
+        "LinuxDesktopProvider/snapshot",
+        "LinuxDesktopProvider/click",
+        "LinuxDesktopProvider/type",
+        "LinuxDesktopProvider/key",
+        "LinuxDesktopProvider/windows",
+        "LinuxDesktopProvider/focus",
+        "LinuxDesktopProvider/launch",
+        "LinuxDesktopProvider/scroll",
+        "LinuxDesktopProvider/shell",
+        "LinuxDesktopProvider/clipboard",
+        "LinuxDesktopProvider/ui_tree",
+        "DisabledDesktopProvider",
+        "DisabledDesktopProvider/__init__",
+        "DisabledDesktopProvider/unavailable_message",
+        "get_desktop_provider"
+      ]
+    },
+    {
+      "id": "w207",
+      "kind": "positive",
+      "question": "Why does the search index show files that don't exist",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+      ],
+      "answer_symbols": [
+        "SearchProviderError",
+        "AionsLinuxIndexProvider",
+        "AionsLinuxIndexProvider/__init__",
+        "AionsLinuxIndexProvider/status",
+        "AionsLinuxIndexProvider/ensure_fresh",
+        "AionsLinuxIndexProvider/refresh",
+        "AionsLinuxIndexProvider/search",
+        "AionsLinuxIndexProvider/search_ext",
+        "AionsLinuxIndexProvider/_load_entries",
+        "AionsLinuxIndexProvider/_is_stale",
+        "AionsLinuxIndexProvider/_scan_root",
+        "AionsLinuxIndexProvider/_make_entry",
+        "AionsLinuxIndexProvider/_normalize_folder_prefix",
+        "AionsLinuxIndexProvider/_score_query"
+      ]
+    },
+    {
+      "id": "w208",
+      "kind": "positive",
+      "question": "When does it update the file index automatically",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/filesystem_provider.py"
+      ],
+      "answer_symbols": [
+        "SearchProviderError",
+        "AionsLinuxIndexProvider",
+        "AionsLinuxIndexProvider/__init__",
+        "AionsLinuxIndexProvider/status",
+        "AionsLinuxIndexProvider/ensure_fresh",
+        "AionsLinuxIndexProvider/refresh",
+        "AionsLinuxIndexProvider/search",
+        "AionsLinuxIndexProvider/search_ext",
+        "AionsLinuxIndexProvider/_load_entries",
+        "AionsLinuxIndexProvider/_is_stale",
+        "AionsLinuxIndexProvider/_scan_root",
+        "AionsLinuxIndexProvider/_make_entry",
+        "AionsLinuxIndexProvider/_normalize_folder_prefix",
+        "AionsLinuxIndexProvider/_score_query"
+      ]
+    },
+    {
+      "id": "w209",
+      "kind": "positive",
+      "question": "how does it understand what I'm really asking",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+      ],
+      "answer_symbols": [
+        "mouth_backend",
+        "_log",
+        "_is_connect_fail",
+        "_extract_json",
+        "_chat",
+        "_runner_root",
+        "_llamacpp_inprocess",
+        "_llamacpp_http",
+        "_prefer_gguf_http",
+        "_via_llamacpp",
+        "_parse_understand",
+        "understand",
+        "speak"
+      ]
+    },
+    {
+      "id": "w210",
+      "kind": "positive",
+      "question": "why is it making up facts that aren't true",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py"
+      ],
+      "answer_symbols": [
+        "mouth_backend",
+        "_log",
+        "_is_connect_fail",
+        "_extract_json",
+        "_chat",
+        "_runner_root",
+        "_llamacpp_inprocess",
+        "_llamacpp_http",
+        "_prefer_gguf_http",
+        "_via_llamacpp",
+        "_parse_understand",
+        "understand",
+        "speak"
+      ]
+    },
+    {
+      "id": "w211",
+      "kind": "positive",
+      "question": "Why are tool responses arriving together?",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/patched_stdio.py"
+      ],
+      "answer_symbols": [
+        "patched_stdio_server",
+        "patched_stdio_server/stdin_reader",
+        "patched_stdio_server/stdout_writer"
+      ]
+    },
+    {
+      "id": "w212",
+      "kind": "positive",
+      "question": "What fixes network message bundling on Windows?",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/patched_stdio.py"
+      ],
+      "answer_symbols": [
+        "patched_stdio_server",
+        "patched_stdio_server/stdin_reader",
+        "patched_stdio_server/stdout_writer"
+      ]
+    },
+    {
+      "id": "w213",
+      "kind": "positive",
+      "question": "why isn't it using the faster search method available",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py"
+      ],
+      "answer_symbols": [
+        "resolve_search_provider_name",
+        "create_linux_search_provider",
+        "get_desktop_provider",
+        "search_provider_status",
+        "desktop_provider_capabilities"
+      ]
+    },
+    {
+      "id": "w214",
+      "kind": "positive",
+      "question": "how does it pick which search engine to use",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/provider_registry.py"
+      ],
+      "answer_symbols": [
+        "resolve_search_provider_name",
+        "create_linux_search_provider",
+        "get_desktop_provider",
+        "search_provider_status",
+        "desktop_provider_capabilities"
+      ]
+    },
+    {
+      "id": "w215",
+      "kind": "positive",
+      "question": "How do I give Claude access to my system?",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+      ],
+      "answer_symbols": [
+        "_is_huge_repo",
+        "log",
+        "_find_dir",
+        "_find_exe",
+        "_env_truthy",
+        "_find_python_exe",
+        "_split_search_roots",
+        "_clamped_float_env",
+        "_now_iso",
+        "_today_str",
+        "_success",
+        "_guard",
+        "_error",
+        "_generate_id",
+        "_run_command",
+        "korean_build_keys",
+        "extract_categories",
+        "_default_host",
+        "_client_identity",
+        "provenance",
+        "with_provenance",
+        "_auto_log_entry",
+        "_auto_dump_logs",
+        "auto_logged",
+        "auto_logged/wrapper",
+        "_load_server_module",
+        "_vector_store_backend",
+        "get_vector_store",
+        "get_cbms",
+        "memory_store_add",
+        "memory_store_search",
+        "_normalize_folder_prefix",
+        "_build_everything_ext_query",
+        "_everything_search",
+        "_search_provider",
+        "_platform_search",
+        "fast_search",
+        "fast_search_ext",
+        "docker_ps",
+        "docker_images",
+        "wsl_run",
+        "wsl_list",
+        "git_status",
+        "git_log",
+        "network_ping",
+        "project_scan_turbo",
+        "project_scan_turbo/run_turbo",
+        "project_scan_status",
+        "project_scan_results",
+        "project_search",
+        "project_file_deps",
+        "conv_log",
+        "conv_dump",
+        "conv_status",
+        "conv_set_threshold",
+        "_read_autolog_entries",
+        "_load_operator_profile",
+        "conv_history",
+        "session_bootstrap",
+        "memory_store",
+        "memory_recall",
+        "session_list",
+        "cbms_search",
+        "cbms_get_chunk",
+        "_calendar_get_events_impl",
+        "calendar_get_events",
+        "_component_state",
+        "_run_with_wall_timeout",
+        "_run_with_wall_timeout/_worker",
+        "_system_health_payload",
+        "system_health",
+        "_browser_thread_init",
+        "_run_browser",
+        "_run_browser/_task",
+        "get_browser",
+        "_browser_unavailable_msg",
+        "browser_navigate",
+        "browser_navigate/op",
+        "browser_snapshot",
+        "browser_snapshot/op",
+        "browser_snapshot/flatten_tree",
+        "browser_click",
+        "browser_click/op",
+        "browser_type",
+        "browser_type/op",
+        "browser_screenshot",
+        "browser_screenshot/op",
+        "browser_get_text",
+        "browser_get_text/op",
+        "browser_close",
+        "browser_close/op",
+        "browser_evaluate",
+        "browser_evaluate/op",
+        "_desktop_err",
+        "desktop_snapshot",
+        "desktop_click",
+        "desktop_type",
+        "desktop_key",
+        "desktop_windows",
+        "desktop_focus",
+        "desktop_launch",
+        "desktop_scroll",
+        "desktop_shell",
+        "desktop_ui_tree",
+        "desktop_clipboard",
+        "mcp_find",
+        "mcp_list",
+        "mcp_info",
+        "web_fetch",
+        "_suggest_aions_tools",
+        "_thinking_auto_cbms",
+        "_thinking_cleanup",
+        "think_start",
+        "think_step",
+        "think_branch",
+        "think_finish",
+        "think_status",
+        "llm_understand",
+        "llm_speak",
+        "_warmup",
+        "_cp_tool_runner",
+        "aions_plan",
+        "aions_execute_step",
+        "aions_execution_status",
+        "skill_list",
+        "skill_search",
+        "skill_run",
+        "task_run",
+        "recipe_list",
+        "forge_request",
+        "forge_list",
+        "forge_promote",
+        "offload_get"
+      ]
+    },
+    {
+      "id": "w216",
+      "kind": "positive",
+      "question": "What provides Claude with tool access?",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/server.py"
+      ],
+      "answer_symbols": [
+        "_is_huge_repo",
+        "log",
+        "_find_dir",
+        "_find_exe",
+        "_env_truthy",
+        "_find_python_exe",
+        "_split_search_roots",
+        "_clamped_float_env",
+        "_now_iso",
+        "_today_str",
+        "_success",
+        "_guard",
+        "_error",
+        "_generate_id",
+        "_run_command",
+        "korean_build_keys",
+        "extract_categories",
+        "_default_host",
+        "_client_identity",
+        "provenance",
+        "with_provenance",
+        "_auto_log_entry",
+        "_auto_dump_logs",
+        "auto_logged",
+        "auto_logged/wrapper",
+        "_load_server_module",
+        "_vector_store_backend",
+        "get_vector_store",
+        "get_cbms",
+        "memory_store_add",
+        "memory_store_search",
+        "_normalize_folder_prefix",
+        "_build_everything_ext_query",
+        "_everything_search",
+        "_search_provider",
+        "_platform_search",
+        "fast_search",
+        "fast_search_ext",
+        "docker_ps",
+        "docker_images",
+        "wsl_run",
+        "wsl_list",
+        "git_status",
+        "git_log",
+        "network_ping",
+        "project_scan_turbo",
+        "project_scan_turbo/run_turbo",
+        "project_scan_status",
+        "project_scan_results",
+        "project_search",
+        "project_file_deps",
+        "conv_log",
+        "conv_dump",
+        "conv_status",
+        "conv_set_threshold",
+        "_read_autolog_entries",
+        "_load_operator_profile",
+        "conv_history",
+        "session_bootstrap",
+        "memory_store",
+        "memory_recall",
+        "session_list",
+        "cbms_search",
+        "cbms_get_chunk",
+        "_calendar_get_events_impl",
+        "calendar_get_events",
+        "_component_state",
+        "_run_with_wall_timeout",
+        "_run_with_wall_timeout/_worker",
+        "_system_health_payload",
+        "system_health",
+        "_browser_thread_init",
+        "_run_browser",
+        "_run_browser/_task",
+        "get_browser",
+        "_browser_unavailable_msg",
+        "browser_navigate",
+        "browser_navigate/op",
+        "browser_snapshot",
+        "browser_snapshot/op",
+        "browser_snapshot/flatten_tree",
+        "browser_click",
+        "browser_click/op",
+        "browser_type",
+        "browser_type/op",
+        "browser_screenshot",
+        "browser_screenshot/op",
+        "browser_get_text",
+        "browser_get_text/op",
+        "browser_close",
+        "browser_close/op",
+        "browser_evaluate",
+        "browser_evaluate/op",
+        "_desktop_err",
+        "desktop_snapshot",
+        "desktop_click",
+        "desktop_type",
+        "desktop_key",
+        "desktop_windows",
+        "desktop_focus",
+        "desktop_launch",
+        "desktop_scroll",
+        "desktop_shell",
+        "desktop_ui_tree",
+        "desktop_clipboard",
+        "mcp_find",
+        "mcp_list",
+        "mcp_info",
+        "web_fetch",
+        "_suggest_aions_tools",
+        "_thinking_auto_cbms",
+        "_thinking_cleanup",
+        "think_start",
+        "think_step",
+        "think_branch",
+        "think_finish",
+        "think_status",
+        "llm_understand",
+        "llm_speak",
+        "_warmup",
+        "_cp_tool_runner",
+        "aions_plan",
+        "aions_execute_step",
+        "aions_execution_status",
+        "skill_list",
+        "skill_search",
+        "skill_run",
+        "task_run",
+        "recipe_list",
+        "forge_request",
+        "forge_list",
+        "forge_promote",
+        "offload_get"
+      ]
+    },
+    {
+      "id": "w217",
+      "kind": "positive",
+      "question": "how do I test if the server infrastructure works at all",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/test_server.py"
+      ],
+      "answer_symbols": [
+        "_now",
+        "ping",
+        "echo",
+        "health"
+      ]
+    },
+    {
+      "id": "w218",
+      "kind": "positive",
+      "question": "what are the minimal tools needed to verify server startup",
+      "answer_files": [
+        "mcpServers/VS_CODE_MCP_CODEX/src/test_server.py"
+      ],
+      "answer_symbols": [
+        "_now",
+        "ping",
+        "echo",
+        "health"
+      ]
+    },
+    {
+      "id": "w219",
+      "kind": "positive",
+      "question": "where can I see if the system is healthy",
+      "answer_files": [
+        "scripts/aions_healthcheck.sh"
+      ],
+      "answer_symbols": [
+        "log"
+      ]
+    },
+    {
+      "id": "w220",
+      "kind": "positive",
+      "question": "why doesn't it tell me which service is broken",
+      "answer_files": [
+        "scripts/aions_healthcheck.sh"
+      ],
+      "answer_symbols": [
+        "log"
+      ]
+    },
+    {
+      "id": "w221",
+      "kind": "positive",
+      "question": "why can't I search for files I know exist",
+      "answer_files": [
+        "scripts/aions_indexer.py"
+      ],
+      "answer_symbols": [
+        "_split_roots",
+        "build_provider",
+        "main"
+      ]
+    },
+    {
+      "id": "w222",
+      "kind": "positive",
+      "question": "how do I find any file on my computer",
+      "answer_files": [
+        "scripts/aions_indexer.py"
+      ],
+      "answer_symbols": [
+        "_split_roots",
+        "build_provider",
+        "main"
+      ]
+    },
+    {
+      "id": "w223",
+      "kind": "positive",
+      "question": "How do I tell the hub I'm still running?",
+      "answer_files": [
+        "scripts/aions_node_heartbeat.py"
+      ],
+      "answer_symbols": [
+        "_default_node_id",
+        "_probe_load",
+        "send_heartbeat",
+        "heartbeat_once",
+        "run_loop",
+        "main"
+      ]
+    },
+    {
+      "id": "w224",
+      "kind": "positive",
+      "question": "What sends status reports at regular intervals?",
+      "answer_files": [
+        "scripts/aions_node_heartbeat.py"
+      ],
+      "answer_symbols": [
+        "_default_node_id",
+        "_probe_load",
+        "send_heartbeat",
+        "heartbeat_once",
+        "run_loop",
+        "main"
+      ]
+    },
+    {
+      "id": "w225",
+      "kind": "positive",
+      "question": "Why am I getting a different Python version",
+      "answer_files": [
+        "scripts/aions_python.sh"
+      ],
+      "answer_symbols": [
+        "usage",
+        "read_config",
+        "resolve_python",
+        "ensure_venv"
+      ]
+    },
+    {
+      "id": "w226",
+      "kind": "positive",
+      "question": "Where does it load the venv configuration",
+      "answer_files": [
+        "scripts/aions_python.sh"
+      ],
+      "answer_symbols": [
+        "usage",
+        "read_config",
+        "resolve_python",
+        "ensure_venv"
+      ]
+    },
+    {
+      "id": "w227",
+      "kind": "positive",
+      "question": "how do I restart Claude from the notification area",
+      "answer_files": [
+        "scripts/aions_tray.py"
+      ],
+      "answer_symbols": [
+        "is_claude_running",
+        "kill_claude",
+        "start_claude",
+        "restart_claude",
+        "open_logs",
+        "open_config",
+        "create_icon_image",
+        "get_status_text",
+        "AIONSTray",
+        "AIONSTray/__init__",
+        "AIONSTray/create_menu",
+        "AIONSTray/on_restart",
+        "AIONSTray/on_stop",
+        "AIONSTray/on_start",
+        "AIONSTray/on_logs",
+        "AIONSTray/on_config",
+        "AIONSTray/on_exit",
+        "AIONSTray/update_icon",
+        "AIONSTray/status_monitor",
+        "AIONSTray/run"
+      ]
+    },
+    {
+      "id": "w228",
+      "kind": "positive",
+      "question": "where do I see if Claude is still running",
+      "answer_files": [
+        "scripts/aions_tray.py"
+      ],
+      "answer_symbols": [
+        "is_claude_running",
+        "kill_claude",
+        "start_claude",
+        "restart_claude",
+        "open_logs",
+        "open_config",
+        "create_icon_image",
+        "get_status_text",
+        "AIONSTray",
+        "AIONSTray/__init__",
+        "AIONSTray/create_menu",
+        "AIONSTray/on_restart",
+        "AIONSTray/on_stop",
+        "AIONSTray/on_start",
+        "AIONSTray/on_logs",
+        "AIONSTray/on_config",
+        "AIONSTray/on_exit",
+        "AIONSTray/update_icon",
+        "AIONSTray/status_monitor",
+        "AIONSTray/run"
+      ]
+    },
+    {
+      "id": "w229",
+      "kind": "positive",
+      "question": "why can't I see my scheduled events appear",
+      "answer_files": [
+        "scripts/calendar_e2e_smoke.py"
+      ],
+      "answer_symbols": [
+        "_section",
+        "main"
+      ]
+    },
+    {
+      "id": "w230",
+      "kind": "positive",
+      "question": "what checks that my calendar connection is properly working",
+      "answer_files": [
+        "scripts/calendar_e2e_smoke.py"
+      ],
+      "answer_symbols": [
+        "_section",
+        "main"
+      ]
+    },
+    {
+      "id": "w231",
+      "kind": "positive",
+      "question": "where is all my knowledge data stored",
+      "answer_files": [
+        "scripts/catalog_e_treasures.py"
+      ],
+      "answer_symbols": [
+        "_now_iso",
+        "_dir_stats",
+        "_manifest_stats",
+        "build_catalog",
+        "main"
+      ]
+    },
+    {
+      "id": "w232",
+      "kind": "positive",
+      "question": "how much storage does each backup location use",
+      "answer_files": [
+        "scripts/catalog_e_treasures.py"
+      ],
+      "answer_symbols": [
+        "_now_iso",
+        "_dir_stats",
+        "_manifest_stats",
+        "build_catalog",
+        "main"
+      ]
+    },
+    {
+      "id": "w233",
+      "kind": "positive",
+      "question": "can I restore my ChatGPT message records",
+      "answer_files": [
+        "scripts/chatgpt_extractor.py"
+      ],
+      "answer_symbols": [
+        "Conversation",
+        "Conversation/__post_init__",
+        "ExtractionResult",
+        "extract_json_objects",
+        "extract_conversations_from_text",
+        "extract_readable_strings",
+        "parse_ldb_file",
+        "extract_all",
+        "save_results",
+        "extract_deep_content"
+      ]
+    },
+    {
+      "id": "w234",
+      "kind": "positive",
+      "question": "where is the ChatGPT cache data located",
+      "answer_files": [
+        "scripts/chatgpt_extractor.py"
+      ],
+      "answer_symbols": [
+        "Conversation",
+        "Conversation/__post_init__",
+        "ExtractionResult",
+        "extract_json_objects",
+        "extract_conversations_from_text",
+        "extract_readable_strings",
+        "parse_ldb_file",
+        "extract_all",
+        "save_results",
+        "extract_deep_content"
+      ]
+    },
+    {
+      "id": "w235",
+      "kind": "positive",
+      "question": "how do I turn that ChatGPT export into structured data",
+      "answer_files": [
+        "scripts/chatgpt_parser_v2.py"
+      ],
+      "answer_symbols": [
+        "extract_conversations",
+        "extract_user_info",
+        "extract_all_readable_titles",
+        "find_conversation_content",
+        "main"
+      ]
+    },
+    {
+      "id": "w236",
+      "kind": "positive",
+      "question": "what pulls out conversation details from raw text files",
+      "answer_files": [
+        "scripts/chatgpt_parser_v2.py"
+      ],
+      "answer_symbols": [
+        "extract_conversations",
+        "extract_user_info",
+        "extract_all_readable_titles",
+        "find_conversation_content",
+        "main"
+      ]
+    },
+    {
+      "id": "w237",
+      "kind": "positive",
+      "question": "Why are my conversation titles showing up garbled in exports",
+      "answer_files": [
+        "scripts/chatgpt_ultimate.py"
+      ],
+      "answer_symbols": [
+        "clean_text",
+        "extract_all_data",
+        "extract_spaced_titles",
+        "main"
+      ]
+    },
+    {
+      "id": "w238",
+      "kind": "positive",
+      "question": "What data formats can the export generate",
+      "answer_files": [
+        "scripts/chatgpt_ultimate.py"
+      ],
+      "answer_symbols": [
+        "clean_text",
+        "extract_all_data",
+        "extract_spaced_titles",
+        "main"
+      ]
+    },
+    {
+      "id": "w239",
+      "kind": "positive",
+      "question": "how does the system learn new behaviors",
+      "answer_files": [
+        "scripts/demo_skill_live.py"
+      ],
+      "answer_symbols": [
+        "verify"
+      ]
+    },
+    {
+      "id": "w240",
+      "kind": "positive",
+      "question": "where are my saved action sequences stored",
+      "answer_files": [
+        "scripts/demo_skill_live.py"
+      ],
+      "answer_symbols": [
+        "verify"
+      ]
+    },
+    {
+      "id": "w241",
+      "kind": "positive",
+      "question": "where can I see how the system learns new tasks",
+      "answer_files": [
+        "scripts/demo_train.py"
+      ],
+      "answer_symbols": [
+        "learn"
+      ]
+    },
+    {
+      "id": "w242",
+      "kind": "positive",
+      "question": "why didn't it remember how to do that again",
+      "answer_files": [
+        "scripts/demo_train.py"
+      ],
+      "answer_symbols": [
+        "learn"
+      ]
+    },
+    {
+      "id": "w243",
+      "kind": "positive",
+      "question": "how do I run a sequence of desktop tasks",
+      "answer_files": [
+        "scripts/demo_windows_batch2.py"
+      ],
+      "answer_symbols": [
+        "think"
+      ]
+    },
+    {
+      "id": "w244",
+      "kind": "positive",
+      "question": "why didn't it create the file like I asked",
+      "answer_files": [
+        "scripts/demo_windows_batch2.py"
+      ],
+      "answer_symbols": [
+        "think"
+      ]
+    },
+    {
+      "id": "w245",
+      "kind": "positive",
+      "question": "why isn't the system remembering successful task workflows",
+      "answer_files": [
+        "scripts/demo_windows_final.py"
+      ],
+      "answer_symbols": [
+        "think"
+      ]
+    },
+    {
+      "id": "w246",
+      "kind": "positive",
+      "question": "how do I test that multiple steps work together",
+      "answer_files": [
+        "scripts/demo_windows_final.py"
+      ],
+      "answer_symbols": [
+        "think"
+      ]
+    },
+    {
+      "id": "w247",
+      "kind": "positive",
+      "question": "where does it show what it learned in this session",
+      "answer_files": [
+        "scripts/demo_windows_session.py"
+      ],
+      "answer_symbols": [
+        "snapshot",
+        "verify"
+      ]
+    },
+    {
+      "id": "w248",
+      "kind": "positive",
+      "question": "why didn't it automatically open the editor like I asked",
+      "answer_files": [
+        "scripts/demo_windows_session.py"
+      ],
+      "answer_symbols": [
+        "snapshot",
+        "verify"
+      ]
+    },
+    {
+      "id": "w249",
+      "kind": "positive",
+      "question": "How do I catalog all my code on disk?",
+      "answer_files": [
+        "scripts/full_system_scan.py"
+      ],
+      "answer_symbols": [
+        "_now",
+        "_write_status",
+        "get_ready_drives",
+        "get_default_excluded_drives",
+        "resolve_drive_order",
+        "export_drive_inventory",
+        "run_turbo_drive",
+        "detect_project_roots",
+        "build_master_map",
+        "parse_args",
+        "main"
+      ]
+    },
+    {
+      "id": "w250",
+      "kind": "positive",
+      "question": "What finds projects and traces their dependencies?",
+      "answer_files": [
+        "scripts/full_system_scan.py"
+      ],
+      "answer_symbols": [
+        "_now",
+        "_write_status",
+        "get_ready_drives",
+        "get_default_excluded_drives",
+        "resolve_drive_order",
+        "export_drive_inventory",
+        "run_turbo_drive",
+        "detect_project_roots",
+        "build_master_map",
+        "parse_args",
+        "main"
+      ]
+    },
+    {
+      "id": "w251",
+      "kind": "positive",
+      "question": "what do I run to check if Python works",
+      "answer_files": [
+        "scripts/hello_world.py"
+      ],
+      "answer_symbols": [
+        "hello_world",
+        "main"
+      ]
+    },
+    {
+      "id": "w252",
+      "kind": "positive",
+      "question": "why did it print nothing to the console",
+      "answer_files": [
+        "scripts/hello_world.py"
+      ],
+      "answer_symbols": [
+        "hello_world",
+        "main"
+      ]
+    },
+    {
+      "id": "w253",
+      "kind": "positive",
+      "question": "why can't I find information I just added",
+      "answer_files": [
+        "scripts/ingest_tier1_chroma.py"
+      ],
+      "answer_symbols": [
+        "_assert_chroma_version",
+        "_now_iso",
+        "_base_meta",
+        "_format_operator_profile",
+        "_is_plaster",
+        "_load_manifest_entries",
+        "_select_sample",
+        "ingest",
+        "main"
+      ]
+    },
+    {
+      "id": "w254",
+      "kind": "positive",
+      "question": "how do I make knowledge searchable by meaning",
+      "answer_files": [
+        "scripts/ingest_tier1_chroma.py"
+      ],
+      "answer_symbols": [
+        "_assert_chroma_version",
+        "_now_iso",
+        "_base_meta",
+        "_format_operator_profile",
+        "_is_plaster",
+        "_load_manifest_entries",
+        "_select_sample",
+        "ingest",
+        "main"
+      ]
+    },
+    {
+      "id": "w255",
+      "kind": "positive",
+      "question": "Why can't I search for the cataloged items afterward",
+      "answer_files": [
+        "scripts/ingest_treasures_tier2.py"
+      ],
+      "answer_symbols": [
+        "_assert_chroma_version",
+        "_now_iso",
+        "_base_meta",
+        "_format_treasure",
+        "_load_catalog",
+        "ingest",
+        "main"
+      ]
+    },
+    {
+      "id": "w256",
+      "kind": "positive",
+      "question": "What happens to the original files after ingestion",
+      "answer_files": [
+        "scripts/ingest_treasures_tier2.py"
+      ],
+      "answer_symbols": [
+        "_assert_chroma_version",
+        "_now_iso",
+        "_base_meta",
+        "_format_treasure",
+        "_load_catalog",
+        "ingest",
+        "main"
+      ]
+    },
+    {
+      "id": "w257",
+      "kind": "positive",
+      "question": "where's the script that shows my morning tasks",
+      "answer_files": [
+        "scripts/operator_daily_brief.py"
+      ],
+      "answer_symbols": [
+        "_light_health",
+        "_status_label_pl",
+        "_priority_label_pl",
+        "format_brief",
+        "main"
+      ]
+    },
+    {
+      "id": "w258",
+      "kind": "positive",
+      "question": "why is it missing today's deadline from the list",
+      "answer_files": [
+        "scripts/operator_daily_brief.py"
+      ],
+      "answer_symbols": [
+        "_light_health",
+        "_status_label_pl",
+        "_priority_label_pl",
+        "format_brief",
+        "main"
+      ]
+    },
+    {
+      "id": "w259",
+      "kind": "positive",
+      "question": "how do I set up my operator details",
+      "answer_files": [
+        "scripts/operator_profile_load.py"
+      ],
+      "answer_symbols": [
+        "_resolve_aions_path",
+        "operator_profile_path",
+        "load_operator_profile"
+      ]
+    },
+    {
+      "id": "w260",
+      "kind": "positive",
+      "question": "where is my user profile information kept",
+      "answer_files": [
+        "scripts/operator_profile_load.py"
+      ],
+      "answer_symbols": [
+        "_resolve_aions_path",
+        "operator_profile_path",
+        "load_operator_profile"
+      ]
+    },
+    {
+      "id": "w261",
+      "kind": "positive",
+      "question": "why does changing one file break that other one",
+      "answer_files": [
+        "scripts/project_scanner.py"
+      ],
+      "answer_symbols": [
+        "FileInfo",
+        "ScanResult",
+        "hash_file",
+        "count_lines",
+        "parse_python_imports",
+        "parse_javascript_imports",
+        "parse_json_references",
+        "extract_paths_from_dict",
+        "looks_like_path",
+        "parse_markdown_links",
+        "parse_shell_references",
+        "parse_powershell_references",
+        "parse_file_imports",
+        "categorize_file",
+        "ProjectScanner",
+        "ProjectScanner/__init__",
+        "ProjectScanner/should_ignore_dir",
+        "ProjectScanner/should_ignore_file",
+        "ProjectScanner/should_scan_file",
+        "ProjectScanner/scan",
+        "ProjectScanner/_scan_file",
+        "ProjectScanner/_build_dependency_graph",
+        "ProjectScanner/_resolve_import",
+        "ProjectScanner/_analyze_graph",
+        "ProjectScanner/_detect_cycles",
+        "ProjectScanner/_detect_cycles/dfs",
+        "ProjectScanner/_save_results",
+        "ProjectScanner/_generate_markdown_report",
+        "main"
+      ]
+    },
+    {
+      "id": "w262",
+      "kind": "positive",
+      "question": "what shows me all the connections between my files",
+      "answer_files": [
+        "scripts/project_scanner.py"
+      ],
+      "answer_symbols": [
+        "FileInfo",
+        "ScanResult",
+        "hash_file",
+        "count_lines",
+        "parse_python_imports",
+        "parse_javascript_imports",
+        "parse_json_references",
+        "extract_paths_from_dict",
+        "looks_like_path",
+        "parse_markdown_links",
+        "parse_shell_references",
+        "parse_powershell_references",
+        "parse_file_imports",
+        "categorize_file",
+        "ProjectScanner",
+        "ProjectScanner/__init__",
+        "ProjectScanner/should_ignore_dir",
+        "ProjectScanner/should_ignore_file",
+        "ProjectScanner/should_scan_file",
+        "ProjectScanner/scan",
+        "ProjectScanner/_scan_file",
+        "ProjectScanner/_build_dependency_graph",
+        "ProjectScanner/_resolve_import",
+        "ProjectScanner/_analyze_graph",
+        "ProjectScanner/_detect_cycles",
+        "ProjectScanner/_detect_cycles/dfs",
+        "ProjectScanner/_save_results",
+        "ProjectScanner/_generate_markdown_report",
+        "main"
+      ]
+    },
+    {
+      "id": "w263",
+      "kind": "positive",
+      "question": "how do I verify audit trails are being recorded correctly",
+      "answer_files": [
+        "scripts/proof_provenance.py"
+      ],
+      "answer_symbols": [
+        "post",
+        "parse_sse",
+        "main"
+      ]
+    },
+    {
+      "id": "w264",
+      "kind": "positive",
+      "question": "what metadata gets attached when information is stored",
+      "answer_files": [
+        "scripts/proof_provenance.py"
+      ],
+      "answer_symbols": [
+        "post",
+        "parse_sse",
+        "main"
+      ]
+    },
+    {
+      "id": "w265",
+      "kind": "positive",
+      "question": "How do I test if the server is working?",
+      "answer_files": [
+        "scripts/smoke_http_mcp.py"
+      ],
+      "answer_symbols": [
+        "post",
+        "parse_sse",
+        "main"
+      ]
+    },
+    {
+      "id": "w266",
+      "kind": "positive",
+      "question": "What checks server health over the network?",
+      "answer_files": [
+        "scripts/smoke_http_mcp.py"
+      ],
+      "answer_symbols": [
+        "post",
+        "parse_sse",
+        "main"
+      ]
+    },
+    {
+      "id": "w267",
+      "kind": "positive",
+      "question": "how do I keep the development copy in sync",
+      "answer_files": [
+        "scripts/sync_dev_mirror.sh"
+      ],
+      "answer_symbols": [
+        "usage"
+      ]
+    },
+    {
+      "id": "w268",
+      "kind": "positive",
+      "question": "why did it delete my changes from the mirror",
+      "answer_files": [
+        "scripts/sync_dev_mirror.sh"
+      ],
+      "answer_symbols": [
+        "usage"
+      ]
+    },
+    {
+      "id": "w269",
+      "kind": "positive",
+      "question": "is the control plane working correctly",
+      "answer_files": [
+        "scripts/test_control_plane.py"
+      ],
+      "answer_symbols": [
+        "_runner",
+        "_resolve_health_url",
+        "check_remote_api",
+        "main"
+      ]
+    },
+    {
+      "id": "w270",
+      "kind": "positive",
+      "question": "how do I test the multi-host system",
+      "answer_files": [
+        "scripts/test_control_plane.py"
+      ],
+      "answer_symbols": [
+        "_runner",
+        "_resolve_health_url",
+        "check_remote_api",
+        "main"
+      ]
+    },
+    {
+      "id": "w271",
+      "kind": "positive",
+      "question": "why is my Google account not connecting properly",
+      "answer_files": [
+        "scripts/test_google_integration.py"
+      ],
+      "answer_symbols": [
+        "main"
+      ]
+    },
+    {
+      "id": "w272",
+      "kind": "positive",
+      "question": "what tests that all the Google integrations are ready",
+      "answer_files": [
+        "scripts/test_google_integration.py"
+      ],
+      "answer_symbols": [
+        "main"
+      ]
+    },
+    {
+      "id": "w273",
+      "kind": "positive",
+      "question": "Why doesn't the model seem to use my context",
+      "answer_files": [
+        "scripts/test_llm_adapter.py"
+      ],
+      "answer_symbols": [
+        "_looks_polish",
+        "_uses_context",
+        "main"
+      ]
+    },
+    {
+      "id": "w274",
+      "kind": "positive",
+      "question": "How do I verify the model is loaded",
+      "answer_files": [
+        "scripts/test_llm_adapter.py"
+      ],
+      "answer_symbols": [
+        "_looks_polish",
+        "_uses_context",
+        "main"
+      ]
+    },
+    {
+      "id": "w275",
+      "kind": "positive",
+      "question": "how do I verify the system nodes are registered correctly",
+      "answer_files": [
+        "scripts/test_node_registry.py"
+      ],
+      "answer_symbols": [
+        "_runner",
+        "smoke_in_process",
+        "smoke_http",
+        "main"
+      ]
+    },
+    {
+      "id": "w276",
+      "kind": "positive",
+      "question": "what does the smoke test check about the registry",
+      "answer_files": [
+        "scripts/test_node_registry.py"
+      ],
+      "answer_symbols": [
+        "_runner",
+        "smoke_in_process",
+        "smoke_http",
+        "main"
+      ]
+    },
+    {
+      "id": "w277",
+      "kind": "positive",
+      "question": "why doesn't it remember how to do this again",
+      "answer_files": [
+        "scripts/test_skill_engine_foundation.py"
+      ],
+      "answer_symbols": [
+        "verify"
+      ]
+    },
+    {
+      "id": "w278",
+      "kind": "positive",
+      "question": "how do I teach it to repeat saved workflows",
+      "answer_files": [
+        "scripts/test_skill_engine_foundation.py"
+      ],
+      "answer_symbols": [
+        "verify"
+      ]
+    },
+    {
+      "id": "w279",
+      "kind": "positive",
+      "question": "how do I find duplicate files in my codebase quickly",
+      "answer_files": [
+        "scripts/turbo_scanner.py"
+      ],
+      "answer_symbols": [
+        "FileInfo",
+        "ScanResult",
+        "everything_search",
+        "hash_file_fast",
+        "count_lines_fast",
+        "parse_python_imports",
+        "parse_js_imports",
+        "parse_file_imports",
+        "categorize_file",
+        "process_file",
+        "TurboScanner",
+        "TurboScanner/__init__",
+        "TurboScanner/scan",
+        "TurboScanner/_build_dependency_graph",
+        "TurboScanner/_resolve_import",
+        "TurboScanner/_analyze_graph",
+        "TurboScanner/_save_results",
+        "TurboScanner/_generate_report",
+        "main"
+      ]
+    },
+    {
+      "id": "w280",
+      "kind": "positive",
+      "question": "where are my orphan files with no dependencies",
+      "answer_files": [
+        "scripts/turbo_scanner.py"
+      ],
+      "answer_symbols": [
+        "FileInfo",
+        "ScanResult",
+        "everything_search",
+        "hash_file_fast",
+        "count_lines_fast",
+        "parse_python_imports",
+        "parse_js_imports",
+        "parse_file_imports",
+        "categorize_file",
+        "process_file",
+        "TurboScanner",
+        "TurboScanner/__init__",
+        "TurboScanner/scan",
+        "TurboScanner/_build_dependency_graph",
+        "TurboScanner/_resolve_import",
+        "TurboScanner/_analyze_graph",
+        "TurboScanner/_save_results",
+        "TurboScanner/_generate_report",
+        "main"
+      ]
+    },
+    {
+      "id": "w281",
+      "kind": "positive",
+      "question": "Why did some tools fail their validation checks",
+      "answer_files": [
+        "scripts/validate_aions_tools.py"
+      ],
+      "answer_symbols": [
+        "ok",
+        "main"
+      ]
+    },
+    {
+      "id": "w282",
+      "kind": "positive",
+      "question": "Which tools does this validation suite actually test",
+      "answer_files": [
+        "scripts/validate_aions_tools.py"
+      ],
+      "answer_symbols": [
+        "ok",
+        "main"
+      ]
+    },
+    {
+      "id": "w283",
+      "kind": "positive",
+      "question": "how do I store passwords without exposing them",
+      "answer_files": [
+        "scripts/vault/_core.py"
+      ],
+      "answer_symbols": [
+        "repo_root",
+        "vault_dir",
+        "marker_path",
+        "index_path",
+        "blob_path",
+        "_sanitize_vault_id",
+        "_now_iso",
+        "_is_windows",
+        "_dpapi_protect",
+        "_dpapi_unprotect",
+        "_dpapi_protect_ctypes",
+        "_dpapi_protect_ctypes/DATA_BLOB",
+        "_dpapi_unprotect_ctypes",
+        "_dpapi_unprotect_ctypes/DATA_BLOB",
+        "_ps1_helper",
+        "_dpapi_protect_powershell",
+        "_dpapi_unprotect_powershell",
+        "ensure_operator_marker",
+        "verify_operator_marker",
+        "load_index",
+        "save_index",
+        "seal_file",
+        "open_vault_entry",
+        "list_entries"
+      ]
+    },
+    {
+      "id": "w284",
+      "kind": "positive",
+      "question": "why can't another user read my stored credentials",
+      "answer_files": [
+        "scripts/vault/_core.py"
+      ],
+      "answer_symbols": [
+        "repo_root",
+        "vault_dir",
+        "marker_path",
+        "index_path",
+        "blob_path",
+        "_sanitize_vault_id",
+        "_now_iso",
+        "_is_windows",
+        "_dpapi_protect",
+        "_dpapi_unprotect",
+        "_dpapi_protect_ctypes",
+        "_dpapi_protect_ctypes/DATA_BLOB",
+        "_dpapi_unprotect_ctypes",
+        "_dpapi_unprotect_ctypes/DATA_BLOB",
+        "_ps1_helper",
+        "_dpapi_protect_powershell",
+        "_dpapi_unprotect_powershell",
+        "ensure_operator_marker",
+        "verify_operator_marker",
+        "load_index",
+        "save_index",
+        "seal_file",
+        "open_vault_entry",
+        "list_entries"
+      ]
+    },
+    {
+      "id": "w285",
+      "kind": "positive",
+      "question": "how do I get a password from the vault to use it",
+      "answer_files": [
+        "scripts/vault/open_secret.py"
+      ],
+      "answer_symbols": [
+        "main"
+      ]
+    },
+    {
+      "id": "w286",
+      "kind": "positive",
+      "question": "where does it write the decrypted secret",
+      "answer_files": [
+        "scripts/vault/open_secret.py"
+      ],
+      "answer_symbols": [
+        "main"
+      ]
+    },
+    {
+      "id": "w287",
+      "kind": "positive",
+      "question": "how do I protect my API keys",
+      "answer_files": [
+        "scripts/vault/seal_secret.py"
+      ],
+      "answer_symbols": [
+        "main"
+      ]
+    },
+    {
+      "id": "w288",
+      "kind": "positive",
+      "question": "where should my OAuth tokens be stored",
+      "answer_files": [
+        "scripts/vault/seal_secret.py"
+      ],
+      "answer_symbols": [
+        "main"
+      ]
+    },
+    {
+      "id": "w289",
+      "kind": "positive",
+      "question": "why does it complain about the wrong Python version",
+      "answer_files": [
+        "scripts/verify_python_env.py"
+      ],
+      "answer_symbols": [
+        "load_config",
+        "main"
+      ]
+    },
+    {
+      "id": "w290",
+      "kind": "positive",
+      "question": "what makes sure the system has correct setup",
+      "answer_files": [
+        "scripts/verify_python_env.py"
+      ],
+      "answer_symbols": [
+        "load_config",
+        "main"
+      ]
+    },
+    {
+      "id": "w291",
+      "kind": "positive",
+      "question": "Why did the tests return empty search results",
+      "answer_files": [
+        "scripts/verify_tier1_chroma.py"
+      ],
+      "answer_symbols": [
+        "main"
+      ]
+    },
+    {
+      "id": "w292",
+      "kind": "positive",
+      "question": "How does it validate the database was set up",
+      "answer_files": [
+        "scripts/verify_tier1_chroma.py"
+      ],
+      "answer_symbols": [
+        "main"
+      ]
+    },
+    {
+      "id": "w293",
+      "kind": "positive",
+      "question": "Why can't I find the document I just added",
+      "answer_files": [
+        "server/app.py"
+      ],
+      "answer_symbols": [
+        "health",
+        "status",
+        "add_context",
+        "search",
+        "sessions",
+        "session_details",
+        "session_dump",
+        "session_prune",
+        "dashboard"
+      ]
+    },
+    {
+      "id": "w294",
+      "kind": "positive",
+      "question": "What endpoints are available for managing sessions",
+      "answer_files": [
+        "server/app.py"
+      ],
+      "answer_symbols": [
+        "health",
+        "status",
+        "add_context",
+        "search",
+        "sessions",
+        "session_details",
+        "session_dump",
+        "session_prune",
+        "dashboard"
+      ]
+    },
+    {
+      "id": "w295",
+      "kind": "positive",
+      "question": "How do I standardize messy message metadata?",
+      "answer_files": [
+        "server/context_schema.py"
+      ],
+      "answer_symbols": [
+        "_now_utc",
+        "_parse_timestamp",
+        "ContextMetadata",
+        "ContextMetadata/to_dict",
+        "normalize_metadata"
+      ]
+    },
+    {
+      "id": "w296",
+      "kind": "positive",
+      "question": "What stores who spoke and what they said?",
+      "answer_files": [
+        "server/context_schema.py"
+      ],
+      "answer_symbols": [
+        "_now_utc",
+        "_parse_timestamp",
+        "ContextMetadata",
+        "ContextMetadata/to_dict",
+        "normalize_metadata"
+      ]
+    },
+    {
+      "id": "w297",
+      "kind": "positive",
+      "question": "how do I define what a search request should look like",
+      "answer_files": [
+        "server/models.py"
+      ],
+      "answer_symbols": [
+        "ContextItem",
+        "ContextBatch",
+        "SearchRequest",
+        "SearchHit",
+        "SearchResponse",
+        "HealthResponse",
+        "SessionInfo",
+        "SessionListResponse",
+        "SessionDumpEntry",
+        "SessionDumpResponse",
+        "PruneRequest",
+        "PruneResponse",
+        "DashboardSummary"
+      ]
+    },
+    {
+      "id": "w298",
+      "kind": "positive",
+      "question": "what does the API expect when I store context",
+      "answer_files": [
+        "server/models.py"
+      ],
+      "answer_symbols": [
+        "ContextItem",
+        "ContextBatch",
+        "SearchRequest",
+        "SearchHit",
+        "SearchResponse",
+        "HealthResponse",
+        "SessionInfo",
+        "SessionListResponse",
+        "SessionDumpEntry",
+        "SessionDumpResponse",
+        "PruneRequest",
+        "PruneResponse",
+        "DashboardSummary"
+      ]
+    },
+    {
+      "id": "w299",
+      "kind": "positive",
+      "question": "why can't I find related information this way",
+      "answer_files": [
+        "server/store.py"
+      ],
+      "answer_symbols": [
+        "_distance_to_similarity",
+        "VectorStore",
+        "VectorStore/__init__",
+        "VectorStore/_get_coll",
+        "VectorStore/add_items",
+        "VectorStore/search",
+        "VectorStore/sessions_count",
+        "VectorStore/list_sessions",
+        "VectorStore/session_stats",
+        "VectorStore/dump_session",
+        "VectorStore/prune_expired",
+        "VectorStore/summary"
+      ]
+    },
+    {
+      "id": "w300",
+      "kind": "positive",
+      "question": "how do I search for things by meaning instead",
+      "answer_files": [
+        "server/store.py"
+      ],
+      "answer_symbols": [
+        "_distance_to_similarity",
+        "VectorStore",
+        "VectorStore/__init__",
+        "VectorStore/_get_coll",
+        "VectorStore/add_items",
+        "VectorStore/search",
+        "VectorStore/sessions_count",
+        "VectorStore/list_sessions",
+        "VectorStore/session_stats",
+        "VectorStore/dump_session",
+        "VectorStore/prune_expired",
+        "VectorStore/summary"
+      ]
+    },
+    {
+      "id": "w301",
+      "kind": "positive",
+      "question": "how do I use a remote database as if it were local",
+      "answer_files": [
+        "server/store_api.py"
+      ],
+      "answer_symbols": [
+        "get_connection_mode",
+        "VectorStore",
+        "VectorStore/__init__",
+        "VectorStore/_request",
+        "VectorStore/add_items",
+        "VectorStore/search",
+        "VectorStore/sessions_count",
+        "VectorStore/list_sessions",
+        "VectorStore/session_stats",
+        "VectorStore/dump_session",
+        "VectorStore/prune_expired",
+        "VectorStore/summary",
+        "VectorStore/get_status"
+      ]
+    },
+    {
+      "id": "w302",
+      "kind": "positive",
+      "question": "what happens if the database server is unreachable",
+      "answer_files": [
+        "server/store_api.py"
+      ],
+      "answer_symbols": [
+        "get_connection_mode",
+        "VectorStore",
+        "VectorStore/__init__",
+        "VectorStore/_request",
+        "VectorStore/add_items",
+        "VectorStore/search",
+        "VectorStore/sessions_count",
+        "VectorStore/list_sessions",
+        "VectorStore/session_stats",
+        "VectorStore/dump_session",
+        "VectorStore/prune_expired",
+        "VectorStore/summary",
+        "VectorStore/get_status"
+      ]
+    },
+    {
+      "id": "w303",
+      "kind": "positive",
+      "question": "Why did the connection drop to embedded mode",
+      "answer_files": [
+        "server/store_http.py"
+      ],
+      "answer_symbols": [
+        "_log_degraded",
+        "get_connection_mode",
+        "_distance_to_similarity",
+        "VectorStore",
+        "VectorStore/__init__",
+        "VectorStore/_connect_http",
+        "VectorStore/reconnect_http",
+        "VectorStore/_get_coll",
+        "VectorStore/add_items",
+        "VectorStore/search",
+        "VectorStore/sessions_count",
+        "VectorStore/list_sessions",
+        "VectorStore/session_stats",
+        "VectorStore/dump_session",
+        "VectorStore/prune_expired",
+        "VectorStore/summary",
+        "VectorStore/get_status"
+      ]
+    },
+    {
+      "id": "w304",
+      "kind": "positive",
+      "question": "How does it choose between connection modes",
+      "answer_files": [
+        "server/store_http.py"
+      ],
+      "answer_symbols": [
+        "_log_degraded",
+        "get_connection_mode",
+        "_distance_to_similarity",
+        "VectorStore",
+        "VectorStore/__init__",
+        "VectorStore/_connect_http",
+        "VectorStore/reconnect_http",
+        "VectorStore/_get_coll",
+        "VectorStore/add_items",
+        "VectorStore/search",
+        "VectorStore/sessions_count",
+        "VectorStore/list_sessions",
+        "VectorStore/session_stats",
+        "VectorStore/dump_session",
+        "VectorStore/prune_expired",
+        "VectorStore/summary",
+        "VectorStore/get_status"
+      ]
+    },
+    {
+      "id": "w305",
+      "kind": "positive",
+      "question": "How do I use either local or remote databases?",
+      "answer_files": [
+        "server/store_selector.py"
+      ],
+      "answer_symbols": [
+        "get_connection_mode"
+      ]
+    },
+    {
+      "id": "w306",
+      "kind": "positive",
+      "question": "What detects and switches database backends?",
+      "answer_files": [
+        "server/store_selector.py"
+      ],
+      "answer_symbols": [
+        "get_connection_mode"
+      ]
+    },
+    {
+      "id": "wn01",
+      "kind": "negative",
+      "question": "where is the online shop checkout and basket",
+      "answer_files": [],
+      "answer_symbols": []
+    },
+    {
+      "id": "wn02",
+      "kind": "negative",
+      "question": "how does the credit card payment flow work",
+      "answer_files": [],
+      "answer_symbols": []
+    },
+    {
+      "id": "wn03",
+      "kind": "negative",
+      "question": "where is the accounting invoice ledger",
+      "answer_files": [],
+      "answer_symbols": []
+    },
+    {
+      "id": "wn04",
+      "kind": "negative",
+      "question": "how do I encode a video file to mp4",
+      "answer_files": [],
+      "answer_symbols": []
+    },
+    {
+      "id": "wn05",
+      "kind": "negative",
+      "question": "where is the 3d scene renderer",
+      "answer_files": [],
+      "answer_symbols": []
+    },
+    {
+      "id": "wn06",
+      "kind": "negative",
+      "question": "how does the turn based combat system work",
+      "answer_files": [],
+      "answer_symbols": []
+    },
+    {
+      "id": "wn07",
+      "kind": "negative",
+      "question": "where are the printer driver settings",
+      "answer_files": [],
+      "answer_symbols": []
+    },
+    {
+      "id": "wn08",
+      "kind": "negative",
+      "question": "how do I sign a blockchain transaction",
+      "answer_files": [],
+      "answer_symbols": []
+    },
+    {
+      "id": "wn09",
+      "kind": "negative",
+      "question": "where is the flight booking calendar widget",
+      "answer_files": [],
+      "answer_symbols": []
+    },
+    {
+      "id": "wn10",
+      "kind": "negative",
+      "question": "how does the spell checker suggest corrections",
+      "answer_files": [],
+      "answer_symbols": []
+    },
+    {
+      "id": "wn11",
+      "kind": "negative",
+      "question": "where is the payroll tax calculation",
+      "answer_files": [],
+      "answer_symbols": []
+    },
+    {
+      "id": "wn12",
+      "kind": "negative",
+      "question": "how do I train a face recognition model",
+      "answer_files": [],
+      "answer_symbols": []
+    }
+  ]
+}

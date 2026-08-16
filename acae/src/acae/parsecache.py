@@ -35,7 +35,9 @@ import json
 from importlib import metadata
 from pathlib import Path
 
-SCHEMA = "acae.parsecache.v1"
+# v2: klucze dostaly prefiks rodzaju (`o` outline, `s` sekrety), bo cache trzyma teraz
+# oba. Stare pliki v1 sa odrzucane automatycznie przez sprawdzenie schematu.
+SCHEMA = "acae.parsecache.v2"
 
 # Pakiety, ktorych wersja zmienia ksztalt outline'u. Zgodne z pinami z requirements.txt
 # i z ryzykiem R9 opisanym w CONTRACT.md.
