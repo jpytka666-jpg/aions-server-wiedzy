@@ -2981,3 +2981,89 @@ gdy uruchamiamy pomiar porownawczy.
   wymaga taniego wykrywania zmian — dzis kosztowaloby ~0,5 s na kazde wywolanie,
   czyli piecdziesiat razy wiecej niz samo pytanie. Swiadomie odlozone.
 - `pytest` 225 zielonych. Bramka M2 i `pack_hash` sprawdzane na stanie przypietym.
+
+## 2026-08-16T11:20 — TRIAZ AUDYTU. 146 zgloszen -> 51, plus jeden potwierdzony blad
+
+### Dlaczego triaz, a nie agenci
+
+`audit_calls.py` zwrocil 88 polknietych wyjatkow i 58 nieuzywanych parametrow.
+Wyslanie tego do modelu kosztowaloby tokeny za rozstrzygniecie, ktore da sie zrobic
+statycznie. Oba pytania maja statyczna odpowiedz:
+
+- **polkniety wyjatek** jest grozny, gdy otacza ZAPIS (tak zginal `log_exchange`),
+- **nieuzywany parametr** jest grozny, gdy wolajacy go PODAJE (tak zginal `cand` w CRLA).
+
+`scripts/triage_audit.py`. Wynik: **88 -> 16 RYZYKO**, **58 -> 30 RYZYKO**.
+
+### Dwie pomylki filtra, obie zlapane przed raportem
+
+1. Pierwsza wersja liczyla `append` i `replace` jako zapis -> 46 zgloszen, w wiekszosci
+   `list.append` i `str.replace`. Operacje w pamieci. Po usunieciu ich z wzorca: 16.
+   **Filtr, ktory krzyczy na wszystko, jest wart tyle co brak filtra.**
+2. Zaslepki wzorca `except ImportError: def math_solve(q): return (False, None)`
+   ladowaly w RYZYKU. Parametr jest tam nieuzywany Z ZALOZENIA. Dodany filtr
+   `zaslepki_po_imporcie`: 35 -> 30.
+
+### Sonda importow — to, czego analiza statyczna nie widzi
+
+Zaslepka po nieudanym imporcie jest poprawnym wzorcem, ale ma wlasciwosc: gdy import
+PADA, podsystem znika po cichu i grzecznie odpowiada „nie umiem". `scripts/probe_imports.py`
+lokalizuje modul przez `find_spec` (LOKALIZUJE, nie uruchamia — uruchomienie modulu
+AIONS wykonaloby jego kod na starcie).
+
+Pierwszy przebieg: 33 brakujace. **Falszywy alarm** — czesc plikow dokłada sciezki
+do `sys.path` w trakcie dzialania, wiec sonda nie ma prawa orzekac. Po dolozeniu
+wykrywania `sys.path`: **160 importow -> 127 znalezione, 11 brakujace, 22 nierozstrzygniete.**
+
+### POTWIERDZONY BLAD: dwie kopie `cbms_memory`, laduje sie starsza
+
+```
+aions_core/cbms_memory.py          566 linii   commit 3a848dd   2026-07-16
+aions_core/server/cbms_memory.py   796 linii   commit 53c7609   2026-08-06
+```
+
+Obie definiuja `class CBMSMemory`. Nikt nie importuje ich po pelnej sciezce pakietu —
+wszyscy robia `from cbms_memory import CBMSMemory` po dolozeniu katalogu do `sys.path`.
+Wiec o tym, ktora sie zaladuje, decyduje KOLEJNOSC W `sys.path`.
+
+`control_plane/cbms_gate.py:184-191`:
+
+```python
+for p in (server, core):
+    if p not in sys.path:
+        sys.path.insert(0, p)
+```
+
+`insert(0, ...)` w petli ODWRACA kolejnosc. Sprawdzone uruchomieniem:
+
+```
+kolejnosc po _ensure_server_path(): ['AIONS', 'AIONS/server', 'ORYGINAL']
+WYGRYWA: aions_core/cbms_memory.py     <- STARSZA KOPIA
+```
+
+**Skutek:** `learning_gate` — bramka zapisu dolozona 2026-08-06, ta ktora zatrzymuje
+73,3% echa w bazie — **istnieje wylacznie w nowszej kopii** (`grep -c`: 1 wobec 0).
+W procesie, w ktorym `cbms_gate` importuje jako pierwszy, bramki NIE MA.
+
+Zastrzezenie, ktore trzeba powiedziec uczciwie: jesli w tym samym procesie cos
+zaimportowalo `cbms_memory` wczesniej (serwer MCP robi to poprawnie, dokladajac tylko
+`server/`), to `sys.modules` juz trzyma dobra kopie i `cbms_gate` dostanie dobra.
+Czyli wynik zalezy od tego, KTO IMPORTUJE PIERWSZY. To jest gorsze niz staly blad,
+bo zachowanie rozjezdza sie miedzy procesami.
+
+Ta sama pulapka dotyczy czterech importow w `aions_core/cbms_memory.py`
+(`korean_keys`, `codebook_engine`, `cbms_symbolic_index`, `hangul_addressing`) —
+wszystkie leza w `aions_core/server/`, a starsza kopia nie dokłada tej sciezki,
+wiec w niej te cztery podsystemy sa zawsze zaslepkami.
+
+### Moduly, ktorych nie ma nigdzie w repo
+
+`llama_cpp` (biblioteka zewnetrzna), `aions_natural_language`, `cbms_consciousness`,
+`ultimate_memo`. Kazdy schowany za zaslepka, wiec nic nie krzyczy.
+
+### Czego ten triaz NIE rozstrzyga
+
+- 70 polknietych wyjatkow w kubelku SREDNIE — nie otaczaja zapisu ani sprzatania.
+- 230 martwych importow — nietkniete, to kosmetyka.
+- Sonda nie zobaczy modulu, ktory sie znajduje, ale wybucha przy imporcie.
+  Zeby to wykryc, trzeba go naprawde uruchomic — swiadomie tego nie robimy.

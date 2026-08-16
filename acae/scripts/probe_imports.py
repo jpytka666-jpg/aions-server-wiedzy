@@ -137,36 +137,52 @@ def main():
     args = ap.parse_args()
 
     root = pathlib.Path(args.root).resolve()
-    brak, jest = [], []
-    for rel, linia, modul, _ in opcjonalne_importy(root, args.dirs):
-        # Sciezka, jaka realnie ma plik uruchomiony jako skrypt: jego wlasny katalog
-        # plus korzen repo. Tak startuja serwery AIONS.
+
+    # Gdzie w repo lezy modul o danej nazwie — zeby odroznic "nie ma go nigdzie"
+    # od "jest, ale w innym katalogu niz ten, ktory go importuje". To dwie zupelnie
+    # rozne naprawy: dopisac plik albo dopisac sciezke.
+    gdzie = defaultdict(list)
+    for p in pliki_py(root, args.dirs):
+        gdzie[p.stem].append(p.relative_to(root).as_posix())
+
+    brak, jest, niepewne = [], [], []
+    for rel, linia, modul, elastyczna in opcjonalne_importy(root, args.dirs):
         katalog = str((root / rel).parent)
-        (jest if znajdz(modul, [katalog, str(root)]) else brak).append(
-            {"plik": rel, "linia": linia, "modul": modul})
+        poz = {"plik": rel, "linia": linia, "modul": modul,
+               "lezy_w": gdzie.get(modul.split(".")[0], [])}
+        if znajdz(modul, [katalog, str(root)]):
+            jest.append(poz)
+        elif elastyczna:
+            niepewne.append(poz)
+        else:
+            brak.append(poz)
+
+    print(f"opcjonalnych importow: {len(jest) + len(brak) + len(niepewne)}   "
+          f"ZNALEZIONE {len(jest)}   BRAKUJACE {len(brak)}   "
+          f"NIEROZSTRZYGNIETE {len(niepewne)}  (plik sam dokłada sciezki)")
+    print()
 
     wg_modulu = defaultdict(list)
     for x in brak:
-        wg_modulu[x["modul"]].append(f"{x['plik']}:{x['linia']}")
-
-    print(f"opcjonalnych importow: {len(jest) + len(brak)}   "
-          f"ZNALEZIONE {len(jest)}   BRAKUJACE {len(brak)}")
-    print()
+        wg_modulu[x["modul"]].append(x)
     if wg_modulu:
         print("=" * 78)
-        print("MODULY, KTORYCH NIE MA — podsystem cicho zastapiony zaslepka")
+        print("PODSYSTEM CICHO ZASTAPIONY ZASLEPKA")
+        print("(importujacy NIE rusza sys.path, wiec tego modulu naprawde nie znajdzie)")
         print("=" * 78)
         for modul in sorted(wg_modulu, key=lambda m: (-len(wg_modulu[m]), m)):
-            miejsca = wg_modulu[modul]
-            print(f"  {modul}   ({len(miejsca)} miejsc)")
-            for m in miejsca[:4]:
-                print(f"      {m}")
-            if len(miejsca) > 4:
-                print(f"      ... i {len(miejsca) - 4} wiecej")
+            poz = wg_modulu[modul]
+            lezy = poz[0]["lezy_w"]
+            gdzie_txt = (f"LEZY W {lezy[0]}" if lezy else "NIE MA GO NIGDZIE W REPO")
+            print(f"  {modul}   ({len(poz)} miejsc)   -> {gdzie_txt}")
+            for x in poz[:4]:
+                print(f"      {x['plik']}:{x['linia']}")
+            if len(poz) > 4:
+                print(f"      ... i {len(poz) - 4} wiecej")
 
     if args.json_out:
         (root / args.json_out).write_text(
-            json.dumps({"brakujace": brak, "znalezione": jest},
+            json.dumps({"brakujace": brak, "niepewne": niepewne, "znalezione": jest},
                        ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8", newline="\n")
         print(f"\npelny wynik: {args.json_out}")
