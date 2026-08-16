@@ -1369,6 +1369,150 @@ def cbms_get_chunk(chunk_id: str) -> str:
         return _error(str(e))
 
 # =============================================================================
+# ACAE — wyszukiwanie w KODZIE tego repozytorium
+# =============================================================================
+#
+# CBMS odpowiada "co o tym wiemy", ACAE odpowiada "gdzie to jest w kodzie".
+# Dwie strony tej samej odpowiedzi, dlatego stoja obok siebie w jednym serwerze,
+# a nie w dwoch osobnych.
+#
+# KOSZT: indeks budowany RAZ przy pierwszym pytaniu (~2,3 s), kazde kolejne pytanie
+# ponizej dziesieciu milisekund. Dlatego to musi zyc w dlugowiecznym procesie serwera,
+# a nie byc odpalane od zera jak skrypt.
+
+_acae_state: Dict[str, Any] = {
+    "index": None, "entries": None, "reader": None, "built_at": None,
+    "provenance": {}, "ranker": None, "files": 0, "symbols": 0,
+}
+_acae_lock = threading.Lock()
+
+
+def _acae_build(force: bool = False) -> Dict[str, Any]:
+    """
+    Buduje indeks raz i trzyma go w pamieci procesu.
+
+    Przy braku modelu albo opisow schodzi cicho do rankera leksykalnego — narzedzie
+    ma dzialac gorzej, a nie nie dzialac wcale. Roznica jest zmierzona: 62% wobec 25%
+    trafien na zbiorze 306 pytan zadanych po ludzku.
+    """
+    with _acae_lock:
+        if _acae_state["index"] is not None and not force:
+            return _acae_state
+        if str(REPO_ROOT) not in sys.path:
+            sys.path.insert(0, str(REPO_ROOT))
+
+        import tomllib
+
+        from acae import parsecache
+        from acae.core import collect_entries
+        from acae.pack import FsLocator, FsReader
+
+        acae_dir = REPO_ROOT / "acae"
+        with open(acae_dir / "config" / "acae.toml", "rb") as fh:
+            cfg = tomllib.load(fh)
+        locator = FsLocator(
+            root=str(REPO_ROOT),
+            roots=cfg["pack"]["roots"],
+            prune_dirs=cfg.get("baseline", {}).get("prune_dirs", []),
+            max_file_bytes=cfg["pack"]["max_file_bytes"],
+        )
+        reader = FsReader(str(REPO_ROOT))
+
+        cache_path = acae_dir / "_out" / "parse_cache.json"
+        outline_cache = parsecache.load(cache_path)
+        przed = len(outline_cache)
+        entries, _skipped = collect_entries(locator, reader, outline_cache=outline_cache)
+        if len(outline_cache) != przed:
+            parsecache.save(cache_path, outline_cache)
+
+        index, ranker, prov = None, "words", {}
+        try:
+            from acae.describe import load_descriptions
+            from acae.embed import StaticEmbedder
+            from acae.embedindex import EmbedIndex, index_key, load_vectors, save_vectors
+
+            # `strict=False`: rozjazd pack_hash tylko oznacza opisy jako nieswieze.
+            # W pomiarze przerywa, w uzyciu nie — bo gdy zmienisz dwa pliki ze 169,
+            # opisy pozostalych 167 sa nadal prawdziwe.
+            opisy, prov = load_descriptions(
+                acae_dir / "_desc" / "descriptions.json", strict=False
+            )
+            model_dir = acae_dir / "_model"
+            vec_path = acae_dir / "_out" / "embed_vectors.npz"
+            klucz = index_key(entries, opisy, model_dir)
+            wektory = load_vectors(vec_path, klucz)
+            index = EmbedIndex(StaticEmbedder(model_dir), entries, opisy, vectors=wektory)
+            if wektory is None:
+                save_vectors(vec_path, klucz, index.M)
+            ranker = "meaning"
+        except Exception as e:
+            prov = {"fallback_reason": f"{type(e).__name__}: {e}"}
+
+        _acae_state.update(
+            index=index, entries=entries, reader=reader, built_at=time.time(),
+            provenance=prov, ranker=ranker, files=len(entries),
+            symbols=sum(len(e["symbols"]) for e in entries),
+        )
+        return _acae_state
+
+
+@mcp_server.tool(
+    name="acae_ask",
+    description=(
+        "Find the code in THIS repository that answers a question. Returns a compact "
+        "slice: matching symbols with their signatures, plus full bodies of the best few. "
+        "ASK IN ENGLISH — the index is English; the same question in Polish scores 20% "
+        "instead of 70%. Translate the user's question before calling. "
+        "Costs roughly 4% of what grepping and reading files would cost. "
+        "Use for 'where is X', 'what does Y', 'why does Z not work' about this codebase. "
+        "For 'what do we know about X' use cbms_search instead."
+    ),
+)
+@auto_logged
+def acae_ask(query: str, drill: int = 3, outline_limit: int = 30, refresh: bool = False) -> str:
+    try:
+        if not query.strip():
+            return _error("query is empty")
+        st = _acae_build(force=refresh)
+
+        from acae.retrieve import build_slice
+
+        ranked = None
+        if st["ranker"] == "meaning" and st["index"] is not None:
+            ranked = st["index"].ranked(query, max(outline_limit, drill))
+
+        start = time.time()
+        text, meta = build_slice(
+            st["entries"], query, st["reader"],
+            outline_limit=outline_limit, drill_limit=drill, ranked=ranked,
+        )
+        elapsed = int((time.time() - start) * 1000)
+
+        out_path = REPO_ROOT / "acae" / "_out" / "ask_slice.txt"
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_bytes(text)
+
+        return _success({
+            "query": query,
+            "ranker": st["ranker"],
+            "scope": {"files": st["files"], "symbols": st["symbols"]},
+            "slice_path": str(out_path),
+            "slice": {
+                "files": meta["files"],
+                "symbols": meta["outline_symbols"],
+                "drilled": meta["drilled"],
+                "terms": meta["terms"],
+            },
+            "elapsed_ms": elapsed,
+            "descriptions_stale": bool(st["provenance"].get("stale")),
+            "fallback_reason": st["provenance"].get("fallback_reason"),
+            "content": text.decode("utf-8", "replace"),
+        })
+    except Exception as e:
+        return _error(f"{type(e).__name__}: {e}")
+
+
+# =============================================================================
 # OPERATOR SENSES — Google Calendar (read-only)
 # =============================================================================
 
