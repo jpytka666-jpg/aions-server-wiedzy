@@ -1490,6 +1490,17 @@ def acae_ask(query: str, drill: int = 3, outline_limit: int = 30, refresh: bool 
         if st["ranker"] == "meaning" and st["index"] is not None:
             ranked = st["index"].ranked(query, max(outline_limit, drill))
 
+        # Tresc wycinka jest grupowana po pliku i sortowana ALFABETYCZNIE — tak zostal
+        # zaprojektowany format, zeby dalo sie go czytac, i na nim stoi bramka M2.
+        # Nie ruszamy go. Ale wtedy czytajacy nie wie, co bylo najlepszym trafieniem,
+        # wiec kolejnosc trafnosci podajemy OBOK, w odpowiedzi narzedzia.
+        top_files: List[str] = []
+        if ranked:
+            for r in ranked:
+                p = str(r["path"])
+                if p not in top_files:
+                    top_files.append(p)
+
         start = time.time()
         text, meta = build_slice(
             st["entries"], query, st["reader"],
