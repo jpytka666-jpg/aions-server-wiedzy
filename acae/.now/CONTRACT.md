@@ -35,7 +35,15 @@ pack, ktory te liczbe bije o rzad wielkosci.
 - [x] JEZYK: narzedzie dziala po angielsku. Te same pytania po polsku: `recall@10` 20,0%,
       po angielsku **70,0%**. Warunek uzycia, nie wada do naprawy — model wolajacy
       narzedzie tlumaczy za darmo.
-- [ ] M1-F: integracja z MCP AIONS — **PRZEDEFINIOWANA 2026-08-16**. Nie osobny serwer
+- [x] **M1-F ZROBIONE 2026-08-16**: `acae_ask` w `mcpServers/VS_CODE_MCP_CODEX/src/server.py`,
+      obok narzedzi CBMS. Test wywolaniem jak z serwera, 10 pytan o znane odpowiedzi:
+      **6/10 na pierwszym miejscu, 9/10 w czolowce, mediana 14 ms** (pierwsze wywolanie
+      5657 ms — budowa indeksu, drugie 16 ms). Zgodne co do jednego z pomiarem `marcin_en`.
+      `acae_pack_status` NIE POWSTAL — pack trwa 3,4 s, wiec tlo i stan sa niepotrzebne.
+      **Edycja `server.py` zmienila pack: `6442322d`/1598 -> `aeffb8a9`/1600.**
+      Obowiazuje: korpus eksperymentalny przypiety do `6442322d` na zawsze,
+      artefakt produkcyjny sledzi repo (`strict=False` nie blokuje narzedzia).
+- [ ] ~~M1-F: integracja z MCP AIONS~~ — **PRZEDEFINIOWANA 2026-08-16**. Nie osobny serwer
       (decyzja Marcina: druga instalacja, drugi punkt awarii, sztuczna sciana wobec CBMS).
       Zakres: **`acae_ask`** jako glowne narzedzie, nie `acae_pack`. Do rozstrzygniecia
       PRZED kodem: (a) jak `project_scan_*` trzyma stan zadania, `server.py:957-1049`;
