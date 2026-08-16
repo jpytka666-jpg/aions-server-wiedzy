@@ -2612,6 +2612,72 @@ zrobic, zeby bylo lepiej.**
 
 Zamrozony held-out pozostaje **NIETKNIETY** — ten pomiar go nie dotyka.
 
+## 2026-08-16T06:29 — SZLIFOWANIE: predkosc. 9,5 s -> 2,0 s na pytanie.
+
+Marcin: *„jak szybko i efektywnie wykonuje swoje zadania, ktore zgodnie z pierwotnymi
+zalozeniami mial wykonywac"*. Pierwsze zmierzenie tego od M2.
+
+### SKUTECZNOSC — kontrakt przekroczony, potwierdzone dzis
+
+```
+cale repo, 169 plikow  ->  36 492 tokeny  = 10,4% sufitu B_ceiling (bramka: 50%)
+wycinek pod pytanie    ->  1 734 - 3 919 tokenow
+grep + read to samo    ->  25 237 - 52 406 tokenow
+                        =  3,6% - 12,2% kosztu.  Bramka M2: 10/10.
+```
+
+### SZYBKOSC — byla zla i wiem juz dokladnie dlaczego
+
+Pierwszy profil pokazal `collect_entries` = 8865 ms i **wyciagnalem z tego bledny wniosek,
+ze to parsowanie**. Zbudowalem cache outline'ow, zysk wyszedl 1,5 s zamiast 8,8 s.
+Zmierzylem drugi raz, tym razem po kawalku:
+
+```
+listowanie plikow   : 8245 ms   <- PRAWDZIWY winowajca
+szukanie sekretow   : 1146 ms
+parsowanie          : 1129 ms   <- to zalatwil cache
+czytanie z dysku    :  139 ms
+hashowanie          :    3 ms
+```
+
+Przyczyna: `base.rglob("*")` **wchodzil do wszystkich katalogow**, w tym `venv`,
+`node_modules` i `__pycache__`, wyliczal wszystko w srodku i dopiero POTEM odrzucal.
+Sam submodul `tools/ChromaFlowStudio` ma w venvie ~13 800 plikow `.py`, ktore byly
+enumerowane po to, zeby je wyrzucic. Efekt: 6276 ms na wyznaczenie 1038 kandydatow,
+czyli szesc milisekund na plik.
+
+Naprawa: `os.walk` z przycinaniem `dirnames` W TRAKCIE chodzenia. Zbior wynikowy
+identyczny — przycinane katalogi i tak byly odrzucane bez sladu w `skipped`,
+a pliki submodulu sa nadal enumerowane, bo one do `skipped` trafiaja.
+
+### WYNIK
+
+| | przed | po |
+|---|---|---|
+| spakowanie calego repo | 9581 ms | **3354 ms** |
+| jedno pytanie, zimny start | 9490 ms | **2953 ms** |
+| jedno pytanie, kolejne | 9490 ms | **~2050 ms** |
+
+**`pack_hash` NIEZMIENIONY** (`6442322d5d5a...`), 169 plikow, 1598 symboli,
+869 pominietych, 36492 tokeny — wszystko co do liczby. `pytest` **225 zielonych**
+(215 + 10 nowych dla cache).
+
+### Co zostalo w tych dwoch sekundach
+
+`szukanie sekretow` 1146 ms to teraz najwiekszy pojedynczy skladnik. Da sie go wrzucic
+do tego samego cache (jest kluczowany trescia tak samo jak outline), ale 2 s jest
+uzywalne i nie gold-platuje tego bez potrzeby.
+
+### Nauczka, ktora zapisuje bo popelnilem ja dzis dwa razy
+
+**Nie optymalizuj tego, co ci sie wydaje waskim gardlem.** Pierwszy pomiar dal mi liczbe
+zbiorcza (8865 ms) i przypisalem ja parsowaniu, bo tak wygladalo. Cache byl poprawny,
+przetestowany i prawie bezuzyteczny. Dopiero rozbicie na skladniki pokazalo, ze winowajca
+byl gdzie indziej. **Mierz skladniki, nie sumy.**
+
+Cache outline'ow zostaje — jest poprawny, ma dziesiec testow i oszczedza te 1,1 s.
+Ale prawdziwe 6 sekund przyszlo z jednej linijki.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
