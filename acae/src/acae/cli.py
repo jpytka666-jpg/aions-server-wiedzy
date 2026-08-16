@@ -125,7 +125,16 @@ def _cmd_ask(args: argparse.Namespace) -> int:
             brakujace = {str(e["path"]) for e in entries} - set(opisy)
             if brakujace:
                 uwagi.append(f"{len(brakujace)} plikow bez opisu (pack sie zmienil?)")
-            index = EmbedIndex(StaticEmbedder(root / "acae" / "_model"), entries, opisy)
+            from .embedindex import index_key, load_vectors, save_vectors
+
+            model_dir = root / "acae" / "_model"
+            vec_path = root / "acae" / "_out" / "embed_vectors.npz"
+            klucz = index_key(entries, opisy, model_dir)
+            wektory = load_vectors(vec_path, klucz)
+
+            index = EmbedIndex(StaticEmbedder(model_dir), entries, opisy, vectors=wektory)
+            if wektory is None:
+                save_vectors(vec_path, klucz, index.M)
             ranked = index.ranked(args.query, max(args.outline_limit, args.drill))
         except Exception as e:  # brak modelu, brak opisow, zle wersje — wszystko jedno
             uwagi.append(f"ranking po znaczeniu niedostepny ({type(e).__name__}), "

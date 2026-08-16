@@ -2840,3 +2840,73 @@ mediana **134 slowa**, 154 ze 169 powyzej 100 slow, zero meta-tekstu.
 Podzial idzie po BAJTACH, nie po sztukach (`scripts/make_desc_batches.py`) — koszt partii
 zalezy od rozmiaru plikow, wiec rowna liczba plikow dawala nierowne obciazenie.
 Wersja odrzucona lezy w `_desc/v1_rejected/`.
+
+## 2026-08-16T08:30 — DOBRY RANKER TRAFIL DO NARZEDZIA. I pomiar predkosci rozstrzyga o M1-F.
+
+### Rzecz, ktora zobaczylem dopiero przy wpinaniu
+
+`EmbedIndex` — czyli ranking po znaczeniu, ten ktory daje 62,0% — mieszkal
+w `scripts/measure_m4.py`. Korzystal z niego **wylacznie pomiar**. Narzedzie, po ktore
+siega czlowiek (`acae ask`), szukalo dalej samymi slowami, czyli **25,1%**.
+
+Przez caly tydzien mierzylem cos innego, niz dawalo narzedzie. Klasa jest teraz
+w bibliotece (`src/acae/embedindex.py`) i ten sam kod obsluguje pomiar oraz uzycie.
+
+**Regresja po przenosinach:** `embed_desc --set dev` -> 30,0 / 36,6 / 0,243 / 97,7
+co do cyfry. Bramka M2 -> 10/10. `pack_hash` `6442322d` niezmieniony. 225 testow.
+
+### Punkt 2 planu wykonany: rozdzielenie artefaktu pomiarowego od produkcyjnego
+
+`load_descriptions(..., strict=)`:
+- **`strict=True` (pomiar)** — rozjazd `pack_hash` PRZERYWA robote, jak dotad,
+- **`strict=False` (uzycie)** — ustawia `provenance["stale"]=True` i pozwala dzialac.
+
+Powod: gdy zmienisz dwa pliki ze 169, opisy pozostalych 167 sa nadal prawdziwe.
+Blokowanie narzedzia bylo wlasnie tym, co zmuszalo do recznego cofania `server.py`
+przed kazdym uruchomieniem.
+
+`acae ask` dostal `--rank meaning|words`, domyslnie `meaning`, z cichym powrotem
+do rankera leksykalnego, gdy brakuje modelu albo opisow. **Narzedzie ma dzialac gorzej,
+a nie nie dzialac wcale.**
+
+### Punkt 3 planu: angielski wpisany w OPIS narzedzia, nie w plik obok
+
+`--rank` niesie w tekscie pomocy: „PYTAJ PO ANGIELSKU — te same pytania po polsku daja
+20% zamiast 70%". Ta sama tresc pojdzie do opisu narzedzia MCP, bo to jedyne miejsce,
+ktore model czyta w momencie uzycia.
+
+Dowod, ze to wlasciwe miejsce: regula Marcina „sprawdzaj logi na starcie" lezala
+wylacznie w pamieci AIONS i przez dwa dni jej nie wykonywalem, bo regula o zagladaniu
+do pamieci siedziala w pamieci.
+
+### POMIAR, KTORY ROZSTRZYGA KSZTALT M1-F
+
+Rozbicie kosztu jednego pytania w JEDNYM procesie:
+
+```
+  import bibliotek     :  664 ms  |
+  wczytanie repo       :  522 ms  |  JEDNORAZOWY start serwera
+  wczytanie modelu     :  222 ms  |  razem ~2,3 s
+  wczytanie wektorow   :   16 ms  |
+  zlozenie indeksu     :  866 ms  |
+  ---------------------------------
+  PYTANIE              : 5-11 ms
+```
+
+**Kazde kolejne pytanie kosztuje ponizej dziesieciu milisekund.** Trzy sekundy w CLI
+to w calosci start procesu, placony przy kazdym wywolaniu.
+
+**Wniosek dla M1-F:** dalsze szlifowanie CLI nie ma sensu. Wartosc lezy w serwerze MCP,
+ktory wstaje RAZ i trzyma indeks w pamieci. Tam odpowiedz jest natychmiastowa.
+
+Dolozony cache wektorow (`_out/embed_vectors.npz`, klucz z hashy plikow + opisow +
+karty modelu) zostaje, bo skraca start serwera o ~3,2 s.
+
+### Stan planu z 2026-08-16
+
+1. ~~stan `project_scan_*`~~ — **zamkniete**. Hybryda RAM+dysk; nasz pack trwa 3,4 s,
+   wiec `acae_pack_status` w ogole nie jest potrzebny. Zakres M1-F zmniejszony.
+2. ~~rozdzielenie artefaktow~~ — **zrobione**, `strict=` w `load_descriptions`.
+3. ~~angielski jako kontrakt~~ — **zrobione** w CLI, do przeniesienia do opisu MCP.
+
+Zostaje **`acae_ask` w serwerze MCP**.
