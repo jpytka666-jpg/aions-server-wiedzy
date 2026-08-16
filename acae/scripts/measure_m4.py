@@ -824,15 +824,17 @@ def main() -> int:
             StaticEmbedder(ACAE_DIR / "_model"), entries,
             descriptions=(ctx["descriptions"] if args.variant in EMBED_Z_OPISAMI else None),
         )
-        if args.variant in ("domain3", "domain1"):
+        if args.variant in Z_DZIEDZINAMI:
             # Dziedziny korzystaja z TEGO SAMEGO artefaktu modelu co ranking — pytanie
             # i opis dziedziny trafiaja do tej samej przestrzeni, inaczej porownanie
-            # nie mialoby sensu.
+            # nie mialoby sensu. M13 bierze stad wylacznie `kind` kazdego pliku.
             dane = json.loads((ACAE_DIR / "_desc" / "domains.json").read_text(encoding="utf-8"))
-            ctx["domain_index"] = DomainIndex(
-                ctx["embed"].embedder, dane["domains"], dane["assignments"],
-            )
+            ctx["assignments"] = dane["assignments"]
             ctx["domain_provenance"] = dane.get("provenance", {})
+            if args.variant in ("domain3", "domain1", "intent_domain"):
+                ctx["domain_index"] = DomainIndex(
+                    ctx["embed"].embedder, dane["domains"], dane["assignments"],
+                )
     elif args.variant in ("prf_code", "prf_prose", "assoc", "prf_desc"):
         if args.variant == "prf_code":
             documents = code_window_documents(entries, reader)
