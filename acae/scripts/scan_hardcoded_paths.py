@@ -30,7 +30,10 @@ import sys
 from collections import defaultdict
 
 POMIJANE = {".git", "__pycache__", "venv", ".venv", "node_modules",
-            "site-packages", ".pytest_cache"}
+            "site-packages", ".pytest_cache",
+            # `bundle-staging` to KOPIA calego repo przygotowana do spakowania.
+            # Bez tego skaner mieli te same pliki drugi raz i trwa minutami.
+            "bundle-staging", "_backups", "backups", "_out", "_desc"}
 
 # Litera dysku + dwukropek + separator. Lapie i `C:\x`, i `C:/x`.
 SCIEZKA = re.compile(r"^[A-Za-z]:[\\/]")
