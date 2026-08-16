@@ -1,0 +1,41 @@
+{
+  "_opis": [
+    "JEDNO MIEJSCE NA WSZYSTKIE SCIEZKI, KTORE WYCHODZA POZA REPO.",
+    "",
+    "Powstalo 2026-08-16, bo skan znalazl 77 sciezek bezwzglednych rozsypanych po kodzie.",
+    "Kazda taka sciezka wpisana na sztywno to zaleznosc od TEJ maszyny: przeniesienie repo",
+    "albo skasowanie 'starego folderu' wylacza kawalek systemu po cichu, bo prawie zawsze",
+    "siedzi to w try/except.",
+    "",
+    "ZASADA: w repo NIE MA sciezek bezwzglednych w kodzie. Jesli cos musi zostac na zewnatrz",
+    "(modele jezykowe waza 72 GB i nie wejda do repo), to jego adres stoi TUTAJ, raz.",
+    "",
+    "Kazdy klucz da sie nadpisac zmienna srodowiskowa o nazwie AIONS_LOK_<KLUCZ_WIELKIMI>,",
+    "na przyklad AIONS_LOK_LLAMA_CLI. Dzieki temu inna maszyna nie wymaga edycji pliku.",
+    "",
+    "Sciezki nieistniejace NIE sa bledem — czytnik zwraca None, a wolajacy ma zdecydowac,",
+    "czy to wylacza funkcje, czy tylko ja ogranicza."
+  ],
+
+  "llama_cli": "E:/LOCAL LLM MODELS/llama-runtime/llama-cli.exe",
+  "model_phi4_mini": "E:/LOCAL LLM MODELS/Phi-4-mini/Phi-4-mini-instruct-Q4_K_M.gguf",
+  "modele_llm_male": "E:/LOCAL LLM MODELS",
+  "modele_llm_duze": "D:/LOCAL LLM MODELS",
+  "model_korean_phi3": "D:/LOCAL LLM MODELS/AIONS-Korean-PHI3/AIONS_KOREAN_MODIFIED_PHI3.safetensors",
+
+  "everything_es": "C:/Program Files/Everything/es.exe",
+
+  "baza_skanu_projektow": "D:/AIONS-INTEGRATION/aions_scan.db",
+
+  "papiery_operatora": "E:/AI_WORKSPACE/AIONS_workspace/papiery",
+
+  "_martwe_lustro": {
+    "_uwaga": [
+      "E:/AIONS_COMPLETE to pozostalosc: 4 pliki logow, a podkatalogi cbms_memory/chunks",
+      "i monitoring ISTNIEJA, ale sa PUSTE. Kod czytajacy stamtad bloki wiedzy dostawal zero,",
+      "podczas gdy prawdziwe 167 blokow lezy w aions_core/memory/chunks.",
+      "Nie wpisujemy tego jako lokalizacji — te miejsca maja wskazywac do wnetrza repo."
+    ],
+    "sciezka": "E:/AIONS_COMPLETE"
+  }
+}

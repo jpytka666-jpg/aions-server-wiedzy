@@ -39,6 +39,20 @@ POMIJANE = {".git", "__pycache__", "venv", ".venv", "node_modules",
 SCIEZKA = re.compile(r"^[A-Za-z]:[\\/]")
 
 
+def _znormalizuj(s: str) -> str:
+    """
+    Jedna postac sciezki do porownan: male litery, pojedyncze ukosniki wsteczne.
+
+    BEZ TEGO KLASYFIKACJA KLAMIE. W plikach JSON i w literalach Pythona ukosnik bywa
+    podwojony (`E:\\\\server wiedzy\\\\...`), wiec proste `startswith` nie dopasowywalo
+    korzenia i 42 sciezki WEWNATRZ repo raportowalo jako zewnetrzne zaleznosci.
+    """
+    s = s.lower().replace("/", "\\")
+    while "\\\\" in s:
+        s = s.replace("\\\\", "\\")
+    return s
+
+
 def pliki(root: pathlib.Path, katalogi, rozszerzenia):
     for nazwa in katalogi:
         base = root / nazwa
