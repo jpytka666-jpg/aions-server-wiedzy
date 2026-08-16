@@ -2309,6 +2309,116 @@ jedna siec z CBMS**, a nie lezec jako martwy plik obok. Czyli kazdy osad
 „pytanie X <-> plik Y, ocena Z" ma trafiac do CBMS jako blok z `references`,
 w tym samym ksztalcie co reszta pamieci AIONS. Wtedy pamiec rosnie na uzywaniu,
 a nie tylko na generowaniu — i jest to zgodne z tym, co CBMS juz robi z chunkami.
+Podpiecie do CBMS DOPIERO gdy przesiewacz sie sprawdzi (decyzja Marcina, 2026-08-16).
+
+## 2026-08-16T05:27 — PREREJESTRACJA M15: PRZESIEWACZ (cross-encoder) na czolowce
+
+### Dlaczego to jest inne narzedzie, a nie dwudziesty trzeci wariant
+
+Dwadziescia dwa mechanizmy MIERZYLY PODOBIENSTWO — leksykalne, wektorowe, grafowe,
+statystyczne. Wszystkie licza, jak bardzo dwie rzeczy sa do siebie podobne, i zadna
+nie potrafi odroznic „to jest O oleju" od „to ODPOWIADA na twoje pytanie o olej".
+
+Cross-encoder robi co innego: dostaje **pytanie i kandydata RAZEM, w jednym wejsciu**,
+i zwraca jedna liczbe — na ile ten kandydat odpowiada na to pytanie. Nie porownuje
+dwoch osobno policzonych reprezentacji. **Czyta pare.**
+
+Wzmocnione pomiarem M14: ksztalt ocen embeddingu nie niesie ZADNEJ informacji o tym,
+czy odpowiedz istnieje (rozklady nakladaja sie, miejscami odwrocone). Skoro statystyka
+tego, co embedding policzyl, jest bezuzyteczna, potrzebne jest cos, co czyta.
+
+Architektura wprost ze STALKERa (A-Life): **tanio wszedzie, drogo tylko dla garstki.**
+Tani przebieg embeddingu po 1598 symbolach zostaje BEZ ZMIAN; drogi sedzia oglada
+wylacznie czolowke.
+
+### Model
+
+`cross-encoder/ms-marco-MiniLM-L-6-v2` — ~22 mln parametrow, ~90 MB. Wybrany NIE przeze
+mnie: `aions_core/aions_hybrid_retrieval.py:138` juz go wywoluje jako domyslny reranker
+AIONS. Biblioteki (`sentence_transformers`, `torch`, `transformers`, `onnxruntime`)
+sa zainstalowane; brakuje tylko pliku modelu.
+
+### Ile kandydatow: `DEPTH = 25`
+
+Nie dobrane teraz. `DEPTH = 25` stoi w `measure_m4.py` od poczatku ablacji M4 i jest
+glebokoscia, na ktorej liczymy `recall@25`. Liczba starsza od tego mechanizmu.
+
+### Tekst kandydata: DOKLADNIE ten sam, ktory widzi embedding
+
+`symbol_text_with_description(path, row, opis)` — bez zmian. **To jest celowe
+i wazniejsze niz wygoda:** gdybym podal przesiewaczowi ladniejszy tekst, nie wiedzialbym,
+czy poprawa pochodzi z LEPSZEGO SEDZIEGO czy z LEPSZEGO MATERIALU. Ten sam material,
+inny sedzia — roznica jest przypisywalna do jednej rzeczy.
+
+Odnotowuje ryzyko tej decyzji: cross-encodery trenowano na prozie, a nasz tekst symbolu
+to w duzej mierze rozbite identyfikatory. Moze to obnizyc wynik. Swiadomie place te cene
+za czystosc eksperymentu.
+
+### Determinizm — i uczciwie, gdzie jest jego granica
+
+Przesiewacz **nie pisze, tylko mierzy**: brak losowania, brak temperatury, jedno wejscie
+daje jedna liczbe. Ale to sa obliczenia zmiennoprzecinkowe, wiec miedzy maszynami
+i wersjami bibliotek moga wystapic roznice na dalekich miejscach po przecinku.
+
+**Rozwiazanie: artefaktem jest CACHE, nie model.** Oceny liczone RAZ, kwantyzowane
+do liczb calkowitych (milijednostki), zapisane w `_desc/rerank_cache.json` z kluczem
+`(hash pytania, pack_hash, nazwa modelu)` i ZACOMMITOWANE. Od tej chwili kazdy pomiar
+odtwarza sie bit w bit **bez uruchamiania modelu w ogole**.
+
+Ten sam wzorzec, ktory zadzialal trzy razy: streszczenia, dziedziny, tablica wektorow.
+Droga rzecz dzieje sie raz, na boku, i zostaje zamrozona.
+
+### Warianty
+
+- **M15a `rerank`** — czolowa 25 z `embed_desc`, przestawiona wylacznie ocena przesiewacza.
+- **M15b `rerank_abstain`** — jak wyzej, plus: gdy **najlepsza ocena przesiewacza jest
+  ujemna**, zwracamy PUSTO.
+
+**Prog zero NIE JEST dobrany na naszych danych.** To wlasna granica decyzyjna modelu:
+przy trenowaniu binarnym logit 0 odpowiada prawdopodobienstwu 0,5, czyli „raczej nie".
+Bierzemy granice modelu, nie swoja.
+
+**WARUNEK UCZCIWOSCI:** przed pomiarem sprawdze karte modelu. Jesli nie potwierdzi
+tej interpretacji wyniku, **M15b zostaje WYCOFANY, a nie przestrojony na inna wartosc.**
+
+**Trzeciego wariantu nie bedzie.**
+
+### KRYTERIUM PRZYJECIA — bez zmian, dwudziesty trzeci raz
+
+`recall@10` >= **34,6%** ORAZ `MRR` >= **0,172** ORAZ `neg/poz` <= **85,2%**.
+
+### WARUNEK WARTOSCI DODANEJ
+
+Wobec `embed_desc` (30,0% / 0,243 / 97,7%): `recall@10` > 30,0% ALBO `neg/poz` < 97,7%.
+
+### WARUNEK KONIECZNY — sufit przestawiania
+
+Przesiewacz przestawia WYLACZNIE czolowa 25. Jesli wlasciwej odpowiedzi tam nie ma,
+nie moze jej wciagnac. Sufit `recall@25` dla `embed_desc` to **36,6%**, wiec
+`recall@10` po przestawieniu **nie moze przekroczyc 36,6%**. Prog 34,6% miesci sie
+pod tym sufitem, ale z zapasem tylko 2 punktow — odnotowuje to jawnie, zeby nie udawac,
+ze mechanizm ma duzo miejsca.
+
+### DIAGNOSTYKA — obowiazkowa
+
+1. `rerank_moved` — dla ilu pytan przesiewacz zmienil symbol na pierwszym miejscu.
+   Zero znaczyloby, ze zgadza sie z embeddingiem i niczego nie wnosi.
+2. `rerank_promoted` — dla ilu pytan pozytywnych wlasciwy symbol AWANSOWAL do top-10
+   z pasma 11-25. To jest cala nadzieja tego etapu.
+3. `rerank_demoted` — dla ilu SPADL z top-10. Cena.
+4. `abstain_neg` / `abstain_pos` — ile negatywow i ile pozytywow dostalo pustke.
+   **Pierwsza para liczb w tym projekcie, ktora wprost mierzy „umie powiedziec nie wiem".**
+
+### PRZEWIDYWANIA. Bilans: 7 na 24
+
+- **`rerank_moved` bedzie wysokie** (ponad polowa pytan) — cross-encoder ocenia inaczej
+  niz podobienstwo wektorow, wiec musi sie rozejsc z embeddingiem.
+- **`recall@10` wzrosnie**, ale **nie dobije do 34,6%**, bo sufit to 36,6% i wymagaloby
+  to przestawienia niemal idealnego.
+- **`abstain_neg` bedzie niezerowy** — pierwszy raz cokolwiek odmowi.
+- **`abstain_pos` tez bedzie niezerowy** i to bedzie kosztowac `recall`.
+- **Kryterium jako calosc NIE zostanie spelnione**, ale `neg/poz` spadnie ponizej 97,7%,
+  czyli warunek wartosci dodanej BEDZIE spelniony.
 
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
