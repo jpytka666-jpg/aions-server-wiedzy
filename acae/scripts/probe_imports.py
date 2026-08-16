@@ -100,12 +100,12 @@ def opcjonalne_importy(root: pathlib.Path, katalogi):
             for x in ast.walk(ast.Module(body=w.body, type_ignores=[])):
                 if isinstance(x, ast.Import):
                     for a in x.names:
-                        yield rel, x.lineno, a.name, False
+                        yield rel, x.lineno, a.name, elastyczna
                 elif isinstance(x, ast.ImportFrom):
                     if x.level:                      # `from . import y` — pomijamy
                         continue
                     if x.module:
-                        yield rel, x.lineno, x.module, False
+                        yield rel, x.lineno, x.module, elastyczna
 
 
 def znajdz(modul: str, sciezki: list[str]) -> bool:
