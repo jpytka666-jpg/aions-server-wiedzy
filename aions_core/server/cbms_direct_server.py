@@ -269,16 +269,10 @@ class UnifiedCBMSHandler(http.server.SimpleHTTPRequestHandler):
                         else:
                             response = result.get('response', '')
 
-                # Apply conversation enhancement if available.
-                # Keyword arguments on purpose: the signature is
-                # enhance_response(query, base_response), and passing them
-                # positionally in the wrong order silently returned a decorated
-                # copy of the user's own question instead of the CBMS answer.
+                # Apply conversation enhancement if available
                 if CONVERSATION_ENHANCED:
                     try:
-                        response = conversation_enhancer.enhance_response(
-                            query=user_message, base_response=response
-                        )
+                        response = conversation_enhancer.enhance_response(response, user_message)
                     except Exception:
                         pass
 
