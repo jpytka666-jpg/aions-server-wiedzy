@@ -117,6 +117,21 @@ def main():
     defs = zbierz_definicje(drzewa)
     jednoznaczne = {n: d[0] for n, d in defs.items() if len(d) == 1}
 
+    # Nazwy widoczne w kazdym pliku: zdefiniowane tutaj albo jawnie zaimportowane.
+    # To jest cala obrona przed myleniem funkcji z repo z wbudowanymi.
+    wbudowane = set(dir(__builtins__)) if isinstance(__builtins__, dict) is False \
+        else set(__builtins__.keys())
+    widoczne: dict[str, set[str]] = {}
+    for rel, drzewo in drzewa.items():
+        nazwy: set[str] = set()
+        for w in ast.walk(drzewo):
+            if isinstance(w, ast.FunctionDef):
+                nazwy.add(w.name)
+            elif isinstance(w, ast.ImportFrom):
+                for alias in w.names:
+                    nazwy.add(alias.asname or alias.name)
+        widoczne[rel] = nazwy - wbudowane
+
     A, B, C, D = [], [], [], []
 
     for rel, drzewo in drzewa.items():
