@@ -290,57 +290,13 @@ def is_hit(item, question) -> bool:
     return False
 
 
-class EmbedIndex:
-    """
-    Wektory wszystkich symboli policzone RAZ. Kolejnosc `items` jest kolejnoscia
-    wierszy macierzy — na niej opieraja sie wszystkie trzy warianty M7.
-
-    Wszystko w `int64`: mnozenie macierzowe liczb calkowitych jest dokladne i niezalezne
-    od kolejnosci sumowania, wiec liczba watkow BLAS nie zmienia wyniku.
-    """
-
-    def __init__(self, embedder, entries, descriptions=None):
-        import numpy as np
-
-        opisy = descriptions or {}
-        self.embedder = embedder
-        self.items = []
-        self.texts = []
-        wektory = []
-        for entry in entries:
-            path = str(entry["path"])
-            for row in entry["symbols"]:
-                # M9b: gdy podano opisy, tekst symbolu to regula M7 PLUS opis jego pliku.
-                # Bez opisow wynik jest identyczny z M7 — `symbol_text_with_description`
-                # z pustym opisem zwraca doslownie `symbol_text`.
-                tekst = symbol_text_with_description(path, row, opisy.get(path, ""))
-                self.items.append((path, row, entry.get("lang")))
-                self.texts.append(tekst)
-                wektory.append(embedder.vector(tekst))
-        self.M = (np.vstack(wektory) if wektory
-                  else np.zeros((0, embedder.dim), dtype=np.int64))
-        # Kwadraty norm, NIE normy. Pierwiastek brany raz, na koncu — dwa obciecia
-        # `isqrt` po drodze potrafily dac wynik powyzej 1000 promili (patrz embed.py).
-        self.norms2 = [int(np.dot(v, v)) for v in self.M]
-
-    def scores(self, question):
-        import math
-
-        import numpy as np
-
-        qv = self.embedder.vector(question)
-        nq2 = int(np.dot(qv, qv))
-        if nq2 == 0:
-            return [0] * len(self.items)
-        iloczyny = self.M @ qv
-        out = []
-        for d, nd2 in zip(iloczyny, self.norms2):
-            d = int(d)
-            if d <= 0 or nd2 == 0:
-                out.append(0)
-            else:
-                out.append(math.isqrt((1000 * 1000 * d * d) // (nq2 * nd2)))
-        return out
+# `EmbedIndex` mieszkal TUTAJ i przez to korzystal z niego wylacznie pomiar, a narzedzie
+# (`acae ask`) szukalo dalej samymi slowami — czyli produkcja dostawala wynik dwuipolkrotnie
+# gorszy niz mierzony (25,1% wobec 62,0% na zbiorze `wide`). Klasa jest teraz w bibliotece,
+# w `acae.embedindex`, i ten sam kod obsluguje pomiar oraz uzycie.
+#
+# Regresja po przenosinach: `--variant embed_desc --set dev` musi dac 30,0 / 36,6 / 0,243 / 97,7
+# co do cyfry. Rozjazd znaczylby, ze przenosiny czegos dotknely.
 
 
 def _lexical_scores(index, entries, terms):
