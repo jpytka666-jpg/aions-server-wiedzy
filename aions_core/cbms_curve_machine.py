@@ -671,9 +671,17 @@ class CBMSCurveMachine:
 
 
     def _load_chunks(self) -> List[Dict]:
-        """Załaduj chunki z E:/AIONS_COMPLETE/cbms_memory/chunks/"""
+        """
+        Zaladuj bloki wiedzy z pamieci repozytorium.
+
+        POPRAWKA 2026-08-16: bylo `E:/AIONS_COMPLETE/cbms_memory/chunks/` wpisane
+        na sztywno. Ten katalog ISTNIEJE, ale jest PUSTY — czyli ta funkcja od zawsze
+        zwracala zero blokow, a `if chunks_dir.exists()` na to nie reagowal.
+        Prawdziwe 167 blokow lezy w pamieci repo.
+        """
+        from .lokalizacje import katalog_pamieci
         chunks = []
-        chunks_dir = Path("E:/AIONS_COMPLETE/cbms_memory/chunks/")
+        chunks_dir = katalog_pamieci() / "chunks"
 
         if chunks_dir.exists():
             for chunk_file in chunks_dir.glob("*.json"):
