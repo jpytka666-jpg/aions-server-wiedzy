@@ -15,11 +15,17 @@ i dla kazdego liczymy ocene pary (pytanie, tekst symbolu). Tekst symbolu to DOKL
 ten sam `symbol_text_with_description`, ktory widzi embedding — decyzja z prerejestracji,
 zeby roznica byla przypisywalna do SEDZIEGO, a nie do materialu.
 
-SKALA
------
-`sentence_transformers` przy jednym neuronie wyjsciowym przepuszcza wynik przez sigmoide,
-wiec dostajemy 0..1. Zapisujemy w promilach jako liczbe calkowita (0..1000).
-Granica decyzyjna modelu to 0,5, czyli 500 promili.
+SKALA — SPROSTOWANE PRZED POMIAREM
+----------------------------------
+Prerejestracja zakladala sigmoide (0..1) i granice 0,5. **Blednie dla tego modelu**:
+jego wlasna konfiguracja deklaruje `Identity`, wiec wyjscie to SUROWY LOGIT.
+Sprawdzone: para jawnie pasujaca dostaje -0,95, jawnie niepasujaca -11,45 — czyli
+nawet trafienie jest ujemne i zero nie jest zadna granica.
+
+Zapisujemy `logit * 1000` zaokraglone w dol od polowy (`math.floor(x*1000 + 0.5)`),
+deterministycznie i symetrycznie dla wartosci ujemnych. Zadnej granicy decyzyjnej
+nie deklarujemy — wariant odmawiajacy zostal WYCOFANY zgodnie z warunkiem uczciwosci
+z prerejestracji, a nie przestrojony.
 """
 
 import datetime
