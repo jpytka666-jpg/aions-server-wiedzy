@@ -12,9 +12,14 @@ from pathlib import Path
 
 from . import world_state
 
+from aions_core.lokalizacje import gdzie as _gdzie
+
 REPO = Path(__file__).resolve().parents[2]
 STATE = REPO / "runtime" / "state"
-EVERYTHING = Path(r"C:\Program Files\Everything\es.exe")
+# 2026-08-16: adres z `config/lokalizacje.json` zamiast wpisanego na sztywno.
+# `gdzie()` zwraca None, gdy programu nie ma — `_find_files` i tak to sprawdza
+# i oddaje czytelny blad zamiast wybuchac.
+EVERYTHING = _gdzie("everything_es") or Path("es.exe")
 
 
 def _find_files(query, folder="", max_results=50):
