@@ -112,11 +112,16 @@ class ExistingModelsHub:
         # Prefer env or repo-local memory/chunks
         root = Path(__file__).resolve().parent
         env_mem = os.environ.get('CBMS_MEMORY_DIR')
+        # POPRAWKA 2026-08-16: bylo `root.parent / 'memory' / 'chunks'`, czyli
+        # <repo>/memory/chunks. Ten katalog ISTNIEJE, ale jest PUSTY, wiec petla
+        # ponizej brala go jako pierwszy pasujacy i konczyla z wynikiem 0 blokow —
+        # nie siegajac nawet dalej. Prawdziwe 167 blokow lezy w aions_core/memory/chunks.
+        # Dwie sciezki zewnetrzne usuniete: `E:\AIONS_COMPLETE\cbms_memory\chunks`
+        # to puste lustro (0 plikow), a `D:\AGI_CODex\chunks` nie istnieje wcale.
+        from .lokalizacje import katalog_pamieci
         paths = [
             (Path(env_mem) / 'chunks') if env_mem else None,
-            root.parent / 'memory' / 'chunks',
-            Path(r"E:\\AIONS_COMPLETE\\cbms_memory\\chunks"),
-            Path(r"D:\\AGI_CODex\\chunks"),
+            katalog_pamieci() / 'chunks',
         ]
 
         for p in paths:
