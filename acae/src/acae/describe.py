@@ -83,11 +83,14 @@ def load_descriptions(
         raise DescriptionsError(f"{path}: brak mapy `descriptions`")
 
     faktyczny = str(prov.get("pack_hash") or "")
-    if expected_pack_hash is not None and faktyczny != expected_pack_hash:
+    rozjazd = expected_pack_hash is not None and faktyczny != expected_pack_hash
+    if rozjazd and strict:
         raise DescriptionsError(
             f"{path}: opisy wyprodukowano dla pack_hash {faktyczny or '(brak)'}, "
             f"a repo ma teraz {expected_pack_hash}. Pomiar przerwany."
         )
+    prov = dict(prov)
+    prov["stale"] = bool(rozjazd)
     return {str(k): str(v) for k, v in opisy.items()}, prov
 
 
