@@ -191,7 +191,9 @@ def triaz_parametrow(drzewa, nieuzyte, stuby=frozenset()) -> list[dict]:
             if par in kw or (idx is not None and idx >= 0 and n_poz > idx):
                 podany = True
                 break
-        if not wolania:
+        if (poz["plik"], poz["linia"]) in stuby:
+            kubelek, powod = "NISKIE", "zaslepka po nieudanym imporcie — parametr zbedny z zalozenia"
+        elif not wolania:
             kubelek, powod = "NISKIE", "funkcji nikt w repo nie wola"
         elif podany:
             kubelek, powod = "RYZYKO", f"wolajacy PODAJE ten argument ({len(wolania)} wywolan)"
