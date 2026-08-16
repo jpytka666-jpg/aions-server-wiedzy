@@ -1534,6 +1534,107 @@ def acae_ask(query: str, drill: int = 3, outline_limit: int = 30, refresh: bool 
 
 
 # =============================================================================
+# CODE HEALTH — samoaudyt repo bez modelu i bez tokenow
+# =============================================================================
+
+def _health_run(nazwa: str, wyjscie: str, dodatkowe: Optional[List[str]] = None) -> Dict[str, Any]:
+    """
+    Uruchamia jeden ze skryptow audytu i oddaje jego raport JSON.
+
+    Osobny proces, a nie import, z dwoch powodow. Skrypty sa napisane jako narzedzia
+    wiersza polecen i dzialaja — regula ADDITIVE ONLY mowi, zeby ich nie przerabiac
+    pod nowego wolajacego. A audyt parsuje 166 plikow, wiec swiezy proces gwarantuje,
+    ze nie widzi modulow, ktore serwer trzyma juz w pamieci.
+    """
+    import subprocess
+
+    skrypt = REPO_ROOT / "acae" / "scripts" / f"{nazwa}.py"
+    if not skrypt.exists():
+        raise FileNotFoundError(f"brak skryptu audytu: {skrypt.name}")
+
+    cmd = [sys.executable, str(skrypt), "--root", ".", "--json-out", wyjscie]
+    cmd += dodatkowe or []
+    proc = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True,
+                          text=True, timeout=240)
+    if proc.returncode != 0:
+        raise RuntimeError(f"{nazwa} zakonczony kodem {proc.returncode}: "
+                           f"{(proc.stderr or proc.stdout)[-400:]}")
+    return json.loads((REPO_ROOT / wyjscie).read_text(encoding="utf-8"))
+
+
+@mcp_server.tool(
+    name="code_health",
+    description=(
+        "Static self-audit of THIS repository. No model, no tokens, ~10 seconds. "
+        "Detects four failure patterns that have each already broken AIONS in production: "
+        "(1) a call whose arguments do not match the function's signature — the endpoint "
+        "returns 500 every time; (2) an exception swallowed around a WRITE — this is how "
+        "conversation logging died silently for weeks; (3) a parameter accepted but never "
+        "used while callers do pass it — this is how eight 'different' CRLA candidates all "
+        "computed the same thing; (4) an optional import whose module cannot be found, which "
+        "silently swaps a whole subsystem for a do-nothing stub. "
+        "Findings are triaged: only high-risk ones are returned by default, because the raw "
+        "counts are mostly benign noise. Run after editing code, or when something reports "
+        "success but produces nothing."
+    ),
+)
+@auto_logged
+def code_health(level: str = "risk", limit: int = 25) -> str:
+    """level: 'risk' (tylko groźne) albo 'all' (pelne liczby, bez list)."""
+    try:
+        start = time.time()
+        surowy = _health_run("audit_calls", "acae/_out/audit.json")
+        triaz = _health_run("triage_audit", "acae/_out/triaz.json")
+        importy = _health_run("probe_imports", "acae/_out/importy.json")
+
+        wyjatki = [x for x in triaz["B_wyjatki"] if x["kubelek"] == "RYZYKO"]
+        parametry = [x for x in triaz["A_parametry"] if x["kubelek"] == "RYZYKO"]
+        brak = importy["brakujace"]
+
+        podsumowanie = {
+            "sygnatury_niezgodne": len(surowy["D_sygnatury"]),
+            "polkniety_wyjatek_wokol_zapisu": len(wyjatki),
+            "ignorowany_parametr_ktory_ktos_podaje": len(parametry),
+            "podsystem_zastapiony_zaslepka": len(brak),
+        }
+        odp: Dict[str, Any] = {
+            "summary": podsumowanie,
+            "total_findings": sum(podsumowanie.values()),
+            "raw_counts_before_triage": {
+                "swallowed_exceptions": len(surowy["B_polkniete"]),
+                "unused_parameters": len(surowy["A_nieuzyte_parametry"]),
+                "dead_imports": len(surowy["C_martwe_importy"]),
+            },
+            "elapsed_ms": int((time.time() - start) * 1000),
+        }
+
+        if level == "risk":
+            odp["signature_mismatch"] = [
+                f"{x['plik']}:{x['linia']} {x['wolane']}() — {x['powod']}"
+                for x in surowy["D_sygnatury"][:limit]
+            ]
+            odp["swallowed_around_write"] = [
+                f"{x['plik']}:{x['linia']} — {x['powod']}" for x in wyjatki[:limit]
+            ]
+            odp["ignored_parameter"] = [
+                f"{x['plik']}:{x['linia']} {x['funkcja']}() ignores `{x['parametr']}` — {x['powod']}"
+                for x in parametry[:limit]
+            ]
+            odp["missing_module"] = [
+                f"{x['plik']}:{x['linia']} needs `{x['modul']}` — "
+                + (f"it lives in {x['lezy_w'][0]}" if x["lezy_w"] else "NOT IN THE REPO AT ALL")
+                for x in brak[:limit]
+            ]
+            # Nierozstrzygniete mowimy GLOSNO. Milczenie o nich czytaloby sie jak
+            # "sprawdzone i czyste", a to nieprawda: dla tych plikow sonda nie ma zdania.
+            odp["undecided_imports"] = len(importy.get("niepewne", []))
+
+        return _success(odp)
+    except Exception as e:
+        return _error(f"{type(e).__name__}: {e}")
+
+
+# =============================================================================
 # OPERATOR SENSES — Google Calendar (read-only)
 # =============================================================================
 

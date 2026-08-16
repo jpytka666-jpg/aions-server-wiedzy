@@ -3067,3 +3067,74 @@ wiec w niej te cztery podsystemy sa zawsze zaslepkami.
 - 230 martwych importow — nietkniete, to kosmetyka.
 - Sonda nie zobaczy modulu, ktory sie znajduje, ale wybucha przy imporcie.
   Zeby to wykryc, trzeba go naprawde uruchomic — swiadomie tego nie robimy.
+
+## 2026-08-16T11:40 — JEDEN ZESZYT ZAMIAST DWOCH + `code_health` jako narzedzie
+
+### Scalanie okazalo sie usunieciem, bo stary byl PODZBIOREM nowego
+
+Porownanie po nazwach funkcji, nie na oko:
+
+```
+TYLKO W STARYM: (nic)
+TYLKO W NOWYM:  _log_gate_rejection, expand_with_references, learning_gate
+W OBU: 17, z tego 2 o roznej dlugosci ciala (cbms_think, create_knowledge_chunk)
+```
+
+Stary nie mial NICZEGO wlasnego. Wiec nie bylo czego scalac — decyzja projektowa
+znikla. Najbezpieczniejsza zmiana to ta, ktorej nie trzeba projektowac.
+
+Sprawdzone przed usunieciem: nikt nie importuje go po sciezce pakietu ani po nazwie
+pliku (grep w `aions_core` i `control_plane` — zero trafien). Trzej wolajacy
+(`cbms_gate`, `planner`, serwer MCP) dokladaja `server/` do sciezki, wiec po usunieciu
+trafiaja na nowszy.
+
+`aions_core/cbms_memory.py` USUNIETY (kopia: `.usuniety.bak`).
+`_ensure_server_path` w `cbms_gate.py` poprawiony — wstawianie od najogolniejszego
+do najbardziej szczegolowego, zeby `server` byl na wierzchu. Komentarz opisuje pulapke,
+zeby nie wrocila.
+
+**Sprawdzone uruchomieniem, nie lektura:**
+```
+cbms_memory zaladuje sie z: aions_core\server\cbms_memory.py
+ma bramke learning_gate: True      ma expand_with_references: True
+_get_memory() zwrocilo: CBMSMemory
+```
+Zywy serwer potwierdza to samo przy starcie: `CBMS loaded from ...\aions_core\server`.
+
+### Sprzatanie bazy: NIE MA CZEGO SPRZATAC
+
+Zamiast wynajmowac Haiku albo lokalny model do przesiewania — bramka `learning_gate`
+JEST tym przesiewaczem, zmierzonym (0 falszywych alarmow na 164 blokach wiedzy).
+Zastosowana wstecz na 167 zywych blokach:
+
+```
+zywych blokow: 167
+    165  ZOSTAJE
+      2  R6_za_krotkie      <- "Test hangul code", "Test hangul code 2"
+```
+
+Baza jest czysta. Wczesniejsze 455 smieci siedzi juz w `chunks_quarantine` (2,5 MB).
+**Pomiar przed praca oszczedzil cala prace.**
+
+### `code_health` — narzedzie AIONS
+
+Trzy skrypty (`audit_calls`, `triage_audit`, `probe_imports`) wpiete jako JEDNO
+narzedzie MCP obok `acae_ask`. Uruchamiane jako osobny proces, nie import — skrypty
+sa napisane jako narzedzia wiersza polecen i dzialaja (ADDITIVE ONLY), a swiezy proces
+gwarantuje, ze audyt nie widzi modulow trzymanych juz przez serwer w pamieci.
+
+Test wywolaniem jak z serwera: **11,6 s, 52 znaleziska wysokiego ryzyka**, wynik
+odlozony przez transport (`OFF_c777d7c2`, 5678 znakow — powyzej progu 800).
+
+Liczby SPADLY po usunieciu duplikatu: polkniete wyjatki 88 -> 82, nieuzywane
+parametry 58 -> 56. Czyli czesc audytu byla echem tego samego kodu w dwoch kopiach.
+
+**Marcin musi zrestartowac serwer MCP, zeby `code_health` sie pojawil.**
+
+### Co zostaje niezrobione
+
+- `run_crla()` wolany z `candidates=` wobec `n_candidates=` — endpoint oddaje 500.
+- CRLA: `simulate_candidate` ignoruje `cand`, `score_candidate` i `_generate_candidates`
+  ignoruja `query`. Turniej osmiu kandydatow liczy osiem razy to samo.
+- Osiem podsystemow zastapionych zaslepka, z czego cztery nie istnieja nigdzie w repo.
+- 22 importy nierozstrzygniete (plik sam dokłada sciezki) — sonda nie ma o nich zdania.
