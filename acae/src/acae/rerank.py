@@ -17,15 +17,26 @@ po przecinku. Gdyby model biegl przy kazdym pomiarze, `result_hash` przestalby b
 porownywalny miedzy przebiegami. Z zamrozonym cache pomiar odtwarza sie bit w bit
 — takze na maszynie, ktora modelu w ogole nie ma.
 
-SKALA OCENY
------------
-`sentence_transformers` przepuszcza wyjscie przez `nn.Sigmoid()`, gdy model ma jeden
-neuron wyjsciowy (sprawdzone w kodzie zainstalowanej wersji 3.0.1, nie w karcie modelu —
-karta o tym milczy). Wynik jest wiec z zakresu 0..1 i **granica decyzyjna lezy w 0,5**.
-Zapisujemy w promilach jako liczbe calkowita: 0..1000, granica **500**.
+SKALA OCENY — I POMYLKA, KTORA TU BYLA
+--------------------------------------
+Prerejestracja M15 zakladala, ze wyjscie jest prawdopodobienstwem (sigmoida), bo
+`sentence_transformers` domyslnie tak robi przy jednym neuronie wyjsciowym. **To bylo
+bledne dla TEGO modelu.** Sprawdzone przed pomiarem:
 
-To NIE jest prog dobrany na naszych danych. To wlasna granica modelu, wynikajaca
-z tego, ze biblioteka traktuje jego wyjscie jako prawdopodobienstwo.
+    config deklaruje aktywacje: torch.nn.modules.linear.Identity
+    faktycznie uzyta          : Identity
+
+Model nadpisuje domyslne zachowanie biblioteki i oddaje **surowy logit**, nie
+prawdopodobienstwo. Proba na jawnych parach: para pasujaca -0,95, niepasujaca -11,45 —
+czyli nawet trafienie wychodzi UJEMNE, wiec zero nie jest tu zadna granica.
+
+Skutek zapisany w prerejestracji i wykonany: **wariant `rerank_abstain` WYCOFANY**,
+nie przestrojony na inna liczbe. Prog dobrany po zobaczeniu tych danych bylby dokladnie
+tym, czego ta metodologia zabrania.
+
+Zapisujemy wiec **milijednostki logitu** (logit * 1000, zaokraglone w dol od polowy),
+bez zadnej granicy decyzyjnej. Ocena sluzy WYLACZNIE do porownywania kandydatow miedzy
+soba — do tego wystarcza kolejnosc, a nie skala bezwzgledna.
 """
 
 from __future__ import annotations
