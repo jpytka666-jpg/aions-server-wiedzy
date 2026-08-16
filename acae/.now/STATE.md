@@ -2182,6 +2182,74 @@ Regresja: `pytest` 215 zielonych, `baseline` 26,6/36,6/0,172/85,2 i `embed_desc`
 30,0/36,6/0,243/97,7 odtworzone co do cyfry. Poprawka echa cofnieta na czas pomiaru
 i przywrocona po nim.
 
+## 2026-08-16T05:30 — STAN SZTUKI: nasz problem ma nazwe i dwudziestoletnia literature
+
+**Query Performance Prediction (QPP)** — przewidywanie, czy wyszukiwanie sie udalo,
+BEZ zagladania do poprawnej odpowiedzi. Dokladnie nasza brakujaca umiejetnosc.
+
+Rodzina **po-wyszukiwawcza** patrzy nie na slowa, tylko na **ROZKLAD WYNIKOW**:
+- **NQC** (Normalized Query Commitment) — rozrzut (odchylenie) wynikow czolowki,
+  znormalizowany. Intuicja: dobrze rozdzielony rozklad = latwe zapytanie.
+- **Clarity** — dywergencja KL miedzy modelem jezykowym czolowki a calym korpusem.
+- **WIG** — zagregowany przyrost informacji czolowki wobec korpusu.
+
+Dlaczego to jest dla nas inne niz wszystko dotad: **nie dotyka zadnej z rzeczy,
+ktore nam sie psuly.** Nie zalezy od slow (zabilo M10), nie wybiera polki (zabilo M11),
+nie zmienia punktacji ani kandydatow. Czyta WYLACZNIE oceny, ktore ranker juz wyliczyl.
+Czysta arytmetyka, wiec w pelni deterministyczne, zero nowych artefaktow.
+
+**DWA ZASTRZEZENIA, oba z literatury, oba przeciwko nam:**
+1. NQC dziala **o okolo 10% gorzej na neuronowym IR** niz na klasycznym — a nasz najlepszy
+   ranker to wlasnie embedding. Udokumentowana slabosc dokladnie w naszym przypadku.
+2. Standardowa praktyka to **dostrajanie `k` na zbiorze rozwojowym**. To jest zabronione.
+   Wartosc musi byc ustalona z gory i z uzasadnieniem spoza danych.
+
+## 2026-08-16T05:30 — M14: POMIAR SUFITU, nie mechanizm
+
+### Dlaczego pomiar, a nie od razu mechanizm
+
+Zeby na podstawie ksztaltu wynikow powiedziec „nie wiem", trzeba postawic **prog**.
+Prog dobrany na szesciu negatywach to dokladnie to pokretlo, ktore uniewaznia wszystko.
+
+Wiec najpierw pytanie tansze i wczesniejsze: **czy ten sygnal w ogole istnieje?**
+Ten sam ruch, ktory uratowal nam tydzien przed M8 (`measure_prose_ceiling.py`: policz,
+czy proza o tych plikach w ogole istnieje, zanim zaczniesz na niej trenowac).
+
+**Ten wpis NIE jest prerejestracja mechanizmu i NIE ma werdyktu wobec kryterium.**
+To pomiar diagnostyczny. Jesli sygnal istnieje — powstanie osobna prerejestracja
+z progiem uzasadnionym strukturalnie, nie dobranym.
+
+### Co liczymy
+
+Dla kazdego z 36 pytan, na rankingu `embed_desc` (bez zmian):
+- `NQC` w wersji calkowitoliczbowej: `1000 * odchylenie(czolowka_k) // srednia(wszystkie)`,
+- `top1`, `srednia czolowki`, `spadek` miedzy pierwszym a dziesiatym wynikiem.
+
+**`k = 10`, ustalone z gory i NIE dobrane:** nasze kryterium od M0 brzmi `recall@10`,
+wiec dziesiatka jest w tym projekcie liczba pierwotna, starsza od tego mechanizmu.
+
+### Pytanie, na ktore ma odpowiedziec
+
+Czy **30 pytan pozytywnych** ma inny ksztalt wynikow niz **6 negatywnych**?
+Jesli rozklady sie nakladaja — kierunek zamkniety, zadnego progu nie da sie postawic
+i nie bedziemy udawac, ze da sie. Jesli sie rozdzielaja — jest po czym stawiac granice.
+
+### PRZEWIDYWANIE
+
+Spodziewam sie **slabego rozdzielenia**. Powod: `embed_desc` ma `neg/poz` 97,7%, czyli
+srednia czolowka negatywow jest niemal identyczna jak pozytywow. To juz jest sygnal,
+ze rozklady sa podobne. Ale `neg/poz` porownuje SREDNIE, a NQC patrzy na ROZRZUT —
+to inna wielkosc i moze rozdzielac tam, gdzie srednia nie rozdziela.
+Bilans przewidywan: 6 na 23.
+
+### Uwaga Marcina do etapu przesiewacza (nie teraz, ale zapisane)
+
+Gdy powstanie warstwa przesiewacza (cross-encoder), jej zapisane oceny **maja tworzyc
+jedna siec z CBMS**, a nie lezec jako martwy plik obok. Czyli kazdy osad
+„pytanie X <-> plik Y, ocena Z" ma trafiac do CBMS jako blok z `references`,
+w tym samym ksztalcie co reszta pamieci AIONS. Wtedy pamiec rosnie na uzywaniu,
+a nie tylko na generowaniu — i jest to zgodne z tym, co CBMS juz robi z chunkami.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
