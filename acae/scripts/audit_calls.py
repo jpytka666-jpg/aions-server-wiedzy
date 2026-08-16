@@ -158,6 +158,12 @@ def main():
 
             # --- D: wywolanie niezgodne z sygnatura
             if isinstance(w, ast.Call) and isinstance(w.func, ast.Name):
+                # Rozstrzygamy WYLACZNIE nazwy widoczne w TYM pliku: zdefiniowane lokalnie
+                # albo jawnie zaimportowane. Bez tego `set()` z biblioteki standardowej
+                # dopasowywal sie do metody `set` z `world_state.py` i produkowal
+                # dziesiatki zmyslonych zgloszen. Lepiej przeoczyc niz naklamac.
+                if w.func.id not in widoczne[rel]:
+                    continue
                 d = jednoznaczne.get(w.func.id)
                 if not d:
                     continue
