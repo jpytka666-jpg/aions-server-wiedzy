@@ -55,6 +55,7 @@ from acae.pack import FsLocator, FsReader  # noqa: E402
 from acae.scope import ScopeIndex  # noqa: E402
 from acae.verify import admit  # noqa: E402
 from acae.domains import DomainIndex  # noqa: E402
+from acae.intent import constrain as intent_constrain  # noqa: E402
 from acae.retrieve import query_terms, score_symbol, select, term_rarity  # noqa: E402
 
 SCHEMA = "acae.m4.v1"
