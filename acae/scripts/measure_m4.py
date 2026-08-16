@@ -797,7 +797,9 @@ def main() -> int:
                  # M11: warstwa dziedzin — najpierw polka, potem ksiazka
                  "domain3", "domain1",
                  # M13: intencja pytania ogranicza rodzaj rzeczy (regula czasownika)
-                 "intent", "intent_domain"),
+                 "intent", "intent_domain",
+                 # M15: przesiewacz (cross-encoder) przestawia czolowke
+                 "rerank"),
     )
     parser.add_argument("--set", dest="qset", default="dev", choices=tuple(SETS))
     parser.add_argument("--out", default=None)
