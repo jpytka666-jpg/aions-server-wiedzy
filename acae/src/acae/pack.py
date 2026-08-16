@@ -6,6 +6,7 @@ Tu i tylko tu wolno dotknac dysku, gita i systemu plikow. Rdzen o niczym z tego 
 
 from __future__ import annotations
 
+import os
 import subprocess
 from pathlib import Path, PurePosixPath
 from typing import Iterable, Mapping, Sequence
