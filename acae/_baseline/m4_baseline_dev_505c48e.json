@@ -1,0 +1,371 @@
+{
+  "depth": 25,
+  "head": "505c48e",
+  "metrics": {
+    "counts": {
+      "negative": 6,
+      "positive": 30
+    },
+    "desc_zero_bucket": 0,
+    "desc_zero_nonzero": 0,
+    "desc_zero_rank_median": 0,
+    "desc_zero_reached_25": 0,
+    "domain_cut": 0,
+    "domain_empty": 0,
+    "domain_fallback": 0,
+    "domain_files_median": 0,
+    "gate_cut": 0,
+    "gate_fallback": 0,
+    "gate_size_median": 0,
+    "intent_cut": 0,
+    "intent_none": 0,
+    "intent_symbols_median": 0,
+    "intent_widened": 0,
+    "m7_zero_bucket": 0,
+    "m7_zero_rank_median": 0,
+    "m7_zero_reached_25": 0,
+    "m9_zero_bucket": 11,
+    "m9_zero_in_top25": 0,
+    "mean_top1_negative": 2268,
+    "mean_top1_positive": 2661,
+    "mrr_permille": 172,
+    "negative_ratio_permille": 852,
+    "recall_at_10_permille": 266,
+    "recall_at_25_permille": 366,
+    "rerank_demoted": 0,
+    "rerank_moved": 0,
+    "rerank_promoted": 0,
+    "verify_cut": 0,
+    "verify_empty": 0,
+    "verify_kept_median": 0
+  },
+  "packages": {
+    "tiktoken": "0.13.0"
+  },
+  "per_query": [
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d001",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1995
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d002",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1673
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d003",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2793
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d004",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d005",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3630
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d006",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2793
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d007",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d008",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d009",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d010",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": 2240
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d011",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1596
+    },
+    {
+      "expansion": [],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d012",
+      "kind": "positive",
+      "rank": 9,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d013",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2805
+    },
+    {
+      "expansion": [],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d014",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 4660
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d015",
+      "kind": "positive",
+      "rank": 15,
+      "top1_score": 2233
+    },
+    {
+      "expansion": [],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d016",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 2226
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d017",
+      "kind": "positive",
+      "rank": 16,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d018",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 2580
+    },
+    {
+      "expansion": [],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d019",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 2326
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d020",
+      "kind": "positive",
+      "rank": 21,
+      "top1_score": 3776
+    },
+    {
+      "expansion": [],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d021",
+      "kind": "positive",
+      "rank": 4,
+      "top1_score": 1595
+    },
+    {
+      "expansion": [],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d022",
+      "kind": "positive",
+      "rank": 8,
+      "top1_score": 1676
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d023",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d024",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1862
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d025",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2877
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d026",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3157
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d027",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2233
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d028",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d029",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 3584
+    },
+    {
+      "expansion": [],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d030",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": 1995
+    },
+    {
+      "expansion": [],
+      "id": "d031",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 1239
+    },
+    {
+      "expansion": [],
+      "id": "d032",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2658
+    },
+    {
+      "expansion": [],
+      "id": "d033",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2560
+    },
+    {
+      "expansion": [],
+      "id": "d034",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2366
+    },
+    {
+      "expansion": [],
+      "id": "d035",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 2793
+    },
+    {
+      "expansion": [],
+      "id": "d036",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": 1995
+    }
+  ],
+  "question_set": {
+    "content_hash": "blake2b256:278f2dc2b92fd4573bdbd3ae37bbc690d5a59ab0fc0d78af5ade6ad97dded4da",
+    "file": "dev_questions.json",
+    "name": "dev"
+  },
+  "result_hash": "blake2b256:77b6ee2b386e773bb4dec45abc7670910234fecb93ed8e7369a0a3e8f31eb071",
+  "schema": "acae.m4.v1",
+  "scope": {
+    "files": 169,
+    "symbols": 1598
+  },
+  "variant": "baseline"
+}

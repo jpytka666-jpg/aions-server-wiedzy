@@ -861,6 +861,13 @@ def main() -> int:
             StaticEmbedder(ACAE_DIR / "_model"), entries,
             descriptions=(ctx["descriptions"] if args.variant in EMBED_Z_OPISAMI else None),
         )
+        if args.variant == "rerank":
+            # Zamrozone oceny przesiewacza. Rozjazd `pack_hash` przerywa pomiar:
+            # oceny wystawione dla innego stanu repo opisuja kod, ktorego juz nie ma.
+            ctx["rerank_cache"], ctx["rerank_provenance"] = load_rerank_cache(
+                ACAE_DIR / "_desc" / "rerank_cache.json",
+                expected_pack_hash=ctx["pack_hash"],
+            )
         if args.variant in Z_DZIEDZINAMI:
             # Dziedziny korzystaja z TEGO SAMEGO artefaktu modelu co ranking — pytanie
             # i opis dziedziny trafiaja do tej samej przestrzeni, inaczej porownanie

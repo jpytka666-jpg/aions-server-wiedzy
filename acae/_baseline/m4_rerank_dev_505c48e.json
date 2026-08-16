@@ -1,0 +1,1183 @@
+{
+  "depth": 25,
+  "descriptions": {
+    "batches": [
+      "desc_0.json",
+      "desc_1.json",
+      "desc_2.json",
+      "desc_3.json",
+      "desc_4.json",
+      "desc_5.json",
+      "desc_6.json",
+      "desc_7.json",
+      "desc_8.json",
+      "desc_9.json",
+      "desc_10.json",
+      "desc_11.json"
+    ],
+    "count": 169,
+    "generated_at": "2026-08-12T22:02:08+00:00",
+    "model": "claude-haiku-4-5-20251001",
+    "pack_hash": "blake2b256:6442322d5d5a011411b7cdb1b50e1fa4673d2b3984399b2dd8c9d02af2bf72db"
+  },
+  "head": "505c48e",
+  "metrics": {
+    "counts": {
+      "negative": 6,
+      "positive": 30
+    },
+    "desc_zero_bucket": 0,
+    "desc_zero_nonzero": 0,
+    "desc_zero_rank_median": 0,
+    "desc_zero_reached_25": 0,
+    "domain_cut": 0,
+    "domain_empty": 0,
+    "domain_fallback": 0,
+    "domain_files_median": 0,
+    "gate_cut": 0,
+    "gate_fallback": 0,
+    "gate_size_median": 0,
+    "intent_cut": 0,
+    "intent_none": 0,
+    "intent_symbols_median": 0,
+    "intent_widened": 0,
+    "m7_zero_bucket": 0,
+    "m7_zero_rank_median": 0,
+    "m7_zero_reached_25": 0,
+    "m9_zero_bucket": 11,
+    "m9_zero_in_top25": 2,
+    "mean_top1_negative": -8687,
+    "mean_top1_positive": -5623,
+    "mrr_permille": 229,
+    "negative_ratio_permille": -8687000,
+    "recall_at_10_permille": 266,
+    "recall_at_25_permille": 366,
+    "rerank_demoted": 1,
+    "rerank_moved": 24,
+    "rerank_promoted": 0,
+    "verify_cut": 0,
+    "verify_empty": 0,
+    "verify_kept_median": 0
+  },
+  "packages": {
+    "tiktoken": "0.13.0"
+  },
+  "per_query": [
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 468,
+              "rerank": -7350,
+              "symbol": "aions_core/server/ts_symbols.py:Symbol/outline_row"
+            },
+            {
+              "embed": 477,
+              "rerank": -7667,
+              "symbol": "aions_core/tools/web_crawler_import.py:split_sentences"
+            },
+            {
+              "embed": 470,
+              "rerank": -8976,
+              "symbol": "aions_core/tools/web_crawler_import.py:sha1"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d001",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -7350
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 407,
+              "rerank": -6911,
+              "symbol": "control_plane/llm_adapter.py:_aions_path"
+            },
+            {
+              "embed": 418,
+              "rerank": -7217,
+              "symbol": "control_plane/agents/agent_runner.py:_deterministic_plan"
+            },
+            {
+              "embed": 407,
+              "rerank": -8378,
+              "symbol": "aions_core/agi_unified.py:AGIUnified/_process_fallback"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d002",
+      "kind": "positive",
+      "rank": 13,
+      "top1_score": -6911
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 484,
+              "rerank": -3895,
+              "symbol": "control_plane/skills/forge.py:_move_request"
+            },
+            {
+              "embed": 479,
+              "rerank": -5803,
+              "symbol": "scripts/catalog_e_treasures.py:_manifest_stats"
+            },
+            {
+              "embed": 493,
+              "rerank": -6891,
+              "symbol": "control_plane/skills/forge.py:gap_detect"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d003",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -3895
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 463,
+              "rerank": -4396,
+              "symbol": "control_plane/skills/semantic_search.py:_normalize_text"
+            },
+            {
+              "embed": 410,
+              "rerank": -7741,
+              "symbol": "aions_core/server/esperanto_bridge.py:_normalize_text"
+            },
+            {
+              "embed": 426,
+              "rerank": -7868,
+              "symbol": "control_plane/skills/semantic_search.py:_active_collection"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d004",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -4396
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 582,
+              "rerank": -1569,
+              "symbol": "control_plane/llm/server_client.py:generate_http"
+            },
+            {
+              "embed": 617,
+              "rerank": -2072,
+              "symbol": "control_plane/llm/server_client.py:health"
+            },
+            {
+              "embed": 568,
+              "rerank": -3416,
+              "symbol": "aions_core/smart_cbms.py:interactive_chat"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d005",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": -1569
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 438,
+              "rerank": -5310,
+              "symbol": "control_plane/node_agent/agent.py:get_local_ip"
+            },
+            {
+              "embed": 442,
+              "rerank": -6895,
+              "symbol": "control_plane/node_agent/agent.py:Handler/log_message"
+            },
+            {
+              "embed": 444,
+              "rerank": -7014,
+              "symbol": "control_plane/node_agent/agent.py:registration_and_heartbeat_loop"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d006",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -5310
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 560,
+              "rerank": -6654,
+              "symbol": "control_plane/operator/loop.py:_record_baseline"
+            },
+            {
+              "embed": 556,
+              "rerank": -7767,
+              "symbol": "control_plane/operator/loop.py:_check_restart_cooldown"
+            },
+            {
+              "embed": 528,
+              "rerank": -7815,
+              "symbol": "control_plane/operator/loop.py:_issue_key"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d007",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -6654
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 359,
+              "rerank": -7596,
+              "symbol": "scripts/ingest_treasures_tier2.py:_now_iso"
+            },
+            {
+              "embed": 363,
+              "rerank": -7615,
+              "symbol": "scripts/ingest_treasures_tier2.py:ingest"
+            },
+            {
+              "embed": 357,
+              "rerank": -7833,
+              "symbol": "scripts/ingest_treasures_tier2.py:_load_catalog"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d008",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -7596
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 471,
+              "rerank": -5179,
+              "symbol": "aions_core/server/refgraph.py:SoftGraph/stats"
+            },
+            {
+              "embed": 484,
+              "rerank": -5181,
+              "symbol": "aions_core/server/refgraph.py:main"
+            },
+            {
+              "embed": 477,
+              "rerank": -5222,
+              "symbol": "aions_core/server/refgraph.py:SoftGraph/_load_dir"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d009",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -5179
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 633,
+              "rerank": -3786,
+              "symbol": "aions_core/tools/web_crawler_import.py:TextExtractor/handle_endtag"
+            },
+            {
+              "embed": 612,
+              "rerank": -4243,
+              "symbol": "aions_core/tools/web_crawler_import.py:crawl"
+            },
+            {
+              "embed": 619,
+              "rerank": -4270,
+              "symbol": "aions_core/tools/web_crawler_import.py:crawl/allowed"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d010",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -3786
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 598,
+              "rerank": -3593,
+              "symbol": "aions_core/tools/web_crawler_import.py:crawl/allowed"
+            },
+            {
+              "embed": 581,
+              "rerank": -4758,
+              "symbol": "aions_core/tools/web_crawler_import.py:main"
+            },
+            {
+              "embed": 571,
+              "rerank": -4761,
+              "symbol": "aions_core/tools/web_crawler_import.py:crawl"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d011",
+      "kind": "positive",
+      "rank": 19,
+      "top1_score": -3593
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 625,
+              "rerank": -5248,
+              "symbol": "control_plane/scheduler.py:collect_deadlines"
+            },
+            {
+              "embed": 605,
+              "rerank": -7178,
+              "symbol": "control_plane/scheduler.py:_parse_date"
+            },
+            {
+              "embed": 585,
+              "rerank": -7330,
+              "symbol": "control_plane/scheduler.py:run_scheduler"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d012",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": -5248
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 441,
+              "rerank": -9972,
+              "symbol": "control_plane/policy.py:evaluate_tool"
+            },
+            {
+              "embed": 437,
+              "rerank": -10209,
+              "symbol": "scripts/operator_daily_brief.py:format_brief"
+            },
+            {
+              "embed": 447,
+              "rerank": -10306,
+              "symbol": "control_plane/policy.py:check_intent"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d013",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -9972
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 509,
+              "rerank": 1779,
+              "symbol": "control_plane/agents/agent_schema.py:validate"
+            },
+            {
+              "embed": 442,
+              "rerank": -5471,
+              "symbol": "control_plane/agents/agent_schema.py:AgentObject/blob"
+            },
+            {
+              "embed": 478,
+              "rerank": -5514,
+              "symbol": "control_plane/agents/agent_schema.py:load"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d014",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 1779
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 495,
+              "rerank": -8256,
+              "symbol": "control_plane/node_registry.py:_load_from_disk"
+            },
+            {
+              "embed": 492,
+              "rerank": -8549,
+              "symbol": "control_plane/node_registry.py:_save_to_disk"
+            },
+            {
+              "embed": 469,
+              "rerank": -8622,
+              "symbol": "control_plane/node_registry.py:_is_stale"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": true,
+      "id": "d015",
+      "kind": "positive",
+      "rank": 17,
+      "top1_score": -8256
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 663,
+              "rerank": 614,
+              "symbol": "server/store_http.py:_log_degraded"
+            },
+            {
+              "embed": 572,
+              "rerank": -4836,
+              "symbol": "server/store_http.py:VectorStore/_connect_http"
+            },
+            {
+              "embed": 543,
+              "rerank": -5051,
+              "symbol": "server/store_http.py:VectorStore/reconnect_http"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d016",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 614
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 556,
+              "rerank": -6865,
+              "symbol": "control_plane/skills/semantic_search.py:_normalize_text"
+            },
+            {
+              "embed": 559,
+              "rerank": -7608,
+              "symbol": "control_plane/skills/semantic_search.py:_v3_semantic_scores"
+            },
+            {
+              "embed": 560,
+              "rerank": -7715,
+              "symbol": "control_plane/skills/semantic_search.py:_get_vs"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d017",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -6865
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 701,
+              "rerank": -575,
+              "symbol": "control_plane/skills/stats.py:rank"
+            },
+            {
+              "embed": 627,
+              "rerank": -6350,
+              "symbol": "control_plane/skills/stats.py:record"
+            },
+            {
+              "embed": 630,
+              "rerank": -6566,
+              "symbol": "control_plane/skills/stats.py:_save"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d018",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": -575
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 450,
+              "rerank": -8459,
+              "symbol": "aions_core/tools/gsm8k_quick.py:final_number"
+            },
+            {
+              "embed": 440,
+              "rerank": -9094,
+              "symbol": "aions_core/tools/gsm8k_quick.py:post_chat"
+            },
+            {
+              "embed": 418,
+              "rerank": -10237,
+              "symbol": "aions_core/tools/bench_runner.py:is_refusal"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d019",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -8459
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 324,
+              "rerank": -10491,
+              "symbol": "control_plane/operator/loop.py:act"
+            },
+            {
+              "embed": 371,
+              "rerank": -10814,
+              "symbol": "control_plane/operator/loop.py:_prune_restart_window"
+            },
+            {
+              "embed": 304,
+              "rerank": -10964,
+              "symbol": "control_plane/operator/loop.py:diagnose"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d020",
+      "kind": "positive",
+      "rank": 5,
+      "top1_score": -10491
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 492,
+              "rerank": -8481,
+              "symbol": "aions_core/tools/bench_runner.py:post_chat"
+            },
+            {
+              "embed": 481,
+              "rerank": -8626,
+              "symbol": "aions_core/tools/bench_runner.py:is_refusal"
+            },
+            {
+              "embed": 482,
+              "rerank": -8649,
+              "symbol": "aions_core/tools/bench_runner.py:main"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d021",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -8481
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 494,
+              "rerank": -6160,
+              "symbol": "scripts/test_llm_adapter.py:_uses_context"
+            },
+            {
+              "embed": 496,
+              "rerank": -6993,
+              "symbol": "scripts/test_llm_adapter.py:main"
+            },
+            {
+              "embed": 522,
+              "rerank": -8404,
+              "symbol": "control_plane/cbms_gate.py:enrich_prompt_context"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d022",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -6160
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 524,
+              "rerank": -7405,
+              "symbol": "aions_core/aions_agent_layer.py:SafeExecutor/_read_file"
+            },
+            {
+              "embed": 525,
+              "rerank": -7418,
+              "symbol": "aions_core/server/cbms_outline.py:toks"
+            },
+            {
+              "embed": 522,
+              "rerank": -7539,
+              "symbol": "aions_core/aions_agent_layer.py:SafeExecutor/_write_file"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d023",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -7405
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 514,
+              "rerank": -5669,
+              "symbol": "aions_core/agi_neural_backprop.py:KnowledgeEmbedder/forward"
+            },
+            {
+              "embed": 523,
+              "rerank": -5769,
+              "symbol": "aions_core/agi_neural_backprop.py:KnowledgeEmbedder"
+            },
+            {
+              "embed": 505,
+              "rerank": -6015,
+              "symbol": "aions_core/agi_neural_backprop.py:KnowledgeEmbedder/_tokenize"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d024",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -5669
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 453,
+              "rerank": -8941,
+              "symbol": "aions_core/tools/test_api.py:test_api"
+            },
+            {
+              "embed": 425,
+              "rerank": -9134,
+              "symbol": "control_plane/skills/schema.py:AObject"
+            },
+            {
+              "embed": 423,
+              "rerank": -9152,
+              "symbol": "control_plane/skills/schema.py:AObject/blob"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d025",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -8941
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 504,
+              "rerank": -3343,
+              "symbol": "aions_core/server/ts_symbols.py:SymbolIndex/_walk"
+            },
+            {
+              "embed": 500,
+              "rerank": -4065,
+              "symbol": "aions_core/server/ts_symbols.py:main"
+            },
+            {
+              "embed": 501,
+              "rerank": -4280,
+              "symbol": "aions_core/server/ts_symbols.py:Symbol/__init__"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d026",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -3343
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 441,
+              "rerank": -10698,
+              "symbol": "aions_core/tools/harvest_memory.py:harvest_memory"
+            },
+            {
+              "embed": 325,
+              "rerank": -10830,
+              "symbol": "aions_core/ingest_cbms_data.py:ingest_chunks"
+            },
+            {
+              "embed": 331,
+              "rerank": -11055,
+              "symbol": "aions_core/server/refgraph.py:tokens"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d027",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -10698
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 526,
+              "rerank": -8761,
+              "symbol": "scripts/calendar_e2e_smoke.py:_section"
+            },
+            {
+              "embed": 530,
+              "rerank": -8820,
+              "symbol": "scripts/calendar_e2e_smoke.py:main"
+            },
+            {
+              "embed": 412,
+              "rerank": -10282,
+              "symbol": "scripts/proof_provenance.py:post"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d028",
+      "kind": "positive",
+      "rank": 2,
+      "top1_score": -8761
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 518,
+              "rerank": 786,
+              "symbol": "scripts/vault/_core.py:verify_operator_marker"
+            },
+            {
+              "embed": 484,
+              "rerank": 744,
+              "symbol": "scripts/vault/_core.py:open_vault_entry"
+            },
+            {
+              "embed": 471,
+              "rerank": 640,
+              "symbol": "scripts/vault/_core.py:blob_path"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": true,
+      "hit_at_25": true,
+      "id": "d029",
+      "kind": "positive",
+      "rank": 1,
+      "top1_score": 786
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 540,
+              "rerank": -6301,
+              "symbol": "scripts/proof_provenance.py:main"
+            },
+            {
+              "embed": 567,
+              "rerank": -7293,
+              "symbol": "control_plane/skills/registry.py:SkillRegistry/handler"
+            },
+            {
+              "embed": 541,
+              "rerank": -7417,
+              "symbol": "control_plane/skills/forge_linux_verify.py:_load_handler_run"
+            }
+          ]
+        }
+      ],
+      "hit_at_10": false,
+      "hit_at_25": false,
+      "id": "d030",
+      "kind": "positive",
+      "rank": 0,
+      "top1_score": -6301
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 440,
+              "rerank": -8569,
+              "symbol": "control_plane/skills/forge_linux_verify.py:_check_schema"
+            },
+            {
+              "embed": 470,
+              "rerank": -9362,
+              "symbol": "scripts/ingest_treasures_tier2.py:_assert_chroma_version"
+            },
+            {
+              "embed": 493,
+              "rerank": -9706,
+              "symbol": "aions_core/tools/check_schema.py:check_schema"
+            }
+          ]
+        }
+      ],
+      "id": "d031",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": -8569
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 548,
+              "rerank": -9630,
+              "symbol": "aions_core/tools/bench_runner.py:is_refusal"
+            },
+            {
+              "embed": 545,
+              "rerank": -9635,
+              "symbol": "aions_core/tools/bench_runner.py:main"
+            },
+            {
+              "embed": 559,
+              "rerank": -9701,
+              "symbol": "aions_core/tools/bench_runner.py:post_chat"
+            }
+          ]
+        }
+      ],
+      "id": "d032",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": -9630
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 567,
+              "rerank": -10031,
+              "symbol": "aions_core/aions_monitoring_dashboard.py:main_monitoring"
+            },
+            {
+              "embed": 530,
+              "rerank": -10057,
+              "symbol": "aions_core/aions_monitoring_dashboard.py:AIONSMonitor"
+            },
+            {
+              "embed": 518,
+              "rerank": -10140,
+              "symbol": "aions_core/aions_monitoring_dashboard.py:TestResult"
+            }
+          ]
+        }
+      ],
+      "id": "d033",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": -10031
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 607,
+              "rerank": -4932,
+              "symbol": "aions_core/test_aions_capabilities.py:send_message"
+            },
+            {
+              "embed": 486,
+              "rerank": -7257,
+              "symbol": "control_plane/operator/loop.py:_request_stop"
+            },
+            {
+              "embed": 480,
+              "rerank": -7472,
+              "symbol": "control_plane/operator/loop.py:main"
+            }
+          ]
+        }
+      ],
+      "id": "d034",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": -4932
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 453,
+              "rerank": -9970,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py:mouth_backend"
+            },
+            {
+              "embed": 434,
+              "rerank": -10108,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py:_extract_json"
+            },
+            {
+              "embed": 461,
+              "rerank": -10185,
+              "symbol": "mcpServers/VS_CODE_MCP_CODEX/src/llm_mouth.py:speak"
+            }
+          ]
+        }
+      ],
+      "id": "d035",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": -9970
+    },
+    {
+      "expansion": [
+        {
+          "note": "czolowka przestawiona ocena przesiewacza; skala 0..1000 promili, granica 500",
+          "rule": "cross_encoder_rerank",
+          "top": [
+            {
+              "embed": 406,
+              "rerank": -8987,
+              "symbol": "control_plane/operator/loop.py:_check_restart_cooldown"
+            },
+            {
+              "embed": 393,
+              "rerank": -10204,
+              "symbol": "control_plane/operator/mouth.py:_short_incident_desc"
+            },
+            {
+              "embed": 385,
+              "rerank": -10355,
+              "symbol": "control_plane/operator/mouth.py:_ensure_env_defaults"
+            }
+          ]
+        }
+      ],
+      "id": "d036",
+      "kind": "negative",
+      "returned": 25,
+      "top1_score": -8987
+    }
+  ],
+  "question_set": {
+    "content_hash": "blake2b256:278f2dc2b92fd4573bdbd3ae37bbc690d5a59ab0fc0d78af5ade6ad97dded4da",
+    "file": "dev_questions.json",
+    "name": "dev"
+  },
+  "result_hash": "blake2b256:e77c3a63468d17d5d7559894aeb425482a896436600bd1c3416f85e008a81882",
+  "schema": "acae.m4.v1",
+  "scope": {
+    "files": 169,
+    "symbols": 1598
+  },
+  "variant": "rerank"
+}
