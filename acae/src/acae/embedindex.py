@@ -42,23 +42,27 @@ class EmbedIndex:
     `symbol_text_with_description` z pustym opisem zwraca doslownie `symbol_text`.
     """
 
-    def __init__(self, embedder, entries, descriptions: Mapping[str, str] | None = None):
+    def __init__(self, embedder, entries, descriptions: Mapping[str, str] | None = None,
+                 vectors=None):
         import numpy as np
 
         opisy = descriptions or {}
         self.embedder = embedder
         self.items: list[tuple[str, Mapping, object]] = []
         self.texts: list[str] = []
-        wektory = []
         for entry in entries:
             path = str(entry["path"])
             for row in entry["symbols"]:  # type: ignore[index]
-                tekst = symbol_text_with_description(path, row, opisy.get(path, ""))
                 self.items.append((path, row, entry.get("lang")))
-                self.texts.append(tekst)
-                wektory.append(embedder.vector(tekst))
-        self.M = (np.vstack(wektory) if wektory
-                  else np.zeros((0, embedder.dim), dtype=np.int64))
+                self.texts.append(symbol_text_with_description(path, row, opisy.get(path, "")))
+
+        # Liczenie 1598 wektorow zajmuje ~3,2 s i jest identyczne, dopoki nie zmieni sie
+        # ani tresc plikow, ani opisy, ani model. `vectors` pozwala podac je z cache.
+        if vectors is not None:
+            self.M = vectors
+        else:
+            w = [embedder.vector(t) for t in self.texts]
+            self.M = np.vstack(w) if w else np.zeros((0, embedder.dim), dtype=np.int64)
         # Kwadraty norm, NIE normy. Pierwiastek raz, na koncu.
         self.norms2 = [int(np.dot(v, v)) for v in self.M]
 
