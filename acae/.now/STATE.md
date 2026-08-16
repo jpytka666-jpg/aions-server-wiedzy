@@ -3359,3 +3359,57 @@ z pazdziernika. Smieci. Usuniete.
 **Gdybym usunal te katalogi bez zagladania, zniszczylbym jedyne kopie dwoch modulow.**
 Regula na przyszlosc: przed usunieciem „duplikatow" sprawdz Everything, czy kazdy plik
 ma naprawde inna kopie.
+
+## 2026-08-16T14:10 — M17 ZMIERZONY. PRZYJETY. Predykcja trafiona.
+
+```
+WARUNEK KONIECZNY  PASS osiagalny dla choc jednego wejscia
+   odpowiedz sensowna + istniejacy blok -> PASS   (nie_echo: True, powod: 'ok')
+   kontrola: echo                       -> RETRY  (R2_opakowanie_syntezy)
+   kontrola: zmyslone zrodlo            -> RETRY  (0 z 1 blokow istnieje)
+                                                        -> SPELNIONY
+
+WARUNEK DRUGI      zero PASS na 30 pytaniach z M16
+   RETRY: 30   PASS: 0   PASS tam, gdzie bramka mowi echo: 0
+                                                        -> SPELNIONY
+
+WERDYKT: PRZYJETY
+```
+
+**Pierwszy przyjety mechanizm po 24 odrzuconych.** Nie dlatego, ze byl lepszy pomysl,
+tylko dlatego, ze nie byl NOWYM mechanizmem: podlaczyl istniejaca, juz zmierzona bramke
+tam, gdzie stalo liczenie symboli z pustego slownika. Nowego kodu oceniajacego zero.
+
+PocketQC odroznia teraz trzy rzeczy, ktorych wczesniej nie odrozniał wcale:
+odpowiedz sensowna (PASS), echo (RETRY z nazwa reguly), zrodlo zmyslone (RETRY z 0/1).
+
+### Zadanie 4: studium wszystkich lokacji CBMS
+
+`es.exe cbms` -> 8601 trafien, z tego 1437 to pliki (reszta katalogi).
+**Lacznie 23,2 GB.** Analiza lokalna, zero kosztu.
+
+```
+E:\server\ciekawe                                7017 poz.     47 MB   <- stare AIONS_COMPLETE
+E:\AJAJAJ\AI DEVELOPMENT                          116 poz.  10601 MB   <- archiwa .tar.gz
+E:\AJAJAJ\CBMS_EXTRACT                            113 poz.   9429 MB   <- te same, .tar
+E:\szul\Documents                                  44 poz.   1398 MB
+D:\NEEDS ATENTION\MAPA_LASU_SOLO_CBMS              55 poz.    170 MB
+E:\server wiedzy\aions_core                        32 poz.      0,5 MB <- ZYWY SYSTEM
+```
+
+**Zywy system to 0,5 MB z 23 200 MB.** Reszta to archiwa z wrzesnia 2025.
+
+**Duplikaty: 200 grup, 4,82 GB do odzyskania** (kopie poza jedna). Najwieksze pary
+to te same archiwa lezace rownolegle w `IMPORT FROM_C` i `IMPORT FROM_E`.
+
+Sprawdzone, ze to naprawde te same pliki, a nie zbieg rozmiarow — probka
+poczatek+srodek+koniec (12 MB) z najwiekszej pary:
+```
+kopia A: 2113448524  c88cf0c9cbde84045f607755f344031f
+kopia B: 2113448524  c88cf0c9cbde84045f607755f344031f   IDENTYCZNE
+```
+Liczba 4,82 GB jest ZANIZONA: nie liczy par `.tar` i `.tar.gz` tego samego zrzutu,
+ktore roznia sie rozmiarem, a niosa te sama tresc. Z nimi bylo by ~10 GB.
+
+NIE USUWAM tych archiwow — to nie byla tresc polecenia, a kasowanie gigabajtow
+cudzych kopii zapasowych wymaga osobnej zgody.

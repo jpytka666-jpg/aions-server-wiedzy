@@ -107,10 +107,17 @@ def qc_crla_result(result: Dict[str, Any], memory_dir: str | Path) -> Dict[str, 
             or "")
     cbms_count = _codebook_symbols_for_text(text, memory_dir) if text else 0
 
-    if logic_ok and cbms_count > 0:
-        verdict = "PASS"
-    elif not logic_ok and cbms_count == 0:
+    # --- WERDYKT (przebudowany 2026-08-16, prerejestracja M17) -------------------
+    # Trzy warunki zamiast liczenia symboli. Kazdy sprawdzalny, kazdy juz istnial
+    # w systemie — nowego mechanizmu tu nie ma, jest tylko podlaczenie tego, co bylo.
+    nie_echo, powod_bramki = _bramka_zapisu(text) if text else (False, "R6_za_krotkie")
+    istniejace, wskazane = _ugruntowanie(w.get("chunk_ids"), memory_dir)
+    ugruntowana = istniejace > 0
+
+    if not logic_ok:
         verdict = "FAIL"
+    elif nie_echo and ugruntowana:
+        verdict = "PASS"
     else:
         verdict = "RETRY"
 
@@ -120,6 +127,12 @@ def qc_crla_result(result: Dict[str, Any], memory_dir: str | Path) -> Dict[str, 
         "refused": refused,
         "score": score,
         "f2_determinism": f_det,
+        "nie_echo": nie_echo,
+        "powod_bramki": powod_bramki,
+        "blokow_istniejacych": istniejace,
+        "blokow_wskazanych": wskazane,
+        # DIAGNOSTYKA, NIE WARUNEK. Zostaje, zeby bylo widac stan lancucha
+        # tlumacz -> ksiazka kodowa, ale nie decyduje juz o niczym.
         "cbms_symbols": cbms_count,
     }
     _append_log("pocket_qc.jsonl", out)
