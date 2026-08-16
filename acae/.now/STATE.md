@@ -2420,6 +2420,116 @@ ze mechanizm ma duzo miejsca.
 - **Kryterium jako calosc NIE zostanie spelnione**, ale `neg/poz` spadnie ponizej 97,7%,
   czyli warunek wartosci dodanej BEDZIE spelniony.
 
+## 2026-08-16T05:42 — M15b WYCOFANY PRZED POMIAREM (warunek uczciwosci zadzialal)
+
+Prerejestracja mowila: prog odmowy to wlasna granica decyzyjna modelu (logit 0 =
+sigmoid 0,5), a **jesli karta modelu tego nie potwierdzi, wariant zostaje WYCOFANY,
+a nie przestrojony**.
+
+Sprawdzone po kolei:
+1. Karta modelu **milczy** o interpretacji wyniku — pokazuje tylko przyklad `+8,6` / `-4,3`.
+2. Kod `sentence_transformers` 3.0.1: `nn.Sigmoid() if num_labels == 1 else nn.Identity()`
+   — wygladalo na potwierdzenie.
+3. **Ale ten model NADPISUJE domyslne zachowanie**:
+   `config.sbert_ce_default_activation_function = torch.nn.modules.linear.Identity`.
+   Faktycznie uzyta aktywacja: `Identity`. Wyjscie to **surowy logit**.
+4. Proba na jawnych parach: pasujaca **-0,95**, niepasujaca **-11,45**. Nawet trafienie
+   jest UJEMNE, wiec zero nie jest zadna granica.
+
+**M15b wycofany.** Prog dobrany po zobaczeniu tego rozkladu bylby dokladnie tym,
+czego ta metodologia zabrania. M15a (`rerank`, samo przestawianie) nie potrzebuje
+granicy bezwzglednej i zostaje.
+
+## 2026-08-16T05:42 — M15a: ODRZUCONY. Przesiewacz przestawia duzo i bezuzytecznie.
+
+Pomiar: `_baseline/m4_rerank_dev_505c48e.json`. Cache: `_desc/rerank_cache.json`,
+900 par, `ms-marco-MiniLM-L-6-v2`, zamrozony i zacommitowany.
+
+| | embed_desc | M15a rerank |
+|---|---|---|
+| recall@10 | 30,0% | **26,6%** |
+| recall@25 | 36,6% | 36,6% |
+| MRR | 0,243 | 0,229 |
+| neg/poz | 97,7% | **NIEMIERZALNE** |
+
+Dwudziesty trzeci pomiar, dwudzieste trzecie odrzucenie.
+
+### WARUNEK DIAGNOSTYCZNY — rozstrzyga jednoznacznie
+
+| pomiar | wartosc |
+|---|---|
+| `rerank_moved` | **24 z 36** — przesiewacz zmienil symbol na pierwszym miejscu |
+| `rerank_promoted` | **0** — ani razu nie wciagnal wlasciwego symbolu z pasma 11-25 do top-10 |
+| `rerank_demoted` | 1 — raz wypchnal wlasciwy symbol z top-10 |
+
+**Przestawia agresywnie i bezuzytecznie.** Rozchodzi sie z embeddingiem w dwoch trzecich
+pytan, czyli naprawde ocenia po swojemu — i ta ocena jest nieskorelowana z poprawnoscia.
+Zero awansow przy 24 przestawieniach to nie jest slaby wynik, to jest **brak sygnalu**.
+
+### TA SAMA WADA MOJEJ PREREJESTRACJI PO RAZ DRUGI
+
+`neg/poz` liczy `srednia_neg * 1000 // srednia_poz`. Przy wynikach UJEMNYCH ta arytmetyka
+daje bezsens (-868700%). **Dokladnie to samo zapisalem przy M7** o wariancie `embed_borda`:
+*„zadeklarowalem jedno kryterium dla trzech wariantow, nie sprawdzajac, czy skala wyniku
+kazdego z nich to kryterium udzwignie"*.
+
+Zapisalem te lekcje i **popelnilem ten sam blad ponownie**. Regula na przyszlosc,
+tym razem operacyjna: **przed kazda prerejestracja sprawdzic ZAKRES wyniku wariantu
+i jawnie napisac, czy `neg/poz` jest dla niego definiowalne.**
+
+### PRAWIE ZARAPORTOWALEM SUKCES, KTOREGO NIE MA
+
+Surowe srednie wygladaly obiecujaco: `top1` pozytywow **-5623**, negatywow **-8687**.
+Czyli model ocenia pytania spoza zakresu o ~3 logity nizej — wygladalo to na pierwszy
+prawdziwy sygnal „nie wiem".
+
+Sprawdzenie ROZKLADU, a nie srednich, wywrocilo to:
+
+| | mediana | zakres |
+|---|---|---|
+| pozytywy | -6160 | -10698 .. **+1779** |
+| negatywy | -8987 | -10031 .. **-4932** |
+
+**20 z 30 pozytywow lezy PONIZEJ najwyzszego negatywu.** Prog postawiony gdziekolwiek
+odcialby dwie trzecie prawdziwych pytan. Rozklady sie nakladaja, sygnalu nie ma —
+ten sam wniosek co w M14 i z tego samego powodu.
+
+Odnotowuje to jako **przestroge metodologiczna**: srednie roznily sie o 3 logity
+i gdybym poprzestal na nich, ogloszilbym przelom. Rozklad mowi co innego.
+
+### HIPOTEZA PO FAKCIE (nieweryfikowana, wymagalaby wlasnej prerejestracji)
+
+Mediana oceny to **-9,9 logita** — model uwaza, ze praktycznie NIC nie jest odpowiedzia.
+To jest zachowanie modelu daleko poza rozkladem, na ktorym go trenowano: `ms-marco`
+uczono na akapitach prozy, a my podajemy mu rozbite identyfikatory plus opis.
+
+Prerejestracja **nazwala to ryzyko i swiadomie je przyjela**, zeby roznica byla
+przypisywalna do SEDZIEGO, a nie do materialu. Cena zaplacona, wynik jednoznaczny.
+
+Naturalny nastepny krok: podac przesiewaczowi **sam opis pliku** — czysta proze,
+bez identyfikatorow. To jest zmiana MATERIALU, wiec wymaga wlasnej prerejestracji
+i jest osobnym eksperymentem, nie poprawka do tego.
+
+### BILANS PRZEWIDYWAN
+
+Trafione: `rerank_moved` wysokie (24 z 36).
+Chybione: `recall@10` wzrosnie — **spadlo** z 30,0% na 26,6%.
+Nieaktualne: dwa przewidywania o odmowie (wariant wycofany przed pomiarem).
+
+### Regresja i gotcha
+
+`pytest` 215 zielonych, `baseline` 26,6/36,6/0,172/85,2 i `embed_desc` 30,0/36,6/0,243/97,7
+odtworzone co do cyfry.
+
+**Gotcha, ktora kosztowala by nas poprawke w AIONS:** hook `checkpoint.py` zamiotl
+do HEAD serwery w wersji CELOWO cofnietej na czas pomiaru (commit 3f7f54e
+„checkpoint: before edit of rerank.py"). Zweryfikowane: HEAD mial 0 wystapien
+`query=user_message`, dysk 1. Naprawione commitem `a3b7568`.
+
+To ten sam mechanizm co gotcha z M0, w nowym wariancie: **hook nie rozroznia
+„cofniete tymczasowo" od „tak ma zostac"**. Regula na przyszlosc: po kazdym cyklu
+cofnij-zmierz-przywroc sprawdzic `git show HEAD:<plik>`, a nie tylko stan dysku.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
