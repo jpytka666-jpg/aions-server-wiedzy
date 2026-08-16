@@ -105,13 +105,42 @@ def _cmd_ask(args: argparse.Namespace) -> int:
     if len(outline_cache) != przed:
         parsecache.save(cache_path, outline_cache)
 
+    # Ranking po ZNACZENIU, gdy sa oba artefakty: tablica wektorow i opisy plikow.
+    # Zmierzone na 306 pytaniach zadanych po ludzku: 62,0% wobec 25,1% dla samego
+    # szukania po slowach. Bez tego narzedzie oddawaloby dwuipolkrotnie gorszy wynik
+    # niz ten, ktory mierzymy.
+    #
+    # Gdy ktoregokolwiek artefaktu brak — cichy powrot do rankera leksykalnego.
+    # Narzedzie ma dzialac gorzej, a nie nie dzialac wcale.
+    ranked = None
+    uwagi: list[str] = []
+    if args.rank == "meaning":
+        try:
+            from .describe import load_descriptions
+            from .embed import StaticEmbedder
+            from .embedindex import EmbedIndex
+
+            opisy, prov = load_descriptions(root / "acae" / "_desc" / "descriptions.json",
+                                            strict=False)
+            brakujace = {str(e["path"]) for e in entries} - set(opisy)
+            if brakujace:
+                uwagi.append(f"{len(brakujace)} plikow bez opisu (pack sie zmienil?)")
+            index = EmbedIndex(StaticEmbedder(root / "acae" / "_model"), entries, opisy)
+            ranked = index.ranked(args.query, max(args.outline_limit, args.drill))
+        except Exception as e:  # brak modelu, brak opisow, zle wersje — wszystko jedno
+            uwagi.append(f"ranking po znaczeniu niedostepny ({type(e).__name__}), "
+                         f"szukam samymi slowami")
+
     text, meta = build_slice(
         entries,
         args.query,
         reader,
         outline_limit=args.outline_limit,
         drill_limit=args.drill,
+        ranked=ranked,
     )
+    for u in uwagi:
+        print(f"uwaga     {u}")
 
     if args.out:
         location = FsStore(args.out).write("slice.txt", text)
