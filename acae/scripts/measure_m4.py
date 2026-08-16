@@ -788,10 +788,14 @@ def main() -> int:
     WARIANTY_Z_OPISAMI = (
         "desc", "prf_desc", "embed_desc", "embed_desc_tie", "embed_desc_borda",
         "gate_desc", "graph_desc", "verify1", "verify2", "domain3", "domain1",
+        "intent", "intent_domain",
     )
-    # Warianty stawiajace ranking na embeddingu Z OPISAMI (M9b, M10 i M11).
+    # Warianty stawiajace ranking na embeddingu Z OPISAMI (M9b, M10, M11 i M13).
     EMBED_Z_OPISAMI = ("embed_desc", "embed_desc_tie", "embed_desc_borda",
-                       "verify1", "verify2", "domain3", "domain1")
+                       "verify1", "verify2", "domain3", "domain1",
+                       "intent", "intent_domain")
+    # Warianty siegajace po artefakt dziedzin (przypisania i/lub routing).
+    Z_DZIEDZINAMI = ("domain3", "domain1", "intent", "intent_domain")
     if args.variant in WARIANTY_Z_OPISAMI:
         # pack_hash liczony TERAZ i porownywany z tym, dla ktorego powstaly opisy.
         # Rozjazd przerywa pomiar: opisy nieaktualnego kodu daja liczby, ktore wygladaja
