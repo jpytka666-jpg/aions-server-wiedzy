@@ -1,0 +1,215 @@
+{
+  "queries": [
+    {
+      "id": "m01",
+      "kind": "positive",
+      "question": "gdzie jest mapa lasu",
+      "answer_files": [
+        "scripts/full_system_scan.py"
+      ],
+      "answer_symbols": [
+        "_now",
+        "_write_status",
+        "get_ready_drives",
+        "get_default_excluded_drives",
+        "resolve_drive_order",
+        "export_drive_inventory",
+        "run_turbo_drive",
+        "detect_project_roots",
+        "build_master_map",
+        "parse_args",
+        "main"
+      ]
+    },
+    {
+      "id": "m02",
+      "kind": "positive",
+      "question": "co jest kurwa zawiecha",
+      "answer_files": [
+        "control_plane/operator/loop.py"
+      ],
+      "answer_symbols": [
+        "_now_iso",
+        "_pct_to_float",
+        "_issue_key",
+        "_load_json_dict",
+        "_save_json_dict",
+        "_load_baseline",
+        "_save_baseline",
+        "_log_spike_baseline",
+        "_record_baseline",
+        "_load_disk_overrides",
+        "_load_restarts",
+        "_save_restarts",
+        "_prune_restart_window",
+        "_check_restart_cooldown",
+        "_register_restart",
+        "observe",
+        "diagnose",
+        "act",
+        "verify",
+        "_snapshot_digest",
+        "learn",
+        "run_cycle",
+        "_request_stop",
+        "main"
+      ]
+    },
+    {
+      "id": "m03",
+      "kind": "positive",
+      "question": "czym sprawdze co mam na dyskach",
+      "answer_files": [
+        "scripts/catalog_e_treasures.py"
+      ],
+      "answer_symbols": [
+        "_now_iso",
+        "_dir_stats",
+        "_manifest_stats",
+        "build_catalog",
+        "main"
+      ]
+    },
+    {
+      "id": "m04",
+      "kind": "positive",
+      "question": "sprawdz czy aions dziala",
+      "answer_files": [
+        "aions_core/tools/check_status.py"
+      ],
+      "answer_symbols": [
+        "check_status"
+      ]
+    },
+    {
+      "id": "m05",
+      "kind": "positive",
+      "question": "czy jestes podlonczony",
+      "answer_files": [
+        "scripts/smoke_http_mcp.py"
+      ],
+      "answer_symbols": [
+        "post",
+        "parse_sse",
+        "main"
+      ]
+    },
+    {
+      "id": "m06",
+      "kind": "positive",
+      "question": "czemu mi nie pamieta rozmowy",
+      "answer_files": [
+        "aions_core/server/conversation_memory.py"
+      ],
+      "answer_symbols": [
+        "_conv_dir",
+        "log_exchange",
+        "summarize_if_needed",
+        "update_user_profile",
+        "get_best_conversation_context",
+        "rollup_summaries"
+      ]
+    },
+    {
+      "id": "m07",
+      "kind": "positive",
+      "question": "gdzie sie kurwa zapisuja te chunki",
+      "answer_files": [
+        "aions_core/server/cbms_memory.py"
+      ],
+      "answer_symbols": [
+        "CBMSMemory",
+        "CBMSMemory/__init__",
+        "CBMSMemory/_load_manifest",
+        "CBMSMemory/_save_manifest",
+        "CBMSMemory/learning_gate",
+        "CBMSMemory/_log_gate_rejection",
+        "CBMSMemory/create_knowledge_chunk",
+        "CBMSMemory/retrieve_chunk",
+        "CBMSMemory/find_chunks_by_concept",
+        "CBMSMemory/expand_with_references",
+        "CBMSMemory/cbms_think",
+        "CBMSMemory/_extract_concepts",
+        "CBMSMemory/_synthesize_chunks",
+        "CBMSMemory/_should_create_new_chunk",
+        "CBMSMemory/_primary_concept",
+        "CBMSMemory/_log_thinking_session",
+        "CBMSMemory/_build_korean_chunk_index",
+        "CBMSMemory/get_memory_stats",
+        "CBMSMemory/cbms_think_like_claude",
+        "CBMSMemory/_synthesize_chunks_with_claude_reasoning",
+        "demo_cbms_memory"
+      ]
+    },
+    {
+      "id": "m08",
+      "kind": "positive",
+      "question": "co robi to esperanto",
+      "answer_files": [
+        "aions_core/server/esperanto_bridge.py"
+      ],
+      "answer_symbols": [
+        "_normalize_text",
+        "_pl_to_eo_basic",
+        "to_esperanto",
+        "from_esperanto_to_pl"
+      ]
+    },
+    {
+      "id": "m09",
+      "kind": "positive",
+      "question": "czemu mi mowi ze nie wie",
+      "answer_files": [
+        "aions_core/server/crla_core.py"
+      ],
+      "answer_symbols": [
+        "Candidate",
+        "CandidateResult",
+        "_normalize_latency_ms",
+        "_compact_trace_score",
+        "_hygiene_score",
+        "generate_candidates",
+        "simulate_candidate",
+        "score_candidate",
+        "_pairwise_tournament",
+        "run_crla"
+      ]
+    },
+    {
+      "id": "m10",
+      "kind": "positive",
+      "question": "gdzie sie sprawdza czy odpowiedz jest dobra",
+      "answer_files": [
+        "aions_core/server/pocket_qc.py"
+      ],
+      "answer_symbols": [
+        "_logs_dir",
+        "_append_log",
+        "_codebook_symbols_for_text",
+        "qc_text",
+        "qc_crla_result"
+      ]
+    },
+    {
+      "id": "m91",
+      "kind": "negative",
+      "question": "gdzie jest ten moj sklep internetowy",
+      "answer_files": [],
+      "answer_symbols": []
+    },
+    {
+      "id": "m92",
+      "kind": "negative",
+      "question": "jak sie loguje przez fejsbuka",
+      "answer_files": [],
+      "answer_symbols": []
+    },
+    {
+      "id": "m93",
+      "kind": "negative",
+      "question": "gdzie sa faktury z ksiegowosci",
+      "answer_files": [],
+      "answer_symbols": []
+    }
+  ]
+}
