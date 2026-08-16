@@ -117,8 +117,14 @@ _CBMS_LOG_PATH = _REPO_ROOT / "runtime" / "state" / "cbms_planner_log.jsonl"
 # to halucynowane dopiski w stylu <|im_end|>/kolejne fikcyjne tury -- Phi-4
 # nie jest modelem ChatML). Zweryfikowane na binarce: --jinja daje czysta,
 # poprawna odpowiedz; chatml -- smieci po pierwszym tokenie.
-_DEFAULT_GGUF = r"E:\LOCAL LLM MODELS\Phi-4-mini\Phi-4-mini-instruct-Q4_K_M.gguf"
-_DEFAULT_LLAMA_CLI = r"E:\LOCAL LLM MODELS\llama-runtime\llama-cli.exe"
+# 2026-08-16: adresy przeniesione do `config/lokalizacje.json` — powod opisany
+# w operator/mouth.py. Te same dwie sciezki byly wpisane na sztywno w obu plikach.
+from aions_core.lokalizacje import gdzie as _gdzie
+
+_sciezka = _gdzie("model_phi4_mini")
+_DEFAULT_GGUF = str(_sciezka) if _sciezka else ""
+_sciezka = _gdzie("llama_cli")
+_DEFAULT_LLAMA_CLI = str(_sciezka) if _sciezka else ""
 _DEFAULT_CHAT_TEMPLATE = "jinja"
 
 # v1.1: bylo na sztywno "90" (zadanie v1.0: timeout <= 90s). Live testy
