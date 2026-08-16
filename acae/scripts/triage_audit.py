@@ -36,9 +36,15 @@ POMIJANE = {".git", "__pycache__", "venv", ".venv", "node_modules", "_backups",
 
 # Czasowniki zapisu — jesli w bloku `try` stoi cokolwiek z tej listy, polkniecie
 # wyjatku znaczy "dane mogly nie dojsc i nikt sie nie dowie".
+#
+# CELOWO NIE MA TU `append`, `replace` ani `dumps`. Pierwsza proba je zawierala
+# i dala 46 zgloszen, z ktorych wiekszosc to `list.append` i `str.replace` —
+# operacje w pamieci, ktore z zapisem nie maja nic wspolnego. `json.dumps` tez nie
+# zapisuje; gdy naprawde cos zapisuje, obok stoi `write` i to `write` jest sygnalem.
+# Filtr, ktory krzyczy na wszystko, jest wart tyle co brak filtra.
 ZAPIS = re.compile(
-    r"(save|write|store|commit|insert|persist|upsert|publish|append|dump|flush|"
-    r"log_|_log|record|register|emit|index|send|post|put|mkdir|makedirs|rename|replace)",
+    r"(save|write|store|commit|insert|persist|upsert|publish|flush|"
+    r"log_|_log|record|register|emit|send|post|mkdir|makedirs|rename|unlink_)",
     re.I)
 
 # Sprzatanie i zamykanie — polkniecie jest tu norma, bo blad przy zamykaniu i tak
