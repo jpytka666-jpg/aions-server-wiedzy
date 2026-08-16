@@ -480,6 +480,34 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             elif q["kind"] == "positive" and not (set(q["answer_files"]) & pliki):
                 # Warunek diagnostyczny (propozycja GPT): bramka wyciela wlasciwy plik.
                 diagnostyka["gate_cut"] += 1
+        elif variant == "rerank":
+            # M15: architektura ze STALKERa — tanio wszedzie, drogo dla garstki.
+            # Tani przebieg `embed_desc` po 1598 symbolach BEZ ZMIAN; przesiewacz
+            # oglada wylacznie czolowke i przestawia ja swoja ocena.
+            #
+            # Model NIE jest tu uruchamiany. Czytamy zamrozone oceny z cache, dzieki
+            # czemu pomiar odtwarza sie bit w bit takze bez modelu na dysku.
+            index = ctx["embed"]
+            sims = index.scores(q["question"])
+            numery, _ = _order(index, sims)
+            przed = _pack(index, numery, sims, depth)
+            ranked, receipts = rerank_top(przed, q["question"], ctx["rerank_cache"])
+
+            # WARUNEK DIAGNOSTYCZNY M15.
+            if przed and ranked and (
+                przed[0]["path"] != ranked[0]["path"]
+                or przed[0]["row"]["name_path"] != ranked[0]["row"]["name_path"]
+            ):
+                diagnostyka["rerank_moved"] += 1
+            if q["kind"] == "positive":
+                # Czy wlasciwy symbol AWANSOWAL z pasma 11-25 do top-10, czy SPADL.
+                przed_poz = next((i for i, it in enumerate(przed, 1) if is_hit(it, q)), 0)
+                po_poz = next((i for i, it in enumerate(ranked, 1) if is_hit(it, q)), 0)
+                if przed_poz and po_poz:
+                    if przed_poz > 10 >= po_poz:
+                        diagnostyka["rerank_promoted"] += 1
+                    elif po_poz > 10 >= przed_poz:
+                        diagnostyka["rerank_demoted"] += 1
         elif variant in ("intent", "intent_domain"):
             # M13: intencja pytania ogranicza RODZAJ rzeczy (regula czasownika z Zorka).
             # Ranking `embed_desc` BEZ ZMIAN — zmienia sie tylko to, kto jest dopuszczony.
