@@ -2678,6 +2678,81 @@ byl gdzie indziej. **Mierz skladniki, nie sumy.**
 Cache outline'ow zostaje — jest poprawny, ma dziesiec testow i oszczedza te 1,1 s.
 Ale prawdziwe 6 sekund przyszlo z jednej linijki.
 
+### Drugi obrot: szukanie sekretow tez do cache
+
+Po naprawie chodzenia po drzewie rozklad wygladal tak:
+
+```
+listowanie plikow  :  453 ms   (bylo 8245)
+szukanie sekretow  : 1244 ms   <- teraz najwieksze
+czytanie z dysku   :  131 ms
+wczytanie cache    :   24 ms
+```
+
+Marcin zapytal, czy nie podpiac Everything do listowania. Odpowiedz: **przed naprawa
+chodzenia bylby to swietny pomysl** (8245 ms), **po naprawie atakuje juz tylko 453 ms**.
+Do tego niesie realne ryzyko: Everything trzyma wlasny indeks i przy wylaczonej usludze
+albo nieswiezym indeksie dalby INNA liste plikow, czyli inny `pack_hash` — po cichu.
+Dla narzedzia, ktorego cala wartosc to powtarzalnosc, zly interes za 0,4 s.
+
+Zamiast tego do istniejacego cache trafil **wynik szukania sekretow**, kluczowany
+sama trescia (regula nie zalezy od sciezki, w odroznieniu od outline'u).
+Schemat cache podniesiony do `v2`, bo klucze dostaly prefiks rodzaju.
+
+### KONCOWY BILANS SZLIFOWANIA
+
+| | przed | po |
+|---|---|---|
+| spakowanie repo | 9581 ms | 3354 ms |
+| pytanie, zimny start | 9490 ms | **3377 ms** |
+| pytanie, kolejne | 9490 ms | **~1250 ms** |
+
+**7,6 raza szybciej** na ciepło. `pack_hash` `6442322d5d5a...` NIEZMIENIONY,
+169/1598/869/36492 co do liczby, `pytest` **225 zielonych**.
+
+## 2026-08-16T06:37 — SZEROKI TEST: 306 pytan. Potwierdza wynik ze zbioru Marcina.
+
+Zbior: `tests/wide_questions.json`, generator `scripts/build_wide_questions.py`.
+Po dwa pytania na kazdy ze **169 plikow**, pisane przez Haiku z instrukcja „pytaj tak,
+jakbys nie czytal opisu". Plus 12 pytan o rzeczy, ktorych w repo nie ma.
+
+| | baseline (leksykalny) | embed_desc |
+|---|---|---|
+| recall@10 | 25,1% | **62,0%** |
+| recall@25 | 39,2% | **76,7%** |
+| MRR | 0,136 | **0,451** |
+| neg/poz | 78,6% | **74,3%** |
+
+**Na 306 pytaniach, nie na dziesieciu.** Wynik ze zbioru Marcina (70% na 10 pytaniach)
+nie byl fartem malej probki — na trzydziestokrotnie wiekszym zbiorze wychodzi 62%.
+
+`MRR` 0,451 znaczy, ze wlasciwy plik jest typowo na **drugim miejscu**.
+`neg/poz` 74,3% jest **ponizej progu 85,2%** — na tym zbiorze kontrola negatywna
+przechodzi.
+
+### CZTERY RZECZY, KTORYCH TEN POMIAR NIE DOWODZI
+
+1. **Pytania powstaly Z OPISOW** i mimo instrukcji dziela z nimi czesc slownictwa.
+   Wynik jest **optymistycznie zawyzony** i nie wiadomo o ile.
+2. **Ten sam model** (Haiku) pisal opisy i pytania. Rodzinne podobienstwo slownictwa
+   jest realnym ryzykiem, ktorego stad nie da sie wykluczyc.
+3. **Trafienie na poziomie PLIKU**, nie symbolu — prog lagodniejszy niz w `dev`/`heldout`.
+4. **Klucz odpowiedzi automatyczny**: pytanie napisane dla pliku X ma odpowiedz X.
+   Nikt nie sprawdzil, czy inny plik nie odpowiada rownie dobrze.
+
+**Wynikow stad NIE WOLNO wstawiac do tabeli z `dev` i `heldout`.**
+
+### Ale porownanie WEWNATRZ zbioru jest czyste
+
+`baseline` 25,1% wobec `embed_desc` 62,0% — ten sam zbior, ten sam prog, ten sam klucz.
+**Opisy plus embedding daja dwuipolkrotna poprawe** na pytaniach zadanych po ludzku.
+To jest ta sama para, ktora na `dev` dawala 26,6% wobec 30,0%.
+
+Roznica miedzy tymi dwoma obrazami nie lezy w narzedziu, tylko w tym, **jak zadane sa
+pytania**: `dev` byl budowany celowo tak, zeby bylo trudno.
+
+Held-out (`blake2b256:e5d8e5b4...`) **NIETKNIETY**.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
