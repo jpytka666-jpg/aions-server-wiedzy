@@ -66,14 +66,31 @@ def typy_handlera(h: ast.ExceptHandler) -> set[str]:
     return out or {"?"}
 
 
+def rusza_sciezke(drzewo) -> bool:
+    """
+    Czy plik dokłada cokolwiek do `sys.path` w trakcie dzialania.
+
+    To rozstrzyga o wiarygodnosci calej sondy. `AIONS_ULTIMATE_UNIFIED.py` i
+    `cbms_gate.py` wstawiaja katalogi do sciezki tuz przed importami, czesto
+    ze zmiennych, ktorych statycznie nie da sie wyliczyc. Dla takich plikow
+    sonda NIE ORZEKA — mowi "nie wiem", zamiast zglaszac brak, ktorego nie ma.
+    """
+    for w in ast.walk(drzewo):
+        if isinstance(w, ast.Attribute) and w.attr == "path" and \
+                isinstance(w.value, ast.Name) and w.value.id == "sys":
+            return True
+    return False
+
+
 def opcjonalne_importy(root: pathlib.Path, katalogi):
-    """(plik, linia, nazwa_modulu, czy_wzgledny) dla kazdego importu w oslonie try/except."""
+    """(plik, linia, modul, czy_plik_rusza_sciezke) dla importow w oslonie try/except."""
     for p in pliki_py(root, katalogi):
         rel = p.relative_to(root).as_posix()
         try:
             drzewo = ast.parse(p.read_bytes(), filename=rel)
         except (SyntaxError, ValueError):
             continue
+        elastyczna = rusza_sciezke(drzewo)
         for w in ast.walk(drzewo):
             if not isinstance(w, ast.Try):
                 continue
