@@ -1445,6 +1445,15 @@ def _acae_build(force: bool = False) -> Dict[str, Any]:
             if wektory is None:
                 save_vectors(vec_path, klucz, index.M)
             ranker = "meaning"
+
+            # Sprawdzenie swiezosci PO POKRYCIU, nie po `pack_hash`. Policzenie
+            # aktualnego `pack_hash` wymaga zbudowania calego packa (~3,4 s) przy kazdym
+            # starcie, a najgrozniejszy rodzaj rozjazdu — plik doszedl albo zniknal —
+            # widac po samych sciezkach i kosztuje zero.
+            prov = dict(prov)
+            prov["files_without_description"] = sorted(
+                {str(e["path"]) for e in entries} - set(opisy)
+            )[:10]
         except Exception as e:
             prov = {"fallback_reason": f"{type(e).__name__}: {e}"}
 
