@@ -776,6 +776,9 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             sorted(diagnostyka["intent_symbols"])[len(diagnostyka["intent_symbols"]) // 2]
             if diagnostyka["intent_symbols"] else 0
         ),
+        "rerank_moved": diagnostyka["rerank_moved"],
+        "rerank_promoted": diagnostyka["rerank_promoted"],
+        "rerank_demoted": diagnostyka["rerank_demoted"],
         "per_query": per_query,
     }
 
