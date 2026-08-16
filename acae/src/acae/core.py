@@ -65,7 +65,11 @@ def _content_lines(entries: Sequence[Mapping[str, object]]) -> list[str]:
     return out
 
 
-def collect_entries(locator: Locator, reader: Reader) -> tuple[list[dict], list[dict]]:
+def collect_entries(
+    locator: Locator,
+    reader: Reader,
+    outline_cache: dict | None = None,
+) -> tuple[list[dict], list[dict]]:
     """
     Przefiltrowane wpisy plikow plus raport pominiec. Czysta funkcja nad portami.
 
