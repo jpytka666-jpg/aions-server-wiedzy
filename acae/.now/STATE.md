@@ -2094,6 +2094,94 @@ drogi sedzia (lokalny model) tylko dla garstki przelaczonej „online" — plus
 **hierarchiczne wyjatki w stylu EVE** jako deterministyczna regula rozstrzygania,
 gdy odpali sie kilka regul naraz.
 
+## 2026-08-16T04:41 — M13: ODRZUCONY. Ale `neg/poz` ruszylo sie PIERWSZY RAZ we wlasciwa strone.
+
+Pomiary: `_baseline/m4_intent_dev_530b8dd.json`, `m4_intent_domain_dev_530b8dd.json`.
+Zbior roboczy 30+/6-, held-out NIETKNIETY.
+
+| wariant | recall@10 | recall@25 | MRR | neg/poz | werdykt |
+|---|---|---|---|---|---|
+| `embed_desc` (punkt wyjscia) | 30,0% | 36,6% | 0,243 | 97,7% | — |
+| M11 `domain3` | 23,3% | 30,0% | 0,178 | 98,6% | — |
+| **M13a `intent`** | 30,0% | 36,6% | 0,217 | **92,6%** | ODRZUCONY |
+| **M13b `intent_domain`** | 20,0% | 26,6% | 0,144 | 99,7% | ODRZUCONY |
+
+Kryterium: `intent` spelnia `MRR` (0,217 >= 0,172), nie spelnia `recall@10` ani `neg/poz`.
+Dwudziesty i dwudziesty pierwszy pomiar.
+
+### WARUNEK WARTOSCI DODANEJ — SPELNIONY przez `intent`
+
+Zapisany przed pomiarem: `recall@10` > 30,0% ALBO `neg/poz` < 97,7%.
+**`neg/poz` 92,6% < 97,7%**, przy NIEZMIENIONYM `recall@10` (30,0%) i `recall@25` (36,6%).
+
+To jest **pierwszy raz, kiedy jakikolwiek mechanizm poprawil kontrole negatywna wobec
+`embed_desc`, nie placac za to trafnoscia.** Poprawka jest skromna — 92,6% to wciaz daleko
+od progu 85,2% — ale ta liczba nie drgnela we wlasciwa strone przez dwadziescia pomiarow.
+
+### DIAGNOSTYKA
+
+| | intent | intent_domain |
+|---|---|---|
+| `intent_none` (tablica milczala) | **22 z 36** | 22 z 36 |
+| `intent_cut` (wycieto wlasciwy plik) | **6 z 30** | **20 z 30** |
+| `intent_widened` (implicit take) | 0 | 1 |
+| `intent_symbols_median` | 1598 z 1598 | 181 z 1598 |
+
+**`intent_cut` = 6 wobec 18 w M11.** Ograniczenie po rodzaju jest trzykrotnie lagodniejsze
+niz kierowanie do dziedziny, i to jest zgodne z konstrukcja: rodzajow jest szesc,
+a `runs` obejmuje 77 ze 169 plikow.
+
+**Tablica milczy w 22 z 36 pytan.** Czyli mechanizm w ogole nie dotknal 61% zbioru,
+a i tak przesunal `neg/poz` o pieć punktow. Efekt na pytanie jest wiec wyrazniej wiekszy,
+niz sugeruje liczba zbiorcza.
+
+### WARUNEK KONIECZNY — zle dobrana statystyka, odnotowuje to jawnie
+
+Prerejestracja mowila: „jesli mediana zawezenia zostawia ponad polowe, mechanizm jest
+NIEURUCHOMIONY, a wynik NIEINTERPRETOWALNY". Mediana wyszla **1598 z 1598**, wiec wedlug
+LITERY tej reguly `intent` jest nieuruchomiony.
+
+Ale rozklad jest **dwumodalny**: w 22 pytaniach ograniczenia nie ma wcale, w 14 jest ostre.
+Mediana mierzy wtedy tylko to, ktorych przypadkow jest wiecej, a nie sile mechanizmu.
+Regula byla pisana pod inny tryb awarii — pod filtr, ktory ODPALA ZAWSZE i nie odsiewa
+(M6: 140 ze 169, M10: 1429 z 1598). Tu jest odwrotnie: odsiewa mocno, ale rzadko.
+
+**Nie uzywam tego jako furtki.** Werdykt i tak brzmi ODRZUCONY na dwoch warunkach z trzech,
+wiec nic nie zalezy od tej reguly. Odnotowuje wylacznie, ze **zle dobralem statystyke
+do tego mechanizmu**: dla filtra warunkowego wlasciwa miara to mediana LICZONA TYLKO
+WTEDY, GDY FILTR ODPALIL, plus osobno czestosc odpalen. Nastepna prerejestracja
+z filtrem warunkowym ma uzyc tej pary.
+
+### `intent_domain` — dwa zle zawezenia nie daja jednego dobrego
+
+`intent_cut` 20 z 30, czyli GORZEJ niz kazdy skladnik osobno (6 i 18). Przeciecie dwoch
+niedoskonalych filtrow kumuluje ich bledy: wystarczy, ze jeden z nich sie pomyli, a plik
+wypada. To jest wynik wart zapamietania przed skladaniem kolejnych warstw —
+**warstwy nie sumuja sie, one sie mnoza, i to w zla strone.**
+
+### BILANS PRZEWIDYWAN: 3 z 4 — najlepiej dotad
+
+| przewidywalem | wyszlo |
+|---|---|
+| `intent_cut` duzo nizszy niz 18 | **TAK** — 6 |
+| `intent_none` wysoki, ponad polowa | **TAK** — 22 z 36 |
+| `recall@10` wzrosnie nieznacznie | **NIE** — stanelo dokladnie na 30,0% |
+| kryterium jako calosc nie zostanie spelnione | **TAK** |
+
+### CO Z TEGO WYNIKA
+
+Regula czasownika **dziala w kierunku, w ktorym nic dotad nie dzialalo** — odsiewa pytania
+spoza zakresu, nie tracac trafnosci. Ale dziala na 39% pytan, bo tablica jest recznie
+pisana i ma sluchawke Zorka: swietna w zakresie, ktory ktos przewidzial, gluchа poza nim.
+
+Naturalny nastepny ruch, WYMAGAJACY WLASNEJ PREREJESTRACJI: tablica intencji pisana
+przez model zamiast przeze mnie, dokladnie tak jak opisy i dziedziny. To jest jedyna
+przewaga, jaka mamy nad Zorkiem z 1979 — ich szescset slow wpisywal czlowiek.
+
+Regresja: `pytest` 215 zielonych, `baseline` 26,6/36,6/0,172/85,2 i `embed_desc`
+30,0/36,6/0,243/97,7 odtworzone co do cyfry. Poprawka echa cofnieta na czas pomiaru
+i przywrocona po nim.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
