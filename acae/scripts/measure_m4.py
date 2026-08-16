@@ -478,6 +478,48 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             elif q["kind"] == "positive" and not (set(q["answer_files"]) & pliki):
                 # Warunek diagnostyczny (propozycja GPT): bramka wyciela wlasciwy plik.
                 diagnostyka["gate_cut"] += 1
+        elif variant in ("intent", "intent_domain"):
+            # M13: intencja pytania ogranicza RODZAJ rzeczy (regula czasownika z Zorka).
+            # Ranking `embed_desc` BEZ ZMIAN — zmienia sie tylko to, kto jest dopuszczony.
+            index = ctx["embed"]
+            zakres, paragon = intent_constrain(q["question"], ctx["assignments"])
+            receipts = [paragon]
+            if zakres is None:
+                diagnostyka["intent_none"] += 1
+
+            if variant == "intent_domain":
+                # Dwa tokeny w jednej linii gramatyki, jak `* noun 'with' held`.
+                pliki_dziedzin, wybrane_dz = ctx["domain_index"].files(q["question"], 3)
+                receipts.append({
+                    "rule": "domain_routing",
+                    "domains": [{"id": d, "permille": w} for d, w in wybrane_dz],
+                    "files_in_scope": len(pliki_dziedzin),
+                })
+                if pliki_dziedzin:
+                    zakres = pliki_dziedzin if zakres is None else (zakres & pliki_dziedzin)
+
+            sims = index.scores(q["question"])
+            numery, _ = _order(index, sims)
+            poszerzone = False
+            if zakres is not None:
+                zawezone = [i for i in numery if index.items[i][0] in zakres]
+                if zawezone:
+                    numery = zawezone
+                else:
+                    # IMPLICIT TAKE z Inform: gdy nic nie przechodzi ograniczenia,
+                    # nie odmawiamy — wracamy do pelnej przestrzeni. Odmowa w takiej
+                    # sytuacji byla by, slowami dokumentacji Inform, „petty".
+                    poszerzone = True
+                    diagnostyka["intent_widened"] += 1
+            ranked = _pack(index, numery, sims, depth)
+            diagnostyka["intent_symbols"].append(len(numery))
+
+            # WARUNEK DIAGNOSTYCZNY M13. `intent_cut` to liczba, ktora zabila M11
+            # (18 z 30) — tutaj musi byc znaczaco nizsza, inaczej zamienilismy
+            # jedno zle zawezenie na drugie.
+            if q["kind"] == "positive" and zakres is not None and not poszerzone:
+                if not (set(q["answer_files"]) & zakres):
+                    diagnostyka["intent_cut"] += 1
         elif variant in ("domain3", "domain1"):
             # M11: najpierw POLKA, potem ksiazka. Ranking `embed_desc` BEZ ZMIAN,
             # tylko biegnie po plikach wybranych dziedzin. Pytanie porownywane jest
