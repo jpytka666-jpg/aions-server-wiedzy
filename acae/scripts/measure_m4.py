@@ -81,6 +81,9 @@ SETS = {
     # Wynikow stad NIE WOLNO wstawiac do tabeli porownawczej z dev/heldout.
     "marcin_pl": "tests/marcin_pl_questions.json",
     "marcin_en": "tests/marcin_en_questions.json",
+    # Szeroki zbior: po dwa pytania na kazdy ze 169 plikow. Wynik OPTYMISTYCZNIE
+    # ZAWYZONY (pytania powstaly z opisow), sluzy do znajdowania dziur, nie do liczby.
+    "wide": "tests/wide_questions.json",
 }
 
 
