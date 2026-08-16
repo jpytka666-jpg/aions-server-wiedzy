@@ -2530,6 +2530,88 @@ To ten sam mechanizm co gotcha z M0, w nowym wariancie: **hook nie rozroznia
 „cofniete tymczasowo" od „tak ma zostac"**. Regula na przyszlosc: po kazdym cyklu
 cofnij-zmierz-przywroc sprawdzic `git show HEAD:<plik>`, a nie tylko stan dysku.
 
+## 2026-08-16T06:09 — NARZEDZIE DZIALA. Blokada to JEZYK, nie wyszukiwanie.
+
+### Skad ten pomiar
+
+Marcin, po dwudziestu trzech odrzuceniach: *„przeciez cala rzecz w tym sie zaczela zeby
+acae umial zrozumiec ludzka mowe"*. Slusznie — zjechalem w optymalizowanie rankera
+i zgubilem cel. Poprosilem go o pytania zadane JEGO slowami. Dal piec i kazal dopisac
+reszte z pamieci.
+
+Kazde pytanie zapisane w DWOCH wersjach o tym samym znaczeniu: jego polskiej
+i angielskim odpowiedniku. Zbiory: `tests/marcin_pl_questions.json`,
+`tests/marcin_en_questions.json`, generator `scripts/make_marcin_questions.py`.
+
+### WYNIK — ranker `embed_desc`, te same pytania, tylko inny jezyk
+
+| | po polsku | po angielsku |
+|---|---|---|
+| recall@10 | 20,0% | **70,0%** |
+| recall@25 | 40,0% | **90,0%** |
+| MRR | 0,125 | **0,662** |
+| neg/poz | 100,5% | **66,3%** |
+
+Per pytanie, pozycja wlasciwego pliku:
+
+```
+m01  gdzie jest mapa lasu                      poza  ->   1
+m02  co jest kurwa zawiecha                      15  ->   1
+m03  czym sprawdze co mam na dyskach             21  ->   1
+m04  sprawdz czy aions dziala                  poza  ->  22
+m05  czy jestes podlonczony                    poza  ->   1
+m06  czemu mi nie pamieta rozmowy              poza  ->   1
+m07  gdzie sie kurwa zapisuja te chunki           7  ->   2
+m08  co robi to esperanto                         1  ->   1
+m09  czemu mi mowi ze nie wie                  poza  -> poza
+m10  gdzie sie sprawdza czy odpowiedz dobra    poza  ->  13
+```
+
+**W pierwszej dziesiatce: 2 z 10 po polsku, 7 z 10 po angielsku.
+Na PIERWSZYM miejscu: 1 z 10 po polsku, 6 z 10 po angielsku.**
+
+### Naturalny eksperyment wewnatrz danych
+
+`m08` „co robi to esperanto" jest **jedynym polskim pytaniem, ktore dziala** — i jedynym,
+ktore zawiera slowo **identyczne w obu jezykach**. To nie jest anegdota, to jest
+potwierdzenie mechanizmu z samego zbioru: dziala dokladnie tam, gdzie jezyk przestaje
+byc przeszkoda.
+
+### Co to znaczy
+
+**Narzedzie dziala.** Na pytaniach zadanych po ludzku, w jezyku korpusu, wskazuje
+wlasciwy plik **na pierwszym miejscu w szesciu przypadkach na dziesiec**, a w dziewieciu
+na dziesiec miesci go w pierwszej dwudziestce piatce.
+
+Dwadziescia trzy odrzucenia nie byly pomiarem narzedzia. Byly pomiarem narzedzia
+na zbiorze zbudowanym CELOWO tak, zeby bylo trudno — agent mial instrukcje „opisuj
+zachowanie, NIE nazywaj symboli". A prawdziwa blokada w codziennym uzyciu lezala gdzie
+indziej i **nie zostala zmierzona ani razu przez tydzien**.
+
+### CZEGO TEN POMIAR NIE DOWODZI — trzy rzeczy, wszystkie przeciwko mnie
+
+1. **To nie jest slepa proba.** Klucz odpowiedzi ustalilem ja, znajac korpus.
+   Wyniku **NIE WOLNO** wstawiac do tabeli z dev/heldout.
+2. **Trafienie liczone na poziomie PLIKU**, nie symbolu — prog znacznie lagodniejszy
+   niz w zamrozonym zbiorze. „70%" i „30%" to nie sa te same liczby.
+3. **Zbior ma 10 pozytywow.** Jedno pytanie to 10 punktow procentowych.
+
+**Ale porownanie PL vs EN jest czyste**: ten sam zbior, ten sam prog, ten sam ranker,
+ten sam klucz — rozni sie WYLACZNIE jezyk pytania. I to porownanie jest cala teza.
+
+### Co z tego wynika na nastepny krok
+
+Blokada jest **tania do usuniecia** w porownaniu ze wszystkim, co probowalismy:
+- przetlumaczyc pytanie na angielski przed szukaniem (i zamrozic tlumaczenia, jak wszystko),
+- albo dopisac opisy plikow po polsku,
+- albo jedno i drugie.
+
+Zadne z tych nie wymaga nowego mechanizmu rankingu. To jest praca na wejsciu, nie
+w silniku. **I to jest pierwszy raz w tym projekcie, kiedy wiadomo, co konkretnie
+zrobic, zeby bylo lepiej.**
+
+Zamrozony held-out pozostaje **NIETKNIETY** — ten pomiar go nie dotyka.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
