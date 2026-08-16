@@ -121,7 +121,31 @@ def triaz_wyjatkow(drzewa) -> list[dict]:
     return wynik
 
 
-def triaz_parametrow(drzewa, nieuzyte) -> list[dict]:
+def zaslepki_po_imporcie(drzewa) -> set[tuple[str, int]]:
+    """
+    Funkcje zdefiniowane WEWNATRZ `except ImportError`. To zaslepki wzorca
+    "dziala tez bez tej biblioteki" — ich parametry sa nieuzywane z zalozenia,
+    bo zaslepka ma tylko zwrocic cos neutralnego. Bez tego filtra `math_solve(q)`
+    i `build_keys(text)` ladowaly w RYZYKU, choc nie sa zepsute.
+
+    Uwaga: to NIE znaczy, ze wszystko gra. Jesli import naprawde pada, podsystem
+    jest po cichu wylaczony — ale tego statycznie nie widac. Od tego jest `probe_imports.py`.
+    """
+    out = set()
+    for rel, drzewo in drzewa.items():
+        for w in ast.walk(drzewo):
+            if not isinstance(w, ast.Try):
+                continue
+            for h in w.handlers:
+                if not (typy_handlera(h) & OPCJONALNE or typy_handlera(h) == {"Exception"}):
+                    continue
+                for x in ast.walk(ast.Module(body=h.body, type_ignores=[])):
+                    if isinstance(x, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                        out.add((rel, x.lineno))
+    return out
+
+
+def triaz_parametrow(drzewa, nieuzyte, stuby=frozenset()) -> list[dict]:
     """
     Nieuzywany parametr wazy tyle, ile wierzy w niego wolajacy.
 
