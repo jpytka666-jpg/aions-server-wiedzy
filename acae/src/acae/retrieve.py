@@ -218,6 +218,7 @@ def build_slice(
     outline_limit: int = 40,
     drill_limit: int = 5,
     max_body_lines: int = 200,
+    ranked: Sequence[Mapping[str, object]] | None = None,
 ) -> tuple[bytes, dict]:
     """
     Wycinek szkieletu pod zapytanie plus ciala najlepiej trafionych symboli.
