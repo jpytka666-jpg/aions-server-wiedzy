@@ -739,6 +739,13 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
             sorted(diagnostyka["domain_files"])[len(diagnostyka["domain_files"]) // 2]
             if diagnostyka["domain_files"] else 0
         ),
+        "intent_none": diagnostyka["intent_none"],
+        "intent_cut": diagnostyka["intent_cut"],
+        "intent_widened": diagnostyka["intent_widened"],
+        "intent_symbols_median": (
+            sorted(diagnostyka["intent_symbols"])[len(diagnostyka["intent_symbols"]) // 2]
+            if diagnostyka["intent_symbols"] else 0
+        ),
         "per_query": per_query,
     }
 
