@@ -39,6 +39,49 @@ def _codebook_symbols_for_text(text: str, memory_dir: str | Path) -> int:
         return 0
 
 
+def _bramka_zapisu(text: str) -> tuple[bool, str]:
+    """
+    Werdykt bramki `learning_gate` — czy tekst jest echem, czy trescia.
+
+    DLACZEGO TA, A NIE LICZENIE SYMBOLI (pomiar 2026-08-16):
+    poprzedni warunek PASS wymagal `cbms_symbols > 0`. Ksiazka kodowa ma 16 hasel,
+    z czego piec to podrecznikowy przyklad o kupowaniu chleba. Sprawdzone na wiekszej
+    ksiazce (477 hasel): sensowny akapit koduje sie na 1 symbol, echo na 0. Waskim
+    gardlem nie jest ksiazka, tylko tlumacz PL->EO przed nia, zrobiony pod to samo demo.
+    Do tego liczenie slow ze slownika mierzy SLOWNICTWO, a nasze echo jest nabite
+    terminami systemowymi — przy dzialajacym tlumaczu wypadaloby LEPIEJ niz odpowiedz
+    sensowna. Bramka mierzy to, o co chodzi, i jest skalibrowana: 0 falszywych alarmow
+    na 164 blokach wiedzy, lapie 455 z 457 smieci.
+
+    Gdy bramki nie da sie wczytac, mowimy o tym WPROST w werdykcie zamiast cicho
+    przepuszczac — cichy fallback w kontroli jakosci to kontrola jakosci, ktorej nie ma.
+    """
+    try:
+        from cbms_memory import CBMSMemory  # type: ignore
+    except Exception as e:
+        return False, f"bramka_niedostepna:{type(e).__name__}"
+    try:
+        # `learning_gate` czyta wylacznie `self._GATE_RULES`, ktore jest atrybutem KLASY,
+        # wiec dziala na instancji bez `__init__` i nie dotyka dysku.
+        return CBMSMemory.learning_gate(CBMSMemory.__new__(CBMSMemory), text)
+    except Exception as e:
+        return False, f"bramka_blad:{type(e).__name__}"
+
+
+def _ugruntowanie(chunk_ids, memory_dir: str | Path) -> tuple[int, int]:
+    """
+    Ile wskazanych blokow NAPRAWDE istnieje w bazie.
+
+    Odpowiedz powolujaca sie na bloki, ktorych nie ma, jest nieugruntowana —
+    i dotad nikt tego nie sprawdzal. Zwraca (istniejace, wskazane).
+    """
+    ids = [str(x) for x in (chunk_ids or []) if x]
+    if not ids:
+        return 0, 0
+    katalog = Path(memory_dir) / "chunks"
+    return sum(1 for i in ids if (katalog / f"{i}.json").exists()), len(ids)
+
+
 def qc_text(text: str, memory_dir: str | Path) -> Dict[str, Any]:
     logic_ok = not any(tok in text.upper() for tok in ["<SCRIPT", "DROP TABLE", "@@", "{ {", "}}}}"])
     cbms_count = _codebook_symbols_for_text(text, memory_dir)
