@@ -1513,7 +1513,7 @@ def acae_ask(query: str, drill: int = 3, outline_limit: int = 30, refresh: bool 
                 "terms": meta["terms"],
             },
             "elapsed_ms": elapsed,
-            "descriptions_stale": bool(st["provenance"].get("stale")),
+            "files_without_description": st["provenance"].get("files_without_description", []),
             "fallback_reason": st["provenance"].get("fallback_reason"),
             "content": text.decode("utf-8", "replace"),
         })
