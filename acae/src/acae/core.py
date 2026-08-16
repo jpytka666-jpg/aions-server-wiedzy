@@ -116,17 +116,27 @@ def collect_entries(
             skipped.append({"path": rel, "reason": "no_grammar"})
             continue
 
-        try:
-            rows = outline_from_bytes(rel, raw)
-        except NoGrammar:
-            skipped.append({"path": rel, "reason": "no_grammar"})
-            continue
+        # Klucz cache: sciezka ORAZ hash tresci. Sama tresc nie wystarcza, bo gramatyka
+        # zalezy od rozszerzenia — ten sam bajt w bajt plik pod inna nazwa moze dac
+        # inny outline. Zmiana nazwy powoduje chybienie, i tak ma byc.
+        ch = content_hash(raw)
+        klucz = f"{rel}\x00{ch}"
+        rows = None if outline_cache is None else outline_cache.get(klucz)
+
+        if rows is None:
+            try:
+                rows = outline_from_bytes(rel, raw)
+            except NoGrammar:
+                skipped.append({"path": rel, "reason": "no_grammar"})
+                continue
+            if outline_cache is not None:
+                outline_cache[klucz] = rows
 
         entries.append({
             "path": rel,
             "lang": lang_for(rel),
             "bytes": len(raw),
-            "content_hash": content_hash(raw),
+            "content_hash": ch,
             "symbols": rows,
         })
 
