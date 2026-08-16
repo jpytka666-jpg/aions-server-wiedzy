@@ -183,13 +183,25 @@ def _memory_dir() -> Path:
 
 
 def _ensure_server_path() -> None:
-    server = str(_aions_path() / "server")
-    core = str(_aions_path())
-    for p in (server, core):
+    """
+    KOLEJNOSC MA ZNACZENIE — i wczesniej byla odwrotna, niz wygladala.
+
+    `sys.path.insert(0, ...)` w petli ODWRACA kolejnosc argumentow: wstawiony jako
+    ostatni laduje na samym poczatku. Petla szla `(server, core)`, wiec na wierzchu
+    konczyl `core` i `from cbms_memory import CBMSMemory` bralo
+    `aions_core/cbms_memory.py` zamiast `aions_core/server/cbms_memory.py`.
+
+    Ta pierwsza kopia byla starsza (2026-07-16) i NIE MIALA `learning_gate` —
+    bramki blokujacej zapisywanie wlasnego echa jako wiedzy. W procesie startowanym
+    przez ten modul bramki po prostu nie bylo. Duplikat zostal usuniety 2026-08-16,
+    ale kolejnosc zostaje poprawna, zeby ta pulapka nie wrocila.
+
+    Wstawiamy od najogolniejszego do najbardziej szczegolowego, zeby `server`
+    wyladowal na wierzchu.
+    """
+    for p in (str(REPO_ROOT), str(_aions_path()), str(_aions_path() / "server")):
         if p not in sys.path:
             sys.path.insert(0, p)
-    if str(REPO_ROOT) not in sys.path:
-        sys.path.insert(0, str(REPO_ROOT))
 
 
 def _get_memory() -> Any | None:
