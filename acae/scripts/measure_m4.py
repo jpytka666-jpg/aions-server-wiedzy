@@ -762,7 +762,9 @@ def main() -> int:
                  # M10: warunek dopuszczenia po rankingu embed_desc
                  "verify1", "verify2",
                  # M11: warstwa dziedzin — najpierw polka, potem ksiazka
-                 "domain3", "domain1"),
+                 "domain3", "domain1",
+                 # M13: intencja pytania ogranicza rodzaj rzeczy (regula czasownika)
+                 "intent", "intent_domain"),
     )
     parser.add_argument("--set", dest="qset", default="dev", choices=tuple(SETS))
     parser.add_argument("--out", default=None)
