@@ -107,3 +107,58 @@ class EmbedIndex:
 def build_index(embedder, entries: Sequence[Mapping[str, object]],
                 descriptions: Mapping[str, str] | None = None) -> EmbedIndex:
     return EmbedIndex(embedder, entries, descriptions)
+
+
+# --------------------------------------------------------------- cache wektorow
+
+def index_key(entries: Sequence[Mapping[str, object]],
+              descriptions: Mapping[str, str] | None,
+              model_dir) -> str:
+    """
+    Klucz cache wektorow. Musi objac WSZYSTKO, co wplywa na tekst symbolu:
+    tresc plikow, opisy i sam model. Pominiecie ktoregokolwiek dalo by ciche
+    podanie wektorow policzonych dla czegos innego.
+    """
+    from pathlib import Path
+
+    from .canon import canonical_json, content_hash
+
+    skladniki = {
+        "files": sorted((str(e["path"]), str(e["content_hash"])) for e in entries),
+        "descriptions": content_hash(
+            canonical_json({k: v for k, v in sorted((descriptions or {}).items())})
+        ),
+        "model_card": content_hash((Path(model_dir) / "model_card.json").read_bytes()),
+    }
+    return content_hash(canonical_json(skladniki))
+
+
+def load_vectors(path, key: str):
+    """Wektory z cache albo `None`. Kazdy blad to `None` — cache to tylko szybkosc."""
+    from pathlib import Path
+
+    p = Path(path)
+    if not p.is_file():
+        return None
+    try:
+        import numpy as np
+
+        with np.load(p, allow_pickle=False) as z:
+            if str(z["key"]) != key:
+                return None
+            return z["M"]
+    except Exception:
+        return None
+
+
+def save_vectors(path, key: str, M) -> None:
+    from pathlib import Path
+
+    try:
+        import numpy as np
+
+        p = Path(path)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        np.savez(p, key=np.array(key), M=M)
+    except Exception:
+        pass
