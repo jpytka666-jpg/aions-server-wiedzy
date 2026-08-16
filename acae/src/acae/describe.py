@@ -56,13 +56,25 @@ class DescriptionsError(RuntimeError):
     """Artefakt opisow nie nadaje sie do pomiaru."""
 
 
-def load_descriptions(path: Path, expected_pack_hash: str | None = None) -> tuple[dict[str, str], dict]:
+def load_descriptions(
+    path: Path,
+    expected_pack_hash: str | None = None,
+    strict: bool = True,
+) -> tuple[dict[str, str], dict]:
     """
     Wczytanie artefaktu opisow wraz z prowieniencja.
 
-    Gdy podano `expected_pack_hash`, rozjazd PRZERYWA pomiar. Opisy wyprodukowane dla
-    jednego stanu repo nie moga cicho przezyc jego zmiany — inaczej liczby wygladalyby
-    sensownie, opisujac kod, ktorego juz nie ma. Ta sama regula co przy hashach modelu M7.
+    DWA TRYBY, bo to sa dwa rozne zastosowania tego samego pliku:
+
+    * **`strict=True` (pomiar)** — rozjazd `pack_hash` PRZERYWA robote. Liczby porownywane
+      miedzy dwudziestoma kilkoma pomiarami musza dotyczyc tego samego repo, inaczej
+      cala tabela klamie.
+    * **`strict=False` (uzycie)** — rozjazd tylko USTAWIA FLAGE w prowieniencji
+      (`stale=True`) i pozwala dzialac. Gdy zmienisz dwa pliki ze 169, opisy pozostalych
+      167 sa nadal prawdziwe i blokowanie narzedzia byloby szkodliwe.
+
+    Bez tego rozdzielenia kazda edycja `server.py` blokowala narzedzie — i dokladnie
+    to zmuszalo nas do recznego cofania plikow przed kazdym uruchomieniem.
     """
     dane = json.loads(Path(path).read_text(encoding="utf-8"))
     opisy = dane.get("descriptions")
