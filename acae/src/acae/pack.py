@@ -89,17 +89,30 @@ class FsLocator:
             base = self._root / name
             if not base.is_dir():
                 continue
-            for path in base.rglob("*"):
-                if not path.is_file():
-                    continue
-                rel_parts = path.relative_to(self._root).parts
-                if any(part in self._prune for part in rel_parts[:-1]):
-                    continue
-                rel = PurePosixPath(*rel_parts).as_posix()
-                if rel.startswith(sub_prefixes):
-                    self._skipped.append({"path": rel, "reason": "submodule"})
-                    continue
-                candidates.append(rel)
+            # `os.walk` zamiast `rglob("*")`, zeby przycinac katalogi W TRAKCIE chodzenia,
+            # a nie po fakcie. `rglob` wchodzil do `venv`, `node_modules` i `__pycache__`,
+            # wyliczal wszystko w srodku i dopiero potem to odrzucal.
+            #
+            # Zmierzone przed zmiana: 6276 ms na wyznaczenie 1038 kandydatow, czyli szesc
+            # milisekund na plik. Sam submodul `tools/ChromaFlowStudio` ma w venvie prawie
+            # czternascie tysiecy plikow .py, ktore byly enumerowane po to, zeby je wyrzucic.
+            #
+            # Zbior wynikowy jest IDENTYCZNY: przycinane katalogi i tak byly odrzucane
+            # bez sladu w `skipped`, wiec niewejscie do nich nie zmienia niczego widocznego.
+            # Pliki submodulu NADAL sa enumerowane, bo one trafiaja do `skipped` i licza sie
+            # do manifestu — dlatego `sub_prefixes` sprawdzamy dalej, a nie przycinamy.
+            for dirpath, dirnames, filenames in os.walk(base):
+                dirnames[:] = [d for d in dirnames if d not in self._prune]
+                for fname in filenames:
+                    path = Path(dirpath) / fname
+                    rel_parts = path.relative_to(self._root).parts
+                    if any(part in self._prune for part in rel_parts[:-1]):
+                        continue
+                    rel = PurePosixPath(*rel_parts).as_posix()
+                    if rel.startswith(sub_prefixes):
+                        self._skipped.append({"path": rel, "reason": "submodule"})
+                        continue
+                    candidates.append(rel)
 
         candidates.sort()
         ignored = self._ignored(candidates)
