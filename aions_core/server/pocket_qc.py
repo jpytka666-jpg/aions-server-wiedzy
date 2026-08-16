@@ -54,7 +54,14 @@ def qc_crla_result(result: Dict[str, Any], memory_dir: str | Path) -> Dict[str, 
     score = float(w.get("score", 0.0))
     f_det = float(w.get("f2_determinism", 0.0)) if isinstance(w.get("f2_determinism", 0.0), (int, float)) else 0.0
     logic_ok = (score >= 0.3) and (f_det >= 0.3) and not refused
-    text = (w.get("text") or w.get("answer") or "")
+    # POPRAWKA 2026-08-16: szukalismy pol `text` i `answer` W ZWYCIEZCY, a zwyciezca
+    # ich NIE MA — `CandidateResult` niesie `answer_preview`. Pelna odpowiedz lezy
+    # o poziom wyzej, w wyniku `run_crla`. Skutek bledu: `text` bylo zawsze puste,
+    # `cbms_symbols` zawsze 0, wiec werdykt PASS byl nieosiagalny — kontrola jakosci
+    # od poczatku wystawiala wylacznie oceny negatywne.
+    text = ((result or {}).get("answer")
+            or w.get("answer_preview")
+            or "")
     cbms_count = _codebook_symbols_for_text(text, memory_dir) if text else 0
 
     if logic_ok and cbms_count > 0:
