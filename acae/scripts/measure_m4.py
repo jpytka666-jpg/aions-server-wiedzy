@@ -442,6 +442,7 @@ def evaluate(entries, ctx, queries, variant, depth=DEPTH):
         "verify_cut": 0, "verify_empty": 0, "verify_kept": [],
         "domain_cut": 0, "domain_empty": 0, "domain_fallback": 0, "domain_files": [],
         "intent_none": 0, "intent_cut": 0, "intent_widened": 0, "intent_symbols": [],
+        "rerank_moved": 0, "rerank_promoted": 0, "rerank_demoted": 0,
     }
     for q in queries:
         terms = query_terms(q["question"])
