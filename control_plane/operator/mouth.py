@@ -60,8 +60,17 @@ _RUNNER_DIR = _REPO_ROOT / "experiments" / "aions_gguf_runner"
 # gdy AIONS_GGUF_PATH / AIONS_LLAMA_CLI / AIONS_MOUTH_TIMEOUT / AIONS_CHAT_TEMPLATE
 # nie sa juz ustawione w srodowisku procesu -- nigdy nie nadpisujemy istniejacej
 # konfiguracji (np. gdy operator jest kiedys uruchamiany z innym modelem).
-_DEFAULT_GGUF = r"E:\LOCAL LLM MODELS\Phi-4-mini\Phi-4-mini-instruct-Q4_K_M.gguf"
-_DEFAULT_LLAMA_CLI = r"E:\LOCAL LLM MODELS\llama-runtime\llama-cli.exe"
+# 2026-08-16: adresy przeniesione do `config/lokalizacje.json`. Te same dwie sciezki
+# byly wpisane na sztywno TU i w skills/goal_planner.py, wiec przeniesienie modelu
+# wymagalo poprawki w dwoch miejscach — albo w jednym, i wtedy polowa systemu
+# przestawala widziec model, po cichu. Semantyka bez zmian: to nadal tylko WARTOSCI
+# DOMYSLNE, a ustawione AIONS_GGUF_PATH / AIONS_LLAMA_CLI nadal maja pierwszenstwo.
+from aions_core.lokalizacje import gdzie as _gdzie
+
+_sciezka = _gdzie("model_phi4_mini")
+_DEFAULT_GGUF = str(_sciezka) if _sciezka else ""
+_sciezka = _gdzie("llama_cli")
+_DEFAULT_LLAMA_CLI = str(_sciezka) if _sciezka else ""
 _DEFAULT_TIMEOUT_S = "60"  # zadanie B4: timeout <= 60s (runner default to 180s)
 _DEFAULT_CHAT_TEMPLATE = "jinja"
 
