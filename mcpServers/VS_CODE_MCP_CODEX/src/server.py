@@ -1517,6 +1517,7 @@ def acae_ask(query: str, drill: int = 3, outline_limit: int = 30, refresh: bool 
             "ranker": st["ranker"],
             "scope": {"files": st["files"], "symbols": st["symbols"]},
             "slice_path": str(out_path),
+            "best_matches": top_files[:8],
             "slice": {
                 "files": meta["files"],
                 "symbols": meta["outline_symbols"],

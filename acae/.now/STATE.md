@@ -2910,3 +2910,74 @@ karty modelu) zostaje, bo skraca start serwera o ~3,2 s.
 3. ~~angielski jako kontrakt~~ — **zrobione** w CLI, do przeniesienia do opisu MCP.
 
 Zostaje **`acae_ask` w serwerze MCP**.
+
+## 2026-08-16T08:44 — M1-F ZROBIONE. `acae_ask` dziala jako narzedzie AIONS.
+
+Narzedzie dolozone do `mcpServers/VS_CODE_MCP_CODEX/src/server.py`, obok narzedzi CBMS —
+bo CBMS odpowiada „co o tym wiemy", a ACAE „gdzie to jest w kodzie". Dwie strony tej samej
+odpowiedzi, jeden serwer.
+
+### Test: wywolane DOKLADNIE tak, jak wola je serwer
+
+Dziesiec pytan o rzeczy, ktorych odpowiedzi znam, sprawdzanych po polu `best_matches`
+(kolejnosc trafnosci):
+
+```
+  wlasciwy plik NA PIERWSZYM MIEJSCU : 6 z 10
+  wsrod osmiu najlepszych            : 9 z 10
+  czas: mediana 14 ms, max 1934 ms
+```
+
+**To sie zgadza co do jednego z pomiarem na zbiorze `marcin_en`** (tam tez 6 z 10 na
+pierwszym miejscu). Narzedzie po wpieciu zachowuje sie tak, jak w pomiarze — czyli
+przenosiny `EmbedIndex` do biblioteki naprawde daly produkcji ten sam kod.
+
+### Koszt potwierdzony na zywym serwerze
+
+```
+  pierwsze wywolanie (budowa indeksu) : 5657 ms
+  drugie wywolanie                    :   16 ms
+```
+
+Indeks budowany raz i trzymany w pamieci procesu (`_acae_state` + `threading.Lock`).
+Parametr `refresh=true` wymusza przebudowe po zmianie kodu.
+
+### Trzy decyzje projektowe, ktore warto pamietac
+
+1. **Angielski w OPISIE narzedzia**, nie w pliku obok: *„ASK IN ENGLISH — the same
+   question in Polish scores 20% instead of 70%. Translate the user's question before
+   calling."* Model czyta to w momencie uzycia, wiec tlumaczy sam.
+2. **Cichy powrot do rankera leksykalnego**, gdy brakuje modelu albo opisow, z powodem
+   w polu `fallback_reason`. Narzedzie ma dzialac gorzej, a nie nie dzialac wcale.
+3. **`best_matches` OBOK wycinka.** Tresc wycinka jest grupowana po pliku i sortowana
+   ALFABETYCZNIE — tak zaprojektowano format i na nim stoi bramka M2, wiec go nie ruszamy.
+   Ale wtedy czytajacy nie wie, co bylo najlepszym trafieniem. Kolejnosc trafnosci idzie
+   wiec w odpowiedzi narzedzia, poza trescia.
+
+### Swiezosc opisow — sprawdzana po POKRYCIU, nie po `pack_hash`
+
+Policzenie aktualnego `pack_hash` wymaga zbudowania calego packa (~3,4 s) przy kazdym
+starcie. Najgrozniejszy rodzaj rozjazdu — plik doszedl albo zniknal — widac po samych
+sciezkach i kosztuje zero. Pole `files_without_description` niesie to do odpowiedzi.
+
+### POTWIERDZONE: edycja `server.py` zmienila pack
+
+Przed: `6442322d...`, 1598 symboli. Po dolozeniu narzedzia: `aeffb8a9...`, **1600 symboli**
+(doszly `_acae_build` i `acae_ask`). Dokladnie to, co zapowiadal punkt 2 planu.
+
+**Zasada, ktora teraz obowiazuje:**
+- **korpus eksperymentalny** (`_desc/descriptions.json`, zbiory `dev`/`heldout`,
+  tabela dwudziestu trzech pomiarow) zostaje przypiety do `6442322d` — to zapis
+  historyczny i przesuniecie go zniszczyloby porownywalnosc,
+- **artefakt produkcyjny** sledzi repo; `strict=False` sprawia, ze rozjazd nie blokuje
+  narzedzia, tylko jest raportowany.
+
+Dzieki temu **koniec z recznym cofaniem plikow** przy zwyklej pracy. Cofa sie tylko wtedy,
+gdy uruchamiamy pomiar porownawczy.
+
+### Co zostaje otwarte
+
+- Narzedzie widzi zmiany w kodzie dopiero po `refresh=true`. Automatyczne odswiezanie
+  wymaga taniego wykrywania zmian — dzis kosztowaloby ~0,5 s na kazde wywolanie,
+  czyli piecdziesiat razy wiecej niz samo pytanie. Swiadomie odlozone.
+- `pytest` 225 zielonych. Bramka M2 i `pack_hash` sprawdzane na stanie przypietym.
