@@ -1959,6 +1959,141 @@ Nie zmieniam jednak zdania z powodu wstydu: zmieniam je, bo M11 pokazal, ze rout
 w dobra polke w 12 z 30 przypadkow, a poprawa narzedzia musialaby byc ogromna, zeby
 z tego zrobic 34,6% skutecznosci calosci.
 
+## 2026-08-16T04:20 — ROZPOZNANIE: mechaniki z gier, ktore rozwiazywaly nasz problem
+
+Na zadanie Marcina. Trzy zrodla, wszystkie sprawdzone, nie z pamieci.
+
+### 1. Parser Infocom / Inform — CZASOWNIK JEST OGRANICZENIEM TYPU
+
+To jest najwazniejsze znalezisko i najlatwiejsze do przeniesienia.
+
+Kazdy czasownik ma liste **linii gramatyki**, probowanych PO KOLEI, pierwsza pasujaca
+wygrywa. Linia to ciag **tokenow**, a kazdy token jest OGRANICZENIEM na kandydata:
+
+| token | co dopuszcza |
+|---|---|
+| `noun` | cokolwiek „w zasiegu" (scope) |
+| `held` | tylko to, co aktor NIESIE |
+| `creature` | tylko obiekt ozywiony |
+| `edible` (ATTR_FILTER_TT) | tylko obiekty z dana **cecha** |
+| `noun=Routine` (ROUTINE_FILTER_TT) | predykat wolany dla kazdego kandydata |
+| `scope=Spells` (SCOPE_TT) | **PODMIENIA cala regule zasiegu** dla tego czasownika |
+
+Przyklad z biblioteki: `Verb 'burn' 'light' * noun -> Burn * noun 'with' held -> Burn;`
+— „spal X czym Y": X musi byc widoczny, Y musi byc TRZYMANY. Dwa rozne ograniczenia
+w jednym zdaniu, oba deterministyczne.
+
+Do tego dwa zachowania warte skopiowania:
+- **implicit take** — gdy warunek nie jest spelniony, ale da sie go naprawic (banan lezy
+  na polce, a `eat` wymaga trzymania), gra NIE ODMAWIA, tylko dobiera brakujacy krok,
+- **disambiguation** — gdy pasuje kilka, PYTA: „masz na mysli bialy zeton czy chipsa?".
+
+Zork mial 600 slow slownika i wywracal sie na slowie spoza listy. Nasza przewaga: slownik
+pisze model, nie czlowiek. Mechanizm zostaje ten sam.
+
+### 2. STALKER, A-Life — DWIE WARSTWY SYMULACJI
+
+Swiat dzieli sie na **online** (pelna symulacja, blisko gracza) i **offline** (tanie
+rekordy danych przesuwane po grafie). Gdy gracz sie zbliza, byt jest „przelaczany online"
+i dopiero wtedy dostaje pelne AI. Do tego **Smart Terrains** — strefy, ktore nakladaja
+wlasne reguly na kazdego, kto do nich wejdzie.
+
+Przelozenie: tani przebieg po wszystkich 1598 symbolach (offline), a drogi sedzia tylko
+dla tych ~25, ktore zostaly „przelaczone online". Smart Terrain = dziedzina, ktora niesie
+wlasne reguly („tutaj preferuj rzeczy typu `stores`").
+
+### 3. EVE Online, Overview — TAKSONOMIA + STANY + WYJATKI
+
+Overview to silnik filtrowania boolowskiego nad **trojpoziomowa taksonomia**:
+`typeID` -> `groupID` -> `categoryID`. My mamy dokladnie to samo: symbol -> plik -> dziedzina.
+
+Dwie rzeczy, ktorych u nas nie ma:
+- **stany** (przyjazny/wrogi) zmieniajace, czy dany typ w ogole sie wyswietla,
+- **wyjatki HIERARCHICZNE, najwyzszy priorytet na gorze listy** — czyli deterministyczna
+  regula rozstrzygania konfliktow. To jest wprost lekarstwo na znana chorobe systemow
+  regulowych: gdy odpala sie wiele regul naraz, musi istniec zapisany porzadek.
+- **zakladki = gotowe profile** przelaczane kontekstem, zamiast strojenia w locie.
+
+## 2026-08-16T04:20 — PREREJESTRACJA M13: INTENCJA OGRANICZA RODZAJ (regula czasownika)
+
+### Dlaczego to, a nie karteczki (M12 czeka dalej)
+
+Pomiar pomylek z 22:20 pokazal wzorzec powtorzony **cztery razy**: odpowiedz lezala
+w `scripts`, a ranker szedl w `aions_core/server` (d001, d007, d025, d026). To nie jest
+pomylka co do TEMATU — to pomylka co do RODZAJU: pytanie dotyczy czegos, co sie URUCHAMIA,
+a ranker podaje cos, co STOI I NASLUCHUJE.
+
+W Zorku ta pomylka jest **niemozliwa**, bo token czasownika z gory odsiewa zly rodzaj.
+
+I najwazniejsze praktycznie: **dane juz sa**. Przy przypisywaniu dziedzin (M11) kazdy
+ze 169 plikow dostal `kind` z zamknietej szostki: `runs`, `serves`, `stores`, `checks`,
+`connects`, `describes`. Rozklad: runs=77, checks=33, stores=19, describes=14,
+connects=13, serves=13. Nie trzeba ani jednego nowego agenta.
+
+### Konstrukcja
+
+**Tablica intencji.** Maly, pisany recznie slownik: czasownik/fraza pytania -> dopuszczalne
+rodzaje. Pisany WYLACZNIE z szostki `kind` i z ogolnych form pytan po angielsku,
+**BEZ ogladania `acae/tests/`**. Kolejnosc linii ma znaczenie, pierwsza pasujaca wygrywa —
+dokladnie jak linie gramatyki w Inform.
+
+**Ograniczenie.** Gdy intencja rozpoznana, ranking `embed_desc` biegnie WYLACZNIE
+po symbolach z plikow o dopuszczonym rodzaju. Punktacja bez zmian.
+
+**Implicit take (z Zorka).** Gdy zaden kandydat nie przechodzi ograniczenia, NIE odmawiamy
+— wracamy do pelnej przestrzeni i odnotowujemy to jako `intent_widened`. Odmowa w takiej
+sytuacji byla by „petty", zeby uzyc slowa z dokumentacji Inform.
+
+**Cisza.** Gdy zadna linia tablicy nie pasuje do pytania, ograniczenia nie ma —
+`intent_none`. Ta liczba mowi, jak czesto tablica w ogole ma cokolwiek do powiedzenia.
+
+### Warianty
+
+- **M13a `intent`** — ograniczenie po rodzaju, ranking `embed_desc`.
+- **M13b `intent_domain`** — ograniczenie po rodzaju ORAZ dziedzina z M11 (`TOP_DOMAINS=3`).
+  Dwa tokeny naraz, jak `* noun 'with' held` w jednej linii gramatyki.
+
+**Trzeciego wariantu nie bedzie.**
+
+### KRYTERIUM PRZYJECIA — bez zmian, dwudziesty raz
+
+`recall@10` >= **34,6%** ORAZ `MRR` >= **0,172** ORAZ `neg/poz` <= **85,2%**.
+
+### WARUNEK WARTOSCI DODANEJ
+
+Wobec punktu wyjscia `embed_desc` (30,0% / 0,243 / 97,7%): `recall@10` > 30,0%
+ALBO `neg/poz` < 97,7%.
+
+### WARUNEK KONIECZNY — jak zawsze od M11
+
+Jesli mediana zawezenia zostawia ponad polowe symboli, mechanizm NIEURUCHOMIONY,
+wynik NIEINTERPRETOWALNY.
+
+### DIAGNOSTYKA — obowiazkowa
+
+1. `intent_none` — dla ilu pytan tablica nie rozpoznala intencji.
+2. `intent_cut` — dla ilu pytan pozytywnych ograniczenie wycielo wlasciwy plik.
+   **To jest liczba, ktora zabila M11** (18 z 30). Musi byc znaczaco nizsza.
+3. `intent_widened` — ile razy zadzialal implicit take.
+4. `intent_symbols_median` — ile symboli zostaje po ograniczeniu.
+
+### PRZEWIDYWANIA. Bilans: 5 trafionych na 23
+
+- **`intent_cut` bedzie DUZO nizszy niz 18** — rodzajow jest szesc, a najliczniejszy
+  (`runs`) obejmuje 77 ze 169 plikow, wiec ograniczenie jest z natury lagodniejsze
+  niz wybor 3 z 20 dziedzin.
+- **`intent_none` bedzie wysoki** — spodziewam sie, ze ponad polowa pytan nie trafi
+  w zadna linie tablicy. Recznie pisana tablica na sluch to sluchowka Zorka: dziala
+  swietnie w zakresie, ktory ktos przewidzial, i milczy poza nim.
+- **`recall@10` wzrosnie nieznacznie**, bo mechanizm zadziala tylko na czesci pytan.
+- **Kryterium jako calosc NIE zostanie spelnione.**
+
+Zapisuje tez ksztalt docelowy, ktorego NIE buduje teraz i ktory wymaga wlasnej
+prerejestracji: **dwuwarstwowa architektura w stylu A-Life** — tani przebieg po calosci,
+drogi sedzia (lokalny model) tylko dla garstki przelaczonej „online" — plus
+**hierarchiczne wyjatki w stylu EVE** jako deterministyczna regula rozstrzygania,
+gdy odpali sie kilka regul naraz.
+
 ## Gotcha — agent raportuje dlugosc opisu, ktorej nie napisal
 
 Pierwszy przebieg M8 (przerwany awaria shella) dal 169 opisow, w ktorych KAZDY z szesciu
