@@ -49,8 +49,8 @@ from .canon import content_hash
 
 SCHEMA = "acae.rerank.v1"
 
-# Granica decyzyjna modelu: sigmoid(0) = 0,5 = 500 promili.
-PROG_ODMOWY = 500
+# Zadnej granicy decyzyjnej NIE MA — patrz naglowek. Wariant odmawiajacy zostal wycofany
+# przed pomiarem, gdy okazalo sie, ze model oddaje logit, a nie prawdopodobienstwo.
 
 
 class RerankError(RuntimeError):
