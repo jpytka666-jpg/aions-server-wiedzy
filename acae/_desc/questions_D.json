@@ -1,0 +1,122 @@
+{
+  "aions_core/agi_learning.py": [
+    "how do I make the system learn from history",
+    "where are discovered patterns saved and indexed"
+  ],
+  "aions_core/memory_graph_engine.py": [
+    "how can I find related concepts when searching",
+    "what makes connected topics appear in results"
+  ],
+  "aions_core/server/cbms_direct_server.py": [
+    "where do I send questions for answers",
+    "why does it claim ignorance on some topics"
+  ],
+  "aions_core/server/conversation_enhancer.py": [
+    "why do responses sound less robotic",
+    "how does it match my emotional tone"
+  ],
+  "aions_core/server/conversation_memory.py": [
+    "how do I make the system remember our talks",
+    "where does it store session transcripts and summaries"
+  ],
+  "aions_core/tools/bench_runner.py": [
+    "what's the speed of each response type",
+    "does performance degrade over repeated test queries"
+  ],
+  "aions_core/tools/gsm8k_quick.py": [
+    "can it correctly answer word problems",
+    "how well does the math module perform"
+  ],
+  "aions_core/tools/query_db.py": [
+    "where is my data stored across the system",
+    "how many files are in each storage location"
+  ],
+  "control_plane/__init__.py": [
+    "how do I access the coordination system",
+    "where can I import the coordinator from"
+  ],
+  "control_plane/agents/agent_schema.py": [
+    "what agent rules prevent it from running",
+    "how do I create a valid agent configuration"
+  ],
+  "scripts/catalog_e_treasures.py": [
+    "where is all my knowledge data stored",
+    "how much storage does each backup location use"
+  ],
+  "scripts/chatgpt_extractor.py": [
+    "can I restore my ChatGPT message records",
+    "where is the ChatGPT cache data located"
+  ],
+  "scripts/demo_skill_live.py": [
+    "how does the system learn new behaviors",
+    "where are my saved action sequences stored"
+  ],
+  "scripts/operator_profile_load.py": [
+    "how do I set up my operator details",
+    "where is my user profile information kept"
+  ],
+  "scripts/vault/seal_secret.py": [
+    "how do I protect my API keys",
+    "where should my OAuth tokens be stored"
+  ],
+  "aions_core/aions_smart_guardrail.py": [
+    "why does it refuse to answer some questions",
+    "what facts back up an approved response"
+  ],
+  "aions_core/cbms_curve_machine.py": [
+    "how are machine learning operations organized",
+    "where are the model weight files located"
+  ],
+  "aions_core/server/cbms_unified_server.py": [
+    "where should I send knowledge-based questions",
+    "when does it search the internet for answers"
+  ],
+  "aions_core/server/esperanto_bridge.py": [
+    "why convert text to a neutral language",
+    "how does it handle Polish phrases"
+  ],
+  "aions_core/server/math_solver.py": [
+    "can it extract numbers from word descriptions",
+    "where does it check for mathematical content"
+  ],
+  "aions_core/tools/web_crawler_import.py": [
+    "how do I add web content to knowledge",
+    "what happens when I crawl a website"
+  ],
+  "aions_core/verify_llama_cpp.py": [
+    "can I run the native model engine",
+    "why can't I use the C++ bindings"
+  ],
+  "control_plane/llm/__init__.py": [
+    "how do I use the fast model server",
+    "why would I need a separate LLM endpoint"
+  ],
+  "control_plane/node_dispatch.py": [
+    "how does it decide where to run the tool",
+    "what happens when I send work remotely"
+  ],
+  "control_plane/orchestrator_loop.py": [
+    "how does the system answer my questions",
+    "where does it find the answer information"
+  ],
+  "control_plane/skills/executor.py": [
+    "how do I run a saved skill recipe",
+    "which conditions prevent skill execution"
+  ],
+  "control_plane/skills/mcp_bridge.py": [
+    "how do I make new skills available",
+    "where can I find all available skills"
+  ],
+  "mcpServers/VS_CODE_MCP_CODEX/src/desktop_provider.py": [
+    "how do I control the desktop from code",
+    "what platform-specific tools are being used"
+  ],
+  "scripts/test_control_plane.py": [
+    "is the control plane working correctly",
+    "how do I test the multi-host system"
+  ],
+  "scripts/test_forge.py": [
+    "does the entire skill creation process work",
+    "how do I test a new skill build"
+  ]
+}

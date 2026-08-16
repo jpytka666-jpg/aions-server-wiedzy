@@ -80,6 +80,17 @@ def collect_entries(
     Wydzielone z build_pack, bo M2 (drill) potrzebuje DOKLADNIE tego samego zbioru
     plikow co M1. Druga kopia regul odrzucania rozjechalaby sie przy pierwszej zmianie
     i bramka M2 przestalaby byc porownywalna z M1.
+
+    `outline_cache` — opcjonalny slownik `(sciezka, content_hash) -> wiersze outline`.
+    Zmierzone: przy jednym zapytaniu **8865 ms z 8865 ms** idzie na ponowne parsowanie
+    tych samych 169 plikow, a samo szukanie zajmuje 0 ms. Cache usuwa dokladnie ten koszt.
+
+    Rdzen NADAL nie dotyka dysku — dostaje gotowy slownik i go uzupelnia, a zapisywanie
+    zostaje po stronie adaptera (`parsecache.py`). Bez tego rozdzialu bramka „rdzen dziala
+    na slowniku w pamieci" przestalaby obowiazywac.
+
+    Gdy `outline_cache` jest `None`, zachowanie jest IDENTYCZNE z poprzednim —
+    pilnuje tego `test_cache_nie_zmienia_pack_hash`.
     """
     skipped: list[dict] = [dict(s) for s in locator.skipped()]
     entries: list[dict] = []
