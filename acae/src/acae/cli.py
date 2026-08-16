@@ -17,6 +17,7 @@ import tomllib
 from pathlib import Path
 
 from .canon import canonical_json
+from . import parsecache
 from .core import PackRequest, build_pack, collect_entries
 from .pack import FsLocator, FsReader, FsStore, write_pack
 from .retrieve import build_slice
