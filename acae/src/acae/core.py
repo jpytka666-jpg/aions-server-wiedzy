@@ -129,8 +129,7 @@ def collect_entries(
         # Klucz cache: sciezka ORAZ hash tresci. Sama tresc nie wystarcza, bo gramatyka
         # zalezy od rozszerzenia — ten sam bajt w bajt plik pod inna nazwa moze dac
         # inny outline. Zmiana nazwy powoduje chybienie, i tak ma byc.
-        ch = content_hash(raw)
-        klucz = f"{rel}\x00{ch}"
+        klucz = f"o\x00{rel}\x00{ch}"
         rows = None if outline_cache is None else outline_cache.get(klucz)
 
         if rows is None:
