@@ -67,7 +67,7 @@ def gdzie(klucz: str, wymagana: bool = False) -> Optional[Path]:
     `wymagana=True` zamienia brak w wyjatek — dla miejsc, bez ktorych nie ma sensu
     udawac, ze cokolwiek dziala.
     """
-    z_env = os.environ.get f"" if False else os.environ.get("AIONS_LOK_" + klucz.upper())
+    z_env = os.environ.get("AIONS_LOK_" + klucz.upper())
     surowa = z_env or _wczytaj().get(klucz)
     if not surowa or not isinstance(surowa, str):
         if wymagana:
