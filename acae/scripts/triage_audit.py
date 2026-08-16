@@ -224,7 +224,7 @@ def main():
             continue
 
     B = triaz_wyjatkow(drzewa)
-    A = triaz_parametrow(drzewa, surowy["A_nieuzyte_parametry"])
+    A = triaz_parametrow(drzewa, surowy["A_nieuzyte_parametry"], zaslepki_po_imporcie(drzewa))
 
     def licz(xs):
         c = defaultdict(int)
