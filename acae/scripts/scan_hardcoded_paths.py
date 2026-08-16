@@ -97,12 +97,17 @@ def main() -> int:
             znaleziska.append({"plik": rel, "linia": nr, "sciezka": tekst, "rodzaj": "config"})
 
     korzen_txt = str(root).lower()
+    # Sprawdzenie istnienia potrafi wisiec na dysku, ktorego nie ma (Windows probuje
+    # go szukac). Ta sama sciezka wystepuje w kodzie wielokrotnie, wiec pytamy raz.
+    pamiec: dict[str, bool] = {}
     for z in znaleziska:
         s = z["sciezka"]
-        try:
-            istnieje = pathlib.Path(s).exists()
-        except OSError:
-            istnieje = False
+        if s not in pamiec:
+            try:
+                pamiec[s] = pathlib.Path(s).exists()
+            except OSError:
+                pamiec[s] = False
+        istnieje = pamiec[s]
         wewnatrz = s.lower().replace("/", "\\").startswith(korzen_txt.replace("/", "\\"))
         z["istnieje"] = istnieje
         z["stan"] = "WEWN" if wewnatrz else ("ZYWA" if istnieje else "MARTWA")
