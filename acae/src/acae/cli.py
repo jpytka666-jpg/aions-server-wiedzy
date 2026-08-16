@@ -179,6 +179,12 @@ def main(argv: list[str] | None = None) -> int:
     a.add_argument("--query", required=True, help="Pytanie w jezyku naturalnym.")
     a.add_argument("--outline-limit", type=int, default=40, help="Ile symboli trafia do szkieletu.")
     a.add_argument("--drill", type=int, default=5, help="Ile symboli dostaje pelne cialo.")
+    a.add_argument(
+        "--rank", choices=("meaning", "words"), default="meaning",
+        help="Jak szukac: 'meaning' (wektory + opisy, domyslne, 62%% trafien na zbiorze "
+             "wide) albo 'words' (samo dopasowanie slow, 25%%). "
+             "PYTAJ PO ANGIELSKU — te same pytania po polsku daja 20%% zamiast 70%%.",
+    )
     a.set_defaults(func=_cmd_ask)
 
     args = parser.parse_args(argv)
