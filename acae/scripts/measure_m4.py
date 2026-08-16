@@ -73,7 +73,15 @@ BOOST_PERMILLE = 500
 # Ile paragonow na zapytanie i ile zrodel na paragon trafia do artefaktu.
 RECEIPT_LIMIT = 5
 
-SETS = {"dev": "tests/dev_questions.json", "heldout": "tests/heldout_questions.json"}
+SETS = {
+    "dev": "tests/dev_questions.json",
+    "heldout": "tests/heldout_questions.json",
+    # Zbiory Marcina — SPRAWDZIAN UZYTECZNOSCI, nie egzamin. Klucz odpowiedzi ustalony
+    # ze znajomoscia korpusu, trafienie liczone na poziomie PLIKU, zbior maly.
+    # Wynikow stad NIE WOLNO wstawiac do tabeli porownawczej z dev/heldout.
+    "marcin_pl": "tests/marcin_pl_questions.json",
+    "marcin_en": "tests/marcin_en_questions.json",
+}
 
 
 def run_git(args: list[str], cwd: Path) -> str:
