@@ -24,7 +24,24 @@ pack, ktory te liczbe bije o rzad wielkosci.
 - [x] wycinki mieszcza sie w 2,7-7,4% kosztu dzisiejszego Grep+Read (`_baseline/m2_c8344eb.json`)
 - [x] `diff _out/m2_run1.json _out/m2_run2.json` exits 0 — pomiar M2 deterministyczny
 - [x] `python -m acae ask --query "..."` zwraca wycinek szkieletu plus ciala symboli
-- [ ] M1-F: dwa narzedzia MCP (`acae_pack`, `acae_pack_status`) — NIE ROZPOCZETE
+- [x] SZLIFOWANIE: pytanie **9490 ms -> ~1250 ms** (cieple), pack **9581 -> 3354 ms**.
+      Przyczyna byla jedna linijka: `rglob` wchodzil do `venv`/`node_modules` i wyliczal
+      dziesiatki tysiecy plikow, zeby je odrzucic. Plus cache outline'ow i sekretow
+      (`parsecache.py`). `pack_hash` NIEZMIENIONY, 225 testow.
+- [x] UZYTECZNOSC zmierzona na pytaniach zadanych po ludzku (306 pytan, zbior `wide`):
+      `recall@10` **62,0%**, `recall@25` 76,7%, `MRR` 0,451, `neg/poz` 74,3%.
+      Samo szukanie po slowach: 25,1%. **Wynik zawyzony** (pytania z opisow) —
+      sluzy do znajdowania dziur, NIE do porownan z `dev`/`heldout`.
+- [x] JEZYK: narzedzie dziala po angielsku. Te same pytania po polsku: `recall@10` 20,0%,
+      po angielsku **70,0%**. Warunek uzycia, nie wada do naprawy — model wolajacy
+      narzedzie tlumaczy za darmo.
+- [ ] M1-F: integracja z MCP AIONS — **PRZEDEFINIOWANA 2026-08-16**. Nie osobny serwer
+      (decyzja Marcina: druga instalacja, drugi punkt awarii, sztuczna sciana wobec CBMS).
+      Zakres: **`acae_ask`** jako glowne narzedzie, nie `acae_pack`. Do rozstrzygniecia
+      PRZED kodem: (a) jak `project_scan_*` trzyma stan zadania, `server.py:957-1049`;
+      (b) `server.py` LEZY W PACKU, wiec jego edycja zmienia `pack_hash` i uniewaznia
+      korpus opisow — przemrozic korpus czy przypiac pomiary do `6442322d`;
+      (c) zapisac tlumaczenie na angielski jako warunek uzycia.
 - [x] M3: `python -m pytest tests/test_store.py` exits 0 — 16 testow, niezmienniki I2/I5/I6/I7/I8/I9 i test C4
 - [x] M3: `store.py` nie importuje `aions_core`, `cbms` ani `chroma` — sprawdzane przez AST, nie przez grep po tekscie
 - [x] M4: zbior testowy ISTNIEJE i jest zamrozony — `tests/heldout_questions.json`, 14 pytan,
