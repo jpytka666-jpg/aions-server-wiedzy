@@ -139,8 +139,9 @@ def main():
     print(f"par ocenionych: {pary_total}   pytan: {len(pytania)}")
     wszystkie = [v for d in scores.values() for v in d.values()]
     w = sorted(wszystkie)
-    print(f"oceny w promilach: min {w[0]}  mediana {w[len(w)//2]}  max {w[-1]}")
-    print(f"powyzej granicy 500: {sum(1 for x in w if x >= 500)} z {len(w)}")
+    print(f"oceny (milijednostki logitu): min {w[0]}  mediana {w[len(w)//2]}  max {w[-1]}")
+    print(f"dodatnich: {sum(1 for x in w if x > 0)} z {len(w)}  "
+          f"(zadnej granicy decyzyjnej nie deklarujemy — patrz naglowek)")
 
 
 if __name__ == "__main__":
