@@ -1543,8 +1543,9 @@ def _health_run(nazwa: str, wyjscie: str, dodatkowe: Optional[List[str]] = None)
 
     Osobny proces, a nie import, z dwoch powodow. Skrypty sa napisane jako narzedzia
     wiersza polecen i dzialaja — regula ADDITIVE ONLY mowi, zeby ich nie przerabiac
-    pod nowego wolajacego. A audyt parsuje 166 plikow, wiec swiezy proces gwarantuje,
-    ze nie widzi modulow, ktore serwer trzyma juz w pamieci.
+    pod nowego wolajacego. A `probe_imports` uzywa `find_spec`, wiec MUSI widziec czysty
+    interpreter: serwer ma juz zaimportowana polowe tych modulow i pozmieniana `sys.path`,
+    wiec w jego procesie sonda odpowiadalaby na inne pytanie niz zadane.
     """
     import subprocess
 
@@ -1560,6 +1561,64 @@ def _health_run(nazwa: str, wyjscie: str, dodatkowe: Optional[List[str]] = None)
         raise RuntimeError(f"{nazwa} zakonczony kodem {proc.returncode}: "
                            f"{(proc.stderr or proc.stdout)[-400:]}")
     return json.loads((REPO_ROOT / wyjscie).read_text(encoding="utf-8"))
+
+
+# Stan audytu. Liczenie idzie w WATKU, a nie w wywolaniu narzedzia.
+#
+# POWOD (zmierzony 2026-08-16 po restarcie): te same trzy skrypty trwaja 9,4 s
+# uruchomione z terminala i ~2 s z procesu, ktory dopiero wstal — ale w ZYWYM,
+# dlugo dzialajacym serwerze te same trzy uruchomienia zajmuja ~60 s. Sprawdzone
+# po czasach zapisu plikow: praca sie KONCZY (audit.json 13:30:28, triaz 13:30:31,
+# importy 13:30:33), tylko klient przestaje czekac po 60 s i melduje blad.
+#
+# Czyli narzedzie „nie dzialalo" wylacznie z punktu widzenia wolajacego. To jest
+# ten sam rodzaj klamstwa, ktory tropimy w tym repo od rana, wiec nie zostawiam go:
+# narzedzie ma ODPOWIADAC OD RAZU i uczciwie mowic, ze liczy.
+_health_state: Dict[str, Any] = {"wynik": None, "kiedy": None, "trwa": False, "blad": None}
+_health_lock = threading.Lock()
+
+
+def _health_compute() -> Dict[str, Any]:
+    """Pelny audyt. Wolane z watku w tle — NIGDY wprost z narzedzia."""
+    start = time.time()
+    surowy = _health_run("audit_calls", "acae/_out/audit.json")
+    triaz = _health_run("triage_audit", "acae/_out/triaz.json")
+    importy = _health_run("probe_imports", "acae/_out/importy.json")
+
+    wyjatki = [x for x in triaz["B_wyjatki"] if x["kubelek"] == "RYZYKO"]
+    parametry = [x for x in triaz["A_parametry"] if x["kubelek"] == "RYZYKO"]
+    brak = importy["brakujace"]
+    podsumowanie = {
+        "sygnatury_niezgodne": len(surowy["D_sygnatury"]),
+        "polkniety_wyjatek_wokol_zapisu": len(wyjatki),
+        "ignorowany_parametr_ktory_ktos_podaje": len(parametry),
+        "podsystem_zastapiony_zaslepka": len(brak),
+    }
+    return {
+        "summary": podsumowanie,
+        "total_findings": sum(podsumowanie.values()),
+        "raw_counts_before_triage": {
+            "swallowed_exceptions": len(surowy["B_polkniete"]),
+            "unused_parameters": len(surowy["A_nieuzyte_parametry"]),
+            "dead_imports": len(surowy["C_martwe_importy"]),
+        },
+        "elapsed_ms": int((time.time() - start) * 1000),
+        "_D": surowy["D_sygnatury"],
+        "_B": wyjatki,
+        "_A": parametry,
+        "_brak": brak,
+        "_niepewne": len(importy.get("niepewne", [])),
+    }
+
+
+def _health_worker() -> None:
+    try:
+        wynik = _health_compute()
+        with _health_lock:
+            _health_state.update(wynik=wynik, kiedy=time.time(), trwa=False, blad=None)
+    except Exception as e:                      # blad MUSI dojsc do wolajacego
+        with _health_lock:
+            _health_state.update(trwa=False, blad=f"{type(e).__name__}: {e}")
 
 
 @mcp_server.tool(
