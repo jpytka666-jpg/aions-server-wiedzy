@@ -3575,3 +3575,77 @@ stosowac ZAWSZE, nie tylko po cofaniu plikow:
 Praktyczny skutek dla Marcina: cofniecie dzisiejszej pracy NIE polega na
 `git checkout .` — trzeba cofnac commity. Punkt sprzed dzisiejszej sesji to `a301687`
 („audyt statyczny AIONS"), a stan sprzed calego audytu to `8bbb1b9` („CONTRACT: M1-F odhaczone").
+
+## 2026-08-16T13:40 — KONTROLA PO RESTARCIE LAPTOPA
+
+Przejscie po liscie zostawionej przed resetem. Wszystko sprawdzone URUCHOMIENIEM.
+
+### 1. `C:\Windows\System32` — czysto
+
+Pusty katalog `server`, ktorego przed restartem cos trzymalo, dal sie usunac.
+Zaden artefakt AIONS nie zostal w katalogu systemowym.
+
+### 2. Operator MOWI — model po przepieciu adresow dziala
+
+```
+comment_incident(...) -> 6264 ms
+"Probable cause: The module removal triggered the write gate.
+ Suggested next step: Investigate why the module removal caused the write gate..."
+```
+
+Pierwsza proba zwrocila None w 0 ms — **blad byl w moim tescie, nie w kodzie**:
+`_short_incident_desc` czyta klucze `issues`/`actions`, a ja podalem `kind`/`detail`,
+wiec skrot wyszedl pusty i funkcja slusznie odmowila. Po poprawieniu ksztaltu — mowi.
+
+### 3. `/crla/ask` po HTTP — **200 zamiast 500**
+
+```
+KOD HTTP: 200   czas: 37 ms   kandydatow: 4
+diagnostyka: {'rozne_odpowiedzi': 1, 'rozne_zestawy_blokow': 1,
+              'skladniki_bez_wplywu': [f1_facts, f2_determinism, f4_policies, f5_trace, f6_hygiene]}
+```
+
+Wejscie, ktore od zawsze oddawalo 500, odpowiada. I od razu MOWI PRAWDE o sobie:
+czterej kandydaci dali jedna odpowiedz, piec z szesciu skladnikow oceny bylo stale.
+Dokladnie to, co zmierzyl M16 — tyle ze teraz widac to w kazdej odpowiedzi, bez pomiaru.
+
+### 4. ZNALEZIONA NOWA WADA: `code_health` zglaszal blad, choc dzialal
+
+Oba moje narzedzia przekraczaly 60-sekundowy limit klienta, a cudze (`system_health`)
+odpowiadalo natychmiast. Rozstrzygniete **kasujac pliki wynikowe i patrzac, czy wroca**:
+
+```
+skasowane 13:29:08
+audit.json  13:30:28    triaz.json  13:30:31    importy.json  13:30:33
+```
+
+Praca sie KONCZYLA — tylko trwala ~60 s zamiast 9,4 s i klient przestawal czekac.
+Czyli narzedzie „nie dzialalo" wylacznie z punktu widzenia wolajacego. To ten sam
+rodzaj klamstwa, ktory tropimy w tym repo od rana.
+
+**Hipoteza, ktora obalilem zamiast na niej budowac:** ze wisi przez odziedziczone
+`stdin` z rury. Sprawdzone symulacja (proces ze `stdin=PIPE` spawnuje skrypt):
+1429 ms, bez zawieszenia. Falszywa przyczyna — dobrze, ze nie „naprawilem" na jej podstawie.
+
+Zmierzone dalej: z procesu, ktory dopiero wstal, trzy puste uruchomienia to 330 ms,
+a prawdziwy skrypt 2085 ms. Czyli sam koszt uruchamiania nie tlumaczy 60 s —
+tlumaczy to dopiero **dlugo dzialajacy, obciazony proces serwera**. Przyczyny nie
+przypiazem do konca i tego nie ukrywam.
+
+**Naprawa wzorcem, ktory ten serwer juz stosuje dla wolnych rzeczy** (`project_scan_turbo`):
+liczenie idzie w watku, narzedzie odpowiada od razu. Czeka do 25 s — gdy maszyna zdazy,
+raport przychodzi w tym samym wywolaniu; gdy nie, oddaje `{"state": "liczę"}` zamiast
+wisiec. Wynik jest zapamietany i niesie `report_age_s`, `refresh=true` liczy od nowa.
+
+```
+1. wywolanie: 8518 ms -> raport, znalezisk 51
+2. wywolanie:    0 ms -> raport z pamieci, wiek 0 s
+```
+
+**Marcin musi zrestartowac serwer MCP jeszcze raz**, zeby ta poprawka weszla.
+
+### Stan znalezisk niezmieniony: 51 wysokiego ryzyka
+
+Do zrobienia zostaje osiem miejsc wskazujacych na puste lustro `E:\AIONS_COMPLETE`
+(`aions_agent_layer` x3, `aions_crla_reformed` x2, `aions_monitoring_dashboard`,
+`aions_smart_guardrail`, `agi_existing_models`).

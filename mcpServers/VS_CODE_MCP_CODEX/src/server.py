@@ -1634,7 +1634,10 @@ def _health_worker() -> None:
         "silently swaps a whole subsystem for a do-nothing stub. "
         "Findings are triaged: only high-risk ones are returned by default, because the raw "
         "counts are mostly benign noise. Run after editing code, or when something reports "
-        "success but produces nothing."
+        "success but produces nothing. "
+        "The report is CACHED and carries `report_age_s`; pass refresh=true to recompute. "
+        "If the audit is still running you get {state: 'liczę'} immediately instead of a "
+        "hang — call again in ~30 s."
     ),
 )
 @auto_logged
