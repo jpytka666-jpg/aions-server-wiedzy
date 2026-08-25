@@ -457,52 +457,159 @@ def _auto_log_entry(tool_name: str, args: Dict, result_preview: str):
         "result": result_preview[:300]
     }
     
-    _auto_log_buffer.append(entry)
-    log(f"AUTO-LOG: {tool_name}({args_str[:50]}) -> buffer={len(_auto_log_buffer)}")
-    
+    with _auto_log_lock:
+        _auto_log_buffer.append(entry)
+        buffer_len = len(_auto_log_buffer)
+    log(f"AUTO-LOG: {tool_name}({args_str[:50]}) -> buffer={buffer_len}")
+
     # Auto-dump when threshold reached
-    if len(_auto_log_buffer) >= _auto_log_threshold:
+    if buffer_len >= _auto_log_threshold:
         _auto_dump_logs()
 
 def _auto_dump_logs():
-    """Dump accumulated logs to file and ChromaDB"""
+    """Dump accumulated logs to file and ChromaDB. Swaps the buffer out under
+    the lock so concurrent appends (tool calls, the idle-flush thread, a
+    shutdown flush) can't race with the read; on failure the entries are
+    merged back so a transient error (e.g. ChromaDB unreachable) never loses
+    them — matching the original never-clear-on-error behavior."""
     global _auto_log_buffer, _auto_log_last_dump
-    
-    if not _auto_log_buffer:
-        return
-    
+
+    with _auto_log_lock:
+        if not _auto_log_buffer:
+            return
+        entries = _auto_log_buffer
+        _auto_log_buffer = []
+
     try:
         # Format logs
         log_text = f"AUTO-LOG DUMP ({_today_str()})\n\n"
-        for entry in _auto_log_buffer:
+        for entry in entries:
             log_text += f"[{entry['timestamp'][:19]}] {entry['tool']}({entry['args']})\n"
             log_text += f"  -> {entry['result']}\n\n"
-        
+
         # Save to JSONL file
         dump_file = DUMPS_DIR / f"autolog_{_today_str()}.jsonl"
         with open(dump_file, "a", encoding="utf-8") as f:
-            for entry in _auto_log_buffer:
+            for entry in entries:
                 f.write(json.dumps(entry, ensure_ascii=False) + "\n")
-        
+
         # Save to ChromaDB
         vs = get_vector_store()
         if vs:
             doc_id = f"autolog_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             metadata = with_provenance({
                 "type": "auto_log",
-                "entry_count": len(_auto_log_buffer),
-                "tools_used": ",".join(set(e["tool"] for e in _auto_log_buffer)),
+                "entry_count": len(entries),
+                "tools_used": ",".join(set(e["tool"] for e in entries)),
                 "timestamp": _now_iso()
             })
             vs.add_items(_auto_log_session, [(doc_id, log_text, metadata)])
-        
-        log(f"AUTO-DUMP: {len(_auto_log_buffer)} entries saved")
-        
-        _auto_log_buffer = []
+
+        log(f"AUTO-DUMP: {len(entries)} entries saved")
+
         _auto_log_last_dump = datetime.now(timezone.utc)
-        
+
     except Exception as e:
+        with _auto_log_lock:
+            _auto_log_buffer = entries + _auto_log_buffer
         log(f"AUTO-DUMP error: {e}")
+
+
+# =============================================================================
+# SHUTDOWN / IDLE-TIME FLUSH (fixes: last 1-4 buffered entries lost forever)
+# =============================================================================
+# _auto_dump_logs() above only ever ran when the buffer hit _auto_log_threshold
+# (5) or a caller explicitly called conv_dump(). Nothing flushed on process
+# exit, so whatever sat below threshold when the MCP stdio pipe closed — the
+# normal shutdown path for this server — was silently discarded. Three layers
+# close that gap, cheapest first:
+#   1. atexit — covers the normal shutdown path (parent closes stdin -> the
+#      stdio read loop hits EOF -> run_stdio_async() returns -> the script
+#      falls off the end -> CPython runs atexit callbacks during interpreter
+#      finalization) and any uncaught exception unwinding to the top of the
+#      script, including KeyboardInterrupt from Ctrl+C.
+#   2. Signal handlers (SIGTERM, SIGINT where available) — covers a caller
+#      that sends a termination signal instead of closing the pipe. Real
+#      protection on POSIX; on Windows a delivered SIGTERM is uncatchable
+#      (os.kill(pid, SIGTERM) from another process calls TerminateProcess
+#      directly — no userspace code, this fix included, runs), so this layer
+#      is inert-but-harmless there. SIGINT (Ctrl+C / CTRL_C_EVENT) IS real on
+#      Windows and is covered.
+#   3. A daemon background thread that flushes whatever's buffered once it is
+#      older than AIONS_AUTOLOG_MAX_AGE_SECONDS, so a long session that never
+#      reaches the 5-entry threshold doesn't hold unflushed entries
+#      indefinitely if something other than a graceful shutdown ends it.
+# None of these can recover entries lost to SIGKILL / TerminateProcess — an
+# OS-level hard kill runs zero userspace code and is not fixable in-process.
+
+_AUTO_LOG_MAX_AGE_SECONDS = _clamped_float_env(
+    "AIONS_AUTOLOG_MAX_AGE_SECONDS", 300.0, 5.0, 3600.0
+)
+_AUTO_LOG_FLUSH_CHECK_SECONDS = _clamped_float_env(
+    "AIONS_AUTOLOG_FLUSH_CHECK_SECONDS", 30.0, 5.0, 300.0
+)
+
+
+def _flush_auto_log_on_exit(*_args) -> None:
+    """Best-effort final flush. Never raises — must not block interpreter/signal shutdown."""
+    try:
+        _auto_dump_logs()
+    except Exception as e:
+        log(f"AUTO-DUMP shutdown-flush error: {e}")
+
+
+atexit.register(_flush_auto_log_on_exit)
+
+
+def _install_signal_flush_handlers() -> None:
+    for sig_name in ("SIGTERM", "SIGINT"):
+        sig = getattr(signal, sig_name, None)
+        if sig is None:
+            continue
+        try:
+            previous = signal.getsignal(sig)
+
+            def _handler(signum, frame, _previous=previous):
+                _flush_auto_log_on_exit()
+                # Chain to whatever handled this signal before us (or the OS
+                # default) so real termination semantics still apply — this
+                # is a flush-before-exit hook, not a replacement shutdown path.
+                if callable(_previous):
+                    _previous(signum, frame)
+                else:
+                    signal.signal(signum, signal.SIG_DFL)
+                    os.kill(os.getpid(), signum)
+
+            signal.signal(sig, _handler)
+        except (ValueError, OSError, RuntimeError) as e:
+            # ValueError: signal.signal() called off the main thread. Non-fatal
+            # — atexit (layer 1) still covers the normal shutdown path.
+            log(f"AUTO-DUMP: could not install {sig_name} flush handler: {e}")
+
+
+_install_signal_flush_handlers()
+
+
+def _auto_log_idle_flusher() -> None:
+    """Daemon thread: flush buffered-but-stale entries so a long-idle session
+    isn't sitting on unflushed data waiting for the 5-entry threshold."""
+    while True:
+        time.sleep(_AUTO_LOG_FLUSH_CHECK_SECONDS)
+        try:
+            with _auto_log_lock:
+                pending = len(_auto_log_buffer)
+                age = (datetime.now(timezone.utc) - _auto_log_last_dump).total_seconds()
+            if pending and age >= _AUTO_LOG_MAX_AGE_SECONDS:
+                log(f"AUTO-DUMP: idle-flush ({pending} entries, {age:.0f}s since last dump)")
+                _auto_dump_logs()
+        except Exception as e:
+            log(f"AUTO-DUMP idle-flush error: {e}")
+
+
+threading.Thread(
+    target=_auto_log_idle_flusher, name="aions-autolog-idle-flush", daemon=True
+).start()
+
 
 def auto_logged(func: Callable) -> Callable:
     """Decorator that auto-logs tool calls - DEBILOODPORNE!"""
