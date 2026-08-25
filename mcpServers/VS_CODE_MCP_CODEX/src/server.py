@@ -957,24 +957,51 @@ def fast_search(query: str, max_results: int = 50, folder: str = "") -> str:
 def fast_search_ext(extension: str, folder: str = "", max_results: int = 100) -> str:
     try:
         provider = _search_provider()
+        all_files = []
+        providers_tried = []
+        ext = extension.lstrip(".")
+
+        # First try primary provider
         if provider == "everything":
             query = _build_everything_ext_query(extension, folder)
             payload = _everything_search(query, max_results, timeout=15)
+            if payload.get("ok"):
+                all_files.extend(payload.get("files", []))
+                providers_tried.append(provider)
         elif provider == LINUX_SEARCH_PROVIDER.provider_name:
-            query = f"*.{extension.lstrip('.')}"
-            payload = LINUX_SEARCH_PROVIDER.search_ext(extension, max_results, folder=folder)
-        else:
-            return _error("Extension search requires an available filesystem provider")
-        if not payload.get("ok"):
-            return _error(payload.get("error", "Search failed"))
-        files = payload["files"]
+            try:
+                payload = LINUX_SEARCH_PROVIDER.search_ext(extension, max_results, folder=folder)
+                if payload.get("ok"):
+                    all_files.extend(payload.get("files", []))
+                    providers_tried.append(provider)
+            except SearchProviderError as exc:
+                log(f"Linux index extension search failed: {exc}")
+
+        # Also search WSL if not restricted to a folder
+        if not folder or folder.startswith("/"):
+            wsl_payload = _wsl_search_ext(extension, max_results - len(all_files), folder="")
+            if wsl_payload.get("ok") and wsl_payload.get("files"):
+                all_files.extend(wsl_payload.get("files", []))
+                providers_tried.append("wsl")
+
+        if not all_files:
+            return _error(f"No files with extension '.{ext}' found")
+
+        # Deduplicate and limit results
+        seen = set()
+        unique_files = []
+        for f in all_files[:max_results]:
+            if f not in seen:
+                seen.add(f)
+                unique_files.append(f)
+
         return _success({
-            "extension": extension.lstrip("."),
+            "extension": ext,
             "folder": folder or None,
-            "query": query,
-            "provider": provider,
-            "files": files,
-            "count": len(files),
+            "query": f"*.{ext}",
+            "provider": ",".join(providers_tried) if len(providers_tried) > 1 else (providers_tried[0] if providers_tried else "unknown"),
+            "files": unique_files,
+            "count": len(unique_files),
         })
     except Exception as e:
         return _error(str(e))
