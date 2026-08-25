@@ -1220,10 +1220,12 @@ def conv_log(role: str, content: str, save_now: bool = False) -> str:
     try:
         global _auto_log_buffer
         entry = {"id": _generate_id(), "timestamp": _now_iso(), "tool": "manual_log", "args": f"role={role}", "result": content[:200]}
-        _auto_log_buffer.append(entry)
-        if save_now or len(_auto_log_buffer) >= _auto_log_threshold:
+        with _auto_log_lock:
+            _auto_log_buffer.append(entry)
+            buffer_len = len(_auto_log_buffer)
+        if save_now or buffer_len >= _auto_log_threshold:
             _auto_dump_logs()
-        return _success({"logged": True, "buffer_size": len(_auto_log_buffer)})
+        return _success({"logged": True, "buffer_size": buffer_len})
     except Exception as e:
         return _error(str(e))
 
@@ -1231,8 +1233,10 @@ def conv_log(role: str, content: str, save_now: bool = False) -> str:
 def conv_dump(summary: str = "") -> str:
     try:
         if summary:
-            _auto_log_buffer.append({"id": _generate_id(), "timestamp": _now_iso(), "tool": "summary", "args": "", "result": summary})
-        count = len(_auto_log_buffer)
+            with _auto_log_lock:
+                _auto_log_buffer.append({"id": _generate_id(), "timestamp": _now_iso(), "tool": "summary", "args": "", "result": summary})
+        with _auto_log_lock:
+            count = len(_auto_log_buffer)
         _auto_dump_logs()
         return _success({"dumped": True, "entries_saved": count})
     except Exception as e:
