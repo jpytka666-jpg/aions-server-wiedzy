@@ -2970,9 +2970,9 @@ def think_start(
 @mcp_server.tool(name="think_step", description="Execute single thinking step with auto CBMS lookup and tool suggestions.")
 @auto_logged
 def think_step(
-    session_id: str,
-    thought: str,
-    step_number: int,
+    session_id: str = "",
+    thought: str = "",
+    step_number: int = 0,
     needs_more_steps: bool = True,
     branch_id: str = "main",
     auto_cbms: bool = True
