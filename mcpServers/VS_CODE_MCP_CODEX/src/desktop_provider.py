@@ -75,22 +75,51 @@ class WindowsDesktopProvider(BaseDesktopProvider):
     provider_name = "windows-desktop"
 
     def __init__(self) -> None:
-        from desktop_control import (
-            desktop_unavailable_msg,
-            impl_click,
-            impl_clipboard,
-            impl_focus,
-            impl_key,
-            impl_launch,
-            impl_scroll,
-            impl_shell,
-            impl_snapshot,
-            impl_type,
-            impl_ui_tree,
-            impl_windows,
-            is_desktop_ready,
-            run_desktop,
-        )
+        # NOTE: desktop_control.py lives beside this file, inside the `src`
+        # package. When this module is imported as `src.desktop_provider`
+        # (the normal packaged path — see server.py's package-relative
+        # imports), a bare `import desktop_control` is NOT on sys.path and
+        # raises ModuleNotFoundError, which get_desktop_provider() in
+        # provider_registry.py/desktop_provider.py silently downgrades to a
+        # DisabledDesktopProvider("Windows desktop provider unavailable: No
+        # module named 'desktop_control'") — masking a real dependency
+        # (pywin32/pyautogui/mss) check behind an import-path bug. Mirror the
+        # relative-then-absolute fallback pattern already used at the top of
+        # server.py and provider_registry.py.
+        try:
+            from .desktop_control import (
+                desktop_unavailable_msg,
+                impl_click,
+                impl_clipboard,
+                impl_focus,
+                impl_key,
+                impl_launch,
+                impl_scroll,
+                impl_shell,
+                impl_snapshot,
+                impl_type,
+                impl_ui_tree,
+                impl_windows,
+                is_desktop_ready,
+                run_desktop,
+            )
+        except ImportError:
+            from desktop_control import (
+                desktop_unavailable_msg,
+                impl_click,
+                impl_clipboard,
+                impl_focus,
+                impl_key,
+                impl_launch,
+                impl_scroll,
+                impl_shell,
+                impl_snapshot,
+                impl_type,
+                impl_ui_tree,
+                impl_windows,
+                is_desktop_ready,
+                run_desktop,
+            )
 
         self._desktop_unavailable_msg = desktop_unavailable_msg
         self._is_desktop_ready = is_desktop_ready
