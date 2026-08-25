@@ -825,7 +825,7 @@ def _everything_search(query: str, max_results: int, timeout: int = 15, folder: 
     return {"ok": True, "files": files, "query": (f"{folder} {query}".strip() if folder else query)}
 
 def _wsl_search(query: str, max_results: int, folder: str = "") -> Dict[str, Any]:
-    """Search files in WSL (Ubuntu) using find command."""
+    """Search files and directories in WSL (Ubuntu) using find command."""
     if not WSL_EXE:
         return {"ok": False, "error": "WSL not available"}
 
@@ -833,8 +833,8 @@ def _wsl_search(query: str, max_results: int, folder: str = "") -> Dict[str, Any
     # Escape query for use in shell
     query_escaped = query.replace("'", "'\\''")
 
-    # Build find command: find /path -iname "*query*" -type f | head -n max_results
-    find_cmd = f"find '{search_root}' -iname '*{query_escaped}*' -type f 2>/dev/null | head -n {max_results}"
+    # Build find command: find /path -iname "*query*" (both files AND directories)
+    find_cmd = f"find '{search_root}' -iname '*{query_escaped}*' 2>/dev/null | head -n {max_results}"
 
     try:
         result = _run_command([str(WSL_EXE), "bash", "-c", find_cmd], timeout=10)
