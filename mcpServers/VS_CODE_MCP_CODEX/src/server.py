@@ -877,9 +877,13 @@ def _platform_search(query: str, max_results: int, folder: str = "") -> Dict[str
     all_files = []
     providers_tried = []
 
+    # Request more results from each provider to account for deduplication across providers
+    # (e.g., if 50% are duplicates, request 2x to ensure we have enough final results)
+    request_count = max_results * 2
+
     # First, try the primary provider for Windows/Linux-indexed paths
     if provider == "everything":
-        payload = _everything_search(query, max_results, timeout=10, folder=folder)
+        payload = _everything_search(query, request_count, timeout=10, folder=folder)
         if payload.get("ok"):
             all_files.extend(payload.get("files", []))
             providers_tried.append(provider)
@@ -887,7 +891,7 @@ def _platform_search(query: str, max_results: int, folder: str = "") -> Dict[str
             log(f"Everything search failed: {payload.get('error')}")
     elif provider == LINUX_SEARCH_PROVIDER.provider_name:
         try:
-            payload = LINUX_SEARCH_PROVIDER.search(query, max_results, folder=folder)
+            payload = LINUX_SEARCH_PROVIDER.search(query, request_count, folder=folder)
             if payload.get("ok"):
                 all_files.extend(payload.get("files", []))
                 providers_tried.append(provider)
@@ -897,8 +901,8 @@ def _platform_search(query: str, max_results: int, folder: str = "") -> Dict[str
     # ALWAYS also search WSL to get files from /home/aions
     # (unless folder is explicitly restricted to Windows paths)
     if not folder or folder.startswith("/") or folder.startswith("C:") is False:
-        # Request enough results from WSL to potentially fill the result set
-        wsl_payload = _wsl_search(query, max_results, folder="")
+        # Request enough results from WSL to contribute meaningfully
+        wsl_payload = _wsl_search(query, request_count, folder="")
         if wsl_payload.get("ok") and wsl_payload.get("files"):
             all_files.extend(wsl_payload.get("files", []))
             if "wsl" not in providers_tried:
@@ -914,26 +918,27 @@ def _platform_search(query: str, max_results: int, folder: str = "") -> Dict[str
     if not all_files:
         return {
             "ok": False,
-            "provider": ",".join(providers_tried) if providers_tried else provider,
+            "provider": "+".join(providers_tried) if providers_tried else provider,
             "error": f"No files found matching '{query}'",
         }
 
-    # Deduplicate results and return only requested count
+    # Deduplicate results while preserving order
     seen = set()
     unique_files = []
     for f in all_files:
-        if f not in seen:
-            seen.add(f)
+        # Normalize path separators for comparison (compare Windows and WSL paths case-insensitively)
+        normalized = f.lower() if isinstance(f, str) else f
+        if normalized not in seen:
+            seen.add(normalized)
             unique_files.append(f)
-            if len(unique_files) >= max_results:
-                break
 
+    # Return only the requested number of results
     return {
         "ok": True,
-        "files": unique_files,
+        "files": unique_files[:max_results],
         "query": query,
         "provider": "+".join(providers_tried) if len(providers_tried) > 1 else (providers_tried[0] if providers_tried else "unknown"),
-        "count": len(unique_files),
+        "count": len(unique_files[:max_results]),
     }
 
 @mcp_server.tool(name="fast_search", description="Fast file search (Everything on Windows, aions-linux-index on Linux).")
