@@ -2719,6 +2719,12 @@ def _thinking_load() -> None:
         log(f"thinking state load failed: {e}")
 
 
+def _thinking_set_current(session_id: Optional[str]) -> None:
+    """Remember which chain is in progress, so callers need not repeat its id."""
+    global _thinking_current
+    _thinking_current = session_id
+
+
 def _thinking_resolve(session_id: str) -> str:
     """An empty id means the session the caller is already in."""
     if session_id and session_id.strip():
