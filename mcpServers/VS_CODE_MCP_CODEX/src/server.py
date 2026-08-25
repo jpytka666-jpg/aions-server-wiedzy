@@ -3086,6 +3086,12 @@ def think_branch(
         parent_step: Od którego kroku rozgałęzić (-1 = current)
     """
     try:
+        if not branch_name or not branch_name.strip():
+            return _error("think_branch needs a 'branch_name'.")
+        branch_name = branch_name.strip()
+        session_id = _thinking_resolve(session_id)
+        if not session_id:
+            return _error("No thinking session in progress. Use think_start() first.")
         with _thinking_lock:
             if session_id not in _thinking_sessions:
                 return _error(f"Session '{session_id}' not found")
