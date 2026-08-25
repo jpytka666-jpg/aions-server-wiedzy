@@ -845,6 +845,25 @@ def _wsl_search(query: str, max_results: int, folder: str = "") -> Dict[str, Any
     except Exception as e:
         return {"ok": False, "error": str(e)}
 
+def _wsl_search_ext(extension: str, max_results: int, folder: str = "") -> Dict[str, Any]:
+    """Search files by extension in WSL (Ubuntu)."""
+    if not WSL_EXE:
+        return {"ok": False, "error": "WSL not available"}
+
+    search_root = folder.strip() if folder else "/home/aions"
+    ext = extension.lstrip(".").lower()
+    # Build find command for extension
+    find_cmd = f"find '{search_root}' -iname '*.{ext}' -type f 2>/dev/null | head -n {max_results}"
+
+    try:
+        result = _run_command([str(WSL_EXE), "bash", "-c", find_cmd], timeout=10)
+        if not result["success"]:
+            return {"ok": False, "error": result.get("stderr", "WSL extension search failed")}
+        files = [f.strip() for f in result["stdout"].strip().split("\n") if f.strip()]
+        return {"ok": True, "files": files, "query": f"*.{ext}", "count": len(files)}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
 def _search_provider() -> str:
     return resolve_search_provider_name(
         platform_name=PLATFORM_NAME,
