@@ -20,12 +20,14 @@ Autor: Marcin Szul / AIONS Project
 
 from __future__ import annotations
 
+import atexit
 import json
 import os
 import queue
 import sys
 import re
 import hashlib
+import signal
 import uuid
 import traceback
 import importlib.util
