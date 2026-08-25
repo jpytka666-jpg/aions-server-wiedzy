@@ -1173,6 +1173,135 @@ def git_log(repo_path: str = "", count: int = 10) -> str:
     except Exception as e:
         return _error(f"Git error: {str(e)}")
 
+@mcp_server.tool(name="git_commit", description="Stage changes and commit with a message.")
+@auto_logged
+def git_commit(repo_path: str = "", message: str = "", add_all: bool = False) -> str:
+    try:
+        # Validate message
+        if not message or not message.strip():
+            return _error("Commit message cannot be empty or whitespace-only")
+
+        git_cmd = GIT_EXE if isinstance(GIT_EXE, str) else str(GIT_EXE)
+        cwd = repo_path if repo_path else None
+
+        # Check if path exists
+        if cwd and not Path(cwd).exists():
+            return _error(f"Path not found: {cwd}")
+
+        # Check if huge repo
+        if _is_huge_repo(cwd):
+            return _error("Cannot commit in huge repository")
+
+        # Optionally stage all changes
+        if add_all:
+            result = subprocess.run(
+                [git_cmd, "add", "-A"],
+                capture_output=True,
+                text=True,
+                cwd=cwd,
+                timeout=10,
+                shell=False
+            )
+            if result.returncode != 0:
+                return _error(f"git add failed: {result.stderr[:200]}")
+
+        # Check if there are staged changes
+        status_result = subprocess.run(
+            [git_cmd, "diff", "--cached", "--quiet"],
+            capture_output=True,
+            text=True,
+            cwd=cwd,
+            timeout=5,
+            shell=False
+        )
+        # returncode 1 means there are staged changes; 0 means no changes
+        if status_result.returncode == 0:
+            return _error("Nothing staged to commit")
+
+        # Perform commit
+        result = subprocess.run(
+            [git_cmd, "commit", "-m", message],
+            capture_output=True,
+            text=True,
+            cwd=cwd,
+            timeout=10,
+            shell=False
+        )
+
+        if result.returncode != 0:
+            return _error(f"git commit failed: {result.stderr[:200]}")
+
+        # Extract hash from output (e.g., "[main abc1234] Commit message")
+        output_lines = result.stdout.strip().split("\n")
+        commit_line = output_lines[0] if output_lines else ""
+
+        # Parse "[branch hash] message" format
+        hash_match = re.search(r'\[.+\s+([a-f0-9]+)\]', commit_line)
+        short_hash = hash_match.group(1) if hash_match else "unknown"
+
+        return _success({
+            "hash": short_hash,
+            "message": message,
+            "output": result.stdout.strip(),
+            "path": cwd or "current"
+        })
+    except Exception as e:
+        return _error(f"Git commit error: {str(e)}")
+
+@mcp_server.tool(name="git_push", description="Push commits to remote repository.")
+@auto_logged
+def git_push(repo_path: str = "", remote: str = "origin", branch: str = "") -> str:
+    try:
+        git_cmd = GIT_EXE if isinstance(GIT_EXE, str) else str(GIT_EXE)
+        cwd = repo_path if repo_path else None
+
+        # Check if path exists
+        if cwd and not Path(cwd).exists():
+            return _error(f"Path not found: {cwd}")
+
+        # Check if huge repo
+        if _is_huge_repo(cwd):
+            return _error("Cannot push in huge repository")
+
+        # Get current branch if not specified
+        if not branch or not branch.strip():
+            result = subprocess.run(
+                [git_cmd, "rev-parse", "--abbrev-ref", "HEAD"],
+                capture_output=True,
+                text=True,
+                cwd=cwd,
+                timeout=5,
+                shell=False
+            )
+            if result.returncode != 0:
+                return _error(f"Failed to determine current branch: {result.stderr[:200]}")
+            branch = result.stdout.strip()
+
+        # Perform push
+        result = subprocess.run(
+            [git_cmd, "push", remote, branch],
+            capture_output=True,
+            text=True,
+            cwd=cwd,
+            timeout=30,
+            shell=False
+        )
+
+        # Report git's actual output regardless of return code
+        output = result.stdout.strip() or result.stderr.strip()
+
+        if result.returncode != 0:
+            return _error(f"git push failed: {output[:300]}")
+
+        return _success({
+            "remote": remote,
+            "branch": branch,
+            "output": output,
+            "path": cwd or "current"
+        })
+    except Exception as e:
+        return _error(f"Git push error: {str(e)}")
+
 # =============================================================================
 # NETWORK TOOLS (AUTO-LOGGED)
 # =============================================================================
