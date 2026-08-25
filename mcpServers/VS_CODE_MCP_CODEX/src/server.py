@@ -3152,6 +3152,15 @@ def think_finish(
         memory_session: Nazwa sesji ChromaDB
     """
     try:
+        if not conclusion or not conclusion.strip():
+            return _error("think_finish needs a 'conclusion'.")
+        # One name in one place. think_start reads back from exactly this collection,
+        # so a caller that invents its own name here would file the conclusion where
+        # nothing will ever look for it.
+        memory_session = (memory_session or "").strip() or THINKING_MEMORY_SESSION
+        session_id = _thinking_resolve(session_id)
+        if not session_id:
+            return _error("No thinking session in progress. Use think_start() first.")
         with _thinking_lock:
             if session_id not in _thinking_sessions:
                 return _error(f"Session '{session_id}' not found")
