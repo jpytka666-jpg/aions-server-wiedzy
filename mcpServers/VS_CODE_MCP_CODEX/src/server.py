@@ -2989,6 +2989,11 @@ def think_step(
         auto_cbms: Czy auto-szukać w CBMS
     """
     try:
+        if not thought or not thought.strip():
+            return _error("think_step needs a 'thought'.")
+        session_id = _thinking_resolve(session_id)
+        if not session_id:
+            return _error("No thinking session in progress. Use think_start() first.")
         with _thinking_lock:
             if session_id not in _thinking_sessions:
                 return _error(f"Session '{session_id}' not found. Use think_start() first.")
