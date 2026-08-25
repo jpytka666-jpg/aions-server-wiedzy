@@ -3170,6 +3170,11 @@ def think_finish(
             session["conclusion"] = conclusion
             session["confidence"] = confidence
             session["completed_at"] = _now_iso()
+            # The chain is over, so nothing is "current" any more. Leaving a finished
+            # id in place would silently attach the next think_step to a closed chain.
+            if _thinking_current == session_id:
+                _thinking_set_current(None)
+            _thinking_save()
         
         report = {
             "session_id": session_id,
