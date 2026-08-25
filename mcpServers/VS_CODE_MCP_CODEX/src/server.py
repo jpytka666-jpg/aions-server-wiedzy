@@ -3135,11 +3135,11 @@ def think_branch(
 @mcp_server.tool(name="think_finish", description="Complete thinking chain, generate summary report, optionally store to ChromaDB memory.")
 @auto_logged
 def think_finish(
-    session_id: str,
-    conclusion: str,
+    session_id: str = "",
+    conclusion: str = "",
     confidence: float = 0.8,
     store_to_memory: bool = True,
-    memory_session: str = "thinking_conclusions"
+    memory_session: str = ""
 ) -> str:
     """
     Kończy łańcuch myślowy i generuje raport.
