@@ -2652,6 +2652,101 @@ _thinking_sessions: Dict[str, Dict] = {}
 _thinking_lock = Lock()
 _thinking_cleanup_interval = timedelta(hours=1)
 
+# --- External local memory for the thinking chain -----------------------------
+#
+# Two gaps this closes, both established by measurement on 2026-08-25:
+#
+# 1. Sessions lived only in the dict above. A server restart erased every chain
+#    of reasoning ever recorded, which makes "external memory" a name rather
+#    than a fact. The dict is now mirrored to disk on every change.
+#
+# 2. Four of the five think_* tools required the caller to repeat a 33-character
+#    session id verbatim on every call. A large model manages that; the local
+#    Qwen3-4B was observed writing `=` where `:` belonged, and a single mangled
+#    id orphans the whole chain with no way back. The server now remembers which
+#    session is current, so the id becomes optional. The burden moves off the
+#    model rather than the model being asked to be better.
+#
+# Both changes are additive: passing an explicit session_id behaves exactly as
+# before, and probing costs nothing when the feature is unused.
+
+_thinking_current: Optional[str] = None
+_THINKING_STATE_PATH = Path(
+    os.environ.get(
+        "AIONS_THINKING_STATE",
+        str(REPO_ROOT / "runtime" / "state" / "aions_thinking_sessions.json"),
+    )
+)
+# Where think_finish files its conclusions and where think_start goes looking for
+# what was already worked out. One name in one place, so the write and the read
+# cannot drift apart.
+THINKING_MEMORY_SESSION = os.environ.get(
+    "AIONS_THINKING_MEMORY_SESSION", "thinking_conclusions"
+)
+
+
+def _thinking_save() -> None:
+    """Mirror the live sessions to disk. Never raises: losing the mirror must not
+    break reasoning that is still in progress."""
+    try:
+        _THINKING_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        payload = {"current": _thinking_current, "sessions": _thinking_sessions}
+        tmp = _THINKING_STATE_PATH.with_suffix(".tmp")
+        # Write-then-rename, so a crash mid-write leaves the previous good file
+        # instead of a truncated one.
+        with open(tmp, "w", encoding="utf-8") as fh:
+            json.dump(payload, fh, ensure_ascii=False, default=str)
+        tmp.replace(_THINKING_STATE_PATH)
+    except Exception as e:
+        log(f"thinking state save failed: {e}")
+
+
+def _thinking_load() -> None:
+    """Restore sessions written by an earlier run. Fail-open: a missing or corrupt
+    file simply means starting empty."""
+    global _thinking_current
+    try:
+        if not _THINKING_STATE_PATH.exists():
+            return
+        with open(_THINKING_STATE_PATH, "r", encoding="utf-8") as fh:
+            payload = json.load(fh)
+        loaded = payload.get("sessions") or {}
+        if isinstance(loaded, dict):
+            _thinking_sessions.update(loaded)
+            _thinking_current = payload.get("current")
+            log(f"thinking state restored: {len(loaded)} session(s)")
+    except Exception as e:
+        log(f"thinking state load failed: {e}")
+
+
+def _thinking_resolve(session_id: str) -> str:
+    """An empty id means the session the caller is already in."""
+    if session_id and session_id.strip():
+        return session_id.strip()
+    return _thinking_current or ""
+
+
+def _thinking_prior_conclusions(goal: str, top_k: int = 3) -> List[Dict[str, Any]]:
+    """What was already concluded about something like this.
+
+    This is the learning half. Every chain ends by filing its conclusion, and
+    every new chain opens by reading the file back. Without it the tools record
+    reasoning that nothing ever consults again."""
+    out: List[Dict[str, Any]] = []
+    try:
+        vs = get_vector_store()
+        if vs is None:
+            return out
+        for hit in vs.search(THINKING_MEMORY_SESSION, goal, top_k):
+            text = hit.get("text") or hit.get("document") or ""
+            out.append({"text": text[:400], "score": hit.get("score")})
+    except Exception as e:
+        log(f"thinking prior-conclusions lookup failed: {e}")
+    return out
+
+
+_thinking_load()
+
 # Prevent auto-logging loops for status checks
 SKIP_LOG_TOOLS.add("think_status")
 
