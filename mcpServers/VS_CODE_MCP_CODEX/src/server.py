@@ -3115,6 +3115,7 @@ def think_branch(
                 "needs_more": True
             }
             session["branches"][branch_name].append(branch_start)
+            _thinking_save()
         
         return _success({
             "session_id": session_id,
