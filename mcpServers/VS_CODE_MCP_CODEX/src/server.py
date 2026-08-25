@@ -3071,9 +3071,9 @@ def think_step(
 
 @mcp_server.tool(name="think_branch", description="Create parallel reasoning branch for exploring alternative hypotheses.")
 def think_branch(
-    session_id: str,
-    branch_name: str,
-    hypothesis: str,
+    session_id: str = "",
+    branch_name: str = "",
+    hypothesis: str = "",
     parent_step: int = -1
 ) -> str:
     """
