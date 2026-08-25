@@ -2936,13 +2936,22 @@ def think_start(
         suggested = _suggest_aions_tools(combined_text)
         session["suggested_tools"] = suggested
         
+        # Open by remembering. Anything already concluded about a goal like this
+        # is handed back before the first step is taken, which is the whole point
+        # of keeping the conclusions in the first place.
+        prior = _thinking_prior_conclusions(f"{goal} {context}".strip())
+        session["prior_conclusions"] = prior
+
         with _thinking_lock:
             _thinking_sessions[session_id] = session
-        
+            _thinking_set_current(session_id)
+            _thinking_save()
+
         return _success({
             "session_id": session_id,
             "goal": goal,
             "max_steps": max_steps,
+            "prior_conclusions": prior,
             "cbms_context": {
                 "status": cbms_result.get("status"),
                 "relevant_chunks": cbms_result.get("chunks", [])[:3],
