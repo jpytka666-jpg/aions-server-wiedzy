@@ -3035,6 +3035,8 @@ def think_step(
             session["current_step"] = step_number
             session["steps"].append(step_record)
             session["active_branch"] = branch_id
+            _thinking_set_current(session_id)
+            _thinking_save()
         
         next_suggestions = []
         if needs_more_steps:
