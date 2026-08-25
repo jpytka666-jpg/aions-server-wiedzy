@@ -899,8 +899,9 @@ def _platform_search(query: str, max_results: int, folder: str = "") -> Dict[str
             log(f"Linux index search failed: {exc}")
 
     # ALWAYS also search WSL to get files from /home/aions
-    # (unless folder is explicitly restricted to Windows paths)
-    if not folder or folder.startswith("/") or folder.startswith("C:") is False:
+    # (unless folder is explicitly restricted to Windows-only paths like C:\ or D:\)
+    should_search_wsl = not folder or folder.startswith("/") or (not folder.startswith("C:") and not folder.startswith("D:") and not folder.startswith("E:"))
+    if should_search_wsl:
         # Request enough results from WSL to contribute meaningfully
         wsl_payload = _wsl_search(query, request_count, folder="")
         if wsl_payload.get("ok") and wsl_payload.get("files"):
