@@ -877,7 +877,7 @@ def _platform_search(query: str, max_results: int, folder: str = "") -> Dict[str
     all_files = []
     providers_tried = []
 
-    # First, try the primary provider
+    # First, try the primary provider for Windows/Linux-indexed paths
     if provider == "everything":
         payload = _everything_search(query, max_results, timeout=10, folder=folder)
         if payload.get("ok"):
@@ -894,15 +894,15 @@ def _platform_search(query: str, max_results: int, folder: str = "") -> Dict[str
         except SearchProviderError as exc:
             log(f"Linux index search failed: {exc}")
 
-    # Also search WSL if:
-    # 1. No folder restriction (or folder is WSL path)
-    # 2. WSL is available
-    # 3. We haven't already found enough results
-    if not folder or folder.startswith("/"):
-        wsl_payload = _wsl_search(query, max_results - len(all_files), folder="")
+    # ALWAYS also search WSL to get files from /home/aions
+    # (unless folder is explicitly restricted to Windows paths)
+    if not folder or folder.startswith("/") or folder.startswith("C:") is False:
+        # Request enough results from WSL to potentially fill the result set
+        wsl_payload = _wsl_search(query, max_results, folder="")
         if wsl_payload.get("ok") and wsl_payload.get("files"):
             all_files.extend(wsl_payload.get("files", []))
-            providers_tried.append("wsl")
+            if "wsl" not in providers_tried:
+                providers_tried.append("wsl")
 
     if not all_files and not providers_tried:
         return {
@@ -918,19 +918,21 @@ def _platform_search(query: str, max_results: int, folder: str = "") -> Dict[str
             "error": f"No files found matching '{query}'",
         }
 
-    # Deduplicate results
+    # Deduplicate results and return only requested count
     seen = set()
     unique_files = []
-    for f in all_files[:max_results]:
+    for f in all_files:
         if f not in seen:
             seen.add(f)
             unique_files.append(f)
+            if len(unique_files) >= max_results:
+                break
 
     return {
         "ok": True,
-        "files": unique_files[:max_results],
+        "files": unique_files,
         "query": query,
-        "provider": ",".join(providers_tried) if len(providers_tried) > 1 else (providers_tried[0] if providers_tried else "unknown"),
+        "provider": "+".join(providers_tried) if len(providers_tried) > 1 else (providers_tried[0] if providers_tried else "unknown"),
         "count": len(unique_files),
     }
 
