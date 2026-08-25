@@ -348,6 +348,7 @@ _auto_log_buffer: List[Dict] = []
 _auto_log_session: str = "claude_marcin_main"
 _auto_log_threshold: int = 5
 _auto_log_last_dump: datetime = datetime.now(timezone.utc)
+_auto_log_lock = threading.Lock()
 
 # =============================================================================
 # PROVENANCE — one Claude, many machines
