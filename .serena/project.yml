@@ -167,3 +167,11 @@ ignored_memory_patterns: []
 # Note that when using the JetBrains backend, language servers are not used and this list is correspondingly ignored.
 language_servers:
 - python
+
+# Same list under the name the 1.6.x schema expects.
+# Two Serena installations are registered (a local one and the plugin), and they
+# read different field names: the newer writes `language_servers`, 1.6.1 reads
+# `languages` and aborts project loading with KeyError 'languages' when it is
+# absent - which left `Available projects:` empty and every tool refusing with
+# "No active project". Both keys are present so either version can load this file.
+languages: ["python"]
