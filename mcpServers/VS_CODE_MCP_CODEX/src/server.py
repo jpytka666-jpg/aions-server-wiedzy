@@ -824,6 +824,27 @@ def _everything_search(query: str, max_results: int, timeout: int = 15, folder: 
     files = [f for f in result["stdout"].strip().split("\n") if f.strip()]
     return {"ok": True, "files": files, "query": (f"{folder} {query}".strip() if folder else query)}
 
+def _wsl_search(query: str, max_results: int, folder: str = "") -> Dict[str, Any]:
+    """Search files in WSL (Ubuntu) using find command."""
+    if not WSL_EXE:
+        return {"ok": False, "error": "WSL not available"}
+
+    search_root = folder.strip() if folder else "/home/aions"
+    # Escape query for use in shell
+    query_escaped = query.replace("'", "'\\''")
+
+    # Build find command: find /path -iname "*query*" -type f | head -n max_results
+    find_cmd = f"find '{search_root}' -iname '*{query_escaped}*' -type f 2>/dev/null | head -n {max_results}"
+
+    try:
+        result = _run_command([str(WSL_EXE), "bash", "-c", find_cmd], timeout=10)
+        if not result["success"]:
+            return {"ok": False, "error": result.get("stderr", "WSL search failed")}
+        files = [f.strip() for f in result["stdout"].strip().split("\n") if f.strip()]
+        return {"ok": True, "files": files, "query": query, "count": len(files)}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
 def _search_provider() -> str:
     return resolve_search_provider_name(
         platform_name=PLATFORM_NAME,
@@ -832,20 +853,66 @@ def _search_provider() -> str:
     )
 
 def _platform_search(query: str, max_results: int, folder: str = "") -> Dict[str, Any]:
+    """Search files using available providers. Combines Windows (Everything or Linux Index) with WSL search."""
     provider = _search_provider()
+    all_files = []
+    providers_tried = []
+
+    # First, try the primary provider
     if provider == "everything":
         payload = _everything_search(query, max_results, timeout=10, folder=folder)
-        payload["provider"] = provider
-        return payload
-    if provider == LINUX_SEARCH_PROVIDER.provider_name:
+        if payload.get("ok"):
+            all_files.extend(payload.get("files", []))
+            providers_tried.append(provider)
+        else:
+            log(f"Everything search failed: {payload.get('error')}")
+    elif provider == LINUX_SEARCH_PROVIDER.provider_name:
         try:
-            return LINUX_SEARCH_PROVIDER.search(query, max_results, folder=folder)
+            payload = LINUX_SEARCH_PROVIDER.search(query, max_results, folder=folder)
+            if payload.get("ok"):
+                all_files.extend(payload.get("files", []))
+                providers_tried.append(provider)
         except SearchProviderError as exc:
-            return {"ok": False, "provider": provider, "error": str(exc)}
+            log(f"Linux index search failed: {exc}")
+
+    # Also search WSL if:
+    # 1. No folder restriction (or folder is WSL path)
+    # 2. WSL is available
+    # 3. We haven't already found enough results
+    if not folder or folder.startswith("/"):
+        wsl_payload = _wsl_search(query, max_results - len(all_files), folder="")
+        if wsl_payload.get("ok") and wsl_payload.get("files"):
+            all_files.extend(wsl_payload.get("files", []))
+            providers_tried.append("wsl")
+
+    if not all_files and not providers_tried:
+        return {
+            "ok": False,
+            "provider": provider,
+            "error": "No filesystem search provider available",
+        }
+
+    if not all_files:
+        return {
+            "ok": False,
+            "provider": ",".join(providers_tried) if providers_tried else provider,
+            "error": f"No files found matching '{query}'",
+        }
+
+    # Deduplicate results
+    seen = set()
+    unique_files = []
+    for f in all_files[:max_results]:
+        if f not in seen:
+            seen.add(f)
+            unique_files.append(f)
+
     return {
-        "ok": False,
-        "provider": provider,
-        "error": "No filesystem search provider available",
+        "ok": True,
+        "files": unique_files[:max_results],
+        "query": query,
+        "provider": ",".join(providers_tried) if len(providers_tried) > 1 else (providers_tried[0] if providers_tried else "unknown"),
+        "count": len(unique_files),
     }
 
 @mcp_server.tool(name="fast_search", description="Fast file search (Everything on Windows, aions-linux-index on Linux).")
