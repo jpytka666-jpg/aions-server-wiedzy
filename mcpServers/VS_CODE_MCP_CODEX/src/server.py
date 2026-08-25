@@ -3003,6 +3003,11 @@ def think_step(
             if session["status"] != "active":
                 return _error(f"Session is {session['status']}. Cannot add steps.")
             
+            # A step number of zero means "whatever comes next". Counting is the
+            # server's job; a caller that has to track it will eventually get it wrong.
+            if step_number <= 0:
+                step_number = int(session.get("current_step") or 0) + 1
+
             if step_number > session["max_steps"]:
                 return _error(f"Exceeded max steps ({session['max_steps']})")
             
