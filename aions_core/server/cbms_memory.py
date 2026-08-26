@@ -51,7 +51,31 @@ class CBMSMemory:
             # PERMANENTLY ENABLED - NO OPTIMIZATION AT COST OF FUNCTIONALITY
             use_sym = str(os.environ.get("CBMS_SYMBOLIC", "1")).lower() in ("1", "true", "on")
             cb_path = self.memory_dir / "codebook" / "codebook.json"
-            if use_sym and cb_path.exists():
+
+            # The shared code book first, when the blocks carry symbols from it.
+            #
+            # The 16-symbol book used below was written around one example sentence about
+            # buying bread. Measured on this store: 86 of 167 blocks contained none of its
+            # symbols at all, so no query could ever reach them - and those 86 held the
+            # thinking patterns, the meta-cognitive strategies and the reasoning
+            # methodologies. The shared book covers 91.6% of the same words.
+            #
+            # It also loads rather than rebuilds: the old index re-encoded every block at
+            # each server start and lost the result on shutdown. 0.12 s against a walk of
+            # the whole store.
+            if use_sym:
+                try:
+                    from cbms_shared_index import SharedBookIndex  # type: ignore
+                    shared = SharedBookIndex(self.memory_dir)
+                    if shared.book_path.exists():
+                        if shared.build(limit=None) > 0:
+                            self._symbolic_idx = shared
+                            self.symbolic_enabled = True
+                except Exception:
+                    # Fall through to the old book rather than lose the layer entirely.
+                    self._symbolic_idx = None
+
+            if use_sym and self._symbolic_idx is None and cb_path.exists():
                 from codebook_engine import Codebook  # type: ignore
                 from cbms_symbolic_index import SymbolicIndex  # type: ignore
                 cb = Codebook.load(cb_path)
