@@ -117,6 +117,11 @@ class SharedBookIndex:
         """Load, do not re-encode. The previous index walked every block and ran the whole
         codec at every server start, then lost the result on shutdown."""
         self.book = load_book(self.book_path)
+        # Symbol back to the word it stands for. This is what turns a hit into a place:
+        # the symbol says the block is relevant, the word says WHERE in it to look.
+        # First root wins, so the reverse map is stable as the book grows.
+        for root, sym in self.book.items():
+            self.sym2word.setdefault(sym, root)
         count = 0
         for i, f in enumerate(sorted(self.chunks_dir.glob("*.json"))):
             if limit and i >= limit:
