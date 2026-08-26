@@ -20,7 +20,7 @@
 # TECH STACK: Python 3, standard library only. The thing being measured is a tree of
 #   JSON files; a dependency would buy nothing and add a way for the measurement to fail.
 # LOCAL WORKSPACE: worktree of aions-server-wiedzy, branch discovery/cbms-structure
-# GIT COMMIT: 824cb07 (introduced)
+# GIT COMMIT: PENDING
 # GITHUB METADATA: jpytka666-jpg/aions-server-wiedzy, branch discovery/cbms-structure
 # ==========================================
 """Measure the live CBMS store. Read-only, by construction."""

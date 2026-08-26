@@ -23,7 +23,7 @@
 #   on a machine that is already short of memory. Its default embedding model is
 #   cached locally, so ingest works with the network down.
 # LOCAL WORKSPACE: worktree of aions-server-wiedzy, branch discovery/cbms-structure
-# GIT COMMIT: 824cb07 (introduced)
+# GIT COMMIT: PENDING
 # GITHUB METADATA: jpytka666-jpg/aions-server-wiedzy, branch discovery/cbms-structure
 # ==========================================
 """Build the CBMS discovery index. Own database, never the live one."""

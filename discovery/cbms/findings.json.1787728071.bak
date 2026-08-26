@@ -226,138 +226,14 @@
     },
     {
       "id": "F15",
-      "claim": "There is a KR-CBMS engine, separate from the modules in this repository, and it is a real working ID scheme rather than a self-report.",
-      "status": "CONFIRMED",
+      "claim": "There is a CBMS_KR engine family, separate from the modules in this repository.",
+      "status": "OPEN",
       "evidence": {
-        "found_2026_08_26": {
-          "kr_cbms_generator.py": "15810 B, 2025-12-16 11:19",
-          "phi3_kr_bridge.py": "17853 B, 2025-12-16",
-          "test_kr_cbms_integration.py": "18070 B, 2025-12-16",
-          "KR_CBMS_INTEGRATION_GUIDE.md": "17444 B, 2025-12-16",
-          "kr_cbms_test_results.json": "834 B, two identical runs 2025-12-17 and 2025-12-19"
-        },
-        "located_at": "backup trees under E:\\server\\ciekawe, E:\\AJAJAJ, E:\\AI_WORKSPACE and E:\\PHI 3-KR_AIONS-SYSTEM INTEGRATION WORKSPACE - not inside this repository",
-        "what_it_does": "Generates a chunk id that carries meaning: KR_<DOMAIN>_<KR_CODE>_<HASH6>, e.g. KR_AI_IN_F7C3B2 - AI domain, syllable 인 (person/artificial), 6 hex of SHA-256 for uniqueness. Decodable with ^KR_([A-Z]{2})_([A-Z]{2})_([A-F0-9]{6})$.",
-        "tables": "16 KR codes each with (cbms_id, 4-element pattern, Korean syllable, meaning); 6 multi-syllable semantic units; 12 domains with keyword lists, GN as fallback",
-        "domain_selection": "count keyword hits per domain, take the argmax, confidence = hits_for_winner / total_hits; no match -> GN at confidence 0.5",
-        "why_it_matters": "This is the one genuinely better idea in the whole KR thread. The live server's id ('K' + SHA-256[:12]) carries no information at all - two chunks about the same subject look unrelated. A KR id sorts, groups and explains itself without opening the file.",
-        "note_on_the_earlier_lead": "Chunk KTHINKSTACK001 (2025-11-08) described a different family - cbms_kr_v1, _blend, _broadcast, CBMS_KR_PURE.py, each with an ARCH_CBMS_KR.md. Those specific files were NOT among what was found. The KTHINKSTACK001 description remains unverified; what is confirmed here is the December generator/bridge/test set."
-      }
-    },
-    {
-      "id": "F16",
-      "claim": "The KR-CBMS 'neural patterns' are hand-written constants, and the bridge that claims to run PHI3-KR never runs a model.",
-      "status": "CONFIRMED",
-      "evidence": {
-        "patterns_are_constants": "SemanticToKoreanMapper.NEURAL_PATTERNS holds 16 four-element tuples literal in the source, drawn from a small repeated pool (0.334, 0.445, 0.556, 0.667, 0.778, 0.823, 0.847, 0.891, 0.912, 0.991) in alternating signs. They are authored, not measured or learned.",
-        "bridge_never_infers": {
-          "file": "phi3_kr_bridge.py",
-          "_process_real": "its own comment reads 'This would use actual model inference / For now, return simulated result with real pattern matching'. It checks whether the string key 'lm_head.weight' is present in the loaded tensor dict and, if so, marks EVERY pattern as activated. No forward pass.",
-          "_process_simulated": "activation = abs(pattern[0]) + abs(pattern[2]) > 1.0, evaluated on the hand-written constants. Deterministic by arithmetic, not by neurons.",
-          "grep_result": "no from_pretrained, no forward, no logits, no torch.no_grad anywhere in the file; the only generate( call is the id generator"
-        },
-        "model_absent": "MODEL_PATH = E:/KOREAN_PHI3_COMPLETE/AIONS_KOREAN_MODIFIED_PHI3.safetensors - the directory does not exist on this machine as of 2026-08-26",
-        "config_block_closes_F12": {
-          "declared": {"modified_tensors": 67, "modified_parameters": 499102, "injection_strength": 0.1, "compression_target": 3.19, "korean_syllables": 16},
-          "match": "injection_strength 0.1 is exactly the std 0.100013 measured across the 4800 injected values in AIONS_KOREAN_INJECTION_RESULTS.json (F12). The 'injection' was random noise scaled by that constant. The mechanism is now named, not merely inferred."
-        }
-      }
-    },
-    {
-      "id": "F17",
-      "claim": "The KR-CBMS test suite passes 33 of 34 - and tests the simulator.",
-      "status": "CONFIRMED",
-      "evidence": {
-        "file": "kr_cbms_test_results.json, identical content at two paths, runs dated 2025-12-17T04:56 and 2025-12-19T19:28",
-        "totals": {"passed": 33, "failed": 1, "pass_rate": 97.06},
-        "suites": {"KR-CBMS Generator": "6/6 PASS", "Neural Pattern Mapping": "6/6 PASS", "PHI3-KR Bridge": "5/6 FAIL", "KR Verification": "6/6 PASS", "CBMS Chunker KR": "4/4 PASS", "End-to-End Flow": "6/6 PASS"},
-        "reading": "Everything that is pure deterministic string and table work passes. The single failing suite is the only one that touches the model. Given F16, 'End-to-End Flow' passing means the simulated end to end, not inference.",
-        "fair_to_the_code": "The generator suites passing is worth something real - the id scheme is genuinely correct and reproducible. The suite is not fraudulent; it is honest about what it exercises. Only the surrounding claims overreach."
-      }
-    },
-    {
-      "id": "F18",
-      "claim": "There are two unrelated chunk-id schemes in CBMS, and confusing them explains part of the muddle.",
-      "status": "CONFIRMED",
-      "evidence": {
-        "scheme_S": {"format": "'S' + SHA-256(content)[:16] uppercased", "file": "cbms_chunker.py create_chunk_id()", "purpose": "splitting a large text into pieces that fit an API limit; carries start_pos, end_pos, chunk_num"},
-        "scheme_K": {"format": "'K' + SHA-256(content)[:12] uppercased", "file": "cbms_memory.py create_knowledge_chunk()", "purpose": "a unit of knowledge in the store; carries concept, references, access counters"},
-        "scheme_KR": {"format": "KR_<DOMAIN>_<KRCODE>_<HASH6>", "file": "kr_cbms_generator.py", "purpose": "a knowledge unit whose id states its subject"},
-        "why_it_matters": "S-chunks are a transport detail, K-chunks are memory. They look alike, are produced by different files, and neither can be turned into the other. A search for 'CBMS chunks' returns both."
-      }
-    },
-    {
-      "id": "F19",
-      "claim": "The KR integration into the chunker was written additively and does not disturb the legacy path.",
-      "status": "CONFIRMED",
-      "evidence": {
-        "compared": "cbms_chunker.py 5955 B (2025-09-09 00:48) against 12836 B (2025-12-16 11:24)",
-        "how": "KR arrives behind a try/except ImportError setting KR_AVAILABLE, a use_kr=False default, a separate create_kr_chunk_id() and a separate chunk_text_kr(). create_chunk_id() and chunk_text() are untouched apart from whitespace. When the generator is missing, create_kr_chunk_id falls back to the legacy id and marks the record is_legacy.",
-        "note": "This is the additive discipline the project asks for, applied correctly by whoever wrote it in December.",
-        "dating": "The 5955 B original is timestamped 2025-09-09 00:48 - forty minutes BEFORE the 01:28:39 seed batch that created the store (F13). The chunker predates the memory it fills."
-      }
-    },
-    {
-      "id": "F20",
-      "claim": "'Plasters' are 200 real knowledge packs holding 343 091 question-answer pairs, and the code that chooses which to consult picks them by hashing the query.",
-      "status": "CONFIRMED",
-      "evidence": {
-        "store": {
-          "path": "E:\\AI_WORKSPACE\\MASTER_CLEAN\\UNCLASSIFIED\\plasters_200g",
-          "packs": 200,
-          "total_qa_count": 343091,
-          "total_size": "401 MB",
-          "per_pack_files": ["enc.npz", "dec.npz", "kb.mmap", "module.json"],
-          "geometry": "d_model 1024, rank 512, uniform across all 200"
-        },
-        "loader": "plasters_loader.py, 10357 B, 2025-11-07. Real work: scans PACK-* directories, loads npz weights, memory-maps kb.mmap with a named fallback when mapping fails, keeps an LRU of 10, reports stats through /info and /plasters/stats.",
-        "routing_is_a_stub": {
-          "header_claims": "'Loads 100+ PACK blocks on demand with IDF + MinHash routing'",
-          "docstring_admits": "'TODO: Implement proper IDF + MinHash routing from module.json routers'",
-          "actual_code": "query_hash = int(md5(query).hexdigest(), 16); idx = (query_hash + i) % len(packs)",
-          "consequence": "Which of 343 091 QA pairs get consulted is decided by the hash of the query string, which is uncorrelated with its meaning. Deterministic, reproducible, and unrelated to the question."
-        },
-        "why_routing_never_started": {
-          "declared_in_module_json": "router: {idf: idf.npz, minhash: mhash.npz}",
-          "measured": "packs containing idf.npz: 0 of 200. Packs containing mhash.npz: 0 of 200. Packs containing kb.mmap: 200 of 200.",
-          "reading": "The tables the router was designed around were never generated. The TODO is not laziness; the inputs do not exist."
-        },
-        "inference_is_a_stub": "PlastersPACK.inference() loads the weights, then returns the f-string '[{pack_id}] Response based on {qa_count} QAs'. Its own comment: 'Simple inference (placeholder - actual implementation depends on architecture)'.",
-        "operational_notes_that_are_real": "kb.mmap mapping failures are a known condition with a documented workaround (CBMS_PLASTERS_USE_MMAP=0, or move to SSD); CBMS_PLASTERS_DIR switches libraries and requires a restart, packs must not be mixed at runtime; CBMS_PLASTERS_MAX_LOADED and CBMS_PLASTERS_PRELOAD_COUNT size the RAM footprint."
-      }
-    },
-    {
-      "id": "F21",
-      "claim": "One shape repeats across every ambitious layer of this system: the infrastructure is real and the intelligence is a placeholder.",
-      "status": "CONFIRMED",
-      "evidence": {
-        "instances": [
-          {"layer": "code book (F03, F04)", "real": "encoder, decoder, index, all correct", "stubbed": "the book has 16 symbols, so only a demo sentence and telemetry can be encoded"},
-          {"layer": "PHI3-KR bridge (F16)", "real": "id generation, tables, audit trail, deterministic activation arithmetic", "stubbed": "_process_real() runs no model; it checks that a dict key exists and declares every pattern activated"},
-          {"layer": "plasters (F20)", "real": "200 packs, 343 091 QA pairs, npz loading, memory mapping, LRU, statistics", "stubbed": "routing hashes the query; inference returns a formatted string"},
-          {"layer": "reference graph (F09)", "real": "49 374 edges written on every chunk", "stubbed": "no code read them for over a year"}
-        ],
-        "why_this_is_the_finding": "Each layer passes its own tests, because each test exercises the half that was built. Nothing lies; every stub says 'placeholder' or 'TODO' in its own comment. The failure is that the working halves were reported as working systems, so the same ground gets re-explored instead of the gap being closed.",
-        "practical_consequence": "When judging any AIONS component, the question to ask first is not 'does it run' but 'which half is this'. Loading, storing, addressing and measuring are consistently done. Choosing, ranking and generating are consistently not."
-      }
-    },
-    {
-      "id": "F22",
-      "claim": "One script wrote the thinking patterns AND introduced the echo that later filled 73% of the store. Same author, same run, one good half and one bad.",
-      "status": "CONFIRMED",
-      "evidence": {
-        "script": "claude_thinking_patterns.py, 15 KB, timestamped 2025-09-09 06:06 - the pattern chunks are timestamped 06:07:06, one minute later",
-        "class": "ClaudeThinkingPatterns - 'Inject Claude's reasoning methodology into CBMS'",
-        "the_good_half": "inject_thinking_patterns() writes six chunks with concept=f'thinking_methodology_{name}'; create_meta_reasoning_chunk() writes concept='claude_meta_reasoning'. Exactly the 6+1 chunks measured in F10.",
-        "the_bad_half": "Its cbms_think_like_claude() has a branch for when retrieval finds nothing: it composes 'No direct knowledge found for: {query}…' and writes a chunk with concept='generated_analysis' - the system recording its own miss as new knowledge.",
-        "how_it_spread": "enhance_cbms_thinking() monkey-patched those methods onto CBMSMemory. They were later folded into the class permanently; cbms_think_like_claude() and _synthesize_chunks_with_claude_reasoning() sit in cbms_memory.py today at lines 653 and 744, and the generated_analysis write is still at line 720.",
-        "two_echo_sources_not_one": {
-          "path_A": "cbms_think() line 492, gated by _should_create_new_chunk() - the shape-of-question heuristic named in F07",
-          "path_B": "cbms_think_like_claude() line 720 - the generated_analysis write from this script",
-          "corroboration": "The write gate's R1 rule matches BOTH: r'No\\s+(prior|direct)\\s+knowledge\\s+found\\s+for:'. 'prior' and 'direct' are the two different writers' wordings. The rule was written after seeing both."
-        },
-        "the_fix_is_complete": "Both call sites now guard 'if new_chunk_id:' before using the result, so a gate refusal cannot append None into the chunk list. Checked at both lines 498 and 724 on 2026-08-26. The echo code still runs and is still refused - which is what gate_rejections.jsonl records.",
-        "why_this_matters": "It removes the temptation to treat the echo as somebody's carelessness. It came bundled with the single most useful contribution to the store, in the same file, by the same hand, in the same minute."
+        "pointer": "chunk KTHINKSTACK001, concept thinking_patterns, created 2025-11-08",
+        "claimed_contents": "cbms_kr_configs/ holds CBMS_KR (core), cbms_kr_v1, cbms_kr_v1_blend, cbms_kr_v1_broadcast and CBMS_KR_PURE.py; each variant carries an ARCH_CBMS_KR.md manifest",
+        "claimed_use": "rebuild Korean Keys, or repair a corrupted kb.mmap",
+        "claimed_integration": "a thinking pattern names the CBMS_KR variant it needs - ITERATIVE_REFINEMENT is said to require cbms_kr_v1_blend",
+        "status_note": "None of this has been opened and verified. The chunk is a claim by an earlier session, not a measurement. Treat as a lead."
       }
     }
   ],
@@ -407,10 +283,8 @@
 
   "open_questions": [
     "Which 8 chunk files have no manifest entry, and which writer created them? (F14)",
+    "Open the CBMS_KR variants and check whether they are a real engine family or another self-report. (F15)",
     "The code book has 16 symbols and encodes one demo sentence plus telemetry. Is growing it the right move, or is the Korean-key layer the one that should carry retrieval permanently? Nothing measured yet compares the two on the same queries.",
-    "chunks_quarantine holds 455 blocks. Is any of it recoverable, or is quarantine effectively deletion with a longer name?",
-    "KR-CBMS ids carry their subject; the live store's ids carry nothing (F15, F18). Nothing prevents adopting the id scheme WITHOUT the neural claim, since the scheme never depended on it. Worth deciding deliberately rather than by neglect.",
-    "The variants named in KTHINKSTACK001 - cbms_kr_v1, _blend, _broadcast, CBMS_KR_PURE.py, ARCH_CBMS_KR.md - were not among what was found on 2026-08-26. Either they are elsewhere or that chunk describes something that never existed.",
-    "cbms_chunker.py's demo points at 'CBMS OBJASNIENIE.txt' on an old Desktop path - the original explanation of CBMS written by M. Szul. If it survives in any backup, it is the closest thing to a primary source for the intent behind all of this."
+    "chunks_quarantine holds 455 blocks. Is any of it recoverable, or is quarantine effectively deletion with a longer name?"
   ]
 }

@@ -129,41 +129,6 @@ To rozróżnienie wyznacza, co zostało do zrobienia: warstwa adresowania i prze
 dla tych wzorców **gotowa**, warstwa kodowania **nigdy ich nie dotknęła** — i nie dotknie,
 dopóki książka kodów nie dostanie symboli, których dziś w niej nie ma.
 
-### Kto to napisał — i co przy okazji zepsuł
-
-`claude_thinking_patterns.py`, 15 KB, znacznik **2025-09-09 06:06**. Bloki mają 06:07:06.
-Minuta różnicy. To jest ten skrypt.
-
-Klasa `ClaudeThinkingPatterns` — *„Inject Claude's reasoning methodology into CBMS"* — zrobiła
-dwie rzeczy naraz:
-
-| połowa dobra | połowa zła |
-|---|---|
-| `inject_thinking_patterns()` zapisuje sześć wzorców, `create_meta_reasoning_chunk()` ramę | `cbms_think_like_claude()` przy pustym wyniku zapisuje `concept="generated_analysis"` z treścią *„No direct knowledge found for: …"* — czyli **własne pudło jako nową wiedzę** |
-
-`enhance_cbms_thinking()` doszywał te metody do `CBMSMemory` w locie. Później wcielono je do klasy
-na stałe — siedzą w `cbms_memory.py` do dziś (linie 653 i 744), a zapis `generated_analysis`
-w linii 720.
-
-**Źródła echa były więc dwa, nie jedno:**
-
-| ścieżka | gdzie | wyzwalacz |
-|---|---|---|
-| A | `cbms_think()`, linia 492 | `_should_create_new_chunk()` — heurystyka „kształt pytania" z rozdziału 6 |
-| B | `cbms_think_like_claude()`, linia 720 | ten skrypt |
-
-Potwierdza to sama bramka: reguła R1 brzmi `No\s+(prior|direct)\s+knowledge\s+found\s+for:`.
-**`prior` i `direct` to sformułowania dwóch różnych pisarzy.** Reguła powstała po zobaczeniu obu.
-
-**Naprawa jest kompletna.** Oba miejsca wywołania sprawdzają dziś `if new_chunk_id:` przed użyciem
-wyniku, więc odrzucenie przez bramkę nie wstawi `None` do listy bloków — sprawdzone 2026-08-26
-w liniach 498 i 724. Kod echa nadal się wykonuje i nadal jest odrzucany; to właśnie zapisuje
-`gate_rejections.jsonl`.
-
-Warto to wiedzieć, bo odbiera ochotę na tłumaczenie echa czyjąś niechlujnością. Przyszło
-w pakiecie z najbardziej wartościowym wkładem do tego magazynu — w tym samym pliku, tą samą ręką,
-w tej samej minucie.
-
 ---
 
 ## 6. Odkurzanie: 73% bazy było echem systemu

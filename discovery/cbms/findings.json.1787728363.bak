@@ -340,25 +340,6 @@
         "why_this_is_the_finding": "Each layer passes its own tests, because each test exercises the half that was built. Nothing lies; every stub says 'placeholder' or 'TODO' in its own comment. The failure is that the working halves were reported as working systems, so the same ground gets re-explored instead of the gap being closed.",
         "practical_consequence": "When judging any AIONS component, the question to ask first is not 'does it run' but 'which half is this'. Loading, storing, addressing and measuring are consistently done. Choosing, ranking and generating are consistently not."
       }
-    },
-    {
-      "id": "F22",
-      "claim": "One script wrote the thinking patterns AND introduced the echo that later filled 73% of the store. Same author, same run, one good half and one bad.",
-      "status": "CONFIRMED",
-      "evidence": {
-        "script": "claude_thinking_patterns.py, 15 KB, timestamped 2025-09-09 06:06 - the pattern chunks are timestamped 06:07:06, one minute later",
-        "class": "ClaudeThinkingPatterns - 'Inject Claude's reasoning methodology into CBMS'",
-        "the_good_half": "inject_thinking_patterns() writes six chunks with concept=f'thinking_methodology_{name}'; create_meta_reasoning_chunk() writes concept='claude_meta_reasoning'. Exactly the 6+1 chunks measured in F10.",
-        "the_bad_half": "Its cbms_think_like_claude() has a branch for when retrieval finds nothing: it composes 'No direct knowledge found for: {query}…' and writes a chunk with concept='generated_analysis' - the system recording its own miss as new knowledge.",
-        "how_it_spread": "enhance_cbms_thinking() monkey-patched those methods onto CBMSMemory. They were later folded into the class permanently; cbms_think_like_claude() and _synthesize_chunks_with_claude_reasoning() sit in cbms_memory.py today at lines 653 and 744, and the generated_analysis write is still at line 720.",
-        "two_echo_sources_not_one": {
-          "path_A": "cbms_think() line 492, gated by _should_create_new_chunk() - the shape-of-question heuristic named in F07",
-          "path_B": "cbms_think_like_claude() line 720 - the generated_analysis write from this script",
-          "corroboration": "The write gate's R1 rule matches BOTH: r'No\\s+(prior|direct)\\s+knowledge\\s+found\\s+for:'. 'prior' and 'direct' are the two different writers' wordings. The rule was written after seeing both."
-        },
-        "the_fix_is_complete": "Both call sites now guard 'if new_chunk_id:' before using the result, so a gate refusal cannot append None into the chunk list. Checked at both lines 498 and 724 on 2026-08-26. The echo code still runs and is still refused - which is what gate_rejections.jsonl records.",
-        "why_this_matters": "It removes the temptation to treat the echo as somebody's carelessness. It came bundled with the single most useful contribution to the store, in the same file, by the same hand, in the same minute."
-      }
     }
   ],
 
