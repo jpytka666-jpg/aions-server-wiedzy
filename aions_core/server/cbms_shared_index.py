@@ -87,17 +87,38 @@ def _folded(word: str) -> str:
     return word
 
 
-def symbols_of(text: str, book: Dict[str, str]) -> List[str]:
-    out: List[str] = []
-    for token in text.split():
+def located_symbols(text: str, book: Dict[str, str]) -> List[Tuple[str, int]]:
+    """Every symbol the text yields, with the offset of the token that produced it.
+
+    Offsets come from walking the tokens, never from searching for the word afterwards.
+    `content.find(word)` returns the FIRST occurrence, which is rarely the one that made
+    the block rank, and it matches inside longer words - `memory` found inside
+    `memorywise`. A token walk cannot do either.
+    """
+    out: List[Tuple[str, int]] = []
+    i, n = 0, len(text)
+    while i < n:
+        while i < n and text[i].isspace():
+            i += 1
+        start = i
+        while i < n and not text[i].isspace():
+            i += 1
+        token = text[start:i]
+        if not token:
+            continue
         core = _core(token)
         if not core:
             continue
+        at = start + token.find(core)
         for candidate in (core, _folded(core)):
             if candidate in book:
-                out.append(book[candidate])
+                out.append((book[candidate], at))
                 break
     return out
+
+
+def symbols_of(text: str, book: Dict[str, str]) -> List[str]:
+    return [s for s, _ in located_symbols(text, book)]
 
 
 class SharedBookIndex:
