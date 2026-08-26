@@ -1,0 +1,169 @@
+#!/usr/bin/env python3
+# ==========================================
+# AUTHOR: M. SZUL
+# AI MODEL: Claude Opus 5
+# TIMESTAMP: 2026-08-27 00:45:12
+# REASON FOR CREATION: The symbolic layer was pointed at a 16-symbol code book written in
+#   October 2025 around one example sentence about buying bread. Measured on the live
+#   store: 86 of 167 blocks contained not a single one of its symbols, so no query could
+#   ever reach them - and those 86 turned out to be the thinking patterns, the
+#   meta-cognitive strategies and the reasoning methodologies. The idea was sound; the
+#   dictionary saw an eighth of the memory.
+# MECHANICS: Reads the symbols already stored in each block's `cbms_codes` rather than
+#   re-encoding every block at startup, so the index loads instead of being rebuilt and
+#   survives a restart. Scores by rarity: a symbol in three blocks says far more about a
+#   query than one in ninety, which the previous count-the-hits scoring could not express.
+#   Queries are split by the same rule the CBMS encoder applies - punctuation peeled off
+#   both ends, case folded only where a case mark could put it back.
+# SYSTEM PART: AIONS memory - symbolic retrieval.
+# ARCHITECTURE FUNCTION: The layer that makes stored blocks findable by meaning without a
+#   model, an embedding, or a network call. It shares one code book with Noworodek, so a
+#   block written here is material the learner can read directly.
+# DEPENDENCIES/LINKS: reads the shared code book produced by cbms-writing (`grow`), and
+#   the `cbms_codes` / `cbms_book` fields on stored chunks. Consumed by cbms_memory.
+# TECH STACK: Python 3, standard library. Python because this plugs into the existing
+#   memory server, which is Python; nothing here is hot enough to need otherwise.
+# LOCAL WORKSPACE: E:\server wiedzy\aions_core\server\cbms_shared_index.py
+# GIT COMMIT: PENDING
+# GITHUB METADATA: local to the AIONS knowledge server
+# ==========================================
+"""Wyszukiwanie po znakach CBMS, na wspolnej ksiazce kodow."""
+
+from __future__ import annotations
+
+import json
+import math
+import os
+import re
+import string
+from collections import Counter
+from pathlib import Path
+from typing import Dict, List, Set, Tuple
+
+# One book, shared with Noworodek. An id or a symbol only means anything relative to it.
+DEFAULT_BOOK = Path.home() / "Desktop" / "AIONS-CBMS" / "ksiazka-wspolna.txt"
+
+_UPLUS = re.compile(r"^U\+([0-9A-Fa-f]{4,6})$")
+_PUNCT = set(string.punctuation)
+
+
+def _decode_symbol(sym: str) -> str:
+    """The book writes some symbols as glyphs and some as `U+25CB`. Both are the same
+    thing, and reading the notation literally makes a six-character 'symbol' that matches
+    nothing."""
+    m = _UPLUS.match(sym)
+    return chr(int(m.group(1), 16)) if m else sym
+
+
+def load_book(path: Path) -> Dict[str, str]:
+    """root -> symbol, exactly as the encoder sees it."""
+    book: Dict[str, str] = {}
+    with open(path, encoding="utf-8") as fh:
+        for line in fh:
+            if line.startswith("#") or "=" not in line:
+                continue
+            root, sym = line.rstrip("\n").rsplit("=", 1)
+            if root and sym:
+                book[root] = _decode_symbol(sym)
+    return book
+
+
+def _core(token: str) -> str:
+    """Punctuation peeled off both ends - the encoder's definition of a word. Leaving it
+    attached is what once made `status:` miss the entry minted for `status`."""
+    i, j = 0, len(token)
+    while i < j and token[i] in _PUNCT:
+        i += 1
+    while j > i and token[j - 1] in _PUNCT:
+        j -= 1
+    return token[i:j]
+
+
+def _folded(word: str) -> str:
+    """Folded only where a case mark could put the capitals back. A mixed shape like
+    `AarSvc_6e9d9` is left alone, because the book must hold it verbatim or not at all."""
+    if word.islower() or word.isupper() or (word[:1].isupper() and word[1:].islower()):
+        return word.lower()
+    return word
+
+
+def symbols_of(text: str, book: Dict[str, str]) -> List[str]:
+    out: List[str] = []
+    for token in text.split():
+        core = _core(token)
+        if not core:
+            continue
+        for candidate in (core, _folded(core)):
+            if candidate in book:
+                out.append(book[candidate])
+                break
+    return out
+
+
+class SharedBookIndex:
+    """Symbol -> blocks, built from what the blocks already carry."""
+
+    def __init__(self, memory_dir: Path, book_path: Path | None = None):
+        self.chunks_dir = Path(memory_dir) / "chunks"
+        self.book_path = Path(book_path or os.environ.get("AIONS_CBMS_BOOK") or DEFAULT_BOOK)
+        self.book: Dict[str, str] = {}
+        self.sym2chunks: Dict[str, Set[str]] = {}
+        self.total = 0
+        self.book_mark: Dict | None = None
+
+    def build(self, limit: int | None = None) -> int:
+        """Load, do not re-encode. The previous index walked every block and ran the whole
+        codec at every server start, then lost the result on shutdown."""
+        self.book = load_book(self.book_path)
+        count = 0
+        for i, f in enumerate(sorted(self.chunks_dir.glob("*.json"))):
+            if limit and i >= limit:
+                break
+            try:
+                obj = json.loads(f.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            codes = obj.get("cbms_codes")
+            # Only the list form. The old field held codes from the 16-symbol book under
+            # the same name; treating those as if they were ours would quietly mix two
+            # alphabets in one index.
+            if not isinstance(codes, list) or not codes:
+                continue
+            cid = obj.get("id") or f.stem
+            for c in codes:
+                self.sym2chunks.setdefault(c, set()).add(cid)
+            if self.book_mark is None:
+                self.book_mark = obj.get("cbms_book")
+            count += 1
+        self.total = count
+        return count
+
+    def _weight(self, symbol: str) -> float:
+        """A symbol in 3 blocks of 167 tells you where to look; one in 90 does not. The
+        previous scoring added 1 per hit and so could not tell them apart."""
+        seen = len(self.sym2chunks.get(symbol, ()))
+        if seen == 0:
+            return 0.0
+        return math.log((self.total + 1) / seen)
+
+    def search(self, query: str, top_k: int = 12) -> List[Tuple[str, float]]:
+        scores: Counter = Counter()
+        for sym in set(symbols_of(query, self.book)):
+            w = self._weight(sym)
+            if w <= 0:
+                continue
+            for cid in self.sym2chunks.get(sym, ()):
+                scores[cid] += w
+        return sorted(scores.items(), key=lambda kv: (-kv[1], kv[0]))[:top_k]
+
+    def snippet(self, chunk_id: str, chars: int = 200) -> str:
+        """A look inside without unpacking anything - which is the whole point of keeping
+        the store readable rather than compressed."""
+        for f in self.chunks_dir.glob("*.json"):
+            try:
+                obj = json.loads(f.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            if (obj.get("id") or f.stem) == chunk_id:
+                return " ".join((obj.get("content") or "").split())[:chars]
+        return ""
