@@ -1,0 +1,5 @@
+# The vector index is derived from findings.json + ARCHITECTURE.md and is rebuilt by
+# ingest.py in seconds. Committing it would put a binary that changes on every run next
+# to the text that is the actual record.
+.chroma/
+.chroma-*/

@@ -1,0 +1,327 @@
+{
+  "measured_from": "E:\\server wiedzy\\aions_core\\memory",
+  "stores": {
+    "chunks_live": 167,
+    "chunks_quarantine": 455,
+    "chunks_purgatory": 3,
+    "blends": 8,
+    "gate_rejections_logged": 59
+  },
+  "manifest": {
+    "version": "1.0",
+    "total_chunks_claimed": 159,
+    "chunk_index_entries": 159,
+    "concept_map_entries": 79,
+    "thinking_sessions": 0,
+    "drift_vs_files": 8
+  },
+  "addressing": {
+    "chunks_with_hangul_code": 52,
+    "chunks_without_hangul_code": 115
+  },
+  "codebook_layer": {
+    "chunks_carrying_codes": 13,
+    "distinct_concepts_among_them": 1,
+    "samples": [
+      {
+        "id": "K11F5037EFE21",
+        "concept": "crla_pattern",
+        "created": "2025-10-28T12:55:04.058552",
+        "codes": [
+          "CR2",
+          "CR3",
+          "CR4",
+          "CR1"
+        ],
+        "eo": "crla turniro: gajninto c02, poentaro 0.981, latenco 0.676 ms."
+      },
+      {
+        "id": "K24673CE3E129",
+        "concept": "crla_pattern",
+        "created": "2025-10-28T15:05:33.240499",
+        "codes": [
+          "CR2",
+          "CR3",
+          "CR4",
+          "CR1"
+        ],
+        "eo": "crla turniro: gajninto c02, poentaro 0.980, latenco 1.062 ms."
+      },
+      {
+        "id": "K32EBC51652CF",
+        "concept": "crla_pattern",
+        "created": "2025-10-28T15:05:33.363295",
+        "codes": [
+          "CR2",
+          "CR3",
+          "CR4",
+          "CR1"
+        ],
+        "eo": "crla turniro: gajninto c03, poentaro 0.980, latenco 0.961 ms."
+      },
+      {
+        "id": "K34AA7269DA88",
+        "concept": "crla_pattern",
+        "created": "2025-10-28T12:54:35.932701",
+        "codes": [
+          "CR2",
+          "CR3",
+          "CR4",
+          "CR1"
+        ],
+        "eo": "crla turniro: gajninto c05, poentaro 0.981, latenco 0.658 ms."
+      },
+      {
+        "id": "K6A832F435D0C",
+        "concept": "crla_pattern",
+        "created": "2025-10-28T12:53:43.042771",
+        "codes": [
+          "CR2",
+          "CR3",
+          "CR4",
+          "CR1"
+        ],
+        "eo": "crla turniro: gajninto c04, poentaro 0.956, latenco 0.719 ms."
+      },
+      {
+        "id": "K7A877033E3E2",
+        "concept": "crla_pattern",
+        "created": "2025-10-28T13:15:57.361174",
+        "codes": [
+          "CR2",
+          "CR3",
+          "CR4",
+          "CR1"
+        ],
+        "eo": "crla turniro: gajninto c00, poentaro 0.980, latenco 1.027 ms."
+      },
+      {
+        "id": "K8EB126084728",
+        "concept": "crla_pattern",
+        "created": "2025-10-28T12:54:49.291644",
+        "codes": [
+          "CR2",
+          "CR3",
+          "CR4",
+          "CR1"
+        ],
+        "eo": "crla turniro: gajninto c04, poentaro 0.981, latenco 0.675 ms."
+      },
+      {
+        "id": "KA69F58019067",
+        "concept": "crla_pattern",
+        "created": "2025-10-28T15:05:33.315964",
+        "codes": [
+          "CR2",
+          "CR3",
+          "CR4",
+          "CR1"
+        ],
+        "eo": "crla turniro: gajninto c04, poentaro 0.981, latenco 0.777 ms."
+      },
+      {
+        "id": "KAC077320184B",
+        "concept": "crla_pattern",
+        "created": "2025-10-28T18:40:34.606003",
+        "codes": [
+          "CR2",
+          "CR3",
+          "CR4",
+          "CR1"
+        ],
+        "eo": "crla turniro: gajninto c03, poentaro 0.983, latenco 0.670 ms."
+      },
+      {
+        "id": "KB3FF1BF9F63A",
+        "concept": "crla_pattern",
+        "created": "2025-10-28T13:28:51.462562",
+        "codes": [
+          "CR2",
+          "CR3",
+          "CR4",
+          "CR1"
+        ],
+        "eo": "crla turniro: gajninto c02, poentaro 0.980, latenco 1.342 ms."
+      },
+      {
+        "id": "KB66AABAFAD49",
+        "concept": "crla_pattern",
+        "created": "2025-10-28T12:57:36.656279",
+        "codes": [
+          "CR2",
+          "CR3",
+          "CR4",
+          "CR1"
+        ],
+        "eo": "crla turniro: gajninto c04, poentaro 0.981, latenco 0.682 ms."
+      },
+      {
+        "id": "KCFAC6DD4F0FF",
+        "concept": "crla_pattern",
+        "created": "2025-10-28T12:54:11.381689",
+        "codes": [
+          "CR2",
+          "CR3",
+          "CR4",
+          "CR1"
+        ],
+        "eo": "crla turniro: gajninto c05, poentaro 0.981, latenco 0.694 ms."
+      },
+      {
+        "id": "KD86E95A5F929",
+        "concept": "crla_pattern",
+        "created": "2025-10-28T19:00:40.437058",
+        "codes": [
+          "CR2",
+          "CR3",
+          "CR4",
+          "CR1"
+        ],
+        "eo": "crla turniro: gajninto c05, poentaro 0.958, latenco 0.741 ms."
+      }
+    ]
+  },
+  "reference_graph": {
+    "chunks_with_references": 166,
+    "max_out_degree": 56,
+    "top_out_degrees": [
+      56,
+      54,
+      51,
+      51,
+      50,
+      50,
+      50,
+      50,
+      49,
+      49
+    ],
+    "non_chunk_reference_targets": {
+      "label": 32,
+      "url": 8,
+      "path": 127
+    }
+  },
+  "concepts": {
+    "crla_pattern": 14,
+    "aions_crla_learning": 9,
+    "web_rag_fact": 9,
+    "session_context_save": 9,
+    "meta_cognitive_strategy": 8,
+    "metaphor_pattern": 8,
+    "consciousness_state": 8,
+    "creative_template": 8,
+    "blend_learning": 6,
+    "ai_ml_fundamentals": 5,
+    "general": 4,
+    "test_meta": 3,
+    "programming_python": 2,
+    "misc": 2,
+    "claude_reports": 2,
+    "tools_cursor": 2,
+    "test_concept_4": 1,
+    "thinking_methodology_analytical_breakdown": 1,
+    "problem_research": 1,
+    "security_cybersec": 1,
+    "test_concept_2": 1,
+    "data_science": 1,
+    "meta_code_analysis": 1,
+    "programming_systems": 1,
+    "problem_optimization": 1,
+    "meta_thinking": 1,
+    "ai_systems": 1,
+    "problem_system_design": 1,
+    "communication_collaboration": 1,
+    "claude_meta_reasoning": 1,
+    "mathematics": 1,
+    "thinking_methodology_multidisciplinary_synthesis": 1,
+    "devops_practices": 1,
+    "thinking_methodology_evidence_based_thinking": 1,
+    "communication_teaching": 1,
+    "communication_presentation": 1,
+    "programming_databases": 1,
+    "test_concept_1": 1,
+    "problem_analytical": 1,
+    "ai_safety": 1,
+    "test_concept_0": 1,
+    "blockchain": 1,
+    "business_analysis": 1,
+    "meta_quality": 1,
+    "problem_creative": 1,
+    "programming_web": 1,
+    "CBMS": 1,
+    "cbms_full_access": 1,
+    "cbms_pipeline": 1,
+    "claude_behavior_rules": 1,
+    "claude_knowledge": 1,
+    "claude_hybrid": 1,
+    "claude_sdk": 1,
+    "codebook": 1,
+    "test_concept_3": 1,
+    "ai_architecture": 1,
+    "demo_shopping": 1,
+    "thinking_methodology_iterative_refinement": 1,
+    "memory_management": 1,
+    "plasters_usage": 1,
+    "symbolic_index": 1,
+    "test_index": 1,
+    "infrastruktura_dyskowa": 1,
+    "programming_javascript": 1,
+    "thinking_methodology_uncertainty_management": 1,
+    "communication_review": 1,
+    "meta_integration": 1,
+    "meta_learning": 1,
+    "communication_technical": 1,
+    "ai_nlp": 1,
+    "thinking_methodology_contextual_reasoning": 1,
+    "safety_guardrails": 1,
+    "ai_handoff_operator_senses": 1,
+    "math_solver": 1,
+    "memory_sources": 1,
+    "operations": 1,
+    "plasters_plan": 1,
+    "plasters": 1,
+    "pocket_qc": 1,
+    "testing": 1,
+    "thinking_patterns": 1,
+    "treasure_catalog": 1,
+    "secrets_vault_meta": 1,
+    "web_rag": 1
+  },
+  "optional_fields": {
+    "hangul_code": 52,
+    "pattern_type": 32,
+    "source": 21,
+    "success_rate": 16,
+    "domain": 16,
+    "usage_count": 16,
+    "eo": 13,
+    "cbms_codes": 13,
+    "strategy_id": 8,
+    "complexity_level": 8,
+    "applicable_domains": 8,
+    "metaphor_id": 8,
+    "effectiveness": 8,
+    "url": 8,
+    "relevance_score": 8,
+    "temporary": 8,
+    "created_at": 8,
+    "state_id": 8,
+    "emotional_tone": 8,
+    "confidence_level": 8,
+    "activation_triggers": 8,
+    "template_id": 8,
+    "last_used": 8,
+    "type": 1,
+    "priority": 1,
+    "author": 1,
+    "kind": 1,
+    "status": 1,
+    "confidence": 1,
+    "derived_from": 1,
+    "evidence": 1,
+    "supersedes": 1,
+    "recorded_at": 1
+  },
+  "unreadable_chunks": []
+}
