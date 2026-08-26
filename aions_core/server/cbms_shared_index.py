@@ -107,7 +107,9 @@ class SharedBookIndex:
         self.chunks_dir = Path(memory_dir) / "chunks"
         self.book_path = Path(book_path or os.environ.get("AIONS_CBMS_BOOK") or DEFAULT_BOOK)
         self.book: Dict[str, str] = {}
+        self.sym2word: Dict[str, str] = {}
         self.sym2chunks: Dict[str, Set[str]] = {}
+        self.where: Dict[str, Path] = {}
         self.total = 0
         self.book_mark: Dict | None = None
 
