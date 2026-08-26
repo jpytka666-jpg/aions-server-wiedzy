@@ -139,6 +139,7 @@ class SharedBookIndex:
             cid = obj.get("id") or f.stem
             for c in codes:
                 self.sym2chunks.setdefault(c, set()).add(cid)
+            self.where[cid] = f
             if self.book_mark is None:
                 self.book_mark = obj.get("cbms_book")
             count += 1
