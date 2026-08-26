@@ -3,3 +3,7 @@
 # to the text that is the actual record.
 .chroma/
 .chroma-*/
+
+# checkpoint.py writes a .bak beside every file it is about to edit. Those are session
+# safety copies, not versions - git already holds the history they duplicate.
+*.bak
