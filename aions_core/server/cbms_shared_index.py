@@ -164,14 +164,44 @@ class SharedBookIndex:
                 scores[cid] += w
         return sorted(scores.items(), key=lambda kv: (-kv[1], kv[0]))[:top_k]
 
+    def content_of(self, chunk_id: str) -> str:
+        f = self.where.get(chunk_id)
+        if f is None:
+            return ""
+        try:
+            return json.loads(f.read_text(encoding="utf-8")).get("content") or ""
+        except Exception:
+            return ""
+
     def snippet(self, chunk_id: str, chars: int = 200) -> str:
-        """A look inside without unpacking anything - which is the whole point of keeping
-        the store readable rather than compressed."""
-        for f in self.chunks_dir.glob("*.json"):
-            try:
-                obj = json.loads(f.read_text(encoding="utf-8"))
-            except Exception:
-                continue
-            if (obj.get("id") or f.stem) == chunk_id:
-                return " ".join((obj.get("content") or "").split())[:chars]
-        return ""
+        """QUICK: the opening of the block. Costs one file read, because the store keeps
+        its text readable instead of compressed - the whole reason for not using an
+        archive format here."""
+        return " ".join(self.content_of(chunk_id).split())[:chars]
+
+    def deep(self, chunk_id: str, query: str, chars: int = 240) -> Tuple[str, int]:
+        """DEEP: the passage the query actually matched, and where it starts.
+
+        A symbol says a block is relevant; on its own that still means reading the block.
+        Mapping the symbol back to its word gives the offset, so the caller jumps to the
+        sentence rather than the file. The rarest matching symbol is chosen because it is
+        the one that made this block win - a symbol present in most blocks would land on
+        an arbitrary passage.
+        """
+        content = self.content_of(chunk_id)
+        if not content:
+            return "", -1
+        here = {s for s in symbols_of(content, self.book)}
+        wanted = [s for s in set(symbols_of(query, self.book)) if s in here]
+        if not wanted:
+            return self.snippet(chunk_id, chars), 0
+        best = min(wanted, key=lambda s: len(self.sym2chunks.get(s, ())))
+        word = self.sym2word.get(best, "")
+        at = -1
+        if word:
+            at = content.lower().find(word.lower())
+        if at < 0:
+            return self.snippet(chunk_id, chars), 0
+        start = max(0, at - chars // 3)
+        window = content[start:start + chars]
+        return " ".join(window.split()), at
