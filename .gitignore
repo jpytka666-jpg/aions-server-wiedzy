@@ -112,4 +112,7 @@ server/__pycache__/
 
 # Artefakty pomiarowe audytu 2026-08 - zawieraja podglady tresci blokow pamieci
 _measure/
-
+# wyniki budowania - nie naleza do repozytorium
+aions_core/tools/**/bin/
+aions_core/tools/**/obj/
+**/*.pdb
