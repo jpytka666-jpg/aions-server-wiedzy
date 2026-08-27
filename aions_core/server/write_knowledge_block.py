@@ -71,6 +71,29 @@ def hangul_address(data: str) -> str:
         return "".join(chr(base + int(c, 16) * 32) for c in h)
 
 
+def store_frequency() -> dict:
+    """How many blocks each symbol appears in, across the whole store.
+
+    Read from what the blocks already carry rather than re-encoding them, so this costs
+    one pass over small JSON files. A block written before this existed simply does not
+    contribute, which understates a symbol's spread and can only make it look rarer -
+    the safe direction, since the worst outcome is an unremarkable word leading the list.
+    """
+    seen: Counter = Counter()
+    try:
+        for f in CHUNKS.glob("*.json"):
+            try:
+                codes = json.loads(f.read_text(encoding="utf-8")).get("cbms_codes")
+            except Exception:
+                continue
+            if isinstance(codes, list):
+                for c in set(codes):
+                    seen[c] += 1
+    except Exception:
+        pass
+    return seen
+
+
 def grow_book(text: str, book_path: Path, max_new: int = 400) -> int:
     """Add this text's unknown words to the shared book. Returns how many were added.
 
