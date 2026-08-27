@@ -201,28 +201,40 @@ class SharedBookIndex:
         return " ".join(self.content_of(chunk_id).split())[:chars]
 
     def deep(self, chunk_id: str, query: str, chars: int = 240) -> Tuple[str, int]:
-        """DEEP: the passage the query actually matched, and where it starts.
+        """DEEP: the passage that actually made this block rank, and where it begins.
 
-        A symbol says a block is relevant; on its own that still means reading the block.
-        Mapping the symbol back to its word gives the offset, so the caller jumps to the
-        sentence rather than the file. The rarest matching symbol is chosen because it is
-        the one that made this block win - a symbol present in most blocks would land on
-        an arbitrary passage.
+        A symbol says the block is relevant; on its own that still means reading the
+        block. The offsets say where, and QUICK may be approximate but this must not be.
+
+        Which occurrence matters is decided by the query, not by position: the window
+        chosen is the one where the most query weight gathers - several distinct rare
+        symbols close together. A word that repeats twenty times therefore does not drag
+        the answer to its first appearance, and a common symbol cannot outvote a rare one
+        because the weights are the same ones that produced the ranking.
         """
         content = self.content_of(chunk_id)
         if not content:
             return "", -1
-        here = {s for s in symbols_of(content, self.book)}
-        wanted = [s for s in set(symbols_of(query, self.book)) if s in here]
-        if not wanted:
+
+        weights = {s: self._weight(s) for s in set(symbols_of(query, self.book))}
+        weights = {s: w for s, w in weights.items() if w > 0}
+        if not weights:
             return self.snippet(chunk_id, chars), 0
-        best = min(wanted, key=lambda s: len(self.sym2chunks.get(s, ())))
-        word = self.sym2word.get(best, "")
-        at = -1
-        if word:
-            at = content.lower().find(word.lower())
-        if at < 0:
+
+        hits = [(s, at) for s, at in located_symbols(content, self.book) if s in weights]
+        if not hits:
             return self.snippet(chunk_id, chars), 0
-        start = max(0, at - chars // 3)
-        window = content[start:start + chars]
-        return " ".join(window.split()), at
+
+        # Every hit is a candidate anchor; the best window is the one that gathers the
+        # most weight. Distinct symbols only - the same word repeated inside one window
+        # says no more than it did the first time.
+        best_start, best_at, best_score = 0, hits[0][1], -1.0
+        for _, anchor in hits:
+            start = max(0, anchor - chars // 3)
+            inside = {s for s, at in hits if start <= at < start + chars}
+            score = sum(weights[s] for s in inside)
+            if score > best_score:
+                best_score, best_start, best_at = score, start, anchor
+
+        window = content[best_start:best_start + chars]
+        return " ".join(window.split()), best_at
