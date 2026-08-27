@@ -147,10 +147,17 @@ def write_block(text: str, concept: str, source: str = "rozmowa",
         return {"id": chunk_id, "nowy": False, "plik": str(target)}
 
     syms = symbols_of(text, book)
-    # Rarest first WITHIN this block, so the opening symbols are the ones that make it
-    # findable. Store-wide rarity is the index's job and is recomputed there.
-    counts = Counter(syms)
-    codes = sorted(set(syms), key=lambda s: (counts[s], s))
+    # Rarest ACROSS THE STORE first, so reading the opening codes tells you what the block
+    # is about.
+    #
+    # Ordering by count within the block does not work and the reason is worth keeping:
+    # inside one block almost every word occurs exactly once, so the sort collapses to
+    # alphabetical and the glue leads. Asked what a block said, it answered
+    # "i ma a jak model dostaje bok" - the four commonest words in Polish first, and
+    # nothing about its subject. A word in three blocks of a hundred says where to look;
+    # a word in ninety says nothing, however often it repeats here.
+    across = store_frequency()
+    codes = sorted(set(syms), key=lambda s: (across.get(s, 0), s))
 
     block = {
         "id": chunk_id,
