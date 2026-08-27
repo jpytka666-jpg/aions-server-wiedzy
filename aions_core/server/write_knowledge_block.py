@@ -94,6 +94,21 @@ def write_block(text: str, concept: str, source: str = "rozmowa",
         raise ValueError(f"za krotkie: {len(text)} znakow, minimum {MIN_CHARS}")
 
     book_path = Path(book_path or os.environ.get("AIONS_CBMS_BOOK") or DEFAULT_BOOK)
+
+    # Teach the book this block's words BEFORE encoding it.
+    #
+    # Without this a block is written in whatever vocabulary the book happens to hold, and
+    # everything else is spelled out letter by letter. Measured on a 273-character note:
+    # the book knew 15 of its 42 words - the glue (`za`, `jest`, `w`) and none of the
+    # content - and the packed form came out at 312 bytes, LARGER than the source. A block
+    # from the store, whose words the book already had, encodes 37 characters into 6
+    # symbols.
+    #
+    # `grow` only ever appends and refuses anything that would renumber or break the round
+    # trip, so this cannot invalidate a block already written or a checkpoint already
+    # trained. The store and the book learn the same words at the same time, which is the
+    # whole reason they share one.
+    grow_book(text, book_path)
     book = load_book(book_path)
 
     digest = hashlib.sha1(text.encode("utf-8")).hexdigest()
