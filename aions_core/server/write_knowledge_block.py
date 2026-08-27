@@ -71,6 +71,32 @@ def hangul_address(data: str) -> str:
         return "".join(chr(base + int(c, 16) * 32) for c in h)
 
 
+def grow_book(text: str, book_path: Path, max_new: int = 400) -> int:
+    """Add this text's unknown words to the shared book. Returns how many were added.
+
+    Capped: one block should not be able to mint hundreds of entries from a typo storm,
+    and the words that matter are the ones that repeat. Failure is not fatal - the block
+    is still written, just in the vocabulary the book already had.
+    """
+    if not CBMS_BIN.exists() or not book_path.exists():
+        return 0
+    with tempfile.TemporaryDirectory() as tmp:
+        src = Path(tmp) / "corpus.txt"
+        src.write_text(text, encoding="utf-8")
+        r = subprocess.run(
+            [str(CBMS_BIN), str(book_path), "grow", str(src), str(max_new), "1"],
+            capture_output=True, text=True, encoding="utf-8", timeout=300)
+        if r.returncode != 0:
+            return 0
+        for line in (r.stdout or "").splitlines():
+            if line.startswith("dopisano"):
+                try:
+                    return int(line.split(":")[1].split()[0])
+                except Exception:
+                    return 0
+    return 0
+
+
 def pack(text: str, book_path: Path) -> str | None:
     """Text through the shared code book. Returns None rather than a broken block if the
     binary is absent or refuses - a block claiming to hold CBMS that does not is worse
