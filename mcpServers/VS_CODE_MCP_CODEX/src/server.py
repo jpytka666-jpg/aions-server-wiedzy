@@ -2537,6 +2537,99 @@ def desktop_ui_tree(max_depth: int = 4, max_nodes: int = 80) -> str:
         return _error(_desktop_err(e))
 
 
+# ---- perception: reading a screen, and saying something out loud ---------------
+#
+# AIONS could already click a button and never know what the button said. These two close
+# that gap: one turns pixels into text, the other turns text into sound. Both use engines
+# Windows already ships - the OCR recognizers (en-GB and pl, verified present) and the
+# installed voices (Paulina and Adam in Polish, Heami in Korean) - so nothing has to be
+# installed, licensed or bundled.
+
+_OCR_BIN = os.environ.get("AIONS_OCR_BIN") or str(
+    Path(__file__).resolve().parents[3]
+    / "aions_core" / "tools" / "ocr" / "bin" / "Release"
+    / "net10.0-windows10.0.22621.0" / "aions-ocr.exe"
+)
+
+
+@mcp_server.tool(
+    name="ocr_read",
+    description="Read text from an image or screenshot with the OCR engine built into "
+                "Windows. Returns the text and, with with_lines, where each line sits on "
+                "the image so the caller can act on what it read. Languages: pl, en-GB.",
+)
+@auto_logged
+def ocr_read(image_path: str, language: str = "pl", with_lines: bool = False) -> str:
+    try:
+        if not Path(_OCR_BIN).exists():
+            return _error(f"narzedzie OCR nie jest zbudowane: {_OCR_BIN}")
+        if not Path(image_path).exists():
+            return _error(f"nie ma takiego pliku: {image_path}")
+        cmd = [_OCR_BIN, image_path, "--jezyk", language]
+        if with_lines:
+            cmd.append("--linie")
+        proc = subprocess.run(cmd, capture_output=True, text=True,
+                              encoding="utf-8", errors="replace", timeout=120)
+        # The tool answers in JSON whether it succeeded or not, so success and failure are
+        # parsed the same way and a caller never has to read stderr to find out which.
+        try:
+            payload = json.loads(proc.stdout or "{}")
+        except Exception:
+            return _error((proc.stdout or proc.stderr or "brak odpowiedzi")[-400:])
+        if not payload.get("ok"):
+            return _error(payload.get("powod", "OCR nie powiodl sie"))
+        return _success(payload)
+    except Exception as e:
+        return _error(f"{type(e).__name__}: {e}")
+
+
+@mcp_server.tool(
+    name="speak",
+    description="Say text out loud with a voice installed in Windows. Polish by default. "
+                "Set to_file to write a .wav instead of playing it.",
+)
+@auto_logged
+def speak(text: str, voice: str = "", to_file: str = "") -> str:
+    try:
+        if not text.strip():
+            return _error("nie ma czego powiedziec")
+        # Doubling is how a literal quote is written inside a single-quoted PowerShell
+        # string, and text coming from a model will contain them.
+        safe = text.replace("'", "''")
+        lines = [
+            "Add-Type -AssemblyName System.Speech",
+            "$s = New-Object System.Speech.Synthesis.SpeechSynthesizer",
+        ]
+        if voice:
+            lines.append(f"try {{ $s.SelectVoice('{voice}') }} catch {{ }}")
+        else:
+            # Whatever Polish voice this machine has, rather than naming one that may not
+            # be installed on the next machine.
+            lines.append("$pl = $s.GetInstalledVoices() | "
+                         "Where-Object { $_.VoiceInfo.Culture.Name -like 'pl*' } | "
+                         "Select-Object -First 1")
+            lines.append("if ($pl) { $s.SelectVoice($pl.VoiceInfo.Name) }")
+        if to_file:
+            lines.append(f"$s.SetOutputToWaveFile('{to_file}')")
+        lines.append(f"$s.Speak('{safe}')")
+        lines.append("Write-Output $s.Voice.Name")
+        lines.append("$s.Dispose()")
+
+        proc = subprocess.run(
+            ["powershell.exe", "-NoProfile", "-Command", "; ".join(lines)],
+            capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=180)
+        if proc.returncode != 0:
+            return _error((proc.stderr or proc.stdout or "nie udalo sie")[-400:])
+        return _success({
+            "powiedziane": text[:200],
+            "znakow": len(text),
+            "glos": (proc.stdout or "").strip().splitlines()[-1] if proc.stdout else None,
+            "plik": to_file or None,
+        })
+    except Exception as e:
+        return _error(f"{type(e).__name__}: {e}")
+
+
 @mcp_server.tool(name="desktop_clipboard", description="Read or write host clipboard. action: get|set; text required for set.")
 @auto_logged
 def desktop_clipboard(action: str, text: str = "") -> str:
