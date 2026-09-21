@@ -45,8 +45,10 @@ class AuditRegressions20260921(unittest.TestCase):
 
     def test_jedno_slowo_moze_trafic_tylko_dokladnie_w_identyfikator(self):
         self.assertEqual(history_guard.classify("CRLA")["id"], "CRLA")
-        self.assertEqual(history_guard.classify("Warlock")["history_status"],
-                         "UNKNOWN_NOT_PROVEN_NEW")
+        r = history_guard.classify("Warlock")
+        self.assertEqual(r["history_status"], "KNOWN")
+        self.assertEqual(r["id"], "WARLOCK")
+        self.assertIn("RUNTIME_ON_CANONICAL_SERVER_WIEDZY_NOT_VERIFIED", r["status"])
 
     def test_podkreslnik_i_spacja_daja_ten_sam_werdykt(self):
         # Przed poprawka maszynowy "R2_opakowanie_syntezy" trafial w 100,
@@ -88,6 +90,34 @@ class AuditRegressions20260921(unittest.TestCase):
         r = history_guard.classify("memory")
         self.assertEqual(r["history_status"], "UNKNOWN_NOT_PROVEN_NEW")
         self.assertIn("possible_matches", r)
+
+class SemanticEvidenceAudit20260921(unittest.TestCase):
+    def test_every_record_has_semantic_evidence_contract(self):
+        d = history_guard.load_ledger()
+        for sec in ("mechanisms", "defects", "decisions"):
+            for item in d[sec]:
+                self.assertTrue(item.get("evidence_checks"), item["id"])
+
+    def test_semantic_validator_bites_when_anchor_is_false(self):
+        import tempfile
+        d = history_guard.load_ledger()
+        victim = next(x for x in d["mechanisms"] if x["id"] == "CBMS")
+        victim["evidence_checks"][0]["contains_all"].append("THIS_ANCHOR_MUST_NOT_EXIST_94821")
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / "ledger.json"
+            p.write_text(json.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
+            errs = history_guard.validate(p)
+        self.assertTrue(any("THIS_ANCHOR_MUST_NOT_EXIST_94821" in e for e in errs), errs)
+
+    def test_warlock_is_known_but_not_claimed_running(self):
+        r = history_guard.classify("Warlock")
+        self.assertEqual(r["id"], "WARLOCK")
+        self.assertIn("RUNTIME_ON_CANONICAL_SERVER_WIEDZY_NOT_VERIFIED", r["status"])
+
+    def test_warlock_rename_corruption_is_known_defect(self):
+        r = history_guard.classify("warlock rename corruption")
+        self.assertEqual(r["history_status"], "KNOWN")
+        self.assertEqual(r["id"], "WARLOCK_RENAME_DOC_CORRUPTION")
 
 if __name__=="__main__":
     unittest.main()

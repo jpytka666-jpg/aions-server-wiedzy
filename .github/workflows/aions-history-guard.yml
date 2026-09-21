@@ -1,21 +1,7 @@
 name: AIONS history guard
 on:
   push:
-    paths:
-      - "AIONS_CATALOG/architecture_history.json"
-      - "aions_core/server/history_guard.py"
-      - "aions_core/server/pocket_qc.py"
-      - "aions_core/tools/aions_preflight.py"
-      - "aions_core/tests/test_history_guard.py"
-      - "AGENTS.md"
   pull_request:
-    paths:
-      - "AIONS_CATALOG/architecture_history.json"
-      - "aions_core/server/history_guard.py"
-      - "aions_core/server/pocket_qc.py"
-      - "aions_core/tools/aions_preflight.py"
-      - "aions_core/tests/test_history_guard.py"
-      - "AGENTS.md"
 jobs:
   guard:
     runs-on: ubuntu-latest
