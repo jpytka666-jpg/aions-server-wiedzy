@@ -129,6 +129,17 @@ class CBMSMemory:
          r"DESKTOP FILES ANALYSIS|files found"),
         ("R8_log_rozmowy",
          r"Podsumowanie rozmowy|ostatnie \d+ wymian"),
+        # R9 (2026-09-21): model mowi uczciwie, ze bloki nie zawieraja odpowiedzi.
+        # To jest dobra odpowiedz, ale NIE jest wiedza i nie moze stac sie blokiem.
+        # Kotwica \A: tylko gdy tekst od tego SIE ZACZYNA, bo cytat "BRAK DANYCH"
+        # w srodku prawdziwej odpowiedzi (np. opis guardraila) jest legalny.
+        ("R9_model_mowi_brak",
+         r"\A\s*\W?\s*(?:(?:podane|dostarczone|te|the|provided)\s+){0,2}"
+         r"(?:blok\w*|fragment\w*|block\w*|context)?\s*(?:wiedzy\s+)?"
+         r"(?:nie\s+(?:zawiera\w*|ma\w*|opisuj\w*|odnosz\w*|wiem)"
+         r"|brak\w*\s+(?:informacji|danych|odpowiedzi)"
+         r"|do(?:es)?\s*n['o]t\s+(?:contain|mention|include)"
+         r"|there\s+is\s+no|no\s+(?:information|data|answer))"),
     ]
 
     def learning_gate(self, content: str, concept: str = "") -> tuple:
@@ -669,9 +680,17 @@ class CBMSMemory:
             return ""
 
     def _should_create_new_chunk(self, query: str, synthesis: str) -> bool:
-        """Determine if new knowledge chunk should be created"""
-        # Create new chunk if significant new insight or query is complex
-        return len(query) > 50 or "new" in query.lower() or "how" in query.lower()
+        """
+        Czy probowac zapisu. Decyzja po TRESCI, nie po ksztalcie pytania.
+
+        Do 2026-09-21 pisalo przy len(query)>50 albo slowach new/how - czyli
+        pytanie decydowalo, a nie to, czy czegokolwiek sie nauczono. Z synteza
+        przez model zapisywalo to kazda odpowiedz, takze uczciwe "bloki nie
+        zawieraja". Teraz: kazda niepusta synteza idzie do bramki zapisu
+        (learning_gate w create_knowledge_chunk, z logiem odrzucen), a bramka
+        rozstrzyga. Pytanie nie ma glosu.
+        """
+        return bool(synthesis) and len(synthesis.strip()) >= 25
     
     def _primary_concept(self, concepts: List[str]) -> str:
         """Select primary concept for chunking"""
