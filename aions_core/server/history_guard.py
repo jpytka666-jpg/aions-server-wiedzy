@@ -155,17 +155,19 @@ def classify(text: str) -> dict[str, Any]:
             "possible_matches": _slabe_trafienia(text)}
 
 
-def validate() -> list[str]:
+def validate(ledger_path: Path | None = None) -> list[str]:
     """
-    UWAGA NA ZAKRES: sprawdza, czy sciezka dowodu ISTNIEJE. NIE sprawdza, czy
-    plik faktycznie mowi to, co rekord twierdzi. Rekord moze wskazac prawdziwy
-    plik, ktory o niczym takim nie wspomina, i validate tego nie zlapie.
-    Zweryfikowane recznie 2026-09-21 dla CBMS_SYNTH_TEMPLATE: dowod jest realny
-    (AIONS_DEEP_DIVE_REPORT_20251129.md, linia 15: "_synthesize_chunks() zwraca
-    hardcoded template"). Dla pozostalych rekordow tresc nie byla sprawdzana.
+    Validate structure AND semantic evidence contracts.
+
+    File existence alone is not evidence. Every record must carry at least one
+    evidence_check. Each check names a file and content anchors that must
+    actually occur in that file. This does not prove an arbitrary natural-
+    language claim mathematically, but it prevents the specific failure where
+    a real file about something else is cited as evidence.
     """
     errors = []
-    data = load_ledger()
+    path = ledger_path or LEDGER
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
     for section in ("mechanisms", "defects", "decisions"):
         ids = set()
         for item in data.get(section, []):
@@ -176,6 +178,7 @@ def validate() -> list[str]:
             if iid in ids:
                 errors.append(f"{section}: duplicate id {iid}")
             ids.add(iid)
+
             ev = item.get("evidence") or []
             if not ev:
                 errors.append(f"{iid}: no evidence")
@@ -184,4 +187,31 @@ def validate() -> list[str]:
                     continue
                 if not (ROOT / rel).exists():
                     errors.append(f"{iid}: missing evidence path: {rel}")
+
+            contracts = item.get("evidence_checks") or []
+            if not contracts:
+                errors.append(f"{iid}: no semantic evidence_checks")
+                continue
+            for n, contract in enumerate(contracts, 1):
+                rel = contract.get("path", "")
+                if not rel:
+                    errors.append(f"{iid}: evidence_check #{n} missing path")
+                    continue
+                p = ROOT / rel
+                if not p.is_file():
+                    errors.append(f"{iid}: semantic evidence file missing: {rel}")
+                    continue
+                if rel not in ev:
+                    errors.append(f"{iid}: semantic evidence path not listed in evidence: {rel}")
+                try:
+                    content = p.read_text(encoding="utf-8").casefold()
+                except Exception as e:
+                    errors.append(f"{iid}: cannot read semantic evidence {rel}: {type(e).__name__}")
+                    continue
+                for anchor in contract.get("contains_all") or []:
+                    if str(anchor).casefold() not in content:
+                        errors.append(f"{iid}: semantic anchor missing in {rel}: {anchor!r}")
+                any_anchors = contract.get("contains_any") or []
+                if any_anchors and not any(str(a).casefold() in content for a in any_anchors):
+                    errors.append(f"{iid}: none of semantic anchors found in {rel}: {any_anchors!r}")
     return errors

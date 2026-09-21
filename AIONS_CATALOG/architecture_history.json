@@ -1,5 +1,5 @@
 {
-  "schema": 2,
+  "schema": 3,
   "generated_at": "2026-09-21",
   "purpose": "Canonical historical cognition for AIONS. Prevent rediscovery of mechanisms, decisions and defects from being mislabeled as new.",
   "rule": "NOT_IN_LEDGER never means NEW. A novelty claim requires history preflight plus explicit evidence.",
@@ -14,12 +14,26 @@
         "cbms memory",
         "memory chunks"
       ],
-      "status": "ACTIVE",
+      "status": "CANONICAL_CODE_PRESENT; OPERATIONAL_PATH_DECLARED",
       "first_known": "2025-09 or earlier",
       "evidence": [
         "AIONS_DEPENDENCY_MAP_20251128.md",
         "AIONS_DEEP_DIVE_REPORT_20251129.md",
         "aions_core/server/cbms_memory.py"
+      ],
+      "evidence_checks": [
+        {
+          "path": "aions_core/server/cbms_memory.py",
+          "contains_all": [
+            "class CBMSMemory"
+          ]
+        },
+        {
+          "path": "AIONS_CATALOG/INDEX.md",
+          "contains_all": [
+            "Operacyjny CBMS (AIONS_PATH)"
+          ]
+        }
       ]
     },
     {
@@ -31,12 +45,26 @@
         "crla tournament",
         "candidate scoring"
       ],
-      "status": "ACTIVE",
+      "status": "CODE_PRESENT; INVOKED_BY_POCKET_QC_RUNNER",
       "first_known": "2025-09 or earlier",
       "evidence": [
         "AIONS_DEPENDENCY_MAP_20251128.md",
         "AIONS_DEEP_DIVE_REPORT_20251129.md",
         "aions_core/server/crla_core.py"
+      ],
+      "evidence_checks": [
+        {
+          "path": "aions_core/server/crla_core.py",
+          "contains_all": [
+            "def run_crla"
+          ]
+        },
+        {
+          "path": "aions_core/tools/uruchom_pocket_qc.py",
+          "contains_all": [
+            "from crla_core import run_crla"
+          ]
+        }
       ]
     },
     {
@@ -49,13 +77,22 @@
         "korean cbms",
         "syllable addressing"
       ],
-      "status": "ACTIVE/HISTORICAL",
+      "status": "CODE_PRESENT; HISTORICAL_ARCHITECTURE",
       "first_known": "2025-09-13",
       "evidence": [
         "AIONS_DEEP_DIVE_REPORT_20251129.md",
         "AIONS_CATALOG/INDEX.md",
         "aions_core/server/korean_keys.py",
         "discovery/cbms/2026-08-26-korean-cbms-findings.md"
+      ],
+      "evidence_checks": [
+        {
+          "path": "aions_core/server/korean_keys.py",
+          "contains_all": [
+            "def build_keys",
+            "inspired by Hangul blocks"
+          ]
+        }
       ]
     },
     {
@@ -67,13 +104,21 @@
         "symbolic index",
         "esperanto bridge"
       ],
-      "status": "ACTIVE",
+      "status": "CODE_PRESENT",
       "first_known": "2025-11 or earlier",
       "evidence": [
         "AIONS_DEEP_DIVE_REPORT_20251129.md",
         "AIONS_CATALOG/codebooks/README.md",
         "aions_core/server/codebook_engine.py",
         "aions_core/server/esperanto_bridge.py"
+      ],
+      "evidence_checks": [
+        {
+          "path": "aions_core/server/esperanto_bridge.py",
+          "contains_all": [
+            "to_esperanto"
+          ]
+        }
       ]
     },
     {
@@ -85,7 +130,7 @@
         "qc_crla_result",
         "quality gate"
       ],
-      "status": "ACTIVE",
+      "status": "CODE_PRESENT; RUNNER_PRESENT",
       "first_known": "2025-11 or earlier",
       "evidence": [
         "AIONS_DEPENDENCY_MAP_20251128.md",
@@ -94,6 +139,20 @@
       ],
       "notes": [
         "Library invoked by callers; not a standalone service."
+      ],
+      "evidence_checks": [
+        {
+          "path": "aions_core/server/pocket_qc.py",
+          "contains_all": [
+            "def qc_crla_result"
+          ]
+        },
+        {
+          "path": "aions_core/tools/uruchom_pocket_qc.py",
+          "contains_all": [
+            "qc_crla_result"
+          ]
+        }
       ]
     },
     {
@@ -105,12 +164,20 @@
         "reasoning patterns",
         "meta reasoning"
       ],
-      "status": "ACTIVE/HISTORICAL",
+      "status": "CATALOG_PRESENT; HISTORICAL",
       "first_known": "2025-09-13 or earlier",
       "evidence": [
         "AIONS_CATALOG/thinking_patterns/README.md",
         "AIONS_DEEP_DIVE_REPORT_20251129.md",
         "ANALYSIS_CHECKPOINT_20251128.md"
+      ],
+      "evidence_checks": [
+        {
+          "path": "AIONS_CATALOG/thinking_patterns/README.md",
+          "contains_all": [
+            "THINKING PATTERNS"
+          ]
+        }
       ]
     },
     {
@@ -122,12 +189,21 @@
         "knowledge packs",
         "pack modules"
       ],
-      "status": "ASSET_PRESENT; EXECUTION STATUS REQUIRES CURRENT PROOF",
+      "status": "ASSET_PRESENT; EXECUTION_STATUS_REQUIRES_CURRENT_PROOF",
       "first_known": "2025-11 or earlier",
       "evidence": [
         "AIONS_DEPENDENCY_MAP_20251128.md",
         "AIONS_DEEP_DIVE_REPORT_20251129.md",
         "AIONS_CATALOG/INDEX.md"
+      ],
+      "evidence_checks": [
+        {
+          "path": "AIONS_CATALOG/INDEX.md",
+          "contains_all": [
+            "plasters_200g_master",
+            "plasters_fullstack"
+          ]
+        }
       ]
     },
     {
@@ -139,13 +215,22 @@
         "panic condition",
         "trigger web rag"
       ],
-      "status": "CODE PRESENT",
+      "status": "CODE_PRESENT",
       "first_known": "2025-11 or earlier",
       "evidence": [
         "AIONS_DEEP_DIVE_REPORT_20251129.md",
         "aions_core/server/cbms_direct_server.py",
         "aions_core/server/cbms_unified_server.py",
         "aions_core/server/web_rag_cbms.py"
+      ],
+      "evidence_checks": [
+        {
+          "path": "aions_core/server/web_rag_cbms.py",
+          "contains_all": [
+            "def search_and_inject",
+            "PANIC"
+          ]
+        }
       ]
     },
     {
@@ -156,11 +241,19 @@
         "memory graph",
         "enhanced cbms retrieval"
       ],
-      "status": "CODE PRESENT",
+      "status": "CODE_PRESENT",
       "first_known": "2025-2026",
       "evidence": [
         "aions_core/memory_graph_engine.py",
         "aions_core/aions_reactor.py"
+      ],
+      "evidence_checks": [
+        {
+          "path": "aions_core/memory_graph_engine.py",
+          "contains_all": [
+            "class MemoryGraph"
+          ]
+        }
       ]
     },
     {
@@ -170,11 +263,19 @@
         "math solver",
         "math_solver"
       ],
-      "status": "CODE PRESENT",
+      "status": "CODE_PRESENT",
       "first_known": "2025-11 or earlier",
       "evidence": [
         "AIONS_DEPENDENCY_MAP_20251128.md",
         "aions_core/server/math_solver.py"
+      ],
+      "evidence_checks": [
+        {
+          "path": "aions_core/server/math_solver.py",
+          "contains_all": [
+            "def is_math_candidate"
+          ]
+        }
       ]
     },
     {
@@ -185,12 +286,20 @@
         "conversation memory",
         "response variator"
       ],
-      "status": "CODE PRESENT",
+      "status": "CODE_PRESENT",
       "first_known": "2025-11 or earlier",
       "evidence": [
         "AIONS_DEPENDENCY_MAP_20251128.md",
         "aions_core/server/conversation_enhancer.py",
         "aions_core/server/conversation_memory.py"
+      ],
+      "evidence_checks": [
+        {
+          "path": "aions_core/server/conversation_enhancer.py",
+          "contains_all": [
+            "class ConversationEnhancer"
+          ]
+        }
       ]
     },
     {
@@ -201,11 +310,27 @@
         "observe diagnose act verify learn",
         "self heal"
       ],
-      "status": "ACTIVE MVP PER STATE",
+      "status": "ACTIVE_MVP_PER_AIONS_STATE",
       "first_known": "2026-07",
       "evidence": [
         "control_plane/operator/loop.py",
         "AIONS_STATE.md"
+      ],
+      "evidence_checks": [
+        {
+          "path": "control_plane/operator/loop.py",
+          "contains_all": [
+            "def run_cycle"
+          ]
+        },
+        {
+          "path": "AIONS_STATE.md",
+          "contains_all": [
+            "Rung 4b",
+            "operator autonomiczny",
+            "MVP"
+          ]
+        }
       ]
     },
     {
@@ -217,12 +342,26 @@
         "skills_lib",
         "agents_lib"
       ],
-      "status": "CODE PRESENT",
+      "status": "CODE_PRESENT",
       "first_known": "2026",
       "evidence": [
         "control_plane/skills/registry.py",
         "control_plane/agents/agent_registry.py",
         "agents_lib"
+      ],
+      "evidence_checks": [
+        {
+          "path": "control_plane/skills/registry.py",
+          "contains_all": [
+            "class SkillRegistry"
+          ]
+        },
+        {
+          "path": "control_plane/agents/agent_registry.py",
+          "contains_all": [
+            "class AgentRegistry"
+          ]
+        }
       ]
     },
     {
@@ -233,12 +372,50 @@
         "outline then drill",
         "semantic codebook"
       ],
-      "status": "ACTIVE DEVELOPMENT/HISTORICAL STATE",
+      "status": "CODE_PRESENT",
       "first_known": "2026-08",
       "evidence": [
         "acae/.now/STATE.md",
         "acae/src/acae/concepts.py",
         "acae/config/semantic_codebook.json"
+      ],
+      "evidence_checks": [
+        {
+          "path": "acae/src/acae/concepts.py",
+          "contains_all": [
+            "class Codebook"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "WARLOCK",
+      "name": "Warlock controlled ingress / perimeter boundary",
+      "aliases": [
+        "warlock",
+        "warlock bridge",
+        "kali-warlock",
+        "warlock perimeter"
+      ],
+      "status": "ARCHITECTURAL_ROLE_DEFINED; CODE_AND_LAB_THREAD_EXIST; RUNTIME_ON_CANONICAL_SERVER_WIEDZY_NOT_VERIFIED",
+      "first_known": "2026-09-01 or earlier",
+      "evidence": [
+        "AIONS_CATALOG/evidence/2026-09-21-rediscovery-warlock-audit.md"
+      ],
+      "evidence_checks": [
+        {
+          "path": "AIONS_CATALOG/evidence/2026-09-21-rediscovery-warlock-audit.md",
+          "contains_all": [
+            "WARLOCK",
+            "WarlockBridge",
+            "RUNTIME IMPLEMENTATION",
+            "NOT VERIFIED"
+          ]
+        }
+      ],
+      "notes": [
+        "Do not collapse architecture existence, repository code/design evidence, and runtime deployment into one status.",
+        "A bounded 2026-09-21 search reported no Warlock runtime artifact on E:\\\\server wiedzy."
       ]
     }
   ],
@@ -264,7 +441,16 @@
       "current_evidence": [
         "commit 592d5eec613398d00941d9a0dfb0af754658e5cb: Pocket QC RETRY R2 on two runs"
       ],
-      "classification": "KNOWN DEFECT / CONTINUATION OR REGRESSION, NOT NEW"
+      "classification": "KNOWN DEFECT / CONTINUATION OR REGRESSION, NOT NEW",
+      "evidence_checks": [
+        {
+          "path": "AIONS_DEEP_DIVE_REPORT_20251129.md",
+          "contains_all": [
+            "_synthesize_chunks()",
+            "template"
+          ]
+        }
+      ]
     },
     {
       "id": "POCKET_QC_WRONG_FIELD",
@@ -279,6 +465,15 @@
       "evidence": [
         "aions_core/server/pocket_qc.py",
         "acae/.now/STATE.md"
+      ],
+      "evidence_checks": [
+        {
+          "path": "aions_core/server/pocket_qc.py",
+          "contains_all": [
+            "answer_preview",
+            "Pelna odpowiedz"
+          ]
+        }
       ]
     },
     {
@@ -294,6 +489,14 @@
       "evidence": [
         "aions_core/server/crla_core.py",
         "acae/.now/STATE.md"
+      ],
+      "evidence_checks": [
+        {
+          "path": "aions_core/server/crla_core.py",
+          "contains_all": [
+            "DRABINKA USUNIETA 2026-08-16"
+          ]
+        }
       ]
     },
     {
@@ -308,6 +511,15 @@
       "known_since": "2025-11-29",
       "evidence": [
         "AIONS_DEEP_DIVE_REPORT_20251129.md"
+      ],
+      "evidence_checks": [
+        {
+          "path": "AIONS_DEEP_DIVE_REPORT_20251129.md",
+          "contains_all": [
+            "PlastersPACK.inference()",
+            "PLACEHOLDER"
+          ]
+        }
       ]
     },
     {
@@ -323,6 +535,15 @@
       "known_since": "2025-11-29",
       "evidence": [
         "AIONS_DEEP_DIVE_REPORT_20251129.md"
+      ],
+      "evidence_checks": [
+        {
+          "path": "AIONS_DEEP_DIVE_REPORT_20251129.md",
+          "contains_all": [
+            "_is_noise_content()",
+            "filtruje"
+          ]
+        }
       ]
     },
     {
@@ -339,9 +560,46 @@
       "evidence": [
         "logs/conversation_dumps/autolog_2025-11-29.jsonl",
         "AIONS_DEEP_DIVE_REPORT_20251129.md",
-        "AGENTS.md"
+        "AGENTS.md",
+        "AIONS_CATALOG/evidence/2026-09-21-rediscovery-warlock-audit.md"
       ],
-      "classification": "PROCESS DEFECT"
+      "classification": "PROCESS DEFECT",
+      "evidence_checks": [
+        {
+          "path": "AIONS_CATALOG/evidence/2026-09-21-rediscovery-warlock-audit.md",
+          "contains_all": [
+            "REDISCOVERY_FAILURE",
+            "592d5eec613398d00941d9a0dfb0af754658e5cb",
+            "_synthesize_chunks()"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "WARLOCK_RENAME_DOC_CORRUPTION",
+      "title": "Over-broad Sheriff->Warlock rename damaged migration prose into Warlock->Warlock statements",
+      "aliases": [
+        "warlock replaces warlock",
+        "warlock to warlock",
+        "warlock rename corruption",
+        "sheriff warlock rename docs"
+      ],
+      "status": "KNOWN_OPEN_DOCUMENTATION_DEFECT_2026-09-21",
+      "known_since": "2026-09-21",
+      "evidence": [
+        "AIONS_CATALOG/evidence/2026-09-21-rediscovery-warlock-audit.md"
+      ],
+      "evidence_checks": [
+        {
+          "path": "AIONS_CATALOG/evidence/2026-09-21-rediscovery-warlock-audit.md",
+          "contains_all": [
+            "Warlock rename documentation corruption",
+            "Warlock replaces the earlier name Warlock",
+            "migracja Warlock -> Warlock"
+          ]
+        }
+      ],
+      "classification": "DOCUMENTATION DEFECT; DOES NOT INVALIDATE THE RUST TOPOLOGY CHANGE"
     }
   ],
   "decisions": [
@@ -350,6 +608,15 @@
       "statement": "LLM is a replaceable communication interface; CBMS is the cognitive system; MCP is execution; Linux is hardware layer.",
       "evidence": [
         "AGENTS.md"
+      ],
+      "evidence_checks": [
+        {
+          "path": "AGENTS.md",
+          "contains_all": [
+            "LLM is a replaceable communication interface",
+            "CBMS is the cognitive system"
+          ]
+        }
       ]
     },
     {
@@ -358,14 +625,34 @@
       "evidence": [
         "AGENTS.md",
         "AIONS_CATALOG/INDEX.md"
+      ],
+      "evidence_checks": [
+        {
+          "path": "AIONS_CATALOG/INDEX.md",
+          "contains_all": [
+            "Operacyjny CBMS (AIONS_PATH)",
+            "E:\\\\server wiedzy\\\\aions_core"
+          ]
+        }
       ]
     },
     {
       "id": "NOVELTY_NEEDS_HISTORY",
       "statement": "Before calling a mechanism, defect, decision or architecture element NEW/FIRST/DISCOVERED, run historical preflight. A miss means UNKNOWN_NOT_PROVEN_NEW, never NEW.",
       "evidence": [
-        "AIONS_CATALOG/architecture_history.json"
+        "AIONS_CATALOG/architecture_history.json",
+        "AGENTS.md"
+      ],
+      "evidence_checks": [
+        {
+          "path": "AGENTS.md",
+          "contains_all": [
+            "UNKNOWN_NOT_PROVEN_NEW",
+            "Before saying or writing"
+          ]
+        }
       ]
     }
-  ]
+  ],
+  "semantic_evidence_rule": "Every mechanism, defect and decision must have at least one evidence_check whose content anchors are present. File existence alone is insufficient."
 }
