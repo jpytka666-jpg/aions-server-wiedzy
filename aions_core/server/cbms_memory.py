@@ -642,13 +642,21 @@ class CBMSMemory:
                   "Jesli bloki nie zawieraja odpowiedzi, napisz to wprost. "
                   "Odpowiedz w jezyku pytania, konkretnie, 3-6 zdan, bez wstepu, "
                   "bez nazw plikow, sciezek i identyfikatorow blokow.")
-        body = json.dumps({
+        payload = {
             "messages": [
                 {"role": "system", "content": system},
                 {"role": "user", "content": f"BLOKI:\n{ctx}\n\nPYTANIE: {query}"},
             ],
-            "temperature": 0, "seed": 123, "max_tokens": 300,
-        }).encode("utf-8")
+            "temperature": 0, "seed": 123,
+            # Modele z trybem myslenia (qwen3) zuzywaja budzet na <think>, wiec
+            # domyslnie wiecej niz 300; llama-server ignoruje nadmiar.
+            "max_tokens": int(os.environ.get("AIONS_LLM_MAX_TOKENS", "1200")),
+        }
+        # Ollama wymaga pola model (400 bez niego); llama-server je ignoruje.
+        _model = os.environ.get("AIONS_LLM_MODEL", "")
+        if _model:
+            payload["model"] = _model
+        body = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
         try:
             with urllib.request.urlopen(req, timeout=timeout) as r:
