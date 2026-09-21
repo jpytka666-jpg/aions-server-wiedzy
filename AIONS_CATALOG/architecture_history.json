@@ -19,7 +19,8 @@
       "evidence": [
         "AIONS_DEPENDENCY_MAP_20251128.md",
         "AIONS_DEEP_DIVE_REPORT_20251129.md",
-        "aions_core/server/cbms_memory.py"
+        "aions_core/server/cbms_memory.py",
+        "AIONS_CATALOG/INDEX.md"
       ],
       "evidence_checks": [
         {
@@ -50,7 +51,8 @@
       "evidence": [
         "AIONS_DEPENDENCY_MAP_20251128.md",
         "AIONS_DEEP_DIVE_REPORT_20251129.md",
-        "aions_core/server/crla_core.py"
+        "aions_core/server/crla_core.py",
+        "aions_core/tools/uruchom_pocket_qc.py"
       ],
       "evidence_checks": [
         {
