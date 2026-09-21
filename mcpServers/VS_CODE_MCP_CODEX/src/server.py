@@ -345,6 +345,14 @@ def extract_categories(text: str) -> List[str]:
 # =============================================================================
 
 _auto_log_buffer: List[Dict] = []
+# Some MCP bridges strip an argument literally named session_id before it
+# reaches this server, so a required session_id makes memory unusable from
+# those clients: the call arrives without it and is rejected as malformed.
+# Proven on 21 Sept 2026 from Claude Cowork, where query and top_k arrived
+# and session_id did not. Giving it a default makes the tools work whether
+# the argument survives the trip or not.
+DEFAULT_MEMORY_SESSION = "claude_marcin_main"
+
 _auto_log_session: str = "claude_marcin_main"
 _auto_log_threshold: int = 5
 _auto_log_last_dump: datetime = datetime.now(timezone.utc)
@@ -1614,7 +1622,7 @@ def session_bootstrap(
 
 @mcp_server.tool(name="memory_store", description="Store context to ChromaDB.")
 @auto_logged
-def memory_store(session_id: str, text: str, ttl_days: int = 30) -> str:
+def memory_store(text: str, session_id: str = DEFAULT_MEMORY_SESSION, ttl_days: int = 30) -> str:
     try:
         doc_id = _generate_id()
         categories = extract_categories(text)
@@ -1629,7 +1637,7 @@ def memory_store(session_id: str, text: str, ttl_days: int = 30) -> str:
 
 @mcp_server.tool(name="memory_recall", description="Search memory.")
 @auto_logged
-def memory_recall(session_id: str, query: str, top_k: int = 5) -> str:
+def memory_recall(query: str, session_id: str = DEFAULT_MEMORY_SESSION, top_k: int = 5) -> str:
     try:
         results = []
         vs = get_vector_store()
@@ -3488,9 +3496,9 @@ def _cp_tool_runner(tool: str, args: dict) -> str:
         "system_health": lambda a: system_health(),
         "cbms_search": lambda a: cbms_search(a.get("query", "")),
         "memory_recall": lambda a: memory_recall(
-            a.get("session_id", "claude_marcin_main"),
-            a.get("query", ""),
-            a.get("top_k", 3),
+            query=a.get("query", ""),
+            session_id=a.get("session_id", DEFAULT_MEMORY_SESSION),
+            top_k=a.get("top_k", 3),
         ),
         "fast_search": lambda a: fast_search(a.get("query", "")),
     }
