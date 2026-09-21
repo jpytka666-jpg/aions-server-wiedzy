@@ -119,7 +119,36 @@ class SemanticEvidenceAudit20260921(unittest.TestCase):
         self.assertEqual(r["history_status"], "KNOWN")
         self.assertEqual(r["id"], "WARLOCK_RENAME_DOC_CORRUPTION")
 
-if __name__=="__main__":
-    unittest.main()
+class AuditOf4f6496e(unittest.TestCase):
+    """
+    Dziura znaleziona w audycie commita 4f6496e: kontrakt dowodowy BEZ zadnej
+    kotwicy przechodzil walidacje bez bledu, czyli cicho wracal do starego
+    zachowania "plik istnieje". Zmierzone przed poprawka: usuniecie
+    contains_all i contains_any z CBMS_SYNTH_TEMPLATE dawalo ERRORS=0.
+    """
 
+    def _ledger_bez_kotwic(self, tmpdir):
+        import json, copy
+        d = copy.deepcopy(history_guard.load_ledger())
+        for rec in d["defects"]:
+            if rec["id"] == "CBMS_SYNTH_TEMPLATE":
+                rec["evidence_checks"][0].pop("contains_all", None)
+                rec["evidence_checks"][0].pop("contains_any", None)
+        p = Path(tmpdir) / "ledger.json"
+        p.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
+        return p
+
+    def test_kontrakt_bez_kotwic_jest_bledem(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            errs = history_guard.validate(self._ledger_bez_kotwic(tmp))
+            self.assertTrue(any("no anchors" in e for e in errs),
+                            f"kontrakt bez kotwic musi byc bledem, dostalem: {errs}")
+
+    def test_prawdziwa_ksiega_nadal_czysta(self):
+        self.assertEqual(history_guard.validate(), [])
+
+
+if __name__ == "__main__":
+    unittest.main()
 

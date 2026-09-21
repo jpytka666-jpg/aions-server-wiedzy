@@ -208,6 +208,15 @@ def validate(ledger_path: Path | None = None) -> list[str]:
                 except Exception as e:
                     errors.append(f"{iid}: cannot read semantic evidence {rel}: {type(e).__name__}")
                     continue
+                # DZIURA ZNALEZIONA 2026-09-21 W AUDYCIE 4f6496e:
+                # kontrakt bez ZADNEJ kotwicy przechodzil bez bledu. Obie petle
+                # nizej po prostu nic nie robily, wiec `{"path": "x"}` cicho
+                # wracal do starego zachowania "plik istnieje" — dokladnie tego,
+                # co ta warstwa miala zlikwidowac. Zmierzone: usuniecie
+                # contains_all i contains_any z CBMS_SYNTH_TEMPLATE dawalo
+                # ERRORS=0. Bramka z obejsciem o jedno pominiecie to nie bramka.
+                if not (contract.get("contains_all") or contract.get("contains_any")):
+                    errors.append(f"{iid}: evidence_check #{n} has no anchors ({rel})")
                 for anchor in contract.get("contains_all") or []:
                     if str(anchor).casefold() not in content:
                         errors.append(f"{iid}: semantic anchor missing in {rel}: {anchor!r}")
@@ -215,3 +224,4 @@ def validate(ledger_path: Path | None = None) -> list[str]:
                 if any_anchors and not any(str(a).casefold() in content for a in any_anchors):
                     errors.append(f"{iid}: none of semantic anchors found in {rel}: {any_anchors!r}")
     return errors
+
