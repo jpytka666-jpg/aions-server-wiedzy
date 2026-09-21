@@ -19,7 +19,7 @@ Kod wyjscia: 0 gdy bramka wydala werdykt (jakikolwiek), 2..5 gdy lancuch pekl
 na konkretnym etapie. Werdykt RETRY to NIE jest blad programu. To jest bramka
 robiaca swoja robote.
 
-Wynik ladzie w aions_core/logs/pocket_qc.jsonl, jedna linia na przebieg.
+Wynik ladzie w aions_core/logs/pocket_qc.jsonl, jedna linia na przebieg.\nWerdykt zawiera pole history: KNOWN vs UNKNOWN_NOT_PROVEN_NEW, aby stary defect\nnie byl przedstawiany jako nowe odkrycie.
 """
 from __future__ import annotations
 

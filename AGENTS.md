@@ -83,3 +83,27 @@ Legacy map: [`.claude/specs/LEGACY_ETAP_MAP.md`](.claude/specs/LEGACY_ETAP_MAP.m
 ## Tool routing
 
 MCP tool cheat sheet (Everything, `wsl_run`, `network_ping`, when **not** to use vmconnect/browser): [`.cursor/rules/aions-mcp-tools.mdc`](.cursor/rules/aions-mcp-tools.mdc)
+
+
+## MANDATORY HISTORICAL COGNITION — KNOWN BEFORE NEW
+
+This is a boot requirement, not optional documentation.
+
+At session start for AIONS architecture / CBMS / CRLA / Pocket QC / learning / memory work:
+```bash
+python aions_core/tools/aions_preflight.py --boot
+```
+
+Before saying or writing **new**, **first**, **discovered**, **next real defect**, **new mechanism**, or an equivalent claim about AIONS:
+```bash
+python aions_core/tools/aions_preflight.py "<finding or mechanism>"
+```
+
+Interpretation is strict:
+- `KNOWN` = continue from the cited history; never present it as a fresh discovery.
+- `UNKNOWN_NOT_PROVEN_NEW` = search history/repo/conversation evidence. A miss is not proof of novelty.
+- `--claim-new` intentionally fails both for known items and for unproven misses.
+- Canonical machine ledger: `AIONS_CATALOG/architecture_history.json`.
+- Human catalog: `AIONS_CATALOG/INDEX.md`.
+
+Pocket QC results are history-annotated. A quality failure may be a recurrence of an old defect, not a new defect.

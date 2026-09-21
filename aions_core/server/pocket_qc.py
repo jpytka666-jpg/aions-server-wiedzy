@@ -6,6 +6,11 @@ import os
 from pathlib import Path
 from typing import Dict, Any
 
+try:
+    from history_guard import classify as _history_classify
+except Exception:
+    _history_classify = None
+
 
 def _logs_dir() -> Path:
     root = Path(os.environ.get("CBMS_BASE_DIR", Path(__file__).resolve().parent.parent))
@@ -87,6 +92,11 @@ def qc_text(text: str, memory_dir: str | Path) -> Dict[str, Any]:
     cbms_count = _codebook_symbols_for_text(text, memory_dir)
     verdict = "PASS" if (logic_ok and cbms_count > 0) else ("RETRY" if logic_ok else "FAIL")
     out = {"type": "text", "verdict": verdict, "logic_ok": logic_ok, "cbms_symbols": cbms_count}
+    if _history_classify is not None:
+        try:
+            out["history"] = _history_classify(out.get("powod_bramki") or out.get("verdict") or "")
+        except Exception as e:
+            out["history"] = {"history_status":"HISTORY_LOOKUP_ERROR","error":type(e).__name__}
     _append_log("pocket_qc.jsonl", out)
     return out
 
@@ -135,6 +145,11 @@ def qc_crla_result(result: Dict[str, Any], memory_dir: str | Path) -> Dict[str, 
         # tlumacz -> ksiazka kodowa, ale nie decyduje juz o niczym.
         "cbms_symbols": cbms_count,
     }
+    if _history_classify is not None:
+        try:
+            out["history"] = _history_classify(powod_bramki or "")
+        except Exception as e:
+            out["history"] = {"history_status":"HISTORY_LOOKUP_ERROR","error":type(e).__name__}
     _append_log("pocket_qc.jsonl", out)
     return out
 

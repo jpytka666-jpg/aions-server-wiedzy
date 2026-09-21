@@ -125,3 +125,24 @@ python scripts\ingest_treasures_tier2.py
 
 *Katalog: human `INDEX.md` + machine `catalog_2026.json`*
 *Ostatnia aktualizacja: 2026-07-10*
+
+
+## 🧠 HISTORICAL COGNITION — NIE ODKRYWAJ AIONS OD NOWA
+
+Kanoniczny maszynowy rejestr mechanizmów, decyzji i znanych awarii:
+`AIONS_CATALOG/architecture_history.json`.
+
+Preflight:
+```powershell
+python aions_core\tools\aions_preflight.py --boot
+python aions_core\tools\aions_preflight.py "R2_opakowanie_syntezy"
+python aions_core\tools\aions_preflight.py "Pocket QC"
+```
+
+Twarda semantyka: brak trafienia oznacza `UNKNOWN_NOT_PROVEN_NEW`, nigdy automatycznie
+`NEW`. History guard jest testowany w CI. Pocket QC dopina klasyfikację historyczną
+do werdyktu, aby regresja starego defektu nie była przedstawiana jako świeże odkrycie.
+
+Konkretny przypadek, który wymusił ten mechanizm: 21.09.2026 Pocket QC ponownie wykrył
+wrapper syntezy, ale ten sam defekt `_synthesize_chunks() <- BUG: template` był już
+jawnie opisany 29.11.2025, a generic-template responses dzień wcześniej.

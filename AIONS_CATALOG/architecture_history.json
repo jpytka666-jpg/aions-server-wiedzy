@@ -1,0 +1,371 @@
+{
+  "schema": 2,
+  "generated_at": "2026-09-21",
+  "purpose": "Canonical historical cognition for AIONS. Prevent rediscovery of mechanisms, decisions and defects from being mislabeled as new.",
+  "rule": "NOT_IN_LEDGER never means NEW. A novelty claim requires history preflight plus explicit evidence.",
+  "mechanisms": [
+    {
+      "id": "CBMS",
+      "name": "CBMS memory/retrieval system",
+      "aliases": [
+        "cbms",
+        "code book memory",
+        "chunk based memory",
+        "cbms memory",
+        "memory chunks"
+      ],
+      "status": "ACTIVE",
+      "first_known": "2025-09 or earlier",
+      "evidence": [
+        "AIONS_DEPENDENCY_MAP_20251128.md",
+        "AIONS_DEEP_DIVE_REPORT_20251129.md",
+        "aions_core/server/cbms_memory.py"
+      ]
+    },
+    {
+      "id": "CRLA",
+      "name": "Chain Reaction Learning Algorithm / candidate scoring",
+      "aliases": [
+        "crla",
+        "chain reaction learning algorithm",
+        "crla tournament",
+        "candidate scoring"
+      ],
+      "status": "ACTIVE",
+      "first_known": "2025-09 or earlier",
+      "evidence": [
+        "AIONS_DEPENDENCY_MAP_20251128.md",
+        "AIONS_DEEP_DIVE_REPORT_20251129.md",
+        "aions_core/server/crla_core.py"
+      ]
+    },
+    {
+      "id": "KOREAN_HANGUL",
+      "name": "Korean/Hangul addressing and compression",
+      "aliases": [
+        "korean keys",
+        "hangul",
+        "korean compression",
+        "korean cbms",
+        "syllable addressing"
+      ],
+      "status": "ACTIVE/HISTORICAL",
+      "first_known": "2025-09-13",
+      "evidence": [
+        "AIONS_DEEP_DIVE_REPORT_20251129.md",
+        "AIONS_CATALOG/INDEX.md",
+        "aions_core/server/korean_keys.py",
+        "discovery/cbms/2026-08-26-korean-cbms-findings.md"
+      ]
+    },
+    {
+      "id": "ESPERANTO_CODEBOOK",
+      "name": "Esperanto/symbolic codebook bridge",
+      "aliases": [
+        "esperanto",
+        "codebook",
+        "symbolic index",
+        "esperanto bridge"
+      ],
+      "status": "ACTIVE",
+      "first_known": "2025-11 or earlier",
+      "evidence": [
+        "AIONS_DEEP_DIVE_REPORT_20251129.md",
+        "AIONS_CATALOG/codebooks/README.md",
+        "aions_core/server/codebook_engine.py",
+        "aions_core/server/esperanto_bridge.py"
+      ]
+    },
+    {
+      "id": "POCKET_QC",
+      "name": "Pocket QC quality gate/library",
+      "aliases": [
+        "pocket qc",
+        "pocket_qc",
+        "qc_crla_result",
+        "quality gate"
+      ],
+      "status": "ACTIVE",
+      "first_known": "2025-11 or earlier",
+      "evidence": [
+        "AIONS_DEPENDENCY_MAP_20251128.md",
+        "aions_core/server/pocket_qc.py",
+        "aions_core/tools/uruchom_pocket_qc.py"
+      ],
+      "notes": [
+        "Library invoked by callers; not a standalone service."
+      ]
+    },
+    {
+      "id": "THINKING_PATTERNS",
+      "name": "Thinking-pattern corpus / meta-reasoning patterns",
+      "aliases": [
+        "thinking patterns",
+        "thinking_log",
+        "reasoning patterns",
+        "meta reasoning"
+      ],
+      "status": "ACTIVE/HISTORICAL",
+      "first_known": "2025-09-13 or earlier",
+      "evidence": [
+        "AIONS_CATALOG/thinking_patterns/README.md",
+        "AIONS_DEEP_DIVE_REPORT_20251129.md",
+        "ANALYSIS_CHECKPOINT_20251128.md"
+      ]
+    },
+    {
+      "id": "PLASTERS",
+      "name": "Plasters knowledge packs",
+      "aliases": [
+        "plasters",
+        "plasterspack",
+        "knowledge packs",
+        "pack modules"
+      ],
+      "status": "ASSET_PRESENT; EXECUTION STATUS REQUIRES CURRENT PROOF",
+      "first_known": "2025-11 or earlier",
+      "evidence": [
+        "AIONS_DEPENDENCY_MAP_20251128.md",
+        "AIONS_DEEP_DIVE_REPORT_20251129.md",
+        "AIONS_CATALOG/INDEX.md"
+      ]
+    },
+    {
+      "id": "PANIC_WEB_RAG",
+      "name": "PANIC -> Web RAG fallback",
+      "aliases": [
+        "panic",
+        "web rag",
+        "panic condition",
+        "trigger web rag"
+      ],
+      "status": "CODE PRESENT",
+      "first_known": "2025-11 or earlier",
+      "evidence": [
+        "AIONS_DEEP_DIVE_REPORT_20251129.md",
+        "aions_core/server/cbms_direct_server.py",
+        "aions_core/server/cbms_unified_server.py",
+        "aions_core/server/web_rag_cbms.py"
+      ]
+    },
+    {
+      "id": "MEMORY_GRAPH",
+      "name": "MemoryGraph concept relationship system",
+      "aliases": [
+        "memorygraph",
+        "memory graph",
+        "enhanced cbms retrieval"
+      ],
+      "status": "CODE PRESENT",
+      "first_known": "2025-2026",
+      "evidence": [
+        "aions_core/memory_graph_engine.py",
+        "aions_core/aions_reactor.py"
+      ]
+    },
+    {
+      "id": "MATH_SOLVER",
+      "name": "Deterministic math solver",
+      "aliases": [
+        "math solver",
+        "math_solver"
+      ],
+      "status": "CODE PRESENT",
+      "first_known": "2025-11 or earlier",
+      "evidence": [
+        "AIONS_DEPENDENCY_MAP_20251128.md",
+        "aions_core/server/math_solver.py"
+      ]
+    },
+    {
+      "id": "CONVERSATION_LAYER",
+      "name": "Conversation enhancer and memory layer",
+      "aliases": [
+        "conversation enhancer",
+        "conversation memory",
+        "response variator"
+      ],
+      "status": "CODE PRESENT",
+      "first_known": "2025-11 or earlier",
+      "evidence": [
+        "AIONS_DEPENDENCY_MAP_20251128.md",
+        "aions_core/server/conversation_enhancer.py",
+        "aions_core/server/conversation_memory.py"
+      ]
+    },
+    {
+      "id": "OPERATOR_LOOP",
+      "name": "Deterministic observe -> diagnose -> act -> verify -> learn loop",
+      "aliases": [
+        "operator loop",
+        "observe diagnose act verify learn",
+        "self heal"
+      ],
+      "status": "ACTIVE MVP PER STATE",
+      "first_known": "2026-07",
+      "evidence": [
+        "control_plane/operator/loop.py",
+        "AIONS_STATE.md"
+      ]
+    },
+    {
+      "id": "SKILL_AGENT_REGISTRIES",
+      "name": "Plug-and-play skill and agent registries",
+      "aliases": [
+        "skill registry",
+        "agent registry",
+        "skills_lib",
+        "agents_lib"
+      ],
+      "status": "CODE PRESENT",
+      "first_known": "2026",
+      "evidence": [
+        "control_plane/skills/registry.py",
+        "control_plane/agents/agent_registry.py",
+        "agents_lib"
+      ]
+    },
+    {
+      "id": "ACAE",
+      "name": "ACAE deterministic code/knowledge packing and retrieval line",
+      "aliases": [
+        "acae",
+        "outline then drill",
+        "semantic codebook"
+      ],
+      "status": "ACTIVE DEVELOPMENT/HISTORICAL STATE",
+      "first_known": "2026-08",
+      "evidence": [
+        "acae/.now/STATE.md",
+        "acae/src/acae/concepts.py",
+        "acae/config/semantic_codebook.json"
+      ]
+    }
+  ],
+  "defects": [
+    {
+      "id": "CBMS_SYNTH_TEMPLATE",
+      "title": "CBMS synthesis emits wrapper/template instead of an answer",
+      "aliases": [
+        "R2_opakowanie_syntezy",
+        "_synthesize_chunks",
+        "generic template",
+        "wrapper synthesis",
+        "na podstawie fragmentow wiedzy",
+        "on the basis of knowledge fragments"
+      ],
+      "status": "ACTIVE_CONFIRMED_2026-09-21",
+      "known_since": "2025-11-28/29",
+      "evidence": [
+        "AIONS_DEPENDENCY_MAP_20251128.md",
+        "AIONS_DEEP_DIVE_REPORT_20251129.md",
+        "aions_core/server/cbms_memory.py"
+      ],
+      "current_evidence": [
+        "commit 592d5eec613398d00941d9a0dfb0af754658e5cb: Pocket QC RETRY R2 on two runs"
+      ],
+      "classification": "KNOWN DEFECT / CONTINUATION OR REGRESSION, NOT NEW"
+    },
+    {
+      "id": "POCKET_QC_WRONG_FIELD",
+      "title": "Pocket QC read winner fields that did not contain the full answer",
+      "aliases": [
+        "pocket qc wrong field",
+        "answer_preview",
+        "winner text answer"
+      ],
+      "status": "FIXED_2026-08-16",
+      "known_since": "2026-08-16",
+      "evidence": [
+        "aions_core/server/pocket_qc.py",
+        "acae/.now/STATE.md"
+      ]
+    },
+    {
+      "id": "CRLA_DEAD_TOURNAMENT",
+      "title": "Pairwise tournament ladder could not change already-sorted winner",
+      "aliases": [
+        "dead tournament",
+        "pairwise tournament",
+        "drabinka"
+      ],
+      "status": "FIXED_2026-08-16",
+      "known_since": "2026-08-16",
+      "evidence": [
+        "aions_core/server/crla_core.py",
+        "acae/.now/STATE.md"
+      ]
+    },
+    {
+      "id": "PLASTERS_PLACEHOLDER",
+      "title": "PlastersPACK.inference historically returned placeholder instead of real inference",
+      "aliases": [
+        "plasters placeholder",
+        "plasterspack inference",
+        "inference placeholder"
+      ],
+      "status": "HISTORICAL_CURRENT_STATUS_UNVERIFIED",
+      "known_since": "2025-11-29",
+      "evidence": [
+        "AIONS_DEEP_DIVE_REPORT_20251129.md"
+      ]
+    },
+    {
+      "id": "CBMS_NOISE_FILTER_SELF_OUTPUT",
+      "title": "CBMS noise filter historically rejected its own synthesis-style outputs",
+      "aliases": [
+        "is_noise_content",
+        "noise filter",
+        "filters own answer",
+        "na podstawie 5 fragmentow wiedzy"
+      ],
+      "status": "HISTORICAL_CURRENT_STATUS_UNVERIFIED",
+      "known_since": "2025-11-29",
+      "evidence": [
+        "AIONS_DEEP_DIVE_REPORT_20251129.md"
+      ]
+    },
+    {
+      "id": "REDISCOVERY_FAILURE",
+      "title": "Known mechanisms/defects rediscovered as if new because history was not consulted",
+      "aliases": [
+        "rediscovery",
+        "rediscovered",
+        "known before new",
+        "history not consulted"
+      ],
+      "status": "ACTIVE_PROCESS_FAILURE_2026-09-21",
+      "known_since": "2025-11-29 as behavior; formally named 2026-09-21",
+      "evidence": [
+        "logs/conversation_dumps/autolog_2025-11-29.jsonl",
+        "AIONS_DEEP_DIVE_REPORT_20251129.md",
+        "AGENTS.md"
+      ],
+      "classification": "PROCESS DEFECT"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "LLM_REPLACEABLE_INTERFACE",
+      "statement": "LLM is a replaceable communication interface; CBMS is the cognitive system; MCP is execution; Linux is hardware layer.",
+      "evidence": [
+        "AGENTS.md"
+      ]
+    },
+    {
+      "id": "CANONICAL_CBMS",
+      "statement": "Canonical operational CBMS lives under E:\\server wiedzy\\aions_core.",
+      "evidence": [
+        "AGENTS.md",
+        "AIONS_CATALOG/INDEX.md"
+      ]
+    },
+    {
+      "id": "NOVELTY_NEEDS_HISTORY",
+      "statement": "Before calling a mechanism, defect, decision or architecture element NEW/FIRST/DISCOVERED, run historical preflight. A miss means UNKNOWN_NOT_PROVEN_NEW, never NEW.",
+      "evidence": [
+        "AIONS_CATALOG/architecture_history.json"
+      ]
+    }
+  ]
+}
