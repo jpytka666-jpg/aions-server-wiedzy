@@ -94,7 +94,13 @@ def qc_text(text: str, memory_dir: str | Path) -> Dict[str, Any]:
     out = {"type": "text", "verdict": verdict, "logic_ok": logic_ok, "cbms_symbols": cbms_count}
     if _history_classify is not None:
         try:
-            out["history"] = _history_classify(out.get("powod_bramki") or out.get("verdict") or "")
+            # POPRAWKA 2026-09-21: bylo out.get("powod_bramki"), a `out` w qc_text
+            # NIGDY nie ma tego klucza - istnieje on wylacznie w qc_crla_result.
+            # Skutek: klasyfikowano doslowne slowo werdyktu. Zmierzone przed
+            # poprawka: classify("FAIL") zwracalo KNOWN REDISCOVERY_FAILURE ze
+            # score 80, wiec KAZDY werdykt FAIL z qc_text dostawal falszywa
+            # pieczec "to juz znane". Klasyfikujemy sprawdzany TEKST.
+            out["history"] = _history_classify(text or "")
         except Exception as e:
             out["history"] = {"history_status":"HISTORY_LOOKUP_ERROR","error":type(e).__name__}
     _append_log("pocket_qc.jsonl", out)
