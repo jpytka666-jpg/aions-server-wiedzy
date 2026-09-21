@@ -600,6 +600,16 @@ class CBMSMemory:
         if query.upper() in ['WITAJ', 'WITAM', 'PRZEDSTAW SIE', 'HELLO', 'HI']:
             return f"Witaj! Jestem AIONS z {len(chunk_ids)} aktywnych modułów wiedzy.\n\nSystem działa na bazie CBMS + Bielik + Claude patterns.\nMam dostęp do wiedzy o programowaniu, AI/ML, systemach i więcej.\n\nW czym mogę pomóc?"
         
+        # --- SYNTEZA PRZEZ MODEL (2026-09-21) --------------------------------
+        # Szablon ponizej jest echem od 2025-11-28 (CBMS_SYNTH_TEMPLATE) i bramka
+        # zapisu slusznie go odrzuca (R2), wiec pamiec nigdy nic nie przyjmuje.
+        # Model jest organem wymiennym: dostaje TE SAME bloki i sklada odpowiedz.
+        # WLACZNIK: AIONS_SYNTH=llm. Bez niego zachowanie NIEZMIENIONE.
+        if os.environ.get("AIONS_SYNTH", "") == "llm":
+            _llm = self._synthesize_with_llm(query, relevant_knowledge)
+            if _llm:
+                return _llm
+        # ----------------------------------------------------------------------
         # For other queries, provide relevant synthesis
         synthesis = f"Na podstawie {len(relevant_knowledge)} fragmentów wiedzy:\n\n"
         
@@ -616,6 +626,40 @@ class CBMSMemory:
         synthesis += f"\n\n[Źródło: CBMS, {len(chunk_ids)} chunków pamięci]"
         return synthesis
     
+    def _synthesize_with_llm(self, query: str, blocks: List[str]) -> str:
+        """
+        Sklada odpowiedz z blokow przez lokalny model (OpenAI-compatible /v1).
+        Adres: AIONS_LLM_URL (domyslnie llama-server 127.0.0.1:8877).
+        temperature=0 i staly seed, zeby przebieg byl powtarzalny.
+        Zwraca "" przy kazdym bledzie - wolajacy wraca do starej sciezki.
+        """
+        import urllib.request
+        url = os.environ.get("AIONS_LLM_URL", "http://127.0.0.1:8877/v1/chat/completions")
+        timeout = float(os.environ.get("AIONS_LLM_TIMEOUT", "120"))
+        max_blocks = int(os.environ.get("AIONS_LLM_MAX_BLOCKS", "8"))
+        ctx = "\n\n".join(b[:800] for b in blocks[:max_blocks])
+        system = ("Odpowiadasz wylacznie na podstawie podanych blokow wiedzy. "
+                  "Jesli bloki nie zawieraja odpowiedzi, napisz to wprost. "
+                  "Odpowiedz w jezyku pytania, konkretnie, 3-6 zdan, bez wstepu, "
+                  "bez nazw plikow, sciezek i identyfikatorow blokow.")
+        body = json.dumps({
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": f"BLOKI:\n{ctx}\n\nPYTANIE: {query}"},
+            ],
+            "temperature": 0, "seed": 123, "max_tokens": 300,
+        }).encode("utf-8")
+        req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                data = json.loads(r.read().decode("utf-8"))
+            text = ((data.get("choices") or [{}])[0].get("message", {}) or {}).get("content", "") or ""
+            text = text.strip()
+            return text if len(text) >= 25 else ""
+        except Exception as e:
+            print(f"DEBUG: LLM synthesis failed: {type(e).__name__}: {e}", file=sys.stderr)
+            return ""
+
     def _should_create_new_chunk(self, query: str, synthesis: str) -> bool:
         """Determine if new knowledge chunk should be created"""
         # Create new chunk if significant new insight or query is complex
