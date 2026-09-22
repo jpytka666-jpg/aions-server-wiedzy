@@ -586,10 +586,13 @@
         "warlock rename corruption",
         "sheriff warlock rename docs"
       ],
-      "status": "KNOWN_OPEN_DOCUMENTATION_DEFECT_2026-09-21",
+      "status": "FIXED_ON_LIVE_BRANCH_2026-09-22; OTHER_BRANCHES_STILL_CARRY_IT",
       "known_since": "2026-09-21",
       "evidence": [
-        "AIONS_CATALOG/evidence/2026-09-21-rediscovery-warlock-audit.md"
+        "AIONS_CATALOG/evidence/2026-09-21-rediscovery-warlock-audit.md",
+        "AIONS_CATALOG/evidence/2026-09-22-warlock-rename-corruption-fixed.md",
+        "commit 40cd7821ff7de7a5792645c266add73870b85589 (polip-agi, naprawa)",
+        "commit 68ea352a2b36342776c7eb6f46a52db2fbc34935 (polip-agi, PR 11 scalony do salvage)"
       ],
       "evidence_checks": [
         {
@@ -599,9 +602,22 @@
             "Warlock replaces the earlier name Warlock",
             "migracja Warlock -> Warlock"
           ]
+        },
+        {
+          "path": "AIONS_CATALOG/evidence/2026-09-22-warlock-rename-corruption-fixed.md",
+          "contains_all": [
+            "3d6afc48b2338a0ddc0e7f6b80d275df5527ecad",
+            "68ea352",
+            "rename_consistency.rs",
+            "ZERO trafien"
+          ],
+          "contains_any": [
+            "lapie dziesiec z dwunastu linii",
+            "osiem falszywych alarmow"
+          ]
         }
       ],
-      "classification": "DOCUMENTATION DEFECT; DOES NOT INVALIDATE THE RUST TOPOLOGY CHANGE"
+      "classification": "DOCUMENTATION DEFECT, NAPRAWIONY NA ZYWEJ GALEZI. Trzy pozostale galezie z 2cd32c4 nadal niosa stare linie. Walidator tego repo nie siega do polip-agi - autorytatywne sa SHA tam, nie ten plik."
     }
   ],
   "decisions": [
